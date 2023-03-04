@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="pieces_image_button_style">
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_width">0sp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">1sp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:contentDescription">piece</item>
+    </style>
+    <style name="icon_image_button_style">
+        <item name="android:background">@null</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+    <style name="icon_image_button_match_detail_control_style">
+        <item name="android:layout_width">0sp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:layout_marginTop">20sp</item>
+        <item name="android:layout_marginBottom">20sp</item>
+        <item name="android:layout_marginStart">5sp</item>
+        <item name="android:layout_marginEnd">5sp</item>
+    </style>
+
+    <style name="icon_image_view_style">
+        <item name="android:layout_width">0sp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:layout_marginTop">10sp</item>
+        <item name="android:layout_marginBottom">10sp</item>
+        <item name="android:layout_marginStart">5sp</item>
+        <item name="android:layout_marginEnd">5sp</item>
+    </style>
+</resources>
