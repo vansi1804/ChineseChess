@@ -1,10 +1,10 @@
-package com.e_commerce_website_project;
+package com;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ECommerceWebsiteProjectApplicationTests {
+class ChineseChessApiApplicationTests {
 
 	@Test
 	void contextLoads() {
