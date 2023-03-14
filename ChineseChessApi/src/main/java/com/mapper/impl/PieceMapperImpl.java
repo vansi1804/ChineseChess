@@ -11,24 +11,28 @@ public class PieceMapperImpl implements PieceMapper {
 
     @Override
     public Piece toEntity(PieceDTO pieceDTO) {
-        return new Piece(
-                pieceDTO.getId(),
-                pieceDTO.getName(),
-                pieceDTO.isRed(),
-                pieceDTO.getImage(),
-                pieceDTO.getStartCol(),
-                pieceDTO.getStartRow());
+        if (pieceDTO == null)
+            return null;
+        Piece piece = new Piece();
+        piece.setName(pieceDTO.getName());
+        piece.setRed(pieceDTO.isRed());
+        piece.setImage(pieceDTO.getImage());
+        piece.setStartCol(pieceDTO.getStartCol());
+        piece.setStartRow(pieceDTO.getStartRow());
+        return piece;
     }
 
     @Override
     public PieceDTO toDTO(Piece piece) {
-        return new PieceDTO(
-                piece.getId(),
-                piece.getName(),
-                piece.isRed(),
-                piece.getImage(),
-                piece.getStartCol(),
-                piece.getStartRow());
+        if (piece == null)
+            return null;
+        PieceDTO pieceDTO = new PieceDTO();
+        pieceDTO.setName(piece.getName());
+        pieceDTO.setRed(piece.isRed());
+        pieceDTO.setImage(piece.getImage());
+        pieceDTO.setStartCol(piece.getStartCol());
+        pieceDTO.setStartRow(piece.getStartRow());
+        return pieceDTO;
     }
 
 }

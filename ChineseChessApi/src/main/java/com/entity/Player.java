@@ -1,7 +1,11 @@
 package com.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,18 +18,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "player")
-public class Player {
+public class Player implements Serializable{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
     @Column(name = "role_id")
-    private long roleId;
+    private int roleId;
     @Column(name = "name")
     private String name;
-    @Column(name = "avata")
-    private String avata;
+    @Column(name = "avatar")
+    private String avatar;
     @Column(name = "elo_score")
     private long eloScore;
-    @Column(name = "level_id")
-    private long levelId;
+    @Column(name = "levels_id")
+    private int levelsId;
+    @Column(name = "fee_paid")
+    private long feePaid;
 }

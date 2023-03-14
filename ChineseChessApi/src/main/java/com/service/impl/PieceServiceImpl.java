@@ -13,17 +13,16 @@ import com.service.PieceService;
 
 @Service
 public class PieceServiceImpl implements PieceService{
+
     @Autowired
     private PieceRepository pieceRepository;
+
     @Autowired
     private PieceMapper pieceMapper;
 
     @Override
     public List<PieceDTO> findAll() {
-        return pieceRepository.findAll()
-        .stream()
-        .map(p->pieceMapper.toDTO(p))
-        .collect(Collectors.toList());
+        return pieceRepository.findAll().stream().map(p->pieceMapper.toDTO(p)).collect(Collectors.toList());
     }
-
+   
 }

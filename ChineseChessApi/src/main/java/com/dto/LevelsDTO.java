@@ -7,10 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PieceDTO {
+public class LevelsDTO {
     private String name;
-    private boolean isRed;
-    private String image;
-    private int startCol;
-    private int startRow;
 }
