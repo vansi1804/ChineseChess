@@ -1,7 +1,11 @@
 package com.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,8 +18,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "move_history")
-public class MoveHistory {
+public class MoveHistory implements Serializable{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
     @Column(name = "game_id")
@@ -29,9 +34,9 @@ public class MoveHistory {
     @Column(name = "from_col")
     private int fromCol;
     @Column(name = "fromRow")
-    private int from_row;
+    private int fromRow;
     @Column(name = "toCol")
-    private int to_col;
+    private int toCol;
     @Column(name = "toRow")
-    private int to_row;
+    private int toRow;
 }
