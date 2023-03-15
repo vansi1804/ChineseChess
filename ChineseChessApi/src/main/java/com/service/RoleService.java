@@ -6,7 +6,10 @@ import com.dto.RoleDTO;
 
 public interface RoleService {
     List<RoleDTO> findAll();
-    RoleDTO findByName(String name);
+
+    RoleDTO findById(int id);
+
     RoleDTO create(RoleDTO roleDTO);
-    RoleDTO update(String lastName, RoleDTO roleDTO);
+
+    RoleDTO update(int id, RoleDTO roleDTO);
 }

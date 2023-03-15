@@ -14,6 +14,7 @@ public class PieceMapperImpl implements PieceMapper {
         if (pieceDTO == null)
             return null;
         Piece piece = new Piece();
+        piece.setId(pieceDTO.getId());
         piece.setName(pieceDTO.getName());
         piece.setRed(pieceDTO.isRed());
         piece.setImage(pieceDTO.getImage());
@@ -27,6 +28,7 @@ public class PieceMapperImpl implements PieceMapper {
         if (piece == null)
             return null;
         PieceDTO pieceDTO = new PieceDTO();
+        pieceDTO.setId(piece.getId());
         pieceDTO.setName(piece.getName());
         pieceDTO.setRed(piece.isRed());
         pieceDTO.setImage(piece.getImage());
