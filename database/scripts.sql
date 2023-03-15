@@ -5,7 +5,7 @@ use chinese_chess;
 create table piece(
 	id int auto_increment,
     name varchar(20),
-    color bit,
+    is_red bit,
 	image varchar(1000),
     start_col int,
     start_row int,
@@ -100,6 +100,8 @@ insert into piece values(31,'Sĩ',1,'',6,10);
 insert into piece values(32,'Tướng',1,'',5,10);
 ---------------------------------------------------
 select * from piece;
+---------------------------------------------------
+insert into role values(1,'adnin',0);
 ---------------------------------------------------
 select * from role;
 
