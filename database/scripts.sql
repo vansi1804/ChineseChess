@@ -15,7 +15,6 @@ create table piece(
 create table role(
 	id int auto_increment,
     name nvarchar(50),
-    power int,
 	primary key(id)
 );
 
@@ -28,11 +27,12 @@ create table levels(
 create table player(
 	id bigint auto_increment,
     role_id int,
+    email varchar(50),
+    phone_number varchar(15),
     name nvarchar(200),
     avata varchar(1000),
     elo_score bigint,
     levels_id int,
-    fee_paid bigint,
     primary key(id),
    foreign key (role_id) references role(id),
    foreign key (levels_id) references levels(id)
