@@ -18,13 +18,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "player")
-public class Player implements Serializable{
+public class Player implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
     @Column(name = "role_id")
     private int roleId;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "phone_number")
+    private String phoneNumber;
     @Column(name = "name")
     private String name;
     @Column(name = "avatar")
@@ -33,6 +37,4 @@ public class Player implements Serializable{
     private long eloScore;
     @Column(name = "levels_id")
     private int levelsId;
-    @Column(name = "fee_paid")
-    private long feePaid;
 }

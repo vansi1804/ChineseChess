@@ -16,7 +16,6 @@ public class RoleMapperImpl implements RoleMapper {
         Role role = new Role();
         role.setId(roleDTO.getId());
         role.setName(roleDTO.getName());
-        role.setPower(roleDTO.getPower());
         return role;
     }
 
@@ -27,7 +26,6 @@ public class RoleMapperImpl implements RoleMapper {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(role.getId());
         roleDTO.setName(role.getName());
-        roleDTO.setPower(role.getPower());
         return roleDTO;
     }
 
