@@ -13,8 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "player")
@@ -29,6 +29,8 @@ public class Player implements Serializable {
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
+    @Column(name = "password")
+    private String password;
     @Column(name = "name")
     private String name;
     @Column(name = "avatar")

@@ -1,7 +1,6 @@
 package com.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,20 +35,23 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDTO create(RoleDTO roleDTO) {
-        if (roleRepository.findByName(roleDTO.getName()).isPresent())
+        if (roleRepository.findByName(roleDTO.getName()) != null)
             throw new ExceptionCustom("Role", ErrorMessage.EXISTING_NAME, "name", roleDTO.getName());
-        roleRepository.save(roleMapper.toEntity(roleDTO));
-        roleDTO.setId((int) roleRepository.count());
-        return roleDTO;
+        return roleMapper.toDTO(roleRepository.save(roleMapper.toEntity(roleDTO)));
     }
 
     @Override
     public RoleDTO update(int id, RoleDTO roleDTO) {
-        Optional<Role> role = roleRepository.findByName(roleDTO.getName());
-        if (role.isPresent() && (role.get().getId() != id))
+        Role role = roleRepository.findByName(roleDTO.getName());
+        if ((role != null) && (role.getId() != id))
             throw new ExceptionCustom("Role", ErrorMessage.EXISTING_NAME, "name", roleDTO.getName());
         roleRepository.save(roleMapper.toEntity(roleDTO));
         return roleDTO;
+    }
+
+    @Override
+    public void delete(int id) {
+        roleRepository.deleteById(id);
     }
 
 }

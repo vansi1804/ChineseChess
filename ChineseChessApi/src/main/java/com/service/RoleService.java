@@ -12,4 +12,6 @@ public interface RoleService {
     RoleDTO create(RoleDTO roleDTO);
 
     RoleDTO update(int id, RoleDTO roleDTO);
+
+    void delete(int id);
 }

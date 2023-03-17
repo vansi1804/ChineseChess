@@ -29,6 +29,7 @@ create table player(
     role_id int,
     email varchar(50),
     phone_number varchar(15),
+    password varchar(1000),
     name nvarchar(200),
     avata varchar(1000),
     elo_score bigint,
