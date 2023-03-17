@@ -1,7 +1,6 @@
 package com.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,20 +34,23 @@ public class LevelsServiceImpl implements LevelsService {
 
     @Override
     public LevelsDTO create(LevelsDTO levelsDTO) {
-        if (levelsRepository.findByName(levelsDTO.getName()).isPresent())
+        if (levelsRepository.findByName(levelsDTO.getName()) != null)
             throw new ExceptionCustom("Levels", ErrorMessage.EXISTING_NAME, "name", levelsDTO.getName());
-        levelsRepository.save(levelsMapper.toEntity(levelsDTO));
-        levelsDTO.setId((int) levelsRepository.count());
-        return levelsDTO;
+        return levelsMapper.toDTO(levelsRepository.save(levelsMapper.toEntity(levelsDTO)));
     }
 
     @Override
     public LevelsDTO update(int id, LevelsDTO levelsDTO) {
-        Optional<Levels> levels = levelsRepository.findByName(levelsDTO.getName());
-        if (levels.isPresent() && (levels.get().getId() != id))
+        Levels levels = levelsRepository.findByName(levelsDTO.getName());
+        if ((levels != null) && (levels.getId() != id))
             throw new ExceptionCustom("Levels", ErrorMessage.EXISTING_NAME, "name", levelsDTO.getName());
         levelsRepository.save(levelsMapper.toEntity(levelsDTO));
         return levelsDTO;
+    }
+
+    @Override
+    public void delete(int id) {
+        levelsRepository.deleteById(id);
     }
 
 }

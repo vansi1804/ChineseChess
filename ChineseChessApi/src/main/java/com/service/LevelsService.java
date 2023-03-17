@@ -12,4 +12,6 @@ public interface LevelsService {
     LevelsDTO create(LevelsDTO levelsDTO);
 
     LevelsDTO update(int id, LevelsDTO levelsDTO);
+
+    void delete(int id);
 }
