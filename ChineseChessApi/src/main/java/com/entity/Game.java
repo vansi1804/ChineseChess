@@ -1,6 +1,7 @@
 package com.entity;
 
-import java.io.Serializable; 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,11 +25,12 @@ public class Game implements Serializable {
     @Column(name = "id")
     private long id;
     @Column(name = "time")
-    private String startAt;
-    @Column(name = "player1_id")
-    private long player1Id;
-    @Column(name = "player2_id")
-    private long player2Id;
+    private int time;
+    @Column(name = "accumulation")
+    private int accumulation;
+    @Column(name = "start_at")
+    private LocalDateTime startAt;
     @Column(name = "result")
     private long result;
+    
 }

@@ -17,14 +17,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "move_history")
-public class MoveHistory implements Serializable{
+@Table(name = "tbl_move_history")
+public class MoveHistory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "game_id")
-    private long gameId;
     @Column(name = "turn")
     private long turn;
     @Column(name = "player_id")

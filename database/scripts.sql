@@ -2,20 +2,34 @@
 create database chinese_chess;
 use chinese_chess;
 
-create table piece(
-	id int auto_increment,
-    name varchar(20),
-    is_red bit,
-	image varchar(1000),
-    start_col int,
-    start_row int,
-    primary key(id)
-);
-
 create table role(
 	id int auto_increment,
     name nvarchar(50),
 	primary key(id)
+);
+
+create table vip(
+	id int auto_increment,
+    name nvarchar(50),
+	primary key(id)
+);
+
+create table status(
+	id int auto_increment,
+    name nvarchar(50),
+	primary key(id)
+);
+
+create table user(
+	id bigint auto_increment,
+    role_id int,
+    email varchar(50),
+    phone_number varchar(15),
+    password varchar(1000),
+    name nvarchar(200),
+    avata varchar(1000),
+    primary key(id),
+   foreign key (role_id) references role(id)
 );
 
 create table levels(
@@ -26,28 +40,31 @@ create table levels(
 
 create table player(
 	id bigint auto_increment,
-    role_id int,
-    email varchar(50),
-    phone_number varchar(15),
-    password varchar(1000),
-    name nvarchar(200),
-    avata varchar(1000),
-    elo_score bigint,
+    user_id bigInt,
     levels_id int,
+    elo_score bigInt,
     primary key(id),
-   foreign key (role_id) references role(id),
+   foreign key (user_id) references user(id),
    foreign key (levels_id) references levels(id)
 );
 
 create table game(
 	id bigint auto_increment,
-	time varchar(20),
-	player1_id bigint,
-	player2_id bigint,
+	time int,
+	accumulation int,
+    start_at datetime,
 	result bigint,
-    primary key(id),
-   foreign key (player1_id) references player(id),
-   foreign key (player2_id) references player(id)
+    primary key(id)
+);
+
+create table piece(
+	id int auto_increment,
+    name varchar(20),
+    is_red bit,
+	image varchar(1000),
+    start_col int,
+    start_row int,
+    primary key(id)
 );
 
 create table move_history(
@@ -102,7 +119,7 @@ insert into piece values(32,'Tướng',1,'',5,10);
 ---------------------------------------------------
 select * from piece;
 ---------------------------------------------------
-insert into role values(1,'adnin',0);
+insert into role values(1,'adnin');
 ---------------------------------------------------
 select * from role;
 

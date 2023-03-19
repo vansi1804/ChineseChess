@@ -6,4 +6,6 @@ public class ValidationREGEX {
 
     public static final String PHONE_NUMBER_REGEX = "/(84[3|5|7|8|9])+([0-9]{8})\b/g";
 
+    public static final String DATE_TIME = "dd-MM-yyyy hh:mm:ss";
+
 }
