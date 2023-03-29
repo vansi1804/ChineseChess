@@ -1,14 +1,12 @@
 package com.exception;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
 public class ExceptionCustom extends RuntimeException {
-	private String entity;
-	private String errorMessage;
-	private String field;
+	private Object entity;
+	private Object errorMessage;
+	private Object field;
 	private Object value;
 
 	public ExceptionCustom(String msg) {
@@ -17,7 +15,7 @@ public class ExceptionCustom extends RuntimeException {
 
 	@Override
 	public String toString() {
-		return String.format(entity + " " + errorMessage + " " + field + " " + value);
+		return entity + " " + errorMessage + " " + field + " " + value + "\n";
 	}
 
 }
