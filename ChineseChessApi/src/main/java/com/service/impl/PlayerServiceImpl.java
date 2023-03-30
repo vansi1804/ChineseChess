@@ -12,8 +12,8 @@ import com.common.Default;
 import com.common.ErrorMessage;
 import com.common.enumeration.EStatus;
 import com.data.dto.PlayerDTO;
+import com.data.dto.creation.PlayerCreationDTO;
 import com.data.dto.profile.PlayerProfileDTO;
-import com.data.dto.register.PlayerRegisterDTO;
 import com.data.entity.Player;
 import com.exception.ExceptionCustom;
 import com.helper.Encoding;
@@ -52,14 +52,14 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerProfileDTO create(PlayerRegisterDTO playerRegisterDTO) throws NoSuchAlgorithmException {
-        if (userRepository.findByPhoneNumber(playerRegisterDTO.getUserRegisterDTO().getPhoneNumber()).isPresent()) {
+    public PlayerProfileDTO create(PlayerCreationDTO playerCreationDTO) throws NoSuchAlgorithmException {
+        if (userRepository.findByPhoneNumber(playerCreationDTO.getUserCreationDTO().getPhoneNumber()).isPresent()) {
             throw new ExceptionCustom("Player", ErrorMessage.DATA_EXISTING, "phone number",
-                    playerRegisterDTO.getUserRegisterDTO().getPhoneNumber());
+                    playerCreationDTO.getUserCreationDTO().getPhoneNumber());
         }
-        Player player = playerMapper.toEntity(playerRegisterDTO);
+        Player player = playerMapper.toEntity(playerCreationDTO);
         player.getUser().setCreatedAt(LocalDateTime.now());
-        player.getUser().setPassword(Encoding.getMD5(playerRegisterDTO.getUserRegisterDTO().getPassword()));
+        player.getUser().setPassword(Encoding.getMD5(playerCreationDTO.getUserCreationDTO().getPassword()));
         player.getUser().setRole(roleRepository.findById(Default.ROLE_PLAYER_ID).get());
         player.getUser().setVip(vipRepository.findById(Default.VIP0_ID).get());
         player.getUser().setStatus(EStatus.Active.getValue());

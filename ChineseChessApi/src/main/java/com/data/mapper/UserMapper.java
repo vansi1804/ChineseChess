@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.data.dto.UserDTO;
+import com.data.dto.creation.UserCreationDTO;
 import com.data.dto.profile.UserProfileDTO;
-import com.data.dto.register.UserRegisterDTO;
 import com.data.entity.User;
 
 @Mapper(componentModel = "spring", uses = {RoleMapper.class, VipMapper.class})
@@ -19,7 +19,7 @@ public interface UserMapper {
     @Mapping(ignore = true, target = "role")
     @Mapping(ignore = true, target = "vip")
     @Mapping(ignore = true, target = "status")
-    User toEntity(UserRegisterDTO userRegisterDTO) throws NoSuchAlgorithmException;
+    User toEntity(UserCreationDTO userCreationDTO) throws NoSuchAlgorithmException;
 
     @Mapping(source = "userProfileDTO.phoneNumber", target = "phoneNumber")
     @Mapping(ignore = true, target = "password")

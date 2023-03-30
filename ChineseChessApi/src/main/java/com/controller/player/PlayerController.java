@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.data.dto.creation.PlayerCreationDTO;
 import com.data.dto.profile.PlayerProfileDTO;
-import com.data.dto.register.PlayerRegisterDTO;
 import com.service.PlayerService;
 
 @RestController
@@ -36,9 +36,9 @@ public class PlayerController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@Valid @RequestBody PlayerRegisterDTO playerRegisterDTO)
+    public ResponseEntity<?> create(@Valid @RequestBody PlayerCreationDTO playerCreationDTO)
             throws NoSuchAlgorithmException {
-        return ResponseEntity.ok(this.playerService.create(playerRegisterDTO));
+        return ResponseEntity.ok(this.playerService.create(playerCreationDTO));
     }
 
     @PutMapping("")
