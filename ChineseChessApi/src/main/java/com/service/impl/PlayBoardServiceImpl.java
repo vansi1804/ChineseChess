@@ -34,13 +34,13 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     }
 
     @Override
-    public PieceDTO[][] update(Piece[][] currentBoard, MoveHistory moveHistory) {
+    public PieceDTO[][] update(PieceDTO[][] currentBoard, MoveHistory moveHistory) {
         moveHistoryRepository.save(moveHistory);
         currentBoard[moveHistory.getFromCol() - 1][moveHistory.getFromRow() - 1] = null;
         moveHistory.getPiece().setCurrentCol(moveHistory.getToCol());
         moveHistory.getPiece().setCurrentRow(moveHistory.getToRow());
-        currentBoard[moveHistory.getToCol() - 1][moveHistory.getToRow() - 1] = moveHistory.getPiece();
-        return pieceMapper.toDTO(currentBoard);
+        currentBoard[moveHistory.getToCol() - 1][moveHistory.getToRow() - 1] = pieceMapper.toDTO(moveHistory.getPiece());
+        return currentBoard;
     }
 
 }
