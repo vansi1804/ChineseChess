@@ -1,4 +1,4 @@
-package com.data.dto.creation;
+package com.data.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

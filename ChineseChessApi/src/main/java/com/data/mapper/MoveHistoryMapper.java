@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.data.dto.GameViewDTO;
-import com.data.dto.MoveHistoryDTO;
+import com.data.dto.MoveHistoryCreationDTO;
 import com.data.entity.MoveHistory;
 
 @Mapper(componentModel = "spring", uses = { MatchMapper.class})
@@ -13,7 +13,7 @@ public interface MoveHistoryMapper {
     @Mapping(ignore = true, target = "match")
     @Mapping(ignore = true, target = "turn")
     @Mapping(ignore = true, target = "piece")
-    MoveHistory toEntity(MoveHistoryDTO moveHistoryDTO);
+    MoveHistory toEntity(MoveHistoryCreationDTO moveHistoryCreationDTO);
 
     @Mapping(source = "match", target = "matchDTO")
     @Mapping(ignore = true, target = "description")

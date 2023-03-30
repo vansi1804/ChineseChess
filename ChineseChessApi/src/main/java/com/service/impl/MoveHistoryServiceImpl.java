@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.data.dto.GameViewDTO;
-import com.data.dto.MoveHistoryDTO;
+import com.data.dto.MoveHistoryCreationDTO;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.data.entity.MoveHistory;
@@ -47,7 +47,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         return moveHistoryRepository.findAllByMatchId(matchId).stream()
                 .map(mh -> {
                     GameViewDTO gameViewDTO = moveHistoryMapper.toDTO(mh);
-                    Piece deadPieceInThisTurn = this.findLastedPieceStandingColAndRowMovingInTurn(
+                    Piece deadPieceInThisTurn = this.findLastedMoveUtilTurnByMatchIdAndColAndRowMovingTo(
                             mh.getMatch().getId(), mh.getTurn() - 1, mh.getToCol(), mh.getToRow());
                     if (deadPieceInThisTurn != null) {
                         deadPieceDTOs.add(pieceMapper.toDTO(deadPieceInThisTurn));
@@ -62,23 +62,23 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     @Override
-    public List<PieceDTO> create(MoveHistoryDTO moveHistoryDTO) {
-        MoveHistory moveHistory = moveHistoryMapper.toEntity(moveHistoryDTO);
-        moveHistory.setMatch(matchRepository.findById(moveHistoryDTO.getMatchId()).get());
-        moveHistory.setTurn(moveHistoryRepository.count() + 1);
-        moveHistory.setPiece(pieceRepository.findById(moveHistoryDTO.getPieceId()).get());
+    public List<PieceDTO> create(MoveHistoryCreationDTO moveHistoryCreationDTO) {
+        MoveHistory moveHistory = moveHistoryMapper.toEntity(moveHistoryCreationDTO);
+        moveHistory.setMatch(matchRepository.findById(moveHistoryCreationDTO.getMatchId()).get());
+        moveHistory.setTurn(moveHistoryRepository.countTurnByMatchId(moveHistoryCreationDTO.getMatchId()) + 1);
+        moveHistory.setPiece(pieceRepository.findById(moveHistoryCreationDTO.getPieceId()).get());
         moveHistoryRepository.save(moveHistory);
 
-        Piece deadPieceInThisTurn = this.findLastedPieceStandingColAndRowMovingInTurn(
-                moveHistoryDTO.getMatchId(), moveHistory.getTurn() - 1,
-                moveHistoryDTO.getToCol(), moveHistoryDTO.getToRow());
+        Piece deadPieceInThisTurn = this.findLastedMoveUtilTurnByMatchIdAndColAndRowMovingTo(
+                moveHistoryCreationDTO.getMatchId(), moveHistory.getTurn() - 1,
+                moveHistoryCreationDTO.getToCol(), moveHistoryCreationDTO.getToRow());
         if (deadPieceInThisTurn != null) {
-            moveHistoryDTO.getDeadPieceDTOs().add(pieceMapper.toDTO(deadPieceInThisTurn));
+            moveHistoryCreationDTO.getDeadPieceDTOs().add(pieceMapper.toDTO(deadPieceInThisTurn));
         }
-        return moveHistoryDTO.getDeadPieceDTOs();
+        return moveHistoryCreationDTO.getDeadPieceDTOs();
     }
 
-    private Piece findLastedPieceStandingColAndRowMovingInTurn(long matchId, long turn, int colMovingTo,
+    private Piece findLastedMoveUtilTurnByMatchIdAndColAndRowMovingTo(long matchId, long turn, int colMovingTo,
             int rowMovingTo) {
         Optional<MoveHistory> lastedMoveToColAndRow = moveHistoryRepository
                 .findLastedMoveUtilTurnByMatchIdAndColAndRowMovingTo(matchId, turn, colMovingTo, rowMovingTo);

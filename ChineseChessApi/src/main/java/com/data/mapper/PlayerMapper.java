@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.data.dto.PlayerDTO;
-import com.data.dto.creation.PlayerCreationDTO;
-import com.data.dto.profile.PlayerProfileDTO;
+import com.data.dto.PlayerCreationDTO;
+import com.data.dto.PlayerProfileDTO;
 import com.data.entity.Player;
 
 @Mapper(componentModel = "spring", uses = {UserMapper.class})

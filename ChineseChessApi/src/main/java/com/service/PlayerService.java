@@ -4,8 +4,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import com.data.dto.PlayerDTO;
-import com.data.dto.creation.PlayerCreationDTO;
-import com.data.dto.profile.PlayerProfileDTO;
+import com.data.dto.PlayerCreationDTO;
+import com.data.dto.PlayerProfileDTO;
 
 public interface PlayerService {
     List<PlayerDTO> findAll();

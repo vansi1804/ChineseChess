@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.data.dto.UserDTO;
-import com.data.dto.creation.UserCreationDTO;
-import com.data.dto.profile.UserProfileDTO;
+import com.data.dto.UserCreationDTO;
+import com.data.dto.UserProfileDTO;
 import com.data.entity.User;
 
 @Mapper(componentModel = "spring", uses = {RoleMapper.class, VipMapper.class})
