@@ -7,7 +7,7 @@ import com.data.dto.GameViewDTO;
 import com.data.dto.MoveHistoryDTO;
 import com.data.entity.MoveHistory;
 
-@Mapper(componentModel = "spring", uses = { MatchMapper.class, PieceMapper.class })
+@Mapper(componentModel = "spring", uses = { MatchMapper.class})
 public interface MoveHistoryMapper {
     @Mapping(ignore = true, target = "id")
     @Mapping(ignore = true, target = "match")
@@ -16,8 +16,8 @@ public interface MoveHistoryMapper {
     MoveHistory toEntity(MoveHistoryDTO moveHistoryDTO);
 
     @Mapping(source = "match", target = "matchDTO")
-    @Mapping(ignore = true, target = "board")
-    @Mapping(ignore = true, target = "deadPieceDTOs")
     @Mapping(ignore = true, target = "description")
+    @Mapping(ignore = true, target = "deadPieceDTOs")
+    @Mapping(ignore = true, target = "currentBoard")
     GameViewDTO toDTO(MoveHistory moveHistory);
 }

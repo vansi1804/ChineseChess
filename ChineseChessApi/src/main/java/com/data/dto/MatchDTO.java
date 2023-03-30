@@ -22,5 +22,4 @@ public class MatchDTO {
     private String player2Avatar;
     private String result;
     private LocalDateTime startAt;
-    private PieceDTO[][] playBoard;
 }
