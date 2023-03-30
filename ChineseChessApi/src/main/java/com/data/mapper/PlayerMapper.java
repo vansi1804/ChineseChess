@@ -6,18 +6,18 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.data.dto.PlayerDTO;
+import com.data.dto.creation.PlayerCreationDTO;
 import com.data.dto.profile.PlayerProfileDTO;
-import com.data.dto.register.PlayerRegisterDTO;
 import com.data.entity.Player;
 
 @Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface PlayerMapper {
 
     @Mapping(ignore = true, target = "id")
-    @Mapping(source = "userRegisterDTO", target = "user")
+    @Mapping(source = "userCreationDTO", target = "user")
     @Mapping(ignore = true, target = "levels")
     @Mapping(ignore = true, target = "elo")
-    Player toEntity(PlayerRegisterDTO playerRegisterDTO) throws NoSuchAlgorithmException;
+    Player toEntity(PlayerCreationDTO playerCreationDTO) throws NoSuchAlgorithmException;
 
     @Mapping(source = "userDTO", target = "user")
     @Mapping(ignore = true, target = "levels")

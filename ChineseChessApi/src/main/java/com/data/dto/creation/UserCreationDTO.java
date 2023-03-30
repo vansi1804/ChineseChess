@@ -1,4 +1,4 @@
-package com.data.dto.register;
+package com.data.dto.creation;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class UserRegisterDTO {
+public class UserCreationDTO {
     @Pattern(regexp = RegexValidation.PHONE_NUMBER_REGEX)
     private String phoneNumber;
     @Size(min = RegexValidation.PASSWORD_SIZE, message = ErrorMessage.SIZE_PASSWORD)
