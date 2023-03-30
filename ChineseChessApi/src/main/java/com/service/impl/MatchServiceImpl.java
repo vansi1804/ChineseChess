@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.common.ErrorMessage;
 import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
+import com.data.dto.MatchStartDTO;
 import com.data.entity.Match;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
@@ -50,7 +52,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public MatchDTO create(MatchCreationDTO matchCreationDTO) {
+    public MatchStartDTO create(MatchCreationDTO matchCreationDTO) {
         Match match = matchMapper.toEntity(matchCreationDTO);
         match.setPlayer1(playerRepository.findById(matchCreationDTO.getPlayer1Id())
                 .orElseThrow(() -> new ExceptionCustom("Player1", ErrorMessage.DATA_NOT_FOUND, "id",
@@ -59,8 +61,10 @@ public class MatchServiceImpl implements MatchService {
                 .orElseThrow(() -> new ExceptionCustom("Player2", ErrorMessage.DATA_NOT_FOUND, "id",
                         matchCreationDTO.getPlayer2Id())));
         match.setStartAt(LocalDateTime.now());
-        MatchDTO matchDTO = matchMapper.toDTO(matchRepository.save(match));
-        return matchDTO;
+        MatchStartDTO matchStartDTO = matchMapper.toStartDTO(matchRepository.save(match));
+        matchStartDTO.setDeadPieceDTOs(new ArrayList<>());
+        matchStartDTO.setPlayBoardStartDTO(playBoardService.create());
+        return matchStartDTO;
     }
 
 }

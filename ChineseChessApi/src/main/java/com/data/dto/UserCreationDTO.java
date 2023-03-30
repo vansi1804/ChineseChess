@@ -1,4 +1,4 @@
-package com.data.dto.creation;
+package com.data.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

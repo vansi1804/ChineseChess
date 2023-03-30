@@ -2,8 +2,6 @@ package com.data.dto;
 
 import java.time.LocalDateTime;
 
-import com.data.dto.profile.UserProfileDTO;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

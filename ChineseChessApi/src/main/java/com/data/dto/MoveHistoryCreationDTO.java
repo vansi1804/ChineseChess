@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MoveHistoryDTO {
+public class MoveHistoryCreationDTO {
     private long matchId;
     private int pieceId;
     private int fromCol;

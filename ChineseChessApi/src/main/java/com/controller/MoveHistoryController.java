@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.data.dto.MoveHistoryDTO;
+import com.data.dto.MoveHistoryCreationDTO;
 import com.service.MoveHistoryService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +27,8 @@ public class MoveHistoryController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@Valid @RequestBody MoveHistoryDTO moveHistoryDTO) {
-        return ResponseEntity.ok(moveHistoryService.create(moveHistoryDTO));
+    public ResponseEntity<?> create(@Valid @RequestBody MoveHistoryCreationDTO moveHistoryCreationDTO) {
+        return ResponseEntity.ok(moveHistoryService.create(moveHistoryCreationDTO));
     }
     
 

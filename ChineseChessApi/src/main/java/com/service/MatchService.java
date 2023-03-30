@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
+import com.data.dto.MatchStartDTO;
 
 public interface MatchService {
     List<MatchDTO> findAll();
@@ -12,5 +13,5 @@ public interface MatchService {
 
     List<MatchDTO> findAllByPlayerId(long playerId);
 
-    MatchDTO create(MatchCreationDTO matchCreationDTO);
+    MatchStartDTO create(MatchCreationDTO matchCreationDTO);
 }

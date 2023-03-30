@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.data.dto.creation.PlayerCreationDTO;
-import com.data.dto.profile.PlayerProfileDTO;
+import com.data.dto.PlayerCreationDTO;
+import com.data.dto.PlayerProfileDTO;
 import com.service.PlayerService;
 
 @RestController
