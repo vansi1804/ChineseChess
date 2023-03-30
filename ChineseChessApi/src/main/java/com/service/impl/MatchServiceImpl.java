@@ -60,7 +60,6 @@ public class MatchServiceImpl implements MatchService {
                         matchCreationDTO.getPlayer2Id())));
         match.setStartAt(LocalDateTime.now());
         MatchDTO matchDTO = matchMapper.toDTO(matchRepository.save(match));
-        matchDTO.setPlayBoard(playBoardService.create());
         return matchDTO;
     }
 

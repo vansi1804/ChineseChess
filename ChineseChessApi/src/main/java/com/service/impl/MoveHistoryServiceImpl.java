@@ -46,7 +46,6 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         return moveHistoryRepository.findAllByMatchId(matchId).stream()
                 .map(mh -> {
                     GameViewDTO gameViewDTO = moveHistoryMapper.toDTO(mh);
-                    gameViewDTO.setBoard(playBoardService.update(currentBoard, mh));
                     Piece deadPieceInThisTurn = this.findLastedPieceStandingColAndRowMovingInTurn(
                             mh.getMatch().getId(), mh.getTurn() - 1, mh.getToCol(), mh.getToRow());
                     if (deadPieceInThisTurn != null) {
@@ -54,6 +53,8 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                     }
                     gameViewDTO.setDeadPieceDTOs(deadPieceDTOs);
                     gameViewDTO.setDescription(moveDescriptionService.getDescription(currentBoard, mh));
+                    gameViewDTO.setCurrentBoard(playBoardService.update(currentBoard, mh));
+
                     return gameViewDTO;
                 })
                 .collect(Collectors.toList());
