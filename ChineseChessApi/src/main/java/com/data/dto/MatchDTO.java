@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class MatchDTO {
+    private long id;
     private int time;
     private int movingTime;
     private int cumulativeTime;

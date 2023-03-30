@@ -41,7 +41,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
     @Override
     public List<GameViewDTO> findAllByMatchId(long matchId) {
-        Piece[][] currentBoard = pieceMapper.toEntity(playBoardService.create());
+        PieceDTO[][] currentBoard = playBoardService.create();
         List<PieceDTO> deadPieceDTOs = new ArrayList<>();
         return moveHistoryRepository.findAllByMatchId(matchId).stream()
                 .map(mh -> {

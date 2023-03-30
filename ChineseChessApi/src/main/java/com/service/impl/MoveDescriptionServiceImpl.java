@@ -5,15 +5,15 @@ import org.springframework.stereotype.Service;
 import com.common.Default;
 import com.common.enumeration.EIndex;
 import com.common.enumeration.EMove;
+import com.data.dto.PieceDTO;
 import com.data.entity.MoveHistory;
-import com.data.entity.Piece;
 import com.service.MoveDescriptionService;
 
 @Service
 public class MoveDescriptionServiceImpl implements MoveDescriptionService {
 
     @Override
-    public String getDescription(Piece[][] currentBoard, MoveHistory moveHistory) {
+    public String getDescription(PieceDTO[][] currentBoard, MoveHistory moveHistory) {
         Object pieceName = moveHistory.getPiece().getName().charAt(0);
         Object index = "";
         Object from;
@@ -47,7 +47,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
                             ? (moveHistory.getToRow() - moveHistory.getFromRow() + 1)
                             : Default.COL - moveHistory.getToCol() + 1;
                 }
-                Piece anotherTheSamePieceInColMoving = this.existingAnotherTheSamePieceInColMoving(
+                PieceDTO anotherTheSamePieceInColMoving = this.existingAnotherTheSamePieceInColMoving(
                         currentBoard, moveHistory);
                 if (anotherTheSamePieceInColMoving != null) {
                     // check moving red piece before or after another the same piece
@@ -71,7 +71,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
                             ? (moveHistory.getFromRow() - moveHistory.getToRow() + 1)
                             : moveHistory.getToCol();
                 }
-                Piece anotherTheSamePieceInColMoving = this.existingAnotherTheSamePieceInColMoving(
+                PieceDTO anotherTheSamePieceInColMoving = this.existingAnotherTheSamePieceInColMoving(
                         currentBoard, moveHistory);
                 if (anotherTheSamePieceInColMoving != null) {
                     // check moving red piece before or after another the same piece
@@ -84,7 +84,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         return pieceName.toString() + index.toString() + from.toString() + move.toString() + to.toString();
     }
 
-    private Piece existingAnotherTheSamePieceInColMoving(Piece[][] currentBoard, MoveHistory moveHistory) {
+    private PieceDTO existingAnotherTheSamePieceInColMoving(PieceDTO[][] currentBoard, MoveHistory moveHistory) {
         int colMoving = moveHistory.getFromCol() - 1;
         for (int row = 0; row < Default.ROW; row++) {
             if (currentBoard[colMoving][row] != null

@@ -1,8 +1,8 @@
 package com.service;
 
+import com.data.dto.PieceDTO;
 import com.data.entity.MoveHistory;
-import com.data.entity.Piece;
 
 public interface MoveDescriptionService {
-    String getDescription(Piece[][] currentBoard, MoveHistory moveHistory);
+    String getDescription(PieceDTO[][] currentBoard, MoveHistory moveHistory);
 }
