@@ -1,10 +1,10 @@
 package com.service;
 
-import com.data.dto.PieceDTO;
+import com.data.dto.PlayBoardDTO;
 import com.data.entity.MoveHistory;
 
 public interface PlayBoardService {
-    PieceDTO[][] create();
+    PlayBoardDTO create();
     
-    PieceDTO[][] update(PieceDTO[][] currentBoard, MoveHistory moveHistory);
+    PlayBoardDTO update(PlayBoardDTO currentBoard, MoveHistory moveHistory);
 }

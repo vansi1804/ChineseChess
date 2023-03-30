@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.data.dto.GameViewDTO;
 import com.data.dto.MoveHistoryDTO;
 import com.data.dto.PieceDTO;
+import com.data.dto.PlayBoardDTO;
 import com.data.entity.MoveHistory;
 import com.data.entity.Piece;
 import com.data.mapper.MoveHistoryMapper;
@@ -41,7 +42,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
     @Override
     public List<GameViewDTO> findAllByMatchId(long matchId) {
-        PieceDTO[][] currentBoard = playBoardService.create();
+        PlayBoardDTO currentBoard = playBoardService.create();
         List<PieceDTO> deadPieceDTOs = new ArrayList<>();
         return moveHistoryRepository.findAllByMatchId(matchId).stream()
                 .map(mh -> {
@@ -53,7 +54,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                     }
                     gameViewDTO.setDeadPieceDTOs(deadPieceDTOs);
                     gameViewDTO.setDescription(moveDescriptionService.getDescription(currentBoard, mh));
-                    gameViewDTO.setCurrentBoard(playBoardService.update(currentBoard, mh));
+                    gameViewDTO.setPlayBoard(playBoardService.update(currentBoard, mh));
 
                     return gameViewDTO;
                 })

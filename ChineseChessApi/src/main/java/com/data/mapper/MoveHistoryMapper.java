@@ -18,6 +18,6 @@ public interface MoveHistoryMapper {
     @Mapping(source = "match", target = "matchDTO")
     @Mapping(ignore = true, target = "description")
     @Mapping(ignore = true, target = "deadPieceDTOs")
-    @Mapping(ignore = true, target = "currentBoard")
+    @Mapping(ignore = true, target = "playBoard")
     GameViewDTO toDTO(MoveHistory moveHistory);
 }
