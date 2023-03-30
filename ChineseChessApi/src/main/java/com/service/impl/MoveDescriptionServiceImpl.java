@@ -6,6 +6,7 @@ import com.common.Default;
 import com.common.enumeration.EIndex;
 import com.common.enumeration.EMove;
 import com.data.dto.PieceDTO;
+import com.data.dto.PlayBoardDTO;
 import com.data.entity.MoveHistory;
 import com.service.MoveDescriptionService;
 
@@ -13,7 +14,7 @@ import com.service.MoveDescriptionService;
 public class MoveDescriptionServiceImpl implements MoveDescriptionService {
 
     @Override
-    public String getDescription(PieceDTO[][] currentBoard, MoveHistory moveHistory) {
+    public String getDescription(PlayBoardDTO currentBoard, MoveHistory moveHistory) {
         Object pieceName = moveHistory.getPiece().getName().charAt(0);
         Object index = "";
         Object from;
@@ -84,14 +85,14 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         return pieceName.toString() + index.toString() + from.toString() + move.toString() + to.toString();
     }
 
-    private PieceDTO existingAnotherTheSamePieceInColMoving(PieceDTO[][] currentBoard, MoveHistory moveHistory) {
+    private PieceDTO existingAnotherTheSamePieceInColMoving(PlayBoardDTO currentBoard, MoveHistory moveHistory) {
         int colMoving = moveHistory.getFromCol() - 1;
         for (int row = 0; row < Default.ROW; row++) {
-            if (currentBoard[colMoving][row] != null
-                    && currentBoard[colMoving][row].getId() == moveHistory.getPiece().getId()
-                    && Boolean.compare(currentBoard[colMoving][row].isRed(), moveHistory.getPiece().isRed()) == 0
-                    && currentBoard[colMoving][row].getName().equals(moveHistory.getPiece().getName())) {
-                return currentBoard[colMoving][row];
+            if (currentBoard.getState()[colMoving][row] != null
+                    && currentBoard.getState()[colMoving][row].getId() != moveHistory.getPiece().getId()
+                    && Boolean.compare(currentBoard.getState()[colMoving][row].isRed(), moveHistory.getPiece().isRed()) == 0
+                    && currentBoard.getState()[colMoving][row].getName().equals(moveHistory.getPiece().getName())) {
+                return currentBoard.getState()[colMoving][row];
             }
         }
         return null;

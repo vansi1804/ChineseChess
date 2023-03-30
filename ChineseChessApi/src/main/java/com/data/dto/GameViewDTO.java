@@ -14,5 +14,5 @@ public class GameViewDTO {
     private long turn;
     private String description;
     private List<PieceDTO> deadPieceDTOs;
-    private PieceDTO[][] currentBoard;
+    private PlayBoardDTO playBoard;
 }
