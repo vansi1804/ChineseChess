@@ -11,9 +11,4 @@ public interface RoleService {
 
     RoleDTO findByName(String name);
 
-    RoleDTO create(RoleDTO roleDTO);
-
-    RoleDTO update(int id, RoleDTO roleDTO);
-    
-    void delete(int id);
 }

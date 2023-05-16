@@ -6,9 +6,9 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum EMove {
-    Up(':'),
-    Across('-'),
-    Down('/');
+    UP(':'),
+    ACROSS('-'),
+    DOWN('/');
 
     private final char value;
 }

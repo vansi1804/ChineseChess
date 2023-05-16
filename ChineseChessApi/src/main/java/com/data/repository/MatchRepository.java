@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.data.entity.Match;
 
-public interface MatchRepository extends JpaRepository<Match, Long> {
+public interface MatchRepository extends JpaRepository<Match, Long> {    
     @Query("SELECT m FROM Match m WHERE m.player1.user.id = :id OR m.player2.user.id = :id")
     List<Match> findAllByPlayerId(@Param("id") long id);
 

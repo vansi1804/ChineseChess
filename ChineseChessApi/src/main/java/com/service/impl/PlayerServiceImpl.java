@@ -1,127 +1,128 @@
 package com.service.impl;
 
-import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.common.Default;
-import com.common.ErrorMessage;
+import com.common.enumeration.ERole;
 import com.common.enumeration.EStatus;
 import com.data.dto.PlayerDTO;
 import com.data.dto.PlayerCreationDTO;
 import com.data.dto.PlayerProfileDTO;
+import com.data.dto.UserDTO;
+import com.data.dto.UserProfileDTO;
 import com.data.entity.Player;
-import com.exception.ExceptionCustom;
-import com.helper.Encoding;
+import com.exception.ResourceNotFoundException;
 import com.data.mapper.PlayerMapper;
-import com.data.repository.LevelsRepository;
+import com.data.repository.RankRepository;
+import com.data.repository.MatchRepository;
 import com.data.repository.PlayerRepository;
-import com.data.repository.RoleRepository;
-import com.data.repository.UserRepository;
-import com.data.repository.VipRepository;
 import com.service.PlayerService;
+import com.service.UserService;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
-    @Autowired
-    private PlayerRepository playerRepository;
-    @Autowired
-    private PlayerMapper playerMapper;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private VipRepository vipRepository;
-    @Autowired
-    private LevelsRepository levelsRepository;
+        @Autowired
+        private PlayerRepository playerRepository;
+        @Autowired
+        private PlayerMapper playerMapper;
+        @Autowired
+        private UserService userService;
+        @Autowired
+        private MatchRepository matchRepository;
+        @Autowired
+        private RankRepository rankRepository;
 
-    @Override
-    public List<PlayerDTO> findAll() {
-        return playerRepository.findAll().stream().map(p -> playerMapper.toDTO(p)).collect(Collectors.toList());
-    }
-
-    @Override
-    public PlayerDTO findById(long id) {
-        return playerRepository.findById(id).map(p -> playerMapper.toDTO(p))
-                .orElseThrow(() -> new ExceptionCustom("Player", ErrorMessage.DATA_NOT_FOUND, "id", id));
-    }
-
-    @Override
-    public PlayerProfileDTO create(PlayerCreationDTO playerCreationDTO) throws NoSuchAlgorithmException {
-        if (userRepository.findByPhoneNumber(playerCreationDTO.getUserCreationDTO().getPhoneNumber()).isPresent()) {
-            throw new ExceptionCustom("Player", ErrorMessage.DATA_EXISTING, "phone number",
-                    playerCreationDTO.getUserCreationDTO().getPhoneNumber());
+        @Override
+        public Page<PlayerDTO> findAll(int no, int limit, String sortBy) {
+                return playerRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
+                                .map(p -> playerMapper.toDTO(p, matchRepository.findAllByPlayerId(p.getId())));
         }
-        Player player = playerMapper.toEntity(playerCreationDTO);
-        player.getUser().setCreatedAt(LocalDateTime.now());
-        player.getUser().setPassword(Encoding.getMD5(playerCreationDTO.getUserCreationDTO().getPassword()));
-        player.getUser().setRole(roleRepository.findById(Default.ROLE_PLAYER_ID).get());
-        player.getUser().setVip(vipRepository.findById(Default.VIP0_ID).get());
-        player.getUser().setStatus(EStatus.Active.getValue());
-        player.setLevels(levelsRepository.findById(Default.LEVELS_ID).get());
-        player.setElo(player.getLevels().getMilestones());
-        userRepository.save(player.getUser());
-        return playerMapper.toProfileDTO(playerRepository.save(player));
-    }
 
-    @Override
-    public PlayerProfileDTO findProfileById(long id) {
-        return playerRepository.findById(id).map(p -> playerMapper.toProfileDTO(p))
-                .orElseThrow(
-                        () -> new ExceptionCustom("Player", ErrorMessage.DATA_NOT_FOUND, "id", id));
-    }
+        @Override
+        public PlayerDTO findByUserId(long userId) {
+                return playerRepository.findByUser_Id(userId)
+                                .map(p -> playerMapper.toDTO(p, matchRepository.findAllByPlayerId(p.getId())))
+                                .orElseThrow(() -> new ResourceNotFoundException(
+                                                Collections.singletonMap("userId", userId)));
+        }
 
-    @Override
-    public PlayerProfileDTO updateProfileById(long id, PlayerProfileDTO playerProfileDTO) {
-        return playerRepository.findById(id)
-                .map(p -> {
-                    p.getUser().setName(playerProfileDTO.getUserProfileDTO().getName());
-                    p.getUser().setAvatar(playerProfileDTO.getUserProfileDTO().getAvatar());
-                    userRepository.save(p.getUser());
-                    return playerMapper.toProfileDTO(p);
-                })
-                .orElseThrow(
-                        () -> new ExceptionCustom("Player", ErrorMessage.DATA_NOT_FOUND, "id", id));
-    }
+        @Override
+        public PlayerProfileDTO findById(long id) {
+                return playerRepository.findById(id)
+                                .map(p -> playerMapper.toProfileDTO(p, matchRepository.findAllByPlayerId(p.getId())))
+                                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+        }
 
-    @Override
-    public PlayerProfileDTO updateEloById(long id, int elo) {
-        return playerRepository.findById(id)
-                .map(p -> {
-                    p.setElo(elo);
-                    return playerMapper.toProfileDTO(playerRepository.save(p));
-                })
-                .orElseThrow(
-                        () -> new ExceptionCustom("Player", ErrorMessage.DATA_NOT_FOUND, "id", id));
-    }
+        @Override
+        public PlayerDTO create(PlayerCreationDTO playerCreationDTO) {
+                UserDTO createdUserDTO = userService.create(playerCreationDTO.getUserCreationDTO(), ERole.PLAYER);
 
-    @Override
-    public PlayerDTO lockById(long id) {
-        return playerRepository.findById(id)
-                .map(p -> {
-                    p.getUser().setStatus(EStatus.Locked.getValue());
-                    userRepository.save(p.getUser());
-                    return playerMapper.toDTO(p);
-                })
-                .orElseThrow(
-                        () -> new ExceptionCustom("Player", ErrorMessage.DATA_NOT_FOUND, "id", id));
-    }
+                Player player = playerMapper.toEntity(playerCreationDTO);
+                player.getUser().setId(createdUserDTO.getId());
+                String levelDefault = Default.LEVEL.name();
+                player.setRank(rankRepository.findByName(levelDefault)
+                                .orElseThrow(() -> new ResourceNotFoundException(
+                                                Collections.singletonMap("level", levelDefault))));
 
-    @Override
-    public PlayerDTO unlockById(long id) {
-        return playerRepository.findById(id)
-                .map(p -> {
-                    p.getUser().setStatus(EStatus.Active.getValue());
-                    userRepository.save(p.getUser());
-                    return playerMapper.toDTO(p);
-                })
-                .orElseThrow(
-                        () -> new ExceptionCustom("Player", ErrorMessage.DATA_NOT_FOUND, "id", id));
-    }
+                PlayerDTO createdPlayerDTO = playerMapper.toDTO(playerRepository.save(player), null);
+                createdPlayerDTO.setUserDTO(createdUserDTO);
+                return createdPlayerDTO;
+        }
+
+        @Override
+        public PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO) {
+                Player oldPlayer = playerRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+
+                UserProfileDTO updatedUserProfileDTO = userService.update(
+                                oldPlayer.getUser().getId(), playerProfileDTO.getUserProfileDTO());
+
+                Player updatePlayer = playerMapper.toEntity(playerProfileDTO);
+                updatePlayer.setId(oldPlayer.getId());
+                updatePlayer.getUser().setId(oldPlayer.getUser().getId());
+                updatePlayer.setRank(oldPlayer.getRank());
+                updatePlayer.setElo(oldPlayer.getElo());
+
+                PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(
+                                updatePlayer, matchRepository.findAllByPlayerId(updatePlayer.getId()));
+                updatedPlayerProfileDTO.setUserProfileDTO(updatedUserProfileDTO);
+                return updatedPlayerProfileDTO;
+        }
+
+        @Override
+        public PlayerProfileDTO updateEloById(long id, int elo) {
+                Player updatePlayer = playerRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                updatePlayer.setElo(elo);
+                return playerMapper.toProfileDTO(updatePlayer, matchRepository.findAllByPlayerId(updatePlayer.getId()));
+        }
+
+        @Override
+        public PlayerDTO lockById(long id) {
+                Player player = playerRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+
+                PlayerDTO playerDTO = playerMapper.toDTO(player, matchRepository.findAllByPlayerId(player.getId()));
+                UserDTO lockedUserDTO = userService.updateStatusById(player.getUser().getId(), EStatus.LOCK);
+                playerDTO.setUserDTO(lockedUserDTO);
+                return playerDTO;
+        }
+
+        @Override
+        public PlayerDTO unlockById(long id) {
+                Player player = playerRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+
+                PlayerDTO playerDTO = playerMapper.toDTO(player, matchRepository.findAllByPlayerId(player.getId()));
+                UserDTO lockedUserDTO = userService.updateStatusById(player.getUser().getId(), EStatus.ACTIVE);
+                playerDTO.setUserDTO(lockedUserDTO);
+                return playerDTO;
+        }
 
 }

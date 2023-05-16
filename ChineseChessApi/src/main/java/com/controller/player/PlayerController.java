@@ -1,7 +1,5 @@
 package com.controller.player;
 
-import java.security.NoSuchAlgorithmException;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.common.Default;
 import com.data.dto.PlayerCreationDTO;
 import com.data.dto.PlayerProfileDTO;
 import com.service.PlayerService;
@@ -26,34 +25,41 @@ public class PlayerController {
     private PlayerService playerService;
 
     @GetMapping("")
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(this.playerService.findAll());
+    public ResponseEntity<?> findAll(
+            @RequestParam(name = "no", defaultValue = Default.PAGE_NO) int no,
+            @RequestParam(name = "limit", defaultValue = Default.PAGE_LIMIT) int limit,
+            @RequestParam(name = "sort-by", defaultValue = Default.SORT_BY) String sortBy) {
+        return ResponseEntity.ok(playerService.findAll(no, limit, sortBy));
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<?> findByUserId(@PathVariable long userId) {
+        return ResponseEntity.ok(playerService.findByUserId(userId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findProfileById(@PathVariable long id) {
-        return ResponseEntity.ok(this.playerService.findProfileById(id));
+    public ResponseEntity<?> findById(@PathVariable long id) {
+        return ResponseEntity.ok(playerService.findById(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@Valid @RequestBody PlayerCreationDTO playerCreationDTO)
-            throws NoSuchAlgorithmException {
-        return ResponseEntity.ok(this.playerService.create(playerCreationDTO));
+    public ResponseEntity<?> create(@Valid @RequestBody PlayerCreationDTO playerCreationDTO) {
+        return ResponseEntity.ok(playerService.create(playerCreationDTO));
     }
 
-    @PutMapping("")
-    public ResponseEntity<?> update(@RequestParam long id, @RequestBody PlayerProfileDTO playerProfileDTO) {
-        return ResponseEntity.ok(this.playerService.updateProfileById(id, playerProfileDTO));
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable long id, @RequestBody PlayerProfileDTO playerProfileDTO) {
+        return ResponseEntity.ok(playerService.update(id, playerProfileDTO));
     }
 
     @PutMapping("/{id}/lock")
-    public ResponseEntity<?> lockById(@PathVariable int id) {
-        return ResponseEntity.ok(this.playerService.lockById(id));
+    public ResponseEntity<?> lockById(@PathVariable long id) {
+        return ResponseEntity.ok(playerService.lockById(id));
     }
 
     @PutMapping("/{id}/unlock")
-    public ResponseEntity<?> unlockById(@PathVariable int id) {
-        return ResponseEntity.ok(this.playerService.unlockById(id));
+    public ResponseEntity<?> unlockById(@PathVariable long id) {
+        return ResponseEntity.ok(playerService.unlockById(id));
     }
 
 }

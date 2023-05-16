@@ -24,27 +24,27 @@ public class VipController {
 
     @GetMapping("")
     public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(this.vipService.findAll());
+        return ResponseEntity.ok(vipService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable int id) {
-        return ResponseEntity.ok(this.vipService.findById(id));
+        return ResponseEntity.ok(vipService.findById(id));
     }
 
     @PostMapping("")
     public ResponseEntity<?> create(@Valid @RequestBody VipDTO vipDTO) {
-        return ResponseEntity.ok(this.vipService.create(vipDTO));
+        return ResponseEntity.ok(vipService.create(vipDTO));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody VipDTO vipDTO) {
-        return ResponseEntity.ok(this.vipService.update(id, vipDTO));
+        return ResponseEntity.ok(vipService.update(id, vipDTO));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        this.vipService.delete(id);
+        vipService.delete(id);
         return ResponseEntity.ok("Deleted");
     }
 }

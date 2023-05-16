@@ -1,6 +1,9 @@
 package com.data.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+
+import com.common.RegexValidation;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDTO {    
     private long id;
-    private LocalDateTime createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = RegexValidation.DATE_TIME)
+    private Date createdDate;
     private UserProfileDTO userProfileDTO;
     private String roleName;
     private String status;

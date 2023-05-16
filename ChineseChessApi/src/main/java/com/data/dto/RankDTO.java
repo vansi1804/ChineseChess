@@ -1,7 +1,5 @@
 package com.data.dto;
 
-import java.util.List;
-
 import javax.validation.constraints.NotBlank;
 
 import com.common.ErrorMessage;
@@ -13,10 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class LevelsDTO{
+public class RankDTO{
     private int id;
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String name;
     private int milestones;
-    List<PlayerDTO> playerDTOs;
 }

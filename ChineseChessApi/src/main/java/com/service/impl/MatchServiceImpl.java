@@ -1,22 +1,22 @@
 package com.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.common.ErrorMessage;
 import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
 import com.data.dto.MatchStartDTO;
-import com.data.entity.Match;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.PlayerRepository;
-import com.exception.ExceptionCustom;
+import com.exception.ResourceNotFoundException;
 import com.service.MatchService;
 import com.service.PlayBoardService;
 
@@ -33,15 +33,14 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<MatchDTO> findAll() {
-        return matchRepository.findAll().stream()
-                .map(m -> matchMapper.toDTO(m)).collect(Collectors.toList());
+        return matchRepository.findAll().stream().map(m -> matchMapper.toDTO(m)).collect(Collectors.toList());
     }
 
     @Override
     public MatchDTO findById(long id) {
         return matchRepository.findById(id)
                 .map(m -> matchMapper.toDTO(m))
-                .orElseThrow(() -> new ExceptionCustom("Match", ErrorMessage.DATA_NOT_FOUND, "id", id));
+                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
     }
 
     @Override
@@ -53,15 +52,19 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public MatchStartDTO create(MatchCreationDTO matchCreationDTO) {
-        Match match = matchMapper.toEntity(matchCreationDTO);
-        match.setPlayer1(playerRepository.findById(matchCreationDTO.getPlayer1Id())
-                .orElseThrow(() -> new ExceptionCustom("Player1", ErrorMessage.DATA_NOT_FOUND, "id",
-                        matchCreationDTO.getPlayer1Id())));
-        match.setPlayer2(playerRepository.findById(matchCreationDTO.getPlayer2Id())
-                .orElseThrow(() -> new ExceptionCustom("Player2", ErrorMessage.DATA_NOT_FOUND, "id",
-                        matchCreationDTO.getPlayer2Id())));
-        match.setStartAt(LocalDateTime.now());
-        MatchStartDTO matchStartDTO = matchMapper.toStartDTO(matchRepository.save(match));
+        Map<String, Object> errors = new HashMap<String, Object>();
+        if (!playerRepository.existsById(matchCreationDTO.getPlayer1Id())) {
+            errors.put("player1Id", matchCreationDTO.getPlayer1Id());
+        }
+        if (!playerRepository.existsById(matchCreationDTO.getPlayer2Id())) {
+            errors.put("player2Id", matchCreationDTO.getPlayer2Id());
+        }
+        if (!errors.isEmpty()) {
+            throw new ResourceNotFoundException(errors);
+        }
+
+        MatchStartDTO matchStartDTO = matchMapper
+                .toStartDTO(matchRepository.save(matchMapper.toEntity(matchCreationDTO)));
         matchStartDTO.setDeadPieceDTOs(new ArrayList<>());
         matchStartDTO.setPlayBoardStartDTO(playBoardService.create());
         return matchStartDTO;

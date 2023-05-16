@@ -1,8 +1,6 @@
 package com.data.entity;
 
 import java.io.Serializable;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,18 +20,22 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "tbl_player")
+@Table(name = "players")
 public class Player implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     private long id;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "levels_id")
-    private Levels levels;
+    @JoinColumn(name = "rank_id")
+    private Rank rank;
+    
     @Column(name = "elo")
     private int elo;
+
 }

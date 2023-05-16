@@ -13,8 +13,8 @@ public class MoveHistoryCreationDTO {
     private long matchId;
     private int pieceId;
     private int fromCol;
-    private int toCol;
     private int fromRow;
+    private int toCol;
     private int toRow;
     List<PieceDTO> deadPieceDTOs;
 }
