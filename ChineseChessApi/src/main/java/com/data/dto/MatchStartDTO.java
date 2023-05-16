@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class MatchStartDTO {
-    private long id;
+    private MatchDTO matchDTO;
     private List<PieceDTO> deadPieceDTOs;
     private PlayBoardDTO playBoardStartDTO;
 }

@@ -1,14 +1,14 @@
 package com.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.common.ErrorMessage;
 import com.data.dto.PieceDTO;
-import com.exception.ExceptionCustom;
+import com.exception.ResourceNotFoundException;
 import com.data.mapper.PieceMapper;
 import com.data.repository.PieceRepository;
 import com.service.PieceService;
@@ -27,8 +27,9 @@ public class PieceServiceImpl implements PieceService {
 
     @Override
     public PieceDTO findById(int id) {
-        return pieceRepository.findById(id).map(p -> pieceMapper.toDTO(p))
-                .orElseThrow(() -> new ExceptionCustom("Piece", ErrorMessage.DATA_NOT_FOUND, "id", id));
+        return pieceRepository.findById(id)
+                .map(p -> pieceMapper.toDTO(p))
+                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
     }
 
 }

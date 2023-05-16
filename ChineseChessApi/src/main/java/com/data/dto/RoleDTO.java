@@ -1,7 +1,5 @@
 package com.data.dto;
 
-import java.util.List;
-
 import javax.validation.constraints.NotBlank;
 
 import com.common.ErrorMessage;
@@ -17,5 +15,4 @@ public class RoleDTO{
     private int id;
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String name;
-    List<UserDTO> userDTOs;
 }

@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 public class PlayerDTO {    // show for admin
     private long id;
     private UserDTO userDTO;
-    private String levelsName;
+    private String rankName;
     private int elo;
+    private int win;
+    private int lost;
+    private int draw;
 }

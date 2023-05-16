@@ -1,6 +1,6 @@
 package com.data.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +22,5 @@ public class MatchDTO {
     private String player2Name;
     private String player2Avatar;
     private String result;
-    private LocalDateTime startAt;
+    private Date createdDate;
 }

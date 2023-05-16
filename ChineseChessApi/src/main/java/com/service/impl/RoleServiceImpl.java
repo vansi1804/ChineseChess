@@ -1,16 +1,19 @@
 package com.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.common.ErrorMessage;
+import com.common.enumeration.ERole;
 import com.data.dto.RoleDTO;
 import com.data.entity.Role;
-import com.exception.ExceptionCustom;
+import com.exception.ResourceNotFoundException;
 import com.data.mapper.RoleMapper;
 import com.data.repository.RoleRepository;
 import com.service.RoleService;
@@ -30,37 +33,30 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDTO findById(int id) {
-        return roleRepository.findById(id).map(r -> roleMapper.toDTO(r))
-                .orElseThrow(() -> new ExceptionCustom("Role", ErrorMessage.DATA_NOT_FOUND, "id", id));
+        return roleRepository.findById(id)
+                .map(r -> roleMapper.toDTO(r))
+                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
     }
 
     @Override
     public RoleDTO findByName(String name) {
         return roleRepository.findByName(name).map(r -> roleMapper.toDTO(r))
-                .orElseThrow(() -> new ExceptionCustom("Role", ErrorMessage.DATA_NOT_FOUND, "name", name));
+                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("name", name)));
     }
 
-    @Override
-    public RoleDTO create(RoleDTO roleDTO) {
-        if (roleRepository.findByName(roleDTO.getName()).isPresent()) {
-            throw new ExceptionCustom("Role", ErrorMessage.DATA_EXISTING, "name", roleDTO.getName());
+    @PostConstruct
+    public void init() {
+        List<Role> roles = new ArrayList<>();
+        for (ERole eRole : ERole.values()) {
+            if (!roleRepository.existsByName(eRole.name())) {
+                Role role = new Role();
+                role.setName(eRole.name());
+                roles.add(role);
+            }
         }
-        return roleMapper.toDTO(roleRepository.save(roleMapper.toEntity(roleDTO)));
-    }
-
-    @Override
-    public RoleDTO update(int id, RoleDTO roleDTO) {
-        Optional<Role> role = roleRepository.findByName(roleDTO.getName());
-        if (role.isPresent() && (role.get().getId() != id)) {
-            throw new ExceptionCustom("Role", ErrorMessage.DATA_EXISTING, "name", roleDTO.getName());
+        if (!roles.isEmpty()) {
+            roleRepository.saveAll(roles);
         }
-        return roleMapper.toDTO(roleRepository.save(roleMapper.toEntity(roleDTO)));
-    }
-
-    @Override
-    public void delete(int id) {
-        roleRepository.delete(roleRepository.findById(id)
-                .orElseThrow(() -> new ExceptionCustom("Role", ErrorMessage.DATA_NOT_FOUND, "id", id)));
     }
 
 }

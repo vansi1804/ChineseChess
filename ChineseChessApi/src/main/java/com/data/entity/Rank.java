@@ -6,17 +6,13 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -30,40 +26,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "users")
-public class User implements Serializable {
+@Table(name = "ranks")
+public class Rank implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
-    private long id;
-
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
-    @Column(name = "password")
-    private String password;
+    private int id;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "avatar")
-    private String avatar;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vip_id", referencedColumnName = "id")
-    private Vip vip;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
-    private Role role;
-
-    @Column(name = "status")
-    private String status;
-
-    @CreatedDate
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_date", updatable = false)
-	private Date createdDate;
+    @Column(name = "milestones")
+    private int milestones;
 
 	@LastModifiedDate
 	@Temporal(TemporalType.TIMESTAMP)
@@ -73,5 +47,5 @@ public class User implements Serializable {
 	@LastModifiedBy
 	@Column(name = "last_modified_by_user_id")
 	private Long lastModifiedBy;
-
+    
 }

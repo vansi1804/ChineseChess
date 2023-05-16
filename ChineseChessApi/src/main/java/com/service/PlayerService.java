@@ -1,22 +1,24 @@
 package com.service;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.data.dto.PlayerDTO;
 import com.data.dto.PlayerCreationDTO;
 import com.data.dto.PlayerProfileDTO;
 
 public interface PlayerService {
-    List<PlayerDTO> findAll();
+    Page<PlayerDTO> findAll(int no, int limit, String sortBy);
 
-    PlayerDTO findById(long id);
+    PlayerDTO findByUserId(long id);
 
-    PlayerProfileDTO create(PlayerCreationDTO playerCreationDTO) throws NoSuchAlgorithmException;
+    PlayerProfileDTO findById(long id);
 
-    PlayerProfileDTO findProfileById(long id);
+    @Transactional
+    PlayerDTO create(PlayerCreationDTO playerCreationDTO);
 
-    PlayerProfileDTO updateProfileById(long id, PlayerProfileDTO playerProfileDTO);
+    @Transactional
+    PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO);
 
     PlayerProfileDTO updateEloById(long id, int elo);
 

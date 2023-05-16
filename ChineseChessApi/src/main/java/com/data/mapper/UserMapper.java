@@ -1,7 +1,5 @@
 package com.data.mapper;
 
-import java.security.NoSuchAlgorithmException;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -10,24 +8,22 @@ import com.data.dto.UserCreationDTO;
 import com.data.dto.UserProfileDTO;
 import com.data.entity.User;
 
-@Mapper(componentModel = "spring", uses = {RoleMapper.class, VipMapper.class})
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
     @Mapping(ignore = true, target = "id")
-    @Mapping(ignore = true, target = "createdAt")
     @Mapping(ignore = true, target = "password")
-    @Mapping(ignore = true, target = "role")
     @Mapping(ignore = true, target = "vip")
+    @Mapping(ignore = true, target = "role")
     @Mapping(ignore = true, target = "status")
-    User toEntity(UserCreationDTO userCreationDTO) throws NoSuchAlgorithmException;
+    User toEntity(UserCreationDTO userCreationDTO);
 
-    @Mapping(source = "userProfileDTO.phoneNumber", target = "phoneNumber")
+    @Mapping(ignore = true, target = "id")
     @Mapping(ignore = true, target = "password")
-    @Mapping(source = "userProfileDTO.name", target = "name")
-    @Mapping(source = "userProfileDTO.avatar", target = "avatar")
     @Mapping(ignore = true, target = "vip")
     @Mapping(ignore = true, target = "role")
-    User toEntity(UserDTO userDTO);
+    @Mapping(ignore = true, target = "status")
+    User toEntity(UserProfileDTO userProfileDTO);
 
     @Mapping(source = "vip.name", target = "vipName")
     UserProfileDTO toProfileDTO(User user);
@@ -38,4 +34,5 @@ public interface UserMapper {
     @Mapping(source = "vip.name", target = "userProfileDTO.vipName")
     @Mapping(source = "role.name", target = "roleName")
     UserDTO toDTO(User user);
+
 }

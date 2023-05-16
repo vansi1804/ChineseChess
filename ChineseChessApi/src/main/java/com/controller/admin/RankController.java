@@ -13,38 +13,38 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.data.dto.LevelsDTO;
-import com.service.LevelsService;
+import com.data.dto.RankDTO;
+import com.service.RankService;
 
 @RestController
-@RequestMapping("api/admin/levels")
-public class LevelsController {
+@RequestMapping("api/admin/ranks")
+public class RankController {
     @Autowired
-    private LevelsService levelsService;
+    private RankService rankService;
 
     @GetMapping("")
     public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(this.levelsService.findAll());
+        return ResponseEntity.ok(rankService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable int id) {
-        return ResponseEntity.ok(this.levelsService.findById(id));
+        return ResponseEntity.ok(rankService.findById(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@Valid @RequestBody LevelsDTO levelsDTO) {
-        return ResponseEntity.ok(this.levelsService.create(levelsDTO));
+    public ResponseEntity<?> create(@Valid @RequestBody RankDTO rankDTO) {
+        return ResponseEntity.ok(rankService.create(rankDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody LevelsDTO levelsDTO) {
-        return ResponseEntity.ok(this.levelsService.update(id, levelsDTO));
+    public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody RankDTO rankDTO) {
+        return ResponseEntity.ok(rankService.update(id, rankDTO));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        this.levelsService.delete(id);
+        rankService.delete(id);
         return ResponseEntity.ok("Deleted");
     }
 }

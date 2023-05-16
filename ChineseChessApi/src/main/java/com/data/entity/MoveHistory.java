@@ -2,7 +2,6 @@ package com.data.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,26 +21,33 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "tbl_move_history")
+@Table(name = "move_historys")
 public class MoveHistory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     private long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "match_id", referencedColumnName = "id")
     private Match match;
+
     @Column(name = "turn")
     private long turn;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "piece_id", referencedColumnName = "id")
     private Piece piece;
+
     @Column(name = "from_col")
     private int fromCol;
+
     @Column(name = "from_row")
     private int fromRow;
+
     @Column(name = "to_col")
     private int toCol;
+
     @Column(name = "to_row")
     private int toRow;
 }

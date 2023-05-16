@@ -6,6 +6,8 @@ public class RegexValidation {
 
     public static final int PASSWORD_SIZE = 8;
 
-    public static final String DATE_TIME = "dd-MM-yyyy hh:mm:ss";
+    public static final String DATE = "dd-MM-yyyy";
+
+    public static final String DATE_TIME = DATE + " HH:mm:ss";
 
 }

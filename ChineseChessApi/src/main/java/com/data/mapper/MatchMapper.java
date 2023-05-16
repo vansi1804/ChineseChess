@@ -8,13 +8,11 @@ import com.data.dto.MatchDTO;
 import com.data.dto.MatchStartDTO;
 import com.data.entity.Match;
 
-
 @Mapper(componentModel = "spring")
 public interface MatchMapper {
     @Mapping(ignore = true, target = "id")
-    @Mapping(ignore = true, target = "player1")
-    @Mapping(ignore = true, target = "player2")
-    @Mapping(ignore = true, target = "startAt")
+    @Mapping(source = "player1Id", target = "player1.id")
+    @Mapping(source = "player1Id", target = "player2.id")
     @Mapping(ignore = true, target = "result")
     Match toEntity(MatchCreationDTO matchCreationDTO);
 
@@ -26,6 +24,7 @@ public interface MatchMapper {
     @Mapping(source = "player2.user.avatar", target = "player2Avatar")
     MatchDTO toDTO(Match match);
 
+    @Mapping(expression = "java(toDTO(match))", target = "matchDTO")
     @Mapping(ignore = true, target = "deadPieceDTOs")
     @Mapping(ignore = true, target = "playBoardStartDTO")
     MatchStartDTO toStartDTO(Match match);
