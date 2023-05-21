@@ -14,6 +14,7 @@ public interface MatchMapper {
     @Mapping(source = "player1Id", target = "player1.id")
     @Mapping(source = "player1Id", target = "player2.id")
     @Mapping(ignore = true, target = "result")
+    @Mapping(ignore = true, target = "createdDate")
     Match toEntity(MatchCreationDTO matchCreationDTO);
 
     @Mapping(source = "player1.id", target = "player1Id")

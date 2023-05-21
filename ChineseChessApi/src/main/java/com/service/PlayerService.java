@@ -2,6 +2,7 @@ package com.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.data.dto.PlayerDTO;
 import com.data.dto.PlayerCreationDTO;
@@ -15,7 +16,7 @@ public interface PlayerService {
     PlayerProfileDTO findById(long id);
 
     @Transactional
-    PlayerDTO create(PlayerCreationDTO playerCreationDTO);
+    PlayerDTO create(PlayerCreationDTO playerCreationDTO, MultipartFile fileAvatar);
 
     @Transactional
     PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO);

@@ -1,7 +1,5 @@
 package com.data.dto;
 
-import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,5 +7,6 @@ import lombok.Data;
 @Data
 public class ErrorMessageResponseDTO {
     private String message;
-    private Map<String, Object> errors;
+    private Object errors;
+    private String path;
 }

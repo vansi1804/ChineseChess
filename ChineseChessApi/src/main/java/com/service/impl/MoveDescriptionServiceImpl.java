@@ -13,6 +13,9 @@ import com.service.MoveDescriptionService;
 @Service
 public class MoveDescriptionServiceImpl implements MoveDescriptionService {
 
+    private int defaultCol = Default.Game.PlayBoardSize.COL;
+    private int defaultRaw = Default.Game.PlayBoardSize.RAW;
+
     @Override
     public String getDescription(PlayBoardDTO currentBoard, MoveHistory moveHistory) {
         Object pieceName = moveHistory.getPiece().getName().charAt(0);
@@ -24,8 +27,8 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         if (isMovingAcross(moveHistory.getFromRow(), moveHistory.getToRow())) {
             move = EMove.ACROSS.getValue();
             if (moveHistory.getPiece().isRed()) {
-                from = Default.PLAY_BOARD_COL_SIZE - moveHistory.getFromCol() + 1;
-                to = Default.PLAY_BOARD_COL_SIZE - moveHistory.getToCol() + 1;
+                from = defaultCol - moveHistory.getFromCol() + 1;
+                to = defaultCol - moveHistory.getToCol() + 1;
             } else {
                 from = moveHistory.getFromCol();
                 to = moveHistory.getToCol();
@@ -40,15 +43,15 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
                     // check move vertical
                     to = isMovingVertical(moveHistory.getFromCol(), moveHistory.getToCol())
                             ? (moveHistory.getFromRow() - moveHistory.getToRow() + 1)
-                            : Default.PLAY_BOARD_COL_SIZE - moveHistory.getToCol() + 1;
+                            : defaultCol - moveHistory.getToCol() + 1;
                 } else { // check move down
                     move = EMove.DOWN.getValue();
                     // check move vertical
                     to = isMovingVertical(moveHistory.getFromCol(), moveHistory.getToCol())
                             ? (moveHistory.getToRow() - moveHistory.getFromRow() + 1)
-                            : Default.PLAY_BOARD_COL_SIZE - moveHistory.getToCol() + 1;
+                            : defaultCol - moveHistory.getToCol() + 1;
                 }
-                PieceDTO anotherTheSamePieceInColMoving = existingAnotherTheSamePieceInColMoving(
+                PieceDTO anotherTheSamePieceInColMoving = findExistingAnotherTheSamePieceInColMoving(
                         currentBoard, moveHistory);
                 if (anotherTheSamePieceInColMoving != null) {
                     // check moving red piece before or after another the same piece
@@ -72,7 +75,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
                             ? (moveHistory.getFromRow() - moveHistory.getToRow() + 1)
                             : moveHistory.getToCol();
                 }
-                PieceDTO anotherTheSamePieceInColMoving = existingAnotherTheSamePieceInColMoving(
+                PieceDTO anotherTheSamePieceInColMoving = findExistingAnotherTheSamePieceInColMoving(
                         currentBoard, moveHistory);
                 if (anotherTheSamePieceInColMoving != null) {
                     // check moving red piece before or after another the same piece
@@ -85,9 +88,9 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         return pieceName.toString() + index.toString() + from.toString() + move.toString() + to.toString();
     }
 
-    private PieceDTO existingAnotherTheSamePieceInColMoving(PlayBoardDTO currentBoard, MoveHistory moveHistory) {
+    private PieceDTO findExistingAnotherTheSamePieceInColMoving(PlayBoardDTO currentBoard, MoveHistory moveHistory) {
         int colMoving = moveHistory.getFromCol() - 1;
-        for (int row = 0; row < Default.PLAY_BOARD_RAW_SIZE; row++) {
+        for (int row = 0; row < defaultRaw; row++) {
             if (currentBoard.getState()[colMoving][row] != null
                     && currentBoard.getState()[colMoving][row].getId() != moveHistory.getPiece().getId()
                     && Boolean.compare(currentBoard.getState()[colMoving][row].isRed(),

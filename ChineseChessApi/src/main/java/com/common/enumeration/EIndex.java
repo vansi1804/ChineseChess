@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum EIndex {
-    BEFORE('t'),
+    BEFORE('t'),   
     AFTER('s');
     
     private final char value;

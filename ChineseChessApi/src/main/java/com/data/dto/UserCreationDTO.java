@@ -3,7 +3,7 @@ package com.data.dto;
 import javax.validation.constraints.Size;
 
 import com.common.ErrorMessage;
-import com.common.RegexValidation;
+import com.common.Validation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class UserCreationDTO extends UserProfileDTO{
-    @Size(min = RegexValidation.PASSWORD_SIZE, message = ErrorMessage.PASSWORD_SIZE)
+    @Size(min = Validation.PASSWORD_SIZE_MIN, message = ErrorMessage.PASSWORD_SIZE)
     private String password;
 }

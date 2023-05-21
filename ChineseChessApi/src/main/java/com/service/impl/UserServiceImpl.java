@@ -1,6 +1,5 @@
 package com.service.impl;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.common.Default;
 import com.common.enumeration.ERole;
@@ -22,6 +22,7 @@ import com.data.mapper.UserMapper;
 import com.data.repository.RoleRepository;
 import com.data.repository.UserRepository;
 import com.data.repository.VipRepository;
+import com.service.FileService;
 import com.service.UserService;
 import com.util.Encoding;
 
@@ -35,6 +36,8 @@ public class UserServiceImpl implements UserService {
         private RoleRepository roleRepository;
         @Autowired
         private VipRepository vipRepository;
+        @Autowired
+        private FileService fileService;
 
         @Override
         public Page<UserDTO> findAll(int no, int limit, String sortBy) {
@@ -69,26 +72,23 @@ public class UserServiceImpl implements UserService {
         }
 
         @Override
-        public UserDTO create(UserCreationDTO userCreationDTO, ERole eRole) {
+        public UserDTO create(UserCreationDTO userCreationDTO, MultipartFile fileAvatar, ERole eRole) {
                 if (userRepository.existsByPhoneNumber(userCreationDTO.getPhoneNumber())) {
                         throw new ConflictException(
                                         Collections.singletonMap("phoneNumber", userCreationDTO.getPhoneNumber()));
                 }
 
                 User createUser = userMapper.toEntity(userCreationDTO);
-                try {
-                        createUser.setPassword(Encoding.getMD5(userCreationDTO.getPassword()));
-                } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                }
+                createUser.setPassword(Encoding.getMD5(userCreationDTO.getPassword())); // should use @Autowired Encoding?
+                createUser.setAvatar(fileService.uploadFile(fileAvatar));
                 createUser.setRole(roleRepository.findByName(eRole.name())
-                                .orElseThrow(() -> new ResourceNotFoundException(
+                                .orElseThrow(() -> new ResourceNotFoundException(       // this should throw for back-end (BE-exception)
                                                 Collections.singletonMap("Role name", eRole.name()))));
-                String vipDefault = Default.VIP.name();
-                createUser.setVip(vipRepository.findByName(vipDefault)
-                                .orElseThrow(() -> new ResourceNotFoundException(
+                String defaultVip = Default.User.VIP.name();
+                createUser.setVip(vipRepository.findByName(defaultVip)  
+                                .orElseThrow(() -> new ResourceNotFoundException(       // (BE-exception)
                                                 Collections.singletonMap("Vip name", eRole.name()))));
-                createUser.setStatus(Default.STATUS.name());
+                createUser.setStatus(Default.User.STATUS.name());
 
                 return userMapper.toDTO(userRepository.save(createUser));
         }
