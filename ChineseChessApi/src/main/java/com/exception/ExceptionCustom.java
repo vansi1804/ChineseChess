@@ -1,7 +1,5 @@
 package com.exception;
 
-import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,9 +8,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ExceptionCustom extends RuntimeException {
-	private final Map<String, Object> errors;
+	private final Object errors;
 	
-	public ExceptionCustom(Map<String, Object> errors, String msg) {
+	public ExceptionCustom(String msg, Object errors) {
 		super(msg);
 		this.errors = errors;
 	}

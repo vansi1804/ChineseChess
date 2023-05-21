@@ -26,7 +26,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
     @Override
     public PlayBoardDTO create() {
-        PlayBoardDTO playBoardDTO = new PlayBoardDTO(new PieceDTO[Default.PLAY_BOARD_COL_SIZE][Default.PLAY_BOARD_RAW_SIZE]);
+        PlayBoardDTO playBoardDTO = new PlayBoardDTO(new PieceDTO[Default.Game.PlayBoardSize.COL][Default.Game.PlayBoardSize.RAW]);
         List<Piece> pieces = pieceRepository.findAll();
         for (Piece piece : pieces) {
             playBoardDTO.getState()[piece.getCurrentCol() - 1][piece.getCurrentRow() - 1] = pieceMapper.toDTO(piece);

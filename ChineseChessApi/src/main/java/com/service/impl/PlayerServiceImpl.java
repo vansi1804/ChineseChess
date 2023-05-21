@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.common.Default;
 import com.common.enumeration.ERole;
@@ -60,12 +61,12 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
         @Override
-        public PlayerDTO create(PlayerCreationDTO playerCreationDTO) {
-                UserDTO createdUserDTO = userService.create(playerCreationDTO.getUserCreationDTO(), ERole.PLAYER);
+        public PlayerDTO create(PlayerCreationDTO playerCreationDTO, MultipartFile fileAvatar) {
+                UserDTO createdUserDTO = userService.create(playerCreationDTO.getUserCreationDTO(), fileAvatar, ERole.PLAYER);
 
                 Player player = playerMapper.toEntity(playerCreationDTO);
                 player.getUser().setId(createdUserDTO.getId());
-                String levelDefault = Default.LEVEL.name();
+                String levelDefault = Default.User.LEVEL.name();
                 player.setRank(rankRepository.findByName(levelDefault)
                                 .orElseThrow(() -> new ResourceNotFoundException(
                                                 Collections.singletonMap("level", levelDefault))));
