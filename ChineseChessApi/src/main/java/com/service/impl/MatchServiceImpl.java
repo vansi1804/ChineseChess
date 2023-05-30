@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
 import com.data.dto.MatchStartDTO;
+import com.data.entity.Match;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.PlayerRepository;
@@ -62,9 +63,8 @@ public class MatchServiceImpl implements MatchService {
         if (!errors.isEmpty()) {
             throw new ResourceNotFoundException(errors);
         }
-
-        MatchStartDTO matchStartDTO = matchMapper
-                .toStartDTO(matchRepository.save(matchMapper.toEntity(matchCreationDTO)));
+        long createdMatchId = matchRepository.save(matchMapper.toEntity(matchCreationDTO)).getId();
+        MatchStartDTO matchStartDTO = matchMapper.toStartDTO(matchRepository.findById(createdMatchId).get());
         matchStartDTO.setDeadPieceDTOs(new ArrayList<>());
         matchStartDTO.setPlayBoardStartDTO(playBoardService.create());
         return matchStartDTO;

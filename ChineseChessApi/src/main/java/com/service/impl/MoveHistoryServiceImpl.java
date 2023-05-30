@@ -1,16 +1,15 @@
 package com.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.data.dto.GameViewDTO;
+import com.data.dto.MatchDetailDTO;
 import com.data.dto.MoveHistoryCreationDTO;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
@@ -44,13 +43,13 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     private PieceMapper pieceMapper;
 
     @Override
-    public List<GameViewDTO> findAllByMatchId(long matchId) {
+    public List<MatchDetailDTO> findAllByMatchId(long matchId) {
         PlayBoardDTO currentBoard = playBoardService.create();
         List<PieceDTO> deadPieceDTOs = new ArrayList<>();
-        return moveHistoryRepository.findAllByMatchId(matchId).stream()
+        return moveHistoryRepository.findAllByMatch_Id(matchId).stream()
                 .map(mh -> {
-                    GameViewDTO gameViewDTO = moveHistoryMapper.toDTO(mh);
-                    Piece deadPieceInThisTurn = findLastedMoveUtilTurnByMatchIdAndColAndRowMovingTo(
+                    MatchDetailDTO gameViewDTO = moveHistoryMapper.toDTO(mh);
+                    Piece deadPieceInThisTurn = findPieceInColAndRowMovingTo(
                             mh.getMatch().getId(), mh.getTurn() - 1, mh.getToCol(), mh.getToRow());
                     if (deadPieceInThisTurn != null) {
                         deadPieceDTOs.add(pieceMapper.toDTO(deadPieceInThisTurn));
@@ -67,17 +66,14 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     @Override
     public List<PieceDTO> create(MoveHistoryCreationDTO moveHistoryCreationDTO) {
         if (!matchRepository.existsById(moveHistoryCreationDTO.getMatchId())) {
-            Map<String, Object> errors = new HashMap<String, Object>();
-            errors.put("matchId", moveHistoryCreationDTO.getMatchId());
-            throw new ResourceNotFoundException(errors);
+            throw new ResourceNotFoundException(
+                    Collections.singletonMap("matchId", moveHistoryCreationDTO.getMatchId()));
         }
         MoveHistory moveHistory = moveHistoryMapper.toEntity(moveHistoryCreationDTO);
-        moveHistory.setMatch(matchRepository.findById(moveHistoryCreationDTO.getMatchId()).get());
-        moveHistory.setTurn(moveHistoryRepository.countTurnByMatchId(moveHistoryCreationDTO.getMatchId()) + 1);
-        moveHistory.setPiece(pieceRepository.findById(moveHistoryCreationDTO.getPieceId()).get());
+        moveHistory.setTurn(moveHistoryRepository.countTurnByMatch_Id(moveHistoryCreationDTO.getMatchId()) + 1);
         moveHistoryRepository.save(moveHistory);
 
-        Piece deadPieceInThisTurn = findLastedMoveUtilTurnByMatchIdAndColAndRowMovingTo(
+        Piece deadPieceInThisTurn = findPieceInColAndRowMovingTo(
                 moveHistoryCreationDTO.getMatchId(), moveHistory.getTurn() - 1,
                 moveHistoryCreationDTO.getToCol(), moveHistoryCreationDTO.getToRow());
         if (deadPieceInThisTurn != null) {
@@ -86,11 +82,20 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         return moveHistoryCreationDTO.getDeadPieceDTOs();
     }
 
-    private Piece findLastedMoveUtilTurnByMatchIdAndColAndRowMovingTo(long matchId, long turn, int colMovingTo,
-            int rowMovingTo) {
+    private Piece findPieceInColAndRowMovingTo(long matchId, long turn, int colMovingTo, int rowMovingTo) {
+        Piece deadPiece = null;
+
         Optional<MoveHistory> lastedMoveToColAndRow = moveHistoryRepository
                 .findLastedMoveUtilTurnByMatchIdAndColAndRowMovingTo(matchId, turn, colMovingTo, rowMovingTo);
-        return lastedMoveToColAndRow.isPresent() ? lastedMoveToColAndRow.get().getPiece() : null;
+
+        if (lastedMoveToColAndRow.isPresent()) {
+            deadPiece = lastedMoveToColAndRow.get().getPiece();
+        } else {
+            Optional<Piece> startPiece = pieceRepository.findByCurrentColAndCurrentRow(colMovingTo, rowMovingTo);
+            deadPiece = startPiece.isPresent() ? startPiece.get() : null;
+        }
+
+        return deadPiece;
     }
 
 }

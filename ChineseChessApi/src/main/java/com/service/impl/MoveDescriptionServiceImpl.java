@@ -24,7 +24,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         Object move;
         Object to;
         // check move across
-        if (isMovingAcross(moveHistory.getFromRow(), moveHistory.getToRow())) {
+        if (isAcrossMoving(moveHistory.getFromRow(), moveHistory.getToRow())) {
             move = EMove.ACROSS.getValue();
             if (moveHistory.getPiece().isRed()) {
                 from = defaultCol - moveHistory.getFromCol() + 1;
@@ -38,47 +38,47 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
             if (moveHistory.getPiece().isRed()) {
                 from = moveHistory.getFromCol();
                 // check move up
-                if (isMovingUp(true, moveHistory.getFromRow(), moveHistory.getToRow())) {
+                if (isUpMoving(true, moveHistory.getFromRow(), moveHistory.getToRow())) {
                     move = EMove.UP.getValue();
                     // check move vertical
-                    to = isMovingVertical(moveHistory.getFromCol(), moveHistory.getToCol())
+                    to = isVerticalMoving(moveHistory.getFromCol(), moveHistory.getToCol())
                             ? (moveHistory.getFromRow() - moveHistory.getToRow() + 1)
                             : defaultCol - moveHistory.getToCol() + 1;
                 } else { // check move down
                     move = EMove.DOWN.getValue();
                     // check move vertical
-                    to = isMovingVertical(moveHistory.getFromCol(), moveHistory.getToCol())
+                    to = isVerticalMoving(moveHistory.getFromCol(), moveHistory.getToCol())
                             ? (moveHistory.getToRow() - moveHistory.getFromRow() + 1)
                             : defaultCol - moveHistory.getToCol() + 1;
                 }
-                PieceDTO anotherTheSamePieceInColMoving = findExistingAnotherTheSamePieceInColMoving(
+                PieceDTO anotherOneWithTheSameInColMoving = findExistingAnotherOneWithTheSameInColMoving(
                         currentBoard, moveHistory);
-                if (anotherTheSamePieceInColMoving != null) {
-                    // check moving red piece before or after another the same piece
-                    index = (anotherTheSamePieceInColMoving.getCurrentCol() > moveHistory.getFromCol())
+                if (anotherOneWithTheSameInColMoving != null) {
+                    // check moving red piece before or after another the same one
+                    index = (anotherOneWithTheSameInColMoving.getCurrentCol() > moveHistory.getFromCol())
                             ? EIndex.BEFORE.getValue()
                             : EIndex.AFTER.getValue();
                 }
             } else { // for black
                 from = moveHistory.getFromCol();
                 // check move up
-                if (isMovingUp(false, moveHistory.getFromRow(), moveHistory.getToRow())) {
+                if (isUpMoving(false, moveHistory.getFromRow(), moveHistory.getToRow())) {
                     move = EMove.UP.getValue();
                     // check move vertical
-                    to = isMovingVertical(moveHistory.getFromCol(), moveHistory.getToCol())
+                    to = isVerticalMoving(moveHistory.getFromCol(), moveHistory.getToCol())
                             ? (moveHistory.getToRow() - moveHistory.getFromRow() + 1)
                             : moveHistory.getToCol();
                 } else { // check move down
                     move = EMove.DOWN.getValue();
                     // check move vertical
-                    to = isMovingVertical(moveHistory.getFromCol(), moveHistory.getToCol())
+                    to = isVerticalMoving(moveHistory.getFromCol(), moveHistory.getToCol())
                             ? (moveHistory.getFromRow() - moveHistory.getToRow() + 1)
                             : moveHistory.getToCol();
                 }
-                PieceDTO anotherTheSamePieceInColMoving = findExistingAnotherTheSamePieceInColMoving(
+                PieceDTO anotherTheSamePieceInColMoving = findExistingAnotherOneWithTheSameInColMoving(
                         currentBoard, moveHistory);
                 if (anotherTheSamePieceInColMoving != null) {
-                    // check moving red piece before or after another the same piece
+                    // check moving red piece before or after another the same one
                     index = (anotherTheSamePieceInColMoving.getCurrentCol() > moveHistory.getFromCol())
                             ? EIndex.AFTER.getValue()
                             : EIndex.BEFORE.getValue();
@@ -88,13 +88,13 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         return pieceName.toString() + index.toString() + from.toString() + move.toString() + to.toString();
     }
 
-    private PieceDTO findExistingAnotherTheSamePieceInColMoving(PlayBoardDTO currentBoard, MoveHistory moveHistory) {
+    private PieceDTO findExistingAnotherOneWithTheSameInColMoving(PlayBoardDTO currentBoard, MoveHistory moveHistory) {
         int colMoving = moveHistory.getFromCol() - 1;
         for (int row = 0; row < defaultRaw; row++) {
             if (currentBoard.getState()[colMoving][row] != null
                     && currentBoard.getState()[colMoving][row].getId() != moveHistory.getPiece().getId()
-                    && Boolean.compare(currentBoard.getState()[colMoving][row].isRed(),
-                            moveHistory.getPiece().isRed()) == 0
+                    && Boolean.compare(
+                            currentBoard.getState()[colMoving][row].isRed(), moveHistory.getPiece().isRed()) == 0
                     && currentBoard.getState()[colMoving][row].getName().equals(moveHistory.getPiece().getName())) {
                 return currentBoard.getState()[colMoving][row];
             }
@@ -102,15 +102,20 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         return null;
     }
 
-    private boolean isMovingAcross(int fromRow, int toRow) {
+    private boolean isAcrossMoving(int fromRow, int toRow) {
         return fromRow == toRow;
     }
 
-    private boolean isMovingUp(boolean isRed, int fromRow, int toRow) {
+    private boolean isUpMoving(boolean isRed, int fromRow, int toRow) {
+        /*
+         *  Compare with play board
+         *      Red move up -> move up
+         *      Black move down -> move up
+         */
         return (isRed && (fromRow > toRow)) || ((!isRed && (fromRow < toRow)));
     }
 
-    private boolean isMovingVertical(int fromCol, int toCol) {
+    private boolean isVerticalMoving(int fromCol, int toCol) {
         return fromCol == toCol;
     }
 

@@ -7,7 +7,7 @@ import com.common.ErrorMessage;
 public class ResourceNotFoundException extends ExceptionCustom {
 
     public ResourceNotFoundException(Map<String, Object> errors) {
-        super(ErrorMessage.INVALID_DATA, errors);
+        super(ErrorMessage.DATA_NOT_FOUND, errors);
     }
 
 }

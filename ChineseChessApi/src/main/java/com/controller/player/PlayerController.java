@@ -47,8 +47,8 @@ public class PlayerController {
 
     @PostMapping("")
     public ResponseEntity<?> create(
-            @RequestPart String playerCreationDTOJsonString,
-            @RequestPart MultipartFile fileAvatar) {
+            @RequestPart(name = "playerCreationDTO") String playerCreationDTOJsonString,
+            @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar) {
         PlayerCreationDTO playerCreationDTO;
         try {
             playerCreationDTO = new ObjectMapper().readValue(

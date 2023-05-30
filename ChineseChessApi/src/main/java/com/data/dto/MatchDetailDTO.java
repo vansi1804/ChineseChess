@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class GameViewDTO {
+public class MatchDetailDTO {
     private MatchDTO matchDTO;
     private long turn;
     private String description;
