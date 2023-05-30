@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "move_historys")
+@Table(name = "move_histories")
 public class MoveHistory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
