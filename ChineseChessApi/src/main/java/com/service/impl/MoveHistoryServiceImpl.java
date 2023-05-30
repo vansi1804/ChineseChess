@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.data.dto.MatchDetailDTO;
 import com.data.dto.MoveHistoryCreationDTO;
+import com.data.dto.MoveHistoryDTO;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.data.entity.MoveHistory;
@@ -43,22 +43,22 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     private PieceMapper pieceMapper;
 
     @Override
-    public List<MatchDetailDTO> findAllByMatchId(long matchId) {
+    public List<MoveHistoryDTO> findAllByMatchId(long matchId) {
         PlayBoardDTO currentBoard = playBoardService.create();
         List<PieceDTO> deadPieceDTOs = new ArrayList<>();
         return moveHistoryRepository.findAllByMatch_Id(matchId).stream()
                 .map(mh -> {
-                    MatchDetailDTO gameViewDTO = moveHistoryMapper.toDTO(mh);
+                    MoveHistoryDTO moveHistoryDTO = new MoveHistoryDTO();
+                    moveHistoryDTO.setTurn(mh.getTurn());
                     Piece deadPieceInThisTurn = findPieceInColAndRowMovingTo(
                             mh.getMatch().getId(), mh.getTurn() - 1, mh.getToCol(), mh.getToRow());
                     if (deadPieceInThisTurn != null) {
                         deadPieceDTOs.add(pieceMapper.toDTO(deadPieceInThisTurn));
                     }
-                    gameViewDTO.setDeadPieceDTOs(deadPieceDTOs);
-                    gameViewDTO.setDescription(moveDescriptionService.getDescription(currentBoard, mh));
-                    gameViewDTO.setPlayBoard(playBoardService.update(currentBoard, mh));
-
-                    return gameViewDTO;
+                    moveHistoryDTO.setDeadPieceDTOs(deadPieceDTOs);
+                    moveHistoryDTO.setDescription(moveDescriptionService.getDescription(currentBoard, mh));
+                    moveHistoryDTO.setPlayBoard(playBoardService.update(currentBoard, mh));
+                    return moveHistoryDTO;
                 })
                 .collect(Collectors.toList());
     }

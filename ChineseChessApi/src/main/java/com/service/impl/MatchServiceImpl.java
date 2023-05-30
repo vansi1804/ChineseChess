@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
+import com.data.dto.MatchDetailDTO;
 import com.data.dto.MatchStartDTO;
-import com.data.entity.Match;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.PlayerRepository;
 import com.exception.ResourceNotFoundException;
 import com.service.MatchService;
+import com.service.MoveHistoryService;
 import com.service.PlayBoardService;
 
 @Service
@@ -31,6 +32,8 @@ public class MatchServiceImpl implements MatchService {
     private PlayerRepository playerRepository;
     @Autowired
     private PlayBoardService playBoardService;
+    @Autowired
+    private MoveHistoryService moveHistoryService;
 
     @Override
     public List<MatchDTO> findAll() {
@@ -49,6 +52,15 @@ public class MatchServiceImpl implements MatchService {
         return matchRepository.findAllByPlayerId(playerId).stream()
                 .map(m -> matchMapper.toDTO(m))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MatchDetailDTO findMatchDetailById(long id) {
+        MatchDetailDTO matchDetailDTO = matchRepository.findById(id)
+                .map(m -> matchMapper.toDetailDTO(m))
+                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+        matchDetailDTO.setMoveHistoryDTOs(moveHistoryService.findAllByMatchId(matchDetailDTO.getMatchDTO().getId()));
+        return matchDetailDTO;
     }
 
     @Override

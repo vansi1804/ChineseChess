@@ -35,28 +35,28 @@ public class Match implements Serializable {
     @Column(name = "id", updatable = false)
     private long id;
 
-    @Column(name = "time")
+    @Column(name = "time", updatable = false)
     private int time;
 
-    @Column(name = "moving_time")
+    @Column(name = "moving_time", updatable = false)
     private int movingTime;
 
-    @Column(name = "cumulative_time")
+    @Column(name = "cumulative_time", updatable = false)
     private int cumulativeTime;
 
-    @Column(name = "bet")
+    @Column(name = "bet", updatable = false)
     private int bet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "player1_id", referencedColumnName = "id")
+    @JoinColumn(name = "player1_id", referencedColumnName = "id", updatable = false)
     private Player player1;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "player2_id", referencedColumnName = "id")
+    @JoinColumn(name = "player2_id", referencedColumnName = "id", updatable = false)
     private Player player2;
 
     @Column(name = "result")
-    private long result;
+    private Long result;
 
     @CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)

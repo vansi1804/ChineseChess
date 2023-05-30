@@ -27,6 +27,11 @@ public class MatchController {
         return ResponseEntity.ok(matchService.findAllByPlayerId(playerId));
     }
 
+    @GetMapping("/{matchId}")
+    public ResponseEntity<?> findMatchDetailById(@PathVariable long matchId) {
+        return ResponseEntity.ok(matchService.findMatchDetailById(matchId));
+    }
+
     @PostMapping("")
     public ResponseEntity<?> create(@Valid @RequestBody MatchCreationDTO matchCreationDTO) {
         return ResponseEntity.ok(matchService.create(matchCreationDTO));
