@@ -4,8 +4,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,15 +19,9 @@ public class MoveHistoryController {
     @Autowired 
     private MoveHistoryService moveHistoryService;
 
-    @GetMapping("/matches/{matchId}")
-    public ResponseEntity<?> findAllByMatchId(@PathVariable long matchId) {
-        return ResponseEntity.ok(moveHistoryService.findAllByMatchId(matchId));
-    }
-
     @PostMapping("")
     public ResponseEntity<?> create(@Valid @RequestBody MoveHistoryCreationDTO moveHistoryCreationDTO) {
         return ResponseEntity.ok(moveHistoryService.create(moveHistoryCreationDTO));
     }
     
-
 }

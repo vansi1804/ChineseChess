@@ -2,6 +2,9 @@ package com.data.dto;
 
 import java.util.Date;
 
+import com.common.Default;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +24,7 @@ public class MatchDTO {
     private long player2Id;
     private String player2Name;
     private String player2Avatar;
-    private String result;
+    private int result;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
     private Date createdDate;
 }

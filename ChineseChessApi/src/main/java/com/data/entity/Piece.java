@@ -27,15 +27,16 @@ public class Piece implements Serializable{
     @Column(name = "name")
     private String name;
 
-    @Column(name = "is_red")
+    @Column(name = "is_red", updatable = false)
     private boolean isRed;
 
     @Column(name = "image")
 	private String image;
 
-    @Column(name = "start_col")
+    @Column(name = "start_col", updatable = false)
     private int currentCol;
     
-    @Column(name = "start_row")
+    @Column(name = "start_row", updatable = false)
     private int currentRow;
+
 }

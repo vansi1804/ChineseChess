@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 
 import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
+import com.data.dto.MatchDetailDTO;
 import com.data.dto.MatchStartDTO;
 import com.data.entity.Match;
 
@@ -12,7 +13,7 @@ import com.data.entity.Match;
 public interface MatchMapper {
     @Mapping(ignore = true, target = "id")
     @Mapping(source = "player1Id", target = "player1.id")
-    @Mapping(source = "player1Id", target = "player2.id")
+    @Mapping(source = "player2Id", target = "player2.id")
     @Mapping(ignore = true, target = "result")
     @Mapping(ignore = true, target = "createdDate")
     Match toEntity(MatchCreationDTO matchCreationDTO);
@@ -29,4 +30,8 @@ public interface MatchMapper {
     @Mapping(ignore = true, target = "deadPieceDTOs")
     @Mapping(ignore = true, target = "playBoardStartDTO")
     MatchStartDTO toStartDTO(Match match);
+
+    @Mapping(expression = "java(toDTO(match))", target = "matchDTO")
+    @Mapping(ignore = true, target = "moveHistoryDTOs")
+    MatchDetailDTO toDetailDTO(Match match);
 }
