@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class UserCreationDTO extends UserProfileDTO{
-    @Size(min = Validation.PASSWORD_SIZE_MIN, message = ErrorMessage.PASSWORD_SIZE)
+    @Size(min = Validation.PASSWORD_SIZE_MIN, message = ErrorMessage.PASSWORD_TOO_SHORT)
     private String password;
 }

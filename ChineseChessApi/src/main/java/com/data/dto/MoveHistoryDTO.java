@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class MoveHistoryDTO {
     private long turn;
     private String description;
-    private List<PieceDTO> deadPieceDTOs;
-    private PlayBoardDTO playBoard;
+    private List<PieceDTO> currentDeadPieceDTOs;
+    private PlayBoardDTO currentBoard;
 }

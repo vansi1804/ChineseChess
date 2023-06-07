@@ -12,6 +12,8 @@ public interface MoveHistoryMapper {
     @Mapping(source = "matchId", target = "match.id")
     @Mapping(ignore = true, target = "turn")
     @Mapping(source = "pieceId", target = "piece.id")
+    @Mapping(ignore = true, target = "fromCol")
+    @Mapping(ignore = true, target = "fromRow")
     MoveHistory toEntity(MoveHistoryCreationDTO moveHistoryCreationDTO);
 
 }

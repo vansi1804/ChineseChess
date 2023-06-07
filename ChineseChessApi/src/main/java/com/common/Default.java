@@ -14,7 +14,7 @@ public class Default {
     public static class Game {
         public class PlayBoardSize {
             public static final int COL = 9;
-            public static final int RAW = 10;
+            public static final int ROW = 10;
         }
     }
 
