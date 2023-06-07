@@ -7,6 +7,6 @@ import com.data.entity.Piece;
 
 public interface PieceRepository extends JpaRepository<Piece,Integer>{
     
-    Optional<Piece> findByCurrentColAndCurrentRow(int colMovingTo, int rowMovingTo);
+    Optional<Piece> findByCurrentColAndCurrentRow(int col, int row);
     
 }
