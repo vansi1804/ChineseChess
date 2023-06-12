@@ -6,9 +6,11 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.data.entity.MoveHistory;
 
+@Repository
 public interface MoveHistoryRepository extends JpaRepository<MoveHistory, Long> {
 
         List<MoveHistory> findAllByMatch_Id(@Param("matchId") long matchId);

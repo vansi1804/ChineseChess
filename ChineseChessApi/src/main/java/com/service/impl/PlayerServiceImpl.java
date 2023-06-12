@@ -77,12 +77,12 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
         @Override
-        public PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO) {
+        public PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO, MultipartFile fileAvatar) {
                 Player oldPlayer = playerRepository.findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
 
                 UserProfileDTO updatedUserProfileDTO = userService.update(
-                                oldPlayer.getUser().getId(), playerProfileDTO.getUserProfileDTO());
+                                oldPlayer.getUser().getId(), playerProfileDTO.getUserProfileDTO(), fileAvatar);
 
                 Player updatePlayer = playerMapper.toEntity(playerProfileDTO);
                 updatePlayer.setId(oldPlayer.getId());

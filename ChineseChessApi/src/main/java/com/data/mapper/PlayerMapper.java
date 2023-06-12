@@ -33,7 +33,7 @@ public interface PlayerMapper {
     PlayerProfileDTO toProfileDTO(Player player, List<Match> matches);
 
     @Mapping(source = "player.user", target = "userDTO")
-    @Mapping(source = "player.rank.name", target = "rankName")    
+    @Mapping(source = "player.rank.name", target = "rankName")
     @Mapping(target = "win", expression = "java(getStatistics(player,matches)[0])")
     @Mapping(target = "lost", expression = "java(getStatistics(player,matches)[1])")
     @Mapping(target = "draw", expression = "java(getStatistics(player,matches)[2])")
@@ -41,18 +41,20 @@ public interface PlayerMapper {
 
     default int[] getStatistics(Player player, List<Match> matches) {
         if (matches == null || matches.isEmpty()) {
-            return new int[]{0,0,0};
+            return new int[] { 0, 0, 0 };
         }
         int win = 0;
         int lost = 0;
         int draw = 0;
         for (Match match : matches) {
-            if(match.getResult() == 0){
-                draw++;
-            }else if(match.getResult() == player.getId()){
-                win++;
-            }else{
-                lost++;
+            if (match.getResult() != null) {
+                if (match.getResult() == 0) {
+                    draw++;
+                } else if (match.getResult() == player.getId()) {
+                    win++;
+                } else {
+                    lost++;
+                }
             }
         }
         return new int[] { win, lost, draw };

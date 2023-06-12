@@ -33,5 +33,6 @@ public interface MatchMapper {
 
     @Mapping(expression = "java(toDTO(match))", target = "matchDTO")
     @Mapping(ignore = true, target = "moveHistoryDTOs")
+    @Mapping(ignore = true, target = "totalTurn")
     MatchDetailDTO toDetailDTO(Match match);
 }

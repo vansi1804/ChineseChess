@@ -2,6 +2,7 @@ package com.service.impl;
 
 import java.util.Collections;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -79,14 +80,15 @@ public class UserServiceImpl implements UserService {
                 }
 
                 User createUser = userMapper.toEntity(userCreationDTO);
-                createUser.setPassword(Encoding.getMD5(userCreationDTO.getPassword())); // should use @Autowired Encoding?
+                createUser.setPassword(Encoding.getMD5(userCreationDTO.getPassword())); 
                 createUser.setAvatar(fileService.uploadFile(fileAvatar));
                 createUser.setRole(roleRepository.findByName(eRole.name())
-                                .orElseThrow(() -> new ResourceNotFoundException(       // this should throw for back-end (BE-exception)
+                                .orElseThrow(() -> new ResourceNotFoundException( // this should throw for back-end
+                                                                                  // (BE-exception)
                                                 Collections.singletonMap("Role name", eRole.name()))));
                 String defaultVip = Default.User.VIP.name();
-                createUser.setVip(vipRepository.findByName(defaultVip)  
-                                .orElseThrow(() -> new ResourceNotFoundException(       // (BE-exception)
+                createUser.setVip(vipRepository.findByName(defaultVip)
+                                .orElseThrow(() -> new ResourceNotFoundException( // (BE-exception)
                                                 Collections.singletonMap("Vip name", eRole.name()))));
                 createUser.setStatus(Default.User.STATUS.name());
 
@@ -94,7 +96,7 @@ public class UserServiceImpl implements UserService {
         }
 
         @Override
-        public UserProfileDTO update(long id, UserProfileDTO userProfileDTO) {
+        public UserProfileDTO update(long id, UserProfileDTO userProfileDTO, MultipartFile fileAvatar) {
                 User oldUser = userRepository.findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
 
@@ -106,6 +108,11 @@ public class UserServiceImpl implements UserService {
                 User updateUser = userMapper.toEntity(userProfileDTO);
                 updateUser.setId(oldUser.getId());
                 updateUser.setPassword(oldUser.getPassword());
+                // check update file Avatar
+                if (!StringUtils.equals(updateUser.getAvatar(), oldUser.getAvatar()) || (fileAvatar != null)) {
+                        fileService.deleteFile(oldUser.getAvatar());
+                        updateUser.setAvatar(fileService.uploadFile(fileAvatar));
+                }
                 updateUser.setRole(oldUser.getRole());
                 updateUser.setVip(oldUser.getVip());
                 updateUser.setStatus(oldUser.getStatus());

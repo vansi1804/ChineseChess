@@ -14,4 +14,5 @@ public class MoveHistoryDTO {
     private String description;
     private List<PieceDTO> currentDeadPieceDTOs;
     private PlayBoardDTO currentBoard;
+    private boolean isCheckingOpponentGeneral;
 }

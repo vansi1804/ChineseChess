@@ -2,17 +2,23 @@ package com.service.impl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.enumeration.EPiece;
 import com.data.dto.PieceDTO;
+import com.data.dto.PlayBoardDTO;
+import com.data.entity.MoveHistory;
 import com.exception.ResourceNotFoundException;
 import com.data.mapper.PieceMapper;
+import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PieceRepository;
 import com.service.PieceService;
+import com.service.PlayBoardService;
 
 @Service
 public class PieceServiceImpl implements PieceService {
@@ -20,6 +26,10 @@ public class PieceServiceImpl implements PieceService {
     private PieceRepository pieceRepository;
     @Autowired
     private PieceMapper pieceMapper;
+    @Autowired
+    private MoveHistoryRepository moveHistoryRepository;
+    @Autowired
+    private PlayBoardService playBoardService;
 
     @Override
     public List<PieceDTO> findAll() {
@@ -36,11 +46,62 @@ public class PieceServiceImpl implements PieceService {
     @Override
     public EPiece convertByName(String name) {
         for (EPiece piece : EPiece.values()) {
-            if (piece.getValue().equalsIgnoreCase(name)) {
+            if (piece.getFullNameValue().equalsIgnoreCase(name)) {
                 return piece;
             }
         }
         throw new ResourceNotFoundException(Collections.singletonMap("name", name));
+    }
+
+    @Override
+    public List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO) {
+        return IntStream.range(0, playBoardDTO.getState().length)
+                .boxed()
+                .flatMap(col -> IntStream.range(0, playBoardDTO.getState()[col].length)
+                        .filter(row -> playBoardDTO.getState()[col][row] != null)
+                        .mapToObj(row -> playBoardDTO.getState()[col][row]))
+                .toList();
+    }
+
+    @Override
+    public List<PieceDTO> findAllDeadInPlayBoard(PlayBoardDTO playBoardDTO) {
+        List<PieceDTO> piecesInBoard = findAllInBoard(playBoardDTO);
+        List<PieceDTO> deadPieces = findAll();
+        // remove all alive pieces in board
+        deadPieces.removeIf(p1 -> piecesInBoard.stream().map(p2 -> p2.getId()).toList().contains(p1.getId()));
+
+        return deadPieces;
+    }
+
+    @Override
+    public PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id) {
+        return IntStream.range(0, playBoardDTO.getState().length)
+                .boxed()
+                .flatMap(col -> IntStream.range(0, playBoardDTO.getState()[col].length)
+                        .filter(row -> playBoardDTO.getState()[col][row] != null
+                                && playBoardDTO.getState()[col][row].getId() == id)
+                        .mapToObj(row -> playBoardDTO.getState()[col][row]))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public PieceDTO findLastAtPosition(long matchId, long turn, int toCol, int toRow) {
+        Optional<MoveHistory> lastMoveToPosition = moveHistoryRepository
+                .findLastByMatchIdAndPositionUntilTurn(matchId, turn, toCol, toRow);
+
+        return lastMoveToPosition.isPresent()
+                ? pieceMapper.toDTO(lastMoveToPosition.get().getPiece())
+                : pieceRepository.findByCurrentColAndCurrentRow(toCol, toRow)
+                        .map(p -> pieceMapper.toDTO(p))
+                        .orElse(null);
+    }
+
+    @Override
+    public List<PieceDTO> findAllDeadByMatchId(long matchId) {
+        PlayBoardDTO playBoard = playBoardService.buildByMatchId(matchId);
+
+        return findAllDeadInPlayBoard(playBoard);
     }
 
 }
