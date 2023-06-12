@@ -21,7 +21,7 @@ public interface UserService {
 
     UserDTO create(UserCreationDTO userCreationDTO, MultipartFile fileAvatar, ERole eRole);
 
-    UserProfileDTO update(long id, UserProfileDTO userProfileDTO);
+    UserProfileDTO update(long id, UserProfileDTO userProfileDTO, MultipartFile fileAvatar);
 
     UserDTO updateStatusById(long id, EStatus eStatus);
 }

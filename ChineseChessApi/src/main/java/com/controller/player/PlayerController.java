@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -60,8 +59,17 @@ public class PlayerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable long id, @RequestBody PlayerProfileDTO playerProfileDTO) {
-        return ResponseEntity.ok(playerService.update(id, playerProfileDTO));
+    public ResponseEntity<?> update(@PathVariable long id,
+            @RequestPart(name = "playerProfileDTO") String playerProfileDTOJsonString,
+            @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar) {
+        PlayerProfileDTO playerProfileDTO;
+        try {
+            playerProfileDTO = new ObjectMapper().readValue(
+                    playerProfileDTOJsonString, PlayerProfileDTO.class);
+        } catch (JsonProcessingException e) {
+            throw new ValidateException(e.getMessage());
+        }
+        return ResponseEntity.ok(playerService.update(id, playerProfileDTO, fileAvatar));
     }
 
     @PutMapping("/{id}/lock")

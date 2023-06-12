@@ -14,6 +14,7 @@ import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
 import com.data.dto.MatchStartDTO;
+import com.data.dto.MoveHistoryDTO;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.PlayerRepository;
@@ -59,7 +60,12 @@ public class MatchServiceImpl implements MatchService {
         MatchDetailDTO matchDetailDTO = matchRepository.findById(id)
                 .map(m -> matchMapper.toDetailDTO(m))
                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
-        matchDetailDTO.setMoveHistoryDTOs(moveHistoryService.findAllByMatchId(matchDetailDTO.getMatchDTO().getId()));
+
+        List<MoveHistoryDTO> moveHistoryDTOs = moveHistoryService
+                .findAllByMatchId(matchDetailDTO.getMatchDTO().getId());
+                
+        matchDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
+        matchDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
         return matchDetailDTO;
     }
 
@@ -75,7 +81,9 @@ public class MatchServiceImpl implements MatchService {
         if (!errors.isEmpty()) {
             throw new ResourceNotFoundException(errors);
         }
+
         long createdMatchId = matchRepository.save(matchMapper.toEntity(matchCreationDTO)).getId();
+        
         MatchStartDTO matchStartDTO = matchMapper.toStartDTO(matchRepository.findById(createdMatchId).get());
         matchStartDTO.setDeadPieceDTOs(new ArrayList<>());
         matchStartDTO.setPlayBoardStartDTO(playBoardService.create());

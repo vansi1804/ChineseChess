@@ -14,4 +14,12 @@ public class PieceDTO {
 	private String image;
     private int currentCol;
     private int currentRow;
+    
+    public PieceDTO(PieceDTO movingPieceDTO) {
+        setId(movingPieceDTO.getId());
+        setName(movingPieceDTO.getName());
+        setImage(movingPieceDTO.getImage());
+        setCurrentCol(movingPieceDTO.getCurrentCol());
+        setCurrentRow(movingPieceDTO.getCurrentRow());
+    }
 }

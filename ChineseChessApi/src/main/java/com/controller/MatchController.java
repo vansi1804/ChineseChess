@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("api/matches")
 public class MatchController {
@@ -36,5 +35,5 @@ public class MatchController {
     public ResponseEntity<?> create(@Valid @RequestBody MatchCreationDTO matchCreationDTO) {
         return ResponseEntity.ok(matchService.create(matchCreationDTO));
     }
-    
+
 }

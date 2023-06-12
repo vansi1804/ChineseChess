@@ -19,7 +19,7 @@ public interface PlayerService {
     PlayerDTO create(PlayerCreationDTO playerCreationDTO, MultipartFile fileAvatar);
 
     @Transactional
-    PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO);
+    PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO, MultipartFile fileAvatar);
 
     PlayerProfileDTO updateEloById(long id, int elo);
 
