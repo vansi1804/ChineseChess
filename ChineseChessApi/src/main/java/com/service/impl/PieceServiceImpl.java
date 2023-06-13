@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,6 @@ import com.data.mapper.PieceMapper;
 import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PieceRepository;
 import com.service.PieceService;
-import com.service.PlayBoardService;
 
 @Service
 public class PieceServiceImpl implements PieceService {
@@ -28,8 +28,6 @@ public class PieceServiceImpl implements PieceService {
     private PieceMapper pieceMapper;
     @Autowired
     private MoveHistoryRepository moveHistoryRepository;
-    @Autowired
-    private PlayBoardService playBoardService;
 
     @Override
     public List<PieceDTO> findAll() {
@@ -55,10 +53,20 @@ public class PieceServiceImpl implements PieceService {
 
     @Override
     public List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO) {
+        return findAllInBoard(playBoardDTO, null, null);
+    }
+
+    @Override
+    public List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed) {
         return IntStream.range(0, playBoardDTO.getState().length)
                 .boxed()
                 .flatMap(col -> IntStream.range(0, playBoardDTO.getState()[col].length)
-                        .filter(row -> playBoardDTO.getState()[col][row] != null)
+                        .filter(row -> {
+                            PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
+                            return pieceDTO != null
+                                    && (StringUtils.isBlank(name) || pieceDTO.getName().equals(name))
+                                    && (isRed == null || pieceDTO.isRed() == isRed);
+                        })
                         .mapToObj(row -> playBoardDTO.getState()[col][row]))
                 .toList();
     }
@@ -95,13 +103,6 @@ public class PieceServiceImpl implements PieceService {
                 : pieceRepository.findByCurrentColAndCurrentRow(toCol, toRow)
                         .map(p -> pieceMapper.toDTO(p))
                         .orElse(null);
-    }
-
-    @Override
-    public List<PieceDTO> findAllDeadByMatchId(long matchId) {
-        PlayBoardDTO playBoard = playBoardService.buildByMatchId(matchId);
-
-        return findAllDeadInPlayBoard(playBoard);
     }
 
 }

@@ -15,11 +15,11 @@ public interface PieceService {
 
     List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO);
 
+    List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed);
+
     PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id);
 
     PieceDTO findLastAtPosition(long matchId, long turn, int toCol, int toRow);
-
-    List<PieceDTO> findAllDeadByMatchId(long matchId);
 
     List<PieceDTO> findAllDeadInPlayBoard(PlayBoardDTO playBoardDTO);
 

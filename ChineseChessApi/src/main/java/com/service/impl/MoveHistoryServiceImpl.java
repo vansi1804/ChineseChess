@@ -4,12 +4,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.Default;
+import com.common.enumeration.EPiece;
+import com.data.dto.MatchCreationResponseDTO;
 import com.data.dto.MoveHistoryCreationDTO;
 import com.data.dto.MoveHistoryDTO;
 import com.data.dto.PieceDTO;
@@ -53,23 +56,27 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
     @Override
     public List<MoveHistoryDTO> findAllByMatchId(long matchId) {
-        PlayBoardDTO currentBoard = playBoardService.create();
+        AtomicReference<PlayBoardDTO> currentBoard = new AtomicReference<>(playBoardService.create());
+        List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(matchId);
 
-        return moveHistoryRepository.findAllByMatch_Id(matchId)
-                .stream()
+        return moveHistories.stream()
                 .map(mh -> {
-                    PieceDTO movingPieceDTO = pieceService.findOneInBoard(currentBoard, mh.getPiece().getId());
+                    PieceDTO movingPieceDTO = pieceService.findOneInBoard(currentBoard.get(), mh.getPiece().getId());
 
                     MoveHistoryDTO moveHistoryDTO = new MoveHistoryDTO();
 
                     moveHistoryDTO.setTurn(mh.getTurn());
                     moveHistoryDTO.setDescription(moveDescriptionService.buildDescription(
-                            currentBoard, movingPieceDTO, mh.getToCol(), mh.getToRow()));
-                    moveHistoryDTO.setCurrentBoard(playBoardService.update(
-                            currentBoard, movingPieceDTO, mh.getToCol(), mh.getToRow()));
+                            currentBoard.get(), movingPieceDTO, mh.getToCol(), mh.getToRow()));
+
+                    currentBoard.set(
+                            playBoardService.update(currentBoard.get(), movingPieceDTO, mh.getToCol(), mh.getToRow()));
+
+                    moveHistoryDTO.setCurrentBoard(currentBoard.get());
                     moveHistoryDTO.setCurrentDeadPieceDTOs(
-                            pieceService.findAllDeadInPlayBoard(moveHistoryDTO.getCurrentBoard()));
-                    moveHistoryDTO.setCheckingOpponentGeneral(false); // update later
+                            pieceService.findAllDeadInPlayBoard(currentBoard.get()));
+                    moveHistoryDTO.setGeneralBeingChecked(
+                            findGeneralBeingChecked(currentBoard.get(), !movingPieceDTO.isRed()));
 
                     return moveHistoryDTO;
                 })
@@ -79,8 +86,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     @Override
     public boolean[][] findMoveValid(long matchId, int pieceId) {
         if (!matchRepository.existsById(matchId)) {
-            new ResourceNotFoundException(
-                    Collections.singletonMap("matchId", matchId));
+            new ResourceNotFoundException(Collections.singletonMap("matchId", matchId));
         }
 
         PieceDTO movingPieceDTO = pieceService.findById(pieceId);
@@ -88,17 +94,18 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         long lastTurn = moveHistoryRepository.countTurnByMatch_Id(matchId);
         long newTurn = lastTurn + 1;
 
-        PlayBoardDTO currentBoard = playBoardService.buildByMatchId(matchId);
+        PlayBoardDTO currentBoard = buildPlayBoardByMatchId(matchId);
 
-        // check piece input existing in currentBoard
         PieceDTO foundPieceInBoard = pieceService.findOneInBoard(currentBoard, movingPieceDTO.getId());
         if (foundPieceInBoard == null) {
             int[] lastPosition = moveHistoryRepository.findLastPositionByMatchIdAndPieceId(
                     matchId, movingPieceDTO.getId());
 
             if (lastPosition != null) {
-                movingPieceDTO.setCurrentCol(lastPosition[0]);
-                movingPieceDTO.setCurrentCol(lastPosition[1]);
+                int lastCol = lastPosition[0];
+                int lastRow = lastPosition[1];
+                movingPieceDTO.setCurrentCol(lastCol);
+                movingPieceDTO.setCurrentRow(lastRow);
             }
 
             Map<String, Object> errors = new HashMap<>();
@@ -108,8 +115,10 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             throw new DeadPieceException(errors);
 
         } else {
-            movingPieceDTO.setCurrentCol(foundPieceInBoard.getCurrentCol());
-            movingPieceDTO.setCurrentRow(foundPieceInBoard.getCurrentRow());
+            int currentCol = foundPieceInBoard.getCurrentCol();
+            int currentRow = foundPieceInBoard.getCurrentRow();
+            movingPieceDTO.setCurrentCol(currentCol);
+            movingPieceDTO.setCurrentRow(currentRow);
         }
 
         boolean[][] validMoves = new boolean[MAX_COL][MAX_ROW];
@@ -124,7 +133,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     @Override
-    public List<PieceDTO> create(MoveHistoryCreationDTO moveHistoryCreationDTO) {
+    public MatchCreationResponseDTO create(MoveHistoryCreationDTO moveHistoryCreationDTO) {
         Match match = matchRepository.findById(moveHistoryCreationDTO.getMatchId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         Collections.singletonMap("matchId", moveHistoryCreationDTO.getMatchId())));
@@ -140,7 +149,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
         PieceDTO movingPieceDTO = pieceService.findById(moveHistoryCreationDTO.getPieceId());
 
-        PlayBoardDTO currentBoard = playBoardService.buildByMatchId(match.getId());
+        PlayBoardDTO currentBoard = this.buildPlayBoardByMatchId(match.getId());
 
         // check piece input existing in currentBoard
         PieceDTO foundPieceInBoard = pieceService.findOneInBoard(currentBoard, movingPieceDTO.getId());
@@ -193,7 +202,13 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             currentBoard = playBoardService.update(
                     currentBoard, movingPieceDTO, moveHistoryCreationDTO.getToCol(), moveHistoryCreationDTO.getToRow());
 
-            return pieceService.findAllDeadInPlayBoard(currentBoard);
+            MatchCreationResponseDTO matchCreationResponseDTO = new MatchCreationResponseDTO();
+
+            matchCreationResponseDTO.setGeneralBeingChecked(
+                    findGeneralBeingChecked(currentBoard, !movingPieceDTO.isRed()));
+            matchCreationResponseDTO.setDeadPiecesDTO(pieceService.findAllDeadInPlayBoard(currentBoard));
+
+            return matchCreationResponseDTO;
         }
 
         Map<String, Object> errors = new HashMap<>();
@@ -203,6 +218,20 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         errors.put("toCol", moveHistoryCreationDTO.getToCol());
         errors.put("toRow", moveHistoryCreationDTO.getToRow());
         throw new InvalidMoveException(errors);
+    }
+
+    private PlayBoardDTO buildPlayBoardByMatchId(long matchId) {
+        return moveHistoryRepository.findAllByMatch_Id(matchId).stream()
+                .reduce(playBoardService.create(), (board, mh) -> playBoardService.update(
+                        board, pieceService.findOneInBoard(board, mh.getPiece().getId()), mh.getToCol(), mh.getToRow()),
+                        (board1, board2) -> board2);
+    }
+
+    private PieceDTO findGeneralBeingChecked(PlayBoardDTO playBoard, boolean isRed) {
+        // check opponent general is being check after moving
+        List<PieceDTO> generals = pieceService.findAllInBoard(playBoard, EPiece.General.getFullNameValue(), isRed);
+        PieceDTO general = generals.isEmpty() ? null : generals.get(0);
+        return movingRuleService.isGeneralBeingChecked(playBoard, general) ? general : null;
     }
 
 }
