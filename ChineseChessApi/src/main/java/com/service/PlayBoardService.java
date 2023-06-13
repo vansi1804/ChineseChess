@@ -8,5 +8,4 @@ public interface PlayBoardService {
 
     PlayBoardDTO update(PlayBoardDTO currentBoard, PieceDTO movingPieceDTO, int toCol, int toRow);
 
-    PlayBoardDTO buildByMatchId(long matchId);
 }

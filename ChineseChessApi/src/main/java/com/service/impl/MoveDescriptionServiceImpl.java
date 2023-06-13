@@ -2,6 +2,8 @@ package com.service.impl;
 
 import org.springframework.stereotype.Service;
 
+import java.util.stream.IntStream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.common.Default;
@@ -90,27 +92,26 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
 
     private String buildIndexDescription(PlayBoardDTO currentBoard, PieceDTO pieceDTO) {
         PieceDTO foundPiece = findExistingTheSameInColPath(currentBoard, pieceDTO);
-        return foundPiece != null
-                ? (pieceDTO.isRed() && (pieceDTO.getCurrentRow() < foundPiece.getCurrentRow()))
+        return foundPiece == null
+                ? ""
+                : (pieceDTO.isRed() && (pieceDTO.getCurrentRow() < foundPiece.getCurrentRow()))
                         || (!pieceDTO.isRed() && (pieceDTO.getCurrentRow() > foundPiece.getCurrentRow()))
                                 ? EIndex.BEFORE.getValue()
-                                : EIndex.AFTER.getValue()
-                : "";
+                                : EIndex.AFTER.getValue();
     }
 
     private PieceDTO findExistingTheSameInColPath(PlayBoardDTO currentBoard, PieceDTO pieceDTO) {
-        int colMoving = pieceDTO.getCurrentCol() - 1;
-        for (int row = 0; row < MAX_ROW; row++) {
-            PieceDTO currentPiece = currentBoard.getState()[colMoving][row];
-            if (currentPiece != null
-                    && currentPiece.getId() != pieceDTO.getId()
-                    && currentPiece.isRed() == pieceDTO.isRed()
-                    && currentPiece.getName().equals(pieceDTO.getName())) {
-                return currentPiece;
-            }
-        }
-
-        return null;
+        return IntStream.rangeClosed(1, MAX_ROW)
+                .filter(row -> {
+                    PieceDTO currentPiece = currentBoard.getState()[pieceDTO.getCurrentCol() - 1][row - 1];
+                    return currentPiece != null
+                            && currentPiece.getId() != pieceDTO.getId()
+                            && currentPiece.isRed() == pieceDTO.isRed()
+                            && currentPiece.getName().equals(pieceDTO.getName());
+                })
+                .mapToObj(row -> currentBoard.getState()[pieceDTO.getCurrentCol() - 1][row - 1])
+                .findFirst()
+                .orElse(null);
     }
 
     private boolean isHorizontalMoving(int fromRow, int toRow) {

@@ -10,7 +10,6 @@ import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.data.entity.Piece;
 import com.data.mapper.PieceMapper;
-import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PieceRepository;
 import com.service.PlayBoardService;
 
@@ -23,8 +22,6 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     private PieceRepository pieceRepository;
     @Autowired
     private PieceMapper pieceMapper;
-    @Autowired
-    private MoveHistoryRepository moveHistoryRepository;
 
     @Override
     public PlayBoardDTO create() {
@@ -33,49 +30,35 @@ public class PlayBoardServiceImpl implements PlayBoardService {
         List<Piece> pieces = pieceRepository.findAll();
 
         for (Piece piece : pieces) {
-            PieceDTO pieceDTO = new PieceDTO(pieceMapper.toDTO(piece));
-            playBoardDTO.getState()[pieceDTO.getCurrentCol() - 1][pieceDTO.getCurrentRow() - 1] = pieceDTO;
+            playBoardDTO.getState()[piece.getCurrentCol() - 1][piece.getCurrentRow() - 1] = pieceMapper.toDTO(piece);
         }
 
         return playBoardDTO;
     }
 
-    public PlayBoardDTO update(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
-        // Create a deep copy of the playBoard
-        PlayBoardDTO updateBoard = new PlayBoardDTO(this.deepCopyState(playBoardDTO.getState()));
-
-        // Perform modifications on the updatedBoard
-        updateBoard.getState()[pieceDTO.getCurrentCol() - 1][pieceDTO.getCurrentRow() - 1] = null;
-        updateBoard.getState()[toCol - 1][toRow - 1] = pieceDTO;
-
-        pieceDTO.setCurrentCol(toCol);
-        pieceDTO.setCurrentRow(toRow);
-
-        return updateBoard;
-    }
-
     @Override
-    public PlayBoardDTO buildByMatchId(long matchId) {
+    public PlayBoardDTO update(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
+        PlayBoardDTO updatedBoard = new PlayBoardDTO();
+        PieceDTO[][] state = playBoardDTO.getState();
+        PieceDTO[][] updatedState = copyStateArray(state); // Use the copyStateArray function
+        updatedBoard.setState(updatedState);
 
-        return moveHistoryRepository.findAllByMatch_Id(matchId).stream()
-                .reduce(create(), (board, mh) -> update(
-                        board, pieceMapper.toDTO(mh.getPiece()), mh.getToCol(), mh.getFromRow()),
-                        (board1, board2) -> board2);
+        // Update the piece's current position in the updatedBoard
+        updatedBoard.getState()[pieceDTO.getCurrentCol() - 1][pieceDTO.getCurrentRow() - 1] = null;
+        PieceDTO updatedPieceDTO = new PieceDTO(pieceDTO);
+        updatedPieceDTO.setCurrentCol(toCol);
+        updatedPieceDTO.setCurrentRow(toRow);
+        updatedBoard.getState()[toCol - 1][toRow - 1] = updatedPieceDTO;
+
+        return updatedBoard;
     }
 
-    private PieceDTO[][] deepCopyState(PieceDTO[][] state) {
-        PieceDTO[][] clonedState = new PieceDTO[MAX_COL][MAX_ROW];
-
-        for (int row = 0; row < MAX_COL; row++) {
-            for (int col = 0; col < MAX_ROW; col++) {
-                PieceDTO pieceDTO = state[row][col];
-                if (pieceDTO != null) {
-                    clonedState[row][col] = new PieceDTO(pieceDTO);
-                }
-            }
+    private PieceDTO[][] copyStateArray(PieceDTO[][] state) {
+        PieceDTO[][] copiedState = new PieceDTO[state.length][];
+        for (int i = 0; i < state.length; i++) {
+            copiedState[i] = state[i].clone();
         }
-
-        return clonedState;
+        return copiedState;
     }
 
 }
