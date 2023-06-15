@@ -38,10 +38,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
     @Override
     public PlayBoardDTO update(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
-        PlayBoardDTO updatedBoard = new PlayBoardDTO();
-        PieceDTO[][] state = playBoardDTO.getState();
-        PieceDTO[][] updatedState = copyStateArray(state); // Use the copyStateArray function
-        updatedBoard.setState(updatedState);
+        PlayBoardDTO updatedBoard = new PlayBoardDTO(cloneStateArray(playBoardDTO.getState()));
 
         // Update the piece's current position in the updatedBoard
         updatedBoard.getState()[pieceDTO.getCurrentCol() - 1][pieceDTO.getCurrentRow() - 1] = null;
@@ -53,7 +50,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
         return updatedBoard;
     }
 
-    private PieceDTO[][] copyStateArray(PieceDTO[][] state) {
+    private PieceDTO[][] cloneStateArray(PieceDTO[][] state) {
         PieceDTO[][] copiedState = new PieceDTO[state.length][];
         for (int i = 0; i < state.length; i++) {
             copiedState[i] = state[i].clone();

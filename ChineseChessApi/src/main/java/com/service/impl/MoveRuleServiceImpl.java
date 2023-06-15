@@ -61,6 +61,14 @@ public class MoveRuleServiceImpl implements MovingRuleService {
         }
 
         if (generalSameColor != null && opponentGeneral != null) {
+            // boolean isGeneralInSafe = !areTwoGeneralsFacing(playBoard, generalSameColor,
+            // opponentGeneral)
+            // && !isGeneralBeingChecked(playBoard, generalSameColor);
+            // if (isGeneralInSafe) {
+            // System.out.println("Move available");
+            // playBoard.print(pieceDTO);
+            // }
+            // return isGeneralInSafe;
             return !areTwoGeneralsFacing(playBoard, generalSameColor, opponentGeneral)
                     && !isGeneralBeingChecked(playBoard, generalSameColor);
         }

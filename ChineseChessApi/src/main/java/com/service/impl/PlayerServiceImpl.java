@@ -62,7 +62,8 @@ public class PlayerServiceImpl implements PlayerService {
 
         @Override
         public PlayerDTO create(PlayerCreationDTO playerCreationDTO, MultipartFile fileAvatar) {
-                UserDTO createdUserDTO = userService.create(playerCreationDTO.getUserCreationDTO(), fileAvatar, ERole.PLAYER);
+                UserDTO createdUserDTO = userService.create(playerCreationDTO.getUserCreationDTO(), fileAvatar,
+                                ERole.PLAYER);
 
                 Player player = playerMapper.toEntity(playerCreationDTO);
                 player.getUser().setId(createdUserDTO.getId());

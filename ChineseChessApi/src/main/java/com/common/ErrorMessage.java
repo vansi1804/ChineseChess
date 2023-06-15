@@ -6,6 +6,7 @@ public class ErrorMessage {
     public static final String INVALID_MOVE = "Invalid move";
     public static final String INVALID_PLAYER_MOVE_PIECE = "Player is moving invalid piece";
 
+    public static final String END_MATCH = "Match is end";
     public static final String DEAD_PIECE = "Piece is dead";
     public static final String OPPONENT_TURN = "Opponent's turn";
     public static final String DATA_NOT_FOUND = "Data not found";

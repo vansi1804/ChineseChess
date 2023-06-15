@@ -42,22 +42,19 @@ public class UserServiceImpl implements UserService {
 
         @Override
         public Page<UserDTO> findAll(int no, int limit, String sortBy) {
-                return userRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
-                                .map(u -> userMapper.toDTO(u));
+                return userRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy))).map(u -> userMapper.toDTO(u));
         }
 
         @Override
         public UserDTO findById(long id) {
-                return userRepository.findById(id)
-                                .map(u -> userMapper.toDTO(u))
+                return userRepository.findById(id).map(u -> userMapper.toDTO(u))
                                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
 
         }
 
         @Override
         public UserDTO findByPhoneNumber(String phoneNumber) {
-                return userRepository.findByPhoneNumber(phoneNumber)
-                                .map(u -> userMapper.toDTO(u))
+                return userRepository.findByPhoneNumber(phoneNumber).map(u -> userMapper.toDTO(u))
                                 .orElseThrow(() -> new ResourceNotFoundException(
                                                 Collections.singletonMap("phoneNumber", phoneNumber)));
 
@@ -65,8 +62,7 @@ public class UserServiceImpl implements UserService {
 
         @Override
         public UserDTO findByName(String name) {
-                return userRepository.findByName(name)
-                                .map(u -> userMapper.toDTO(u))
+                return userRepository.findByName(name).map(u -> userMapper.toDTO(u))
                                 .orElseThrow(() -> new ResourceNotFoundException(
                                                 Collections.singletonMap("name", name)));
 
@@ -80,7 +76,7 @@ public class UserServiceImpl implements UserService {
                 }
 
                 User createUser = userMapper.toEntity(userCreationDTO);
-                createUser.setPassword(Encoding.getMD5(userCreationDTO.getPassword())); 
+                createUser.setPassword(Encoding.getMD5(userCreationDTO.getPassword()));
                 createUser.setAvatar(fileService.uploadFile(fileAvatar));
                 createUser.setRole(roleRepository.findByName(eRole.name())
                                 .orElseThrow(() -> new ResourceNotFoundException( // this should throw for back-end
