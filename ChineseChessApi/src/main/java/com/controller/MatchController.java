@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -34,6 +35,11 @@ public class MatchController {
     @PostMapping("")
     public ResponseEntity<?> create(@Valid @RequestBody MatchCreationDTO matchCreationDTO) {
         return ResponseEntity.ok(matchService.create(matchCreationDTO));
+    }
+
+    @PutMapping("/{matchId}/{isRedWin}")
+    public ResponseEntity<?> updateResult(@PathVariable long matchId, @PathVariable Boolean isRedWin) {
+        return ResponseEntity.ok(matchService.updateResult(matchId, isRedWin));
     }
 
 }

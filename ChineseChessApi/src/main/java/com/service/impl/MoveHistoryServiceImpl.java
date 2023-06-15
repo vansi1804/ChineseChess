@@ -24,7 +24,6 @@ import com.data.mapper.MoveHistoryMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.MoveHistoryRepository;
 import com.exception.DeadPieceException;
-import com.exception.EndMatchException;
 import com.exception.InvalidMoveException;
 import com.exception.InvalidMovingPlayerException;
 import com.exception.InvalidPlayerMovePieceException;
@@ -139,11 +138,6 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         Collections.singletonMap("matchId", moveHistoryCreationDTO.getMatchId())));
 
-        if (match.getResult() != null) {
-            throw new EndMatchException(
-                    Collections.singletonMap("matchId", moveHistoryCreationDTO.getMatchId()));
-        }
-
         if ((match.getPlayer1().getId() != moveHistoryCreationDTO.getPlayerId())
                 && (match.getPlayer2().getId() != moveHistoryCreationDTO.getPlayerId())) {
             throw new InvalidMovingPlayerException(
@@ -204,8 +198,6 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         if (isValidMove) {
             MoveHistory moveHistory = moveHistoryMapper.toEntity(moveHistoryCreationDTO);
             moveHistory.setTurn(newTurn);
-            moveHistory.setFromCol(movingPieceDTO.getCurrentCol());
-            moveHistory.setFromRow(movingPieceDTO.getCurrentRow());
             moveHistoryRepository.save(moveHistory);
 
             MoveHistoryCreationResponseDTO moveHistoryCreationResponseDTO = new MoveHistoryCreationResponseDTO();
@@ -218,11 +210,6 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             moveHistoryCreationResponseDTO.setGeneralBeingChecked(
                     findGeneralBeingChecked(currentBoard, !movingPieceDTO.isRed()));
             moveHistoryCreationResponseDTO.setCheckMate(isCheckMate(currentBoard, movingPieceDTO.isRed()));
-
-            if (moveHistoryCreationResponseDTO.isCheckMate()) {
-                match.setResult(moveHistoryCreationDTO.getPlayerId());
-                matchRepository.save(match);
-            }
 
             System.out.println("===========================================");
             System.out.println("Turn" + newTurn);

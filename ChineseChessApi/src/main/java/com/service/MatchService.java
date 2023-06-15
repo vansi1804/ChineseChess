@@ -17,4 +17,6 @@ public interface MatchService {
     MatchDetailDTO findMatchDetailById(long id);
 
     MatchStartDTO create(MatchCreationDTO matchCreationDTO);
+
+    MatchDTO updateResult(long id, Boolean isRedWin);
 }
