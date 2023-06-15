@@ -38,13 +38,7 @@ public class MoveHistory implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "piece_id", referencedColumnName = "id")
     private Piece piece;
-
-    @Column(name = "from_col")
-    private int fromCol;
-
-    @Column(name = "from_row")
-    private int fromRow;
-
+    
     @Column(name = "to_col")
     private int toCol;
 

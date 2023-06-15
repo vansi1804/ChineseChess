@@ -15,9 +15,11 @@ import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
 import com.data.dto.MatchStartDTO;
 import com.data.dto.MoveHistoryDTO;
+import com.data.entity.Match;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.PlayerRepository;
+import com.exception.EndMatchException;
 import com.exception.ResourceNotFoundException;
 import com.service.MatchService;
 import com.service.MoveHistoryService;
@@ -87,12 +89,31 @@ public class MatchServiceImpl implements MatchService {
             throw new ResourceNotFoundException(errors);
         }
 
-        long createdMatchId = matchRepository.save(matchMapper.toEntity(matchCreationDTO)).getId();
+        Match match = matchRepository.saveAndFlush(matchMapper.toEntity(matchCreationDTO));
 
-        MatchStartDTO matchStartDTO = matchMapper.toStartDTO(matchRepository.findById(createdMatchId).get());
+        MatchStartDTO matchStartDTO = matchMapper.toStartDTO(match);
         matchStartDTO.setDeadPieceDTOs(new ArrayList<>());
         matchStartDTO.setPlayBoardStartDTO(playBoardService.create());
         return matchStartDTO;
+    }
+
+    @Override
+    public MatchDTO updateResult(long id, Boolean isRedWin) {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+
+        if (match.getResult() != null) {
+            throw new EndMatchException(Collections.singletonMap("id", id));
+        }
+
+        long winnerId = (isRedWin == null)
+                ? 0
+                : isRedWin
+                        ? match.getPlayer1().getId()
+                        : match.getPlayer2().getId();
+        match.setResult(winnerId);
+
+        return matchMapper.toDTO(matchRepository.save(match));
     }
 
 }
