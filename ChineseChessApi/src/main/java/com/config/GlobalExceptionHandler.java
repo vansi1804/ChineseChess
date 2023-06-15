@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.data.dto.ErrorMessageResponseDTO;
 import com.exception.ConflictException;
 import com.exception.DeadPieceException;
+import com.exception.EndMatchException;
 import com.exception.InvalidMoveException;
 import com.exception.InvalidMovingPlayerException;
 import com.exception.InvalidPlayerMovePieceException;
@@ -76,6 +77,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidPlayerMovePieceException.class)
     public ResponseEntity<?> handleInvalidPlayerMovePieceException(InvalidPlayerMovePieceException ex,
+            HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
+    }
+
+    @ExceptionHandler(EndMatchException.class)
+    public ResponseEntity<?> handleEndMatchException(EndMatchException ex,
             HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));

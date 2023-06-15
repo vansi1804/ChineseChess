@@ -63,7 +63,12 @@ public class MatchServiceImpl implements MatchService {
 
         List<MoveHistoryDTO> moveHistoryDTOs = moveHistoryService
                 .findAllByMatchId(matchDetailDTO.getMatchDTO().getId());
-                
+
+        for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOs) {
+            System.out.println("\n" + moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription());
+            moveHistoryDTO.getCurrentBoard().print(moveHistoryDTO.getMovingPieceDTO());
+        }
+
         matchDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
         matchDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
         return matchDetailDTO;
@@ -83,7 +88,7 @@ public class MatchServiceImpl implements MatchService {
         }
 
         long createdMatchId = matchRepository.save(matchMapper.toEntity(matchCreationDTO)).getId();
-        
+
         MatchStartDTO matchStartDTO = matchMapper.toStartDTO(matchRepository.findById(createdMatchId).get());
         matchStartDTO.setDeadPieceDTOs(new ArrayList<>());
         matchStartDTO.setPlayBoardStartDTO(playBoardService.create());
