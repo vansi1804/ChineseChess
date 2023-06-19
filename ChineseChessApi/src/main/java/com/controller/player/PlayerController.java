@@ -1,6 +1,5 @@
 package com.controller.player;
 
-import org.apache.kafka.common.security.oauthbearer.secured.ValidateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.common.Default;
 import com.data.dto.PlayerCreationDTO;
 import com.data.dto.PlayerProfileDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.service.JsonProcessService;
 import com.service.PlayerService;
 
 @RestController
@@ -25,6 +23,8 @@ import com.service.PlayerService;
 public class PlayerController {
     @Autowired
     private PlayerService playerService;
+    @Autowired
+    private JsonProcessService jsonProcessService;
 
     @GetMapping("")
     public ResponseEntity<?> findAll(
@@ -48,13 +48,8 @@ public class PlayerController {
     public ResponseEntity<?> create(
             @RequestPart(name = "playerCreationDTO") String playerCreationDTOJsonString,
             @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar) {
-        PlayerCreationDTO playerCreationDTO;
-        try {
-            playerCreationDTO = new ObjectMapper().readValue(
-                    playerCreationDTOJsonString, PlayerCreationDTO.class);
-        } catch (JsonProcessingException e) {
-            throw new ValidateException(e.getMessage());
-        }
+        PlayerCreationDTO playerCreationDTO = jsonProcessService.readValue(
+                playerCreationDTOJsonString, PlayerCreationDTO.class);
         return ResponseEntity.ok(playerService.create(playerCreationDTO, fileAvatar));
     }
 
@@ -62,13 +57,8 @@ public class PlayerController {
     public ResponseEntity<?> update(@PathVariable long id,
             @RequestPart(name = "playerProfileDTO") String playerProfileDTOJsonString,
             @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar) {
-        PlayerProfileDTO playerProfileDTO;
-        try {
-            playerProfileDTO = new ObjectMapper().readValue(
-                    playerProfileDTOJsonString, PlayerProfileDTO.class);
-        } catch (JsonProcessingException e) {
-            throw new ValidateException(e.getMessage());
-        }
+        PlayerProfileDTO playerProfileDTO = jsonProcessService.readValue(
+                playerProfileDTOJsonString, PlayerProfileDTO.class);
         return ResponseEntity.ok(playerService.update(id, playerProfileDTO, fileAvatar));
     }
 
