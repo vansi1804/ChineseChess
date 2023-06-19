@@ -40,20 +40,30 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     private final int MAX_COL = Default.Game.PlayBoardSize.COL;
     private final int MAX_ROW = Default.Game.PlayBoardSize.ROW;
 
+    private final MoveHistoryRepository moveHistoryRepository;
+    private final MoveHistoryMapper moveHistoryMapper;
+    private final MatchRepository matchRepository;
+    private final PlayBoardService playBoardService;
+    private final MoveDescriptionService moveDescriptionService;
+    private final PieceService pieceService;
+    private final MovingRuleService movingRuleService;
+
     @Autowired
-    private MoveHistoryRepository moveHistoryRepository;
-    @Autowired
-    private MoveHistoryMapper moveHistoryMapper;
-    @Autowired
-    private MatchRepository matchRepository;
-    @Autowired
-    private PlayBoardService playBoardService;
-    @Autowired
-    private MoveDescriptionService moveDescriptionService;
-    @Autowired
-    private PieceService pieceService;
-    @Autowired
-    private MovingRuleService movingRuleService;
+    public MoveHistoryServiceImpl(MoveHistoryRepository moveHistoryRepository,
+            MoveHistoryMapper moveHistoryMapper,
+            MatchRepository matchRepository,
+            PlayBoardService playBoardService,
+            MoveDescriptionService moveDescriptionService,
+            PieceService pieceService,
+            MovingRuleService movingRuleService) {
+        this.moveHistoryRepository = moveHistoryRepository;
+        this.moveHistoryMapper = moveHistoryMapper;
+        this.matchRepository = matchRepository;
+        this.playBoardService = playBoardService;
+        this.moveDescriptionService = moveDescriptionService;
+        this.pieceService = pieceService;
+        this.movingRuleService = movingRuleService;
+    }
 
     @Override
     public List<MoveHistoryDTO> findAllByMatchId(long matchId) {

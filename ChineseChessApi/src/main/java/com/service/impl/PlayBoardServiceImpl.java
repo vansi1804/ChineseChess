@@ -18,10 +18,14 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     private final int MAX_COL = Default.Game.PlayBoardSize.COL;
     private final int MAX_ROW = Default.Game.PlayBoardSize.ROW;
 
+    private final PieceRepository pieceRepository;
+    private final PieceMapper pieceMapper;
+
     @Autowired
-    private PieceRepository pieceRepository;
-    @Autowired
-    private PieceMapper pieceMapper;
+    public PlayBoardServiceImpl(PieceRepository pieceRepository, PieceMapper pieceMapper) {
+        this.pieceRepository = pieceRepository;
+        this.pieceMapper = pieceMapper;
+    }
 
     @Override
     public PlayBoardDTO create() {

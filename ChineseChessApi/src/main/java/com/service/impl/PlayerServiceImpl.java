@@ -28,16 +28,25 @@ import com.service.UserService;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
+
+        private final PlayerRepository playerRepository;
+        private final PlayerMapper playerMapper;
+        private final UserService userService;
+        private final MatchRepository matchRepository;
+        private final RankRepository rankRepository;
+
         @Autowired
-        private PlayerRepository playerRepository;
-        @Autowired
-        private PlayerMapper playerMapper;
-        @Autowired
-        private UserService userService;
-        @Autowired
-        private MatchRepository matchRepository;
-        @Autowired
-        private RankRepository rankRepository;
+        public PlayerServiceImpl(PlayerRepository playerRepository,
+                        PlayerMapper playerMapper,
+                        UserService userService,
+                        MatchRepository matchRepository,
+                        RankRepository rankRepository) {
+                this.playerRepository = playerRepository;
+                this.playerMapper = playerMapper;
+                this.userService = userService;
+                this.matchRepository = matchRepository;
+                this.rankRepository = rankRepository;
+        }
 
         @Override
         public Page<PlayerDTO> findAll(int no, int limit, String sortBy) {

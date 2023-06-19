@@ -18,8 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("api/moveHistories")
 public class MoveHistoryController {
-    @Autowired
+   
     private MoveHistoryService moveHistoryService;
+
+    @Autowired
+    public MoveHistoryController(MoveHistoryService moveHistoryService) {
+        this.moveHistoryService = moveHistoryService;
+    }
 
     @GetMapping("")
     public ResponseEntity<?> findMoveValid(

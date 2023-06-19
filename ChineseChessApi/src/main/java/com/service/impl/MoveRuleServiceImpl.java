@@ -28,10 +28,14 @@ public class MoveRuleServiceImpl implements MovingRuleService {
     private static final List<Integer> PALACE_CENTER_ROWS_FOR_RED = IntStream.rangeClosed(8, 10).boxed()
             .collect(Collectors.toList());
 
+    private final PieceService pieceService;
+    private final PlayBoardService playBoardService;
+
     @Autowired
-    private PieceService pieceService;
-    @Autowired
-    private PlayBoardService playBoardService;
+    public MoveRuleServiceImpl(PieceService pieceService, PlayBoardService playBoardService) {
+        this.pieceService = pieceService;
+        this.playBoardService = playBoardService;
+    }
 
     @Override
     public boolean isMoveValid(PlayBoardDTO playBoard, PieceDTO pieceDTO, int toCol, int toRow) {

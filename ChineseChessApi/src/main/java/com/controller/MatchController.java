@@ -19,8 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("api/matches")
 public class MatchController {
-    @Autowired
+    
     private MatchService matchService;
+
+    @Autowired
+    public MatchController(MatchService matchService) {
+        this.matchService = matchService;
+    }
 
     @GetMapping("/players/{playerId}")
     public ResponseEntity<?> findAllByPlayerId(@PathVariable long playerId) {

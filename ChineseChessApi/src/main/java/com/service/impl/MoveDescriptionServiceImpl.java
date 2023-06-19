@@ -19,8 +19,12 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     private final int MAX_COL = Default.Game.PlayBoardSize.COL;
     private final int MAX_ROW = Default.Game.PlayBoardSize.ROW;
 
+    private final PieceService pieceService;
+
     @Autowired
-    private PieceService pieceService;
+    public MoveDescriptionServiceImpl(PieceService pieceService) {
+        this.pieceService = pieceService;
+    }
 
     @Override
     public String buildDescription(PlayBoardDTO currentBoard, PieceDTO pieceDTO, int toCol, int toRow) {

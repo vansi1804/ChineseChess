@@ -21,10 +21,15 @@ import com.service.PlayerService;
 @RestController
 @RequestMapping("api/players")
 public class PlayerController {
+
+    private final PlayerService playerService;
+    private final JsonProcessService jsonProcessService;
+
     @Autowired
-    private PlayerService playerService;
-    @Autowired
-    private JsonProcessService jsonProcessService;
+    public PlayerController(PlayerService playerService, JsonProcessService jsonProcessService) {
+        this.playerService = playerService;
+        this.jsonProcessService = jsonProcessService;
+    }
 
     @GetMapping("")
     public ResponseEntity<?> findAll(
