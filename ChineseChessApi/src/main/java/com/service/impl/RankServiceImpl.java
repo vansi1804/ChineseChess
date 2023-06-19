@@ -21,10 +21,15 @@ import com.service.RankService;
 
 @Service
 public class RankServiceImpl implements RankService {
+   
+    private final RankRepository rankRepository;
+    private final RankMapper rankMapper;
+
     @Autowired
-    private RankRepository rankRepository;
-    @Autowired
-    private RankMapper rankMapper;
+    public RankServiceImpl(RankRepository rankRepository, RankMapper rankMapper) {
+        this.rankRepository = rankRepository;
+        this.rankMapper = rankMapper;
+    }
 
     @Override
     public List<RankDTO> findAll() {

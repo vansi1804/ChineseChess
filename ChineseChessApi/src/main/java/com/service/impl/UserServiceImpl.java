@@ -29,16 +29,25 @@ import com.util.Encoding;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+        private final UserRepository userRepository;
+        private final UserMapper userMapper;
+        private final RoleRepository roleRepository;
+        private final VipRepository vipRepository;
+        private final FileService fileService;
+
         @Autowired
-        private UserRepository userRepository;
-        @Autowired
-        private UserMapper userMapper;
-        @Autowired
-        private RoleRepository roleRepository;
-        @Autowired
-        private VipRepository vipRepository;
-        @Autowired
-        private FileService fileService;
+        public UserServiceImpl(UserRepository userRepository,
+                        UserMapper userMapper,
+                        RoleRepository roleRepository,
+                        VipRepository vipRepository,
+                        FileService fileService) {
+                this.userRepository = userRepository;
+                this.userMapper = userMapper;
+                this.roleRepository = roleRepository;
+                this.vipRepository = vipRepository;
+                this.fileService = fileService;
+        }
 
         @Override
         public Page<UserDTO> findAll(int no, int limit, String sortBy) {

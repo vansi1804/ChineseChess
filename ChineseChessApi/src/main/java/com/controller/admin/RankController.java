@@ -19,8 +19,13 @@ import com.service.RankService;
 @RestController
 @RequestMapping("api/admin/ranks")
 public class RankController {
+
+    private final RankService rankService;
+
     @Autowired
-    private RankService rankService;
+    public RankController(RankService rankService) {
+        this.rankService = rankService;
+    }
 
     @GetMapping("")
     public ResponseEntity<?> findAll() {

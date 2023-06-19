@@ -12,8 +12,13 @@ import com.service.RoleService;
 @RestController
 @RequestMapping("api/admin/roles")
 public class RoleController {
+
+    private final RoleService roleService;
+
     @Autowired
-    private RoleService roleService;
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @GetMapping("")
     public ResponseEntity<?> findAll() {

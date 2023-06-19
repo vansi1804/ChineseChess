@@ -19,8 +19,13 @@ import com.service.VipService;
 @RestController
 @RequestMapping("api/admin/vips")
 public class VipController {
+   
+    private final VipService vipService;
+
     @Autowired
-    private VipService vipService;
+    public VipController(VipService vipService) {
+        this.vipService = vipService;
+    }
 
     @GetMapping("")
     public ResponseEntity<?> findAll() {

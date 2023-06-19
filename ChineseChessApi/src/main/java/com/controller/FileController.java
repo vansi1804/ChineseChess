@@ -26,8 +26,13 @@ import com.service.FileService;
 @RestController
 @RequestMapping("api/files")
 public class FileController {
-    @Autowired
+
     private FileService fileService;
+
+    @Autowired
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
+    }
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {

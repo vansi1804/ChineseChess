@@ -22,12 +22,19 @@ import com.service.PieceService;
 
 @Service
 public class PieceServiceImpl implements PieceService {
+
+    private final PieceRepository pieceRepository;
+    private final PieceMapper pieceMapper;
+    private final MoveHistoryRepository moveHistoryRepository;
+
     @Autowired
-    private PieceRepository pieceRepository;
-    @Autowired
-    private PieceMapper pieceMapper;
-    @Autowired
-    private MoveHistoryRepository moveHistoryRepository;
+    public PieceServiceImpl(PieceRepository pieceRepository,
+            PieceMapper pieceMapper,
+            MoveHistoryRepository moveHistoryRepository) {
+        this.pieceRepository = pieceRepository;
+        this.pieceMapper = pieceMapper;
+        this.moveHistoryRepository = moveHistoryRepository;
+    }
 
     @Override
     public List<PieceDTO> findAll() {

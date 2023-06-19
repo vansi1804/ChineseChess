@@ -27,16 +27,25 @@ import com.service.PlayBoardService;
 
 @Service
 public class MatchServiceImpl implements MatchService {
+
+    private final MatchRepository matchRepository;
+    private final MatchMapper matchMapper;
+    private final PlayerRepository playerRepository;
+    private final PlayBoardService playBoardService;
+    private final MoveHistoryService moveHistoryService;
+
     @Autowired
-    private MatchRepository matchRepository;
-    @Autowired
-    private MatchMapper matchMapper;
-    @Autowired
-    private PlayerRepository playerRepository;
-    @Autowired
-    private PlayBoardService playBoardService;
-    @Autowired
-    private MoveHistoryService moveHistoryService;
+    public MatchServiceImpl(MatchRepository matchRepository,
+            MatchMapper matchMapper,
+            PlayerRepository playerRepository,
+            PlayBoardService playBoardService,
+            MoveHistoryService moveHistoryService) {
+        this.matchRepository = matchRepository;
+        this.matchMapper = matchMapper;
+        this.playerRepository = playerRepository;
+        this.playBoardService = playBoardService;
+        this.moveHistoryService = moveHistoryService;
+    }
 
     @Override
     public List<MatchDTO> findAll() {

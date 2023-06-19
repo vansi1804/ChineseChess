@@ -21,10 +21,15 @@ import com.service.VipService;
 
 @Service
 public class VipServiceImpl implements VipService {
+
+    private final VipRepository vipRepository;
+    private final VipMapper vipMapper;
+
     @Autowired
-    private VipRepository vipRepository;
-    @Autowired
-    private VipMapper vipMapper;
+    public VipServiceImpl(VipRepository vipRepository, VipMapper vipMapper){
+        this.vipRepository = vipRepository;
+        this.vipMapper = vipMapper;
+    }
 
     @Override
     public List<VipDTO> findAll() {
