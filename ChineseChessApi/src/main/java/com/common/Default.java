@@ -31,4 +31,8 @@ public class Default {
         public static final EVip VIP = EVip.VIP0;
     }
 
+    public static class JWT {
+        public static final long EXPIRATION = 70000;
+    }
+
 }

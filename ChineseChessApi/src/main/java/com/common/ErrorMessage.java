@@ -5,6 +5,7 @@ public class ErrorMessage {
     public static final String INVALID_MOVING_PLAYER = "Invalid moving player";
     public static final String INVALID_MOVE = "Invalid move";
     public static final String INVALID_PLAYER_MOVE_PIECE = "Player is moving invalid piece";
+    public static final String INVALID_JSON_PAYLOAD = "JSON INVALID PAYLOAD";
 
     public static final String END_MATCH = "Match is end";
     public static final String DEAD_PIECE = "Piece is dead";

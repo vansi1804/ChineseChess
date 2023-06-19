@@ -19,6 +19,7 @@ import com.exception.EndMatchException;
 import com.exception.InvalidMoveException;
 import com.exception.InvalidMovingPlayerException;
 import com.exception.InvalidPlayerMovePieceException;
+import com.exception.JsonProcessException;
 import com.exception.OpponentTurnException;
 import com.exception.ValidationException;
 import com.exception.ResourceNotFoundException;
@@ -84,6 +85,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EndMatchException.class)
     public ResponseEntity<?> handleEndMatchException(EndMatchException ex,
+            HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
+    }
+
+    @ExceptionHandler(JsonProcessException.class)
+    public ResponseEntity<?> handleJsonProcessException(JsonProcessException ex,
             HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
