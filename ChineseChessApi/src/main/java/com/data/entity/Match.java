@@ -17,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AllArgsConstructor;
@@ -60,7 +61,12 @@ public class Match implements Serializable {
 
     @CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_date", updatable = false)
-	private Date createdDate;
+	@Column(name = "start_at", updatable = false)
+	private Date startAt;
+
+    @LastModifiedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "stop_at", updatable = false)
+	private Date stopAt;
 
 }

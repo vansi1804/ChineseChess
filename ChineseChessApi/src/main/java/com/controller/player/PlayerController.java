@@ -33,9 +33,9 @@ public class PlayerController {
 
     @GetMapping("")
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "no", defaultValue = Default.Page.NO) int no,
-            @RequestParam(name = "limit", defaultValue = Default.Page.LIMIT) int limit,
-            @RequestParam(name = "sort-by", defaultValue = Default.Page.SORT_BY) String sortBy) {
+            @RequestParam(name = "no", required = false, defaultValue = Default.Page.NO) int no,
+            @RequestParam(name = "limit", required = false, defaultValue = Default.Page.LIMIT) int limit,
+            @RequestParam(name = "sort-by", required = false, defaultValue = Default.Page.SORT_BY) String sortBy) {
         return ResponseEntity.ok(playerService.findAll(no, limit, sortBy));
     }
 

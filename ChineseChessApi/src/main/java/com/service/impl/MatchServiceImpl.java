@@ -1,6 +1,5 @@
 package com.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.common.ErrorMessage;
 import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
@@ -19,7 +19,7 @@ import com.data.entity.Match;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.PlayerRepository;
-import com.exception.EndMatchException;
+import com.exception.InvalidException;
 import com.exception.ResourceNotFoundException;
 import com.service.MatchService;
 import com.service.MoveHistoryService;
@@ -88,6 +88,7 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public MatchStartDTO create(MatchCreationDTO matchCreationDTO) {
         Map<String, Object> errors = new HashMap<String, Object>();
+
         if (!playerRepository.existsById(matchCreationDTO.getPlayer1Id())) {
             errors.put("player1Id", matchCreationDTO.getPlayer1Id());
         }
@@ -98,10 +99,21 @@ public class MatchServiceImpl implements MatchService {
             throw new ResourceNotFoundException(errors);
         }
 
+        if (matchRepository.existsPlayingByPlayerId(matchCreationDTO.getPlayer1Id())) {
+            errors.put("player1Id", matchCreationDTO.getPlayer1Id());
+        }
+
+        if (matchRepository.existsPlayingByPlayerId(matchCreationDTO.getPlayer2Id())) {
+            errors.put("player2Id", matchCreationDTO.getPlayer2Id());
+        }
+
+        if (!errors.isEmpty()) {
+            throw new InvalidException(ErrorMessage.PLAYER_PLAYING, errors);
+        }
+
         Match match = matchRepository.saveAndFlush(matchMapper.toEntity(matchCreationDTO));
 
         MatchStartDTO matchStartDTO = matchMapper.toStartDTO(match);
-        matchStartDTO.setDeadPieceDTOs(new ArrayList<>());
         matchStartDTO.setPlayBoardStartDTO(playBoardService.create());
         return matchStartDTO;
     }
@@ -112,7 +124,7 @@ public class MatchServiceImpl implements MatchService {
                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
 
         if (match.getResult() != null) {
-            throw new EndMatchException(Collections.singletonMap("id", id));
+            throw new InvalidException(ErrorMessage.END_MATCH, Collections.singletonMap("id", match.getId()));
         }
 
         long winnerId = (isRedWin == null)

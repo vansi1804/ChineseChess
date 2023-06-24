@@ -15,7 +15,8 @@ public interface MatchMapper {
     @Mapping(source = "player1Id", target = "player1.id")
     @Mapping(source = "player2Id", target = "player2.id")
     @Mapping(ignore = true, target = "result")
-    @Mapping(ignore = true, target = "createdDate")
+    @Mapping(ignore = true, target = "startAt")
+    @Mapping(ignore = true, target = "stopAt")
     Match toEntity(MatchCreationDTO matchCreationDTO);
 
     @Mapping(source = "player1.id", target = "player1Id")
@@ -27,7 +28,6 @@ public interface MatchMapper {
     MatchDTO toDTO(Match match);
 
     @Mapping(expression = "java(toDTO(match))", target = "matchDTO")
-    @Mapping(ignore = true, target = "deadPieceDTOs")
     @Mapping(ignore = true, target = "playBoardStartDTO")
     MatchStartDTO toStartDTO(Match match);
 

@@ -14,13 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.data.dto.ErrorMessageResponseDTO;
 import com.exception.ConflictException;
-import com.exception.DeadPieceException;
-import com.exception.EndMatchException;
-import com.exception.InvalidMoveException;
-import com.exception.InvalidMovingPlayerException;
-import com.exception.InvalidPlayerMovePieceException;
+import com.exception.InvalidException;
 import com.exception.JsonProcessException;
-import com.exception.OpponentTurnException;
 import com.exception.ValidationException;
 import com.exception.ResourceNotFoundException;
 
@@ -51,48 +46,14 @@ public class GlobalExceptionHandler {
                 .body(new ErrorMessageResponseDTO(ex.getMessage(), errors, request.getServletPath()));
     }
 
-    @ExceptionHandler(InvalidMoveException.class)
-    public ResponseEntity<?> handleInvalidMoveException(InvalidMoveException ex, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
-    }
-
-    @ExceptionHandler(DeadPieceException.class)
-    public ResponseEntity<?> handleDeadPieceException(DeadPieceException ex, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
-    }
-
-    @ExceptionHandler(OpponentTurnException.class)
-    public ResponseEntity<?> handleOpponentTurnException(OpponentTurnException ex, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
-    }
-
-    @ExceptionHandler(InvalidMovingPlayerException.class)
-    public ResponseEntity<?> handleInvalidMovingPlayerException(InvalidMovingPlayerException ex,
-            HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
-    }
-
-    @ExceptionHandler(InvalidPlayerMovePieceException.class)
-    public ResponseEntity<?> handleInvalidPlayerMovePieceException(InvalidPlayerMovePieceException ex,
-            HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
-    }
-
-    @ExceptionHandler(EndMatchException.class)
-    public ResponseEntity<?> handleEndMatchException(EndMatchException ex,
-            HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
-    }
-
     @ExceptionHandler(JsonProcessException.class)
-    public ResponseEntity<?> handleJsonProcessException(JsonProcessException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<?> handleJsonProcessException(JsonProcessException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
+    }
+
+    @ExceptionHandler(InvalidException.class)
+    public ResponseEntity<?> handleInvalidException(InvalidException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
     }

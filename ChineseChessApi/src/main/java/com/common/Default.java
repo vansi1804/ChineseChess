@@ -19,7 +19,7 @@ public class Default {
     }
 
     public static class Page {
-        public static final String NO = "1";
+        public static final String NO = "0";
         public static final String LIMIT = "20";
         public static final String SORT_BY = "id";
     }
@@ -32,7 +32,10 @@ public class Default {
     }
 
     public static class JWT {
-        public static final long EXPIRATION = 70000;
+        public static final String SECRET = "SECRET_KEY";
+        public static final long EXPIRATION_TIME = 900_000;
+        public static final String TOKEN_PREFIX = "Bearer ";
+        public static final String HEADER_STRING = "Authorization";
     }
 
 }
