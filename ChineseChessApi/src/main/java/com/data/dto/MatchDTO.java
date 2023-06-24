@@ -26,5 +26,7 @@ public class MatchDTO {
     private String player2Avatar;
     private Long result;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
-    private Date createdDate;
+    private Date startAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
+    private Date stopAt;
 }
