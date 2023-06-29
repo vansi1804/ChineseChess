@@ -1,26 +1,57 @@
 package com.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.data.dto.ErrorMessageResponseDTO;
 import com.exception.ConflictException;
 import com.exception.InvalidException;
 import com.exception.JsonProcessException;
-import com.exception.ValidationException;
 import com.exception.ResourceNotFoundException;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    // @Override
+    // protected ResponseEntity<Object> handleMethodArgumentNotValid(
+    //         MethodArgumentNotValidException ex,
+    //         HttpHeaders headers,
+    //         HttpStatus status,
+    //         WebRequest request) {
+
+    //     String objectName = ex.getBindingResult().getObjectName();
+    //     FieldError fieldError = ex.getBindingResult().getFieldErrors().get(0);
+    //     String field = fieldError.getField();
+    //     String defaultMessage = fieldError.getDefaultMessage();
+
+    //     Map<String, Object> errors = new LinkedHashMap<>();
+    //     errors.put("objectName", objectName);
+
+    //     String[] fieldNames = field.split("\\.");
+
+    //     Map<String, Object> currentError = errors;
+    //     for (int i = 0; i < fieldNames.length; i++) {
+    //         if (i < fieldNames.length - 1) {
+    //             LinkedHashMap<String, Object> nestedError = new LinkedHashMap<>();
+    //             currentError.put("fieldName", nestedError);
+    //             currentError = nestedError;
+    //             currentError.put("objectName", fieldNames[i]);
+    //         } else {
+    //             currentError.put("fieldName", fieldNames[i]);
+    //         }
+    //     }
+    
+    //     errors.put("message", defaultMessage);
+
+    //     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    //             .body(new ErrorMessageResponseDTO(ErrorMessage.INVALID_DATA, errors,
+    //                     ((ServletWebRequest) request).getRequest().getServletPath()));
+    // }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleNotFoundException(ResourceNotFoundException ex, HttpServletRequest request) {
@@ -32,18 +63,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleConflictException(ConflictException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String message = error.getDefaultMessage();
-            errors.put(fieldName, message);
-        });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorMessageResponseDTO(ex.getMessage(), errors, request.getServletPath()));
     }
 
     @ExceptionHandler(JsonProcessException.class)
