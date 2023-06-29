@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.exception.ResourceNotFoundException;
-import com.exception.ValidationException;
 import com.service.FileService;
 
 import java.io.File;
@@ -53,7 +52,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public Resource downloadFile(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
-            throw new ValidationException(Collections.singletonMap("File name", fileName));
+            throw new ResourceNotFoundException(Collections.singletonMap("File name", fileName));
         }
 
         Path filePath = Paths.get(UPLOAD_DIR, fileName);

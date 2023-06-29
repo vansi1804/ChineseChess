@@ -1,5 +1,7 @@
 package com.controller.player;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.common.Default;
 import com.data.dto.PlayerCreationDTO;
 import com.data.dto.PlayerProfileDTO;
+import com.exception.InvalidException;
 import com.service.JsonProcessService;
 import com.service.PlayerService;
+import com.util.ValidationDataUtil;
 
 @RestController
 @RequestMapping("api/players")
@@ -53,8 +57,15 @@ public class PlayerController {
     public ResponseEntity<?> create(
             @RequestPart(name = "playerCreationDTO") String playerCreationDTOJsonString,
             @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar) {
+
         PlayerCreationDTO playerCreationDTO = jsonProcessService.readValue(
                 playerCreationDTOJsonString, PlayerCreationDTO.class);
+
+        Map<String, Object> validationErrors = ValidationDataUtil.errors(playerCreationDTO);
+        if (!validationErrors.isEmpty()) {
+            throw new InvalidException(validationErrors);
+        }
+
         return ResponseEntity.ok(playerService.create(playerCreationDTO, fileAvatar));
     }
 
@@ -62,8 +73,15 @@ public class PlayerController {
     public ResponseEntity<?> update(@PathVariable long id,
             @RequestPart(name = "playerProfileDTO") String playerProfileDTOJsonString,
             @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar) {
+
         PlayerProfileDTO playerProfileDTO = jsonProcessService.readValue(
                 playerProfileDTOJsonString, PlayerProfileDTO.class);
+
+        Map<String, Object> validationErrors = ValidationDataUtil.errors(playerProfileDTO);
+        if (!validationErrors.isEmpty()) {
+            throw new InvalidException(validationErrors);
+        }
+
         return ResponseEntity.ok(playerService.update(id, playerProfileDTO, fileAvatar));
     }
 

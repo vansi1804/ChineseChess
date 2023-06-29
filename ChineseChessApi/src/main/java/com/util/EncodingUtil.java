@@ -3,7 +3,7 @@ package com.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Encoding {
+public class EncodingUtil {
 
     private static final String SECRET_WORDS = "VanSiMeo";
     private static final int OFFSET = 4; // index to insert SECRET_WORDS

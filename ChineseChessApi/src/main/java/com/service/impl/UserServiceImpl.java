@@ -25,7 +25,7 @@ import com.data.repository.UserRepository;
 import com.data.repository.VipRepository;
 import com.service.FileService;
 import com.service.UserService;
-import com.util.Encoding;
+import com.util.EncodingUtil;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
                 }
 
                 User createUser = userMapper.toEntity(userCreationDTO);
-                createUser.setPassword(Encoding.getMD5(userCreationDTO.getPassword()));
+                createUser.setPassword(EncodingUtil.getMD5(userCreationDTO.getPassword()));
                 createUser.setAvatar(fileService.uploadFile(fileAvatar));
                 createUser.setRole(roleRepository.findByName(eRole.name())
                                 .orElseThrow(() -> new ResourceNotFoundException( // this should throw for back-end
@@ -114,7 +114,8 @@ public class UserServiceImpl implements UserService {
                 updateUser.setId(oldUser.getId());
                 updateUser.setPassword(oldUser.getPassword());
                 // check update file Avatar
-                if (!StringUtils.equals(updateUser.getAvatar(), oldUser.getAvatar()) || (fileAvatar != null)) {
+                if (!StringUtils.equals(updateUser.getAvatar(), oldUser.getAvatar())
+                                || (fileAvatar != null && !fileAvatar.isEmpty())) {
                         fileService.deleteFile(oldUser.getAvatar());
                         updateUser.setAvatar(fileService.uploadFile(fileAvatar));
                 }
