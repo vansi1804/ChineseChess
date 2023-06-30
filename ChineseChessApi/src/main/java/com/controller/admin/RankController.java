@@ -32,7 +32,7 @@ public class RankController {
         return ResponseEntity.ok(rankService.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id={id}")
     public ResponseEntity<?> findById(@PathVariable int id) {
         return ResponseEntity.ok(rankService.findById(id));
     }
@@ -42,12 +42,12 @@ public class RankController {
         return ResponseEntity.ok(rankService.create(rankDTO));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/id={id}")
     public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody RankDTO rankDTO) {
         return ResponseEntity.ok(rankService.update(id, rankDTO));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id={id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
         rankService.delete(id);
         return ResponseEntity.ok("Deleted");

@@ -42,12 +42,12 @@ public class VipController {
         return ResponseEntity.ok(vipService.create(vipDTO));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/id={id}")
     public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody VipDTO vipDTO) {
         return ResponseEntity.ok(vipService.update(id, vipDTO));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id={id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
         vipService.delete(id);
         return ResponseEntity.ok("Deleted");

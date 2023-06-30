@@ -39,7 +39,7 @@ public class FileController {
         return ResponseEntity.ok(fileService.uploadFile(file));
     }
 
-    @GetMapping("/download/{fileName}")
+    @GetMapping("/download/fileName={fileName}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws IOException {
         Resource resource = fileService.downloadFile(fileName);
         if (resource != null) {
@@ -60,7 +60,7 @@ public class FileController {
         }
     }
 
-    @GetMapping("/display/{fileName}") // view on web
+    @GetMapping("/display/fileName={fileName}") // view on web
     public ResponseEntity<byte[]> displayFile(@PathVariable String fileName) throws IOException {
         Resource resource = fileService.downloadFile(fileName);
         if (resource != null) {

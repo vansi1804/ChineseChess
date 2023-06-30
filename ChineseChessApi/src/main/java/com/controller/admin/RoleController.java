@@ -25,7 +25,7 @@ public class RoleController {
         return ResponseEntity.ok(roleService.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id={id}")
     public ResponseEntity<?> findById(@PathVariable int id) {
         return ResponseEntity.ok(roleService.findById(id));
     }
