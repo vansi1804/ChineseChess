@@ -1,4 +1,4 @@
-package com.controller.admin;
+package com.controller;
 
 import javax.validation.Valid;
 
@@ -24,6 +24,11 @@ public class TrainingController {
     @Autowired
     public TrainingController(TrainingService trainingService) {
         this.trainingService = trainingService;
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> findAll() {
+        return ResponseEntity.ok(trainingService.findAll());
     }
 
     @GetMapping("/id={id}")

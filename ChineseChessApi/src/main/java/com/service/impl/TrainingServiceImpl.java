@@ -30,6 +30,13 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
+    public List<TrainingDTO> findAll() {
+        return trainingRepository.findAll().stream()
+                .map(t -> trainingMapper.toDTO(t))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<TrainingDTO> findAllChildrenById(Long id) {
         return trainingRepository.findAllByParentTraining_Id(id).stream()
                 .map(t -> trainingMapper.toDTO(t))
@@ -66,7 +73,7 @@ public class TrainingServiceImpl implements TrainingService {
 
         if (trainingRepository.existByParentTrainingIdAndTitle(
                 trainingDTO.getParentTrainingId(), trainingDTO.getTitle())) {
-                    
+
             Map<String, Object> errors = new HashMap<>();
             errors.put("parentTrainingId", trainingDTO.getParentTrainingId());
             errors.put("title", trainingDTO.getTitle());

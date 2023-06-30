@@ -6,6 +6,7 @@ import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
 import com.data.dto.MatchStartDTO;
+import com.data.dto.TrainingMatchDTO;
 
 public interface MatchService {
     List<MatchDTO> findAll();
@@ -19,4 +20,7 @@ public interface MatchService {
     MatchStartDTO create(MatchCreationDTO matchCreationDTO);
 
     MatchDTO updateResult(long id, Boolean isRedWin);
+
+    TrainingMatchDTO create(long trainingId);
+
 }
