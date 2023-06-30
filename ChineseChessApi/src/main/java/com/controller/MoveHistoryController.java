@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.data.dto.MoveHistoryCreationDTO;
+import com.data.dto.TrainingMoveHistoryCreationDTO;
 import com.service.MoveHistoryService;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("api/moveHistories")
 public class MoveHistoryController {
-   
+
     private MoveHistoryService moveHistoryService;
 
     @Autowired
@@ -35,6 +36,11 @@ public class MoveHistoryController {
     @PostMapping("")
     public ResponseEntity<?> create(@Valid @RequestBody MoveHistoryCreationDTO moveHistoryCreationDTO) {
         return ResponseEntity.ok(moveHistoryService.create(moveHistoryCreationDTO));
+    }
+
+    @PostMapping("/training")
+    public ResponseEntity<?> create(@Valid @RequestBody TrainingMoveHistoryCreationDTO trainingMoveHistoryCreationDTO) {
+        return ResponseEntity.ok(moveHistoryService.create(trainingMoveHistoryCreationDTO));
     }
 
 }

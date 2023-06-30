@@ -6,6 +6,8 @@ import com.data.dto.TrainingDTO;
 
 public interface TrainingService {
 
+    List<TrainingDTO> findAll();
+
     List<TrainingDTO> findAllChildrenById(Long id);
 
     TrainingDTO create(TrainingDTO trainingDTO);

@@ -19,6 +19,7 @@ import com.data.dto.MoveHistoryCreationDTO;
 import com.data.dto.MoveHistoryDTO;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
+import com.data.dto.TrainingMoveHistoryCreationDTO;
 import com.data.entity.Match;
 import com.data.entity.MoveHistory;
 import com.data.mapper.MoveHistoryMapper;
@@ -140,6 +141,89 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     @Override
+    public MoveHistoryCreationResponseDTO create(TrainingMoveHistoryCreationDTO trainingMoveHistoryCreationDTO) {
+        Match match = matchRepository.findById(trainingMoveHistoryCreationDTO.getMatchId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        Collections.singletonMap("matchId", trainingMoveHistoryCreationDTO.getMatchId())));
+
+        if (match.getResult() != null) {
+            throw new InvalidException(ErrorMessage.END_MATCH, Collections.singletonMap("matchId", match.getId()));
+        }
+
+        long lastTurn = moveHistoryRepository.countTurnByMatch_Id(match.getId());
+        long newTurn = lastTurn + 1;
+
+        PieceDTO movingPieceDTO = pieceService.findById(trainingMoveHistoryCreationDTO.getPieceId());
+
+        PlayBoardDTO currentBoard = this.buildPlayBoardByMatchId(match.getId());
+
+        // check piece input existing in currentBoard
+        PieceDTO foundPieceInBoard = pieceService.findOneInBoard(currentBoard, movingPieceDTO.getId());
+        if (foundPieceInBoard == null) {
+            int[] lastPosition = moveHistoryRepository.findLastPositionByMatchIdAndPieceId(
+                    match.getId(), movingPieceDTO.getId());
+            if (lastPosition != null) {
+                movingPieceDTO.setCurrentCol(lastPosition[0]);
+                movingPieceDTO.setCurrentRow(lastPosition[1]);
+            }
+
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("matchId", match.getId());
+            errors.put("turn", newTurn);
+            errors.put("pieceDTO", movingPieceDTO);
+            throw new InvalidException(ErrorMessage.DEAD_PIECE, errors);
+
+        } else {
+            movingPieceDTO.setCurrentCol(foundPieceInBoard.getCurrentCol());
+            movingPieceDTO.setCurrentRow(foundPieceInBoard.getCurrentRow());
+        }
+
+        if (((newTurn % 2 != 0) && movingPieceDTO.isRed())) {
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("matchId", match.getId());
+            errors.put("turn", newTurn);
+            errors.put("pieceDTO", movingPieceDTO);
+            throw new InvalidException(ErrorMessage.OPPONENT_TURN, errors);
+        }
+
+        boolean isValidMove = movingRuleService.isMoveValid(
+                currentBoard, movingPieceDTO,
+                trainingMoveHistoryCreationDTO.getToCol(),
+                trainingMoveHistoryCreationDTO.getToRow());
+
+        if (isValidMove) {
+            MoveHistory moveHistory = moveHistoryMapper.toEntity(trainingMoveHistoryCreationDTO);
+            moveHistory.setTurn(newTurn);
+            moveHistoryRepository.save(moveHistory);
+
+            MoveHistoryCreationResponseDTO moveHistoryCreationResponseDTO = new MoveHistoryCreationResponseDTO();
+            moveHistoryCreationResponseDTO.setDeadPieceDTO(
+                    currentBoard.getState()[moveHistory.getToCol() - 1][moveHistory.getToRow() - 1]);
+
+            currentBoard = playBoardService.update(
+                    currentBoard, movingPieceDTO,
+                    trainingMoveHistoryCreationDTO.getToCol(),
+                    trainingMoveHistoryCreationDTO.getToRow());
+
+            moveHistoryCreationResponseDTO.setGeneralBeingChecked(
+                    findGeneralBeingChecked(currentBoard, !movingPieceDTO.isRed()));
+
+            boolean isCheckMate = isCheckMate(currentBoard, movingPieceDTO.isRed());
+            moveHistoryCreationResponseDTO.setCheckMate(isCheckMate);
+
+            return moveHistoryCreationResponseDTO;
+        }
+
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("matchId", match.getId());
+        errors.put("turn", newTurn);
+        errors.put("pieceDTO", movingPieceDTO);
+        errors.put("toCol", trainingMoveHistoryCreationDTO.getToCol());
+        errors.put("toRow", trainingMoveHistoryCreationDTO.getToRow());
+        throw new InvalidException(ErrorMessage.INVALID_MOVE, errors);
+    }
+
+    @Override
     public MoveHistoryCreationResponseDTO create(MoveHistoryCreationDTO moveHistoryCreationDTO) {
         Match match = matchRepository.findById(moveHistoryCreationDTO.getMatchId())
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -183,8 +267,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             movingPieceDTO.setCurrentRow(foundPieceInBoard.getCurrentRow());
         }
 
-        if (((newTurn % 2 != 0) && (match.getPlayer1().getId() != moveHistoryCreationDTO.getPlayerId()))
-                || ((newTurn % 2 == 0) && (match.getPlayer2().getId() != moveHistoryCreationDTO.getPlayerId()))) {
+        if (((newTurn % 2 != 0) && movingPieceDTO.isRed())) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("matchId", match.getId());
             errors.put("turn", newTurn);
@@ -200,9 +283,6 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             errors.put("pieceDTO", movingPieceDTO);
             throw new InvalidException(ErrorMessage.INVALID_PLAYER_MOVE_PIECE, errors);
         }
-
-        System.out.println("current");
-        currentBoard.print(movingPieceDTO);
 
         boolean isValidMove = movingRuleService.isMoveValid(
                 currentBoard, movingPieceDTO, moveHistoryCreationDTO.getToCol(), moveHistoryCreationDTO.getToRow());
@@ -220,18 +300,14 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
             moveHistoryCreationResponseDTO.setGeneralBeingChecked(
                     findGeneralBeingChecked(currentBoard, !movingPieceDTO.isRed()));
-            
+
             boolean isCheckMate = isCheckMate(currentBoard, movingPieceDTO.isRed());
+            moveHistoryCreationResponseDTO.setCheckMate(isCheckMate);
+
             if (isCheckMate) {
                 match.setResult(moveHistoryCreationDTO.getPlayerId());
                 matchRepository.save(match);
             }
-            
-            moveHistoryCreationResponseDTO.setCheckMate(isCheckMate);
-
-            System.out.println("===========================================");
-            System.out.println("Turn" + newTurn);
-            currentBoard.print(movingPieceDTO);
 
             return moveHistoryCreationResponseDTO;
         }

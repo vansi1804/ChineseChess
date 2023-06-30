@@ -7,13 +7,15 @@ import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
 import com.data.dto.MatchStartDTO;
+import com.data.dto.TrainingMatchDTO;
 import com.data.entity.Match;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { TrainingMapper.class })
 public interface MatchMapper {
     @Mapping(ignore = true, target = "id")
     @Mapping(source = "player1Id", target = "player1.id")
     @Mapping(source = "player2Id", target = "player2.id")
+    @Mapping(ignore = true, target = "training")
     @Mapping(ignore = true, target = "result")
     @Mapping(ignore = true, target = "startAt")
     @Mapping(ignore = true, target = "stopAt")
@@ -35,4 +37,9 @@ public interface MatchMapper {
     @Mapping(ignore = true, target = "moveHistoryDTOs")
     @Mapping(ignore = true, target = "totalTurn")
     MatchDetailDTO toDetailDTO(Match match);
+
+    @Mapping(source = "training", target = "trainingDTO")
+    @Mapping(ignore = true, target = "playBoardStartDTO")
+    TrainingMatchDTO toTrainingDTO(Match match);
+
 }
