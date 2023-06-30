@@ -13,7 +13,7 @@ public class ErrorMessage {
     public static final String DATA_NOT_FOUND = "Data not found";
     public static final String DATA_ALREADY_EXISTS = "Data already exists";
     public static final String BLANK_DATA = "Blank data";
-    public static final String PASSWORD_TOO_SHORT = "Password should have at least "
+    public static final String PASSWORD_TOO_SHORT = "Password should have at least"
             + Validation.PASSWORD_SIZE_MIN + " characters";
     public static final String INVALID_FILE_TYPE = "Invalid file type";
 }

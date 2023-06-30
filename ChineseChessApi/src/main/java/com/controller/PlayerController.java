@@ -1,4 +1,4 @@
-package com.controller.player;
+package com.controller;
 
 import java.util.Map;
 
@@ -43,12 +43,12 @@ public class PlayerController {
         return ResponseEntity.ok(playerService.findAll(no, limit, sortBy));
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/users/id={userId}")
     public ResponseEntity<?> findByUserId(@PathVariable long userId) {
         return ResponseEntity.ok(playerService.findByUserId(userId));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id={id}")
     public ResponseEntity<?> findById(@PathVariable long id) {
         return ResponseEntity.ok(playerService.findById(id));
     }
@@ -69,7 +69,7 @@ public class PlayerController {
         return ResponseEntity.ok(playerService.create(playerCreationDTO, fileAvatar));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/id={id}")
     public ResponseEntity<?> update(@PathVariable long id,
             @RequestPart(name = "playerProfileDTO") String playerProfileDTOJsonString,
             @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar) {
@@ -85,12 +85,12 @@ public class PlayerController {
         return ResponseEntity.ok(playerService.update(id, playerProfileDTO, fileAvatar));
     }
 
-    @PutMapping("/{id}/lock")
+    @PutMapping("/id={id}/lock")
     public ResponseEntity<?> lockById(@PathVariable long id) {
         return ResponseEntity.ok(playerService.lockById(id));
     }
 
-    @PutMapping("/{id}/unlock")
+    @PutMapping("/id={id}/unlock")
     public ResponseEntity<?> unlockById(@PathVariable long id) {
         return ResponseEntity.ok(playerService.unlockById(id));
     }

@@ -27,14 +27,14 @@ public class MatchController {
         this.matchService = matchService;
     }
 
-    @GetMapping("/players/{playerId}")
+    @GetMapping("/players/id={playerId}")
     public ResponseEntity<?> findAllByPlayerId(@PathVariable long playerId) {
         return ResponseEntity.ok(matchService.findAllByPlayerId(playerId));
     }
 
-    @GetMapping("/{matchId}")
-    public ResponseEntity<?> findMatchDetailById(@PathVariable long matchId) {
-        return ResponseEntity.ok(matchService.findMatchDetailById(matchId));
+    @GetMapping("/id={id}")
+    public ResponseEntity<?> findMatchDetailById(@PathVariable long id) {
+        return ResponseEntity.ok(matchService.findMatchDetailById(id));
     }
 
     @PostMapping("")
@@ -42,9 +42,9 @@ public class MatchController {
         return ResponseEntity.ok(matchService.create(matchCreationDTO));
     }
 
-    @PutMapping("/{matchId}/{isRedWin}")
-    public ResponseEntity<?> updateResult(@PathVariable long matchId, @PathVariable Boolean isRedWin) {
-        return ResponseEntity.ok(matchService.updateResult(matchId, isRedWin));
+    @PutMapping("/id={id}/{isRedWin}")
+    public ResponseEntity<?> updateResult(@PathVariable long id, @PathVariable Boolean isRedWin) {
+        return ResponseEntity.ok(matchService.updateResult(id, isRedWin));
     }
 
 }

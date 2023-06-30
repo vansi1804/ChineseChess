@@ -146,7 +146,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                         Collections.singletonMap("matchId", moveHistoryCreationDTO.getMatchId())));
 
         if (match.getResult() != null) {
-            throw new InvalidException(ErrorMessage.END_MATCH, Collections.singletonMap("id", match.getId()));
+            throw new InvalidException(ErrorMessage.END_MATCH, Collections.singletonMap("matchId", match.getId()));
         }
 
         if ((match.getPlayer1().getId() != moveHistoryCreationDTO.getPlayerId())

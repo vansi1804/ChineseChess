@@ -19,9 +19,8 @@ public class ValidationDataUtil<T> {
             Map<String, Object> errors = new LinkedHashMap<>();
             // Custom error details from the violations
             for (ConstraintViolation<T> violation : violations) {
-                String field = violation.getPropertyPath().toString();
-                String message = violation.getMessage();
-                errors.put(field, message);
+                errors.put("field", violation.getPropertyPath().toString());
+                errors.put("message", violation.getMessage());
             }
             return errors;
         }

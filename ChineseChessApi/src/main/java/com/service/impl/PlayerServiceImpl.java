@@ -59,7 +59,7 @@ public class PlayerServiceImpl implements PlayerService {
                 return playerRepository.findByUser_Id(userId)
                                 .map(p -> playerMapper.toDTO(p, matchRepository.findAllByPlayerId(p.getId())))
                                 .orElseThrow(() -> new ResourceNotFoundException(
-                                                Collections.singletonMap("userId", userId)));
+                                                Collections.singletonMap("user.id", userId)));
         }
 
         @Override

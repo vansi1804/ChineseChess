@@ -51,7 +51,7 @@ public class VipServiceImpl implements VipService {
     @Override
     public VipDTO create(VipDTO vipDTO) {
         if (vipRepository.existsByName(vipDTO.getName())) {
-            throw new ResourceNotFoundException(Collections.singletonMap("Vip name", vipDTO.getName()));
+            throw new ResourceNotFoundException(Collections.singletonMap("name", vipDTO.getName()));
         }
         return vipMapper.toDTO(vipRepository.save(vipMapper.toEntity(vipDTO)));
     }

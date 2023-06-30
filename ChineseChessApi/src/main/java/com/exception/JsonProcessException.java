@@ -15,8 +15,8 @@ public class JsonProcessException extends ExceptionCustom {
 
     private static Object extractErrorMessage(JsonProcessingException ex) {
         String fieldName = getFieldError(ex);
-        return fieldName == null 
-        ? ex.getOriginalMessage() 
+        return fieldName == null
+        ? ex.getOriginalMessage()
         : Collections.singletonMap(fieldName, "UNRECOGNIZED");
     }
 

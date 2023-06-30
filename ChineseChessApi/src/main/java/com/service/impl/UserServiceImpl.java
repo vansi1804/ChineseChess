@@ -90,11 +90,11 @@ public class UserServiceImpl implements UserService {
                 createUser.setRole(roleRepository.findByName(eRole.name())
                                 .orElseThrow(() -> new ResourceNotFoundException( // this should throw for back-end
                                                                                   // (BE-exception)
-                                                Collections.singletonMap("Role name", eRole.name()))));
+                                                Collections.singletonMap("user.role.name", eRole.name()))));
                 String defaultVip = Default.User.VIP.name();
                 createUser.setVip(vipRepository.findByName(defaultVip)
                                 .orElseThrow(() -> new ResourceNotFoundException( // (BE-exception)
-                                                Collections.singletonMap("Vip name", eRole.name()))));
+                                                Collections.singletonMap("user.vip.name", eRole.name()))));
                 createUser.setStatus(Default.User.STATUS.name());
 
                 return userMapper.toDTO(userRepository.save(createUser));

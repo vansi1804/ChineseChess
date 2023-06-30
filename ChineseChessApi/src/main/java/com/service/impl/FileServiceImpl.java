@@ -52,7 +52,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public Resource downloadFile(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
-            throw new ResourceNotFoundException(Collections.singletonMap("File name", fileName));
+            throw new ResourceNotFoundException(Collections.singletonMap("fileName", fileName));
         }
 
         Path filePath = Paths.get(UPLOAD_DIR, fileName);
@@ -60,10 +60,10 @@ public class FileServiceImpl implements FileService {
         try {
             resource = new UrlResource(filePath.toUri());
             if (!resource.exists() || !resource.isReadable()) {
-                throw new ResourceNotFoundException(Collections.singletonMap("File name", fileName));
+                throw new ResourceNotFoundException(Collections.singletonMap("fileName", fileName));
             }
         } catch (MalformedURLException e) {
-            throw new ResourceNotFoundException(Collections.singletonMap("File name", fileName));
+            throw new ResourceNotFoundException(Collections.singletonMap("fileName", fileName));
         }
         return resource;
     }
