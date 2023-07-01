@@ -59,11 +59,6 @@ public class PieceServiceImpl implements PieceService {
     }
 
     @Override
-    public List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO) {
-        return findAllInBoard(playBoardDTO, null, null);
-    }
-
-    @Override
     public List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed) {
         return IntStream.range(0, playBoardDTO.getState().length)
                 .boxed()
@@ -80,7 +75,7 @@ public class PieceServiceImpl implements PieceService {
 
     @Override
     public List<PieceDTO> findAllDeadInPlayBoard(PlayBoardDTO playBoardDTO) {
-        List<PieceDTO> piecesInBoard = findAllInBoard(playBoardDTO);
+        List<PieceDTO> piecesInBoard = findAllInBoard(playBoardDTO, null, null);
         List<PieceDTO> deadPieces = findAll();
         // remove all alive pieces in board
         deadPieces.removeIf(p1 -> piecesInBoard.stream().map(p2 -> p2.getId()).toList().contains(p1.getId()));
@@ -110,6 +105,59 @@ public class PieceServiceImpl implements PieceService {
                 : pieceRepository.findByCurrentColAndCurrentRow(toCol, toRow)
                         .map(p -> pieceMapper.toDTO(p))
                         .orElse(null);
+    }
+
+    @Override
+    public PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoard, PieceDTO pieceDTO) {
+        return IntStream.rangeClosed(1, playBoard.getState()[0].length)
+                .filter(row -> {
+                    PieceDTO currentPiece = playBoard.getState()[pieceDTO.getCurrentCol() - 1][row - 1];
+                    return currentPiece != null
+                            && currentPiece.getId() != pieceDTO.getId()
+                            && currentPiece.isRed() == pieceDTO.isRed()
+                            && currentPiece.getName().equals(pieceDTO.getName());
+                })
+                .mapToObj(row -> playBoard.getState()[pieceDTO.getCurrentCol() - 1][row - 1])
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public boolean existsBetweenInRowPath(PlayBoardDTO playBoard, int currentRow, int fromCol, int toCol) {
+        int startCol = Math.min(fromCol, toCol) + 1;
+        int endCol = Math.max(fromCol, toCol) - 1;
+
+        return IntStream.rangeClosed(startCol, endCol)
+                .anyMatch(col -> playBoard.getState()[col - 1][currentRow - 1] != null);
+    }
+
+    @Override
+    public boolean existsBetweenInColPath(PlayBoardDTO playBoard, int currentCol, int fromRow, int toRow) {
+        int startRow = Math.min(fromRow, toRow) + 1;
+        int endRow = Math.max(fromRow, toRow) - 1;
+
+        return IntStream.rangeClosed(startRow, endRow)
+                .anyMatch(row -> playBoard.getState()[currentCol - 1][row - 1] != null);
+    }
+
+    @Override
+    public int countBetweenInRowPath(PlayBoardDTO playBoard, int currentRow, int fromCol, int toCol) {
+        int startCol = Math.min(fromCol, toCol) + 1;
+        int endCol = Math.max(fromCol, toCol) - 1;
+
+        return (int) IntStream.rangeClosed(startCol, endCol)
+                .filter(col -> playBoard.getState()[col - 1][currentRow - 1] != null)
+                .count();
+    }
+
+    @Override
+    public int countBetweenInColPath(PlayBoardDTO playBoard, int currentCol, int fromRow, int toRow) {
+        int startRow = Math.min(fromRow, toRow) + 1;
+        int endRow = Math.max(fromRow, toRow) - 1;
+
+        return (int) IntStream.rangeClosed(startRow, endRow)
+                .filter(row -> playBoard.getState()[currentCol - 1][row - 1] != null)
+                .count();
     }
 
 }

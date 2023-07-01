@@ -13,8 +13,9 @@ public class Default {
 
     public static class Game {
         public class PlayBoardSize {
-            public static final int COL = 9;
-            public static final int ROW = 10;
+            public static final int AREA_Min = 1;
+            public static final int COL_MAX = 9;
+            public static final int ROW_MAX = 10;
         }
     }
 
