@@ -26,7 +26,7 @@ public class VipServiceImpl implements VipService {
     private final VipMapper vipMapper;
 
     @Autowired
-    public VipServiceImpl(VipRepository vipRepository, VipMapper vipMapper){
+    public VipServiceImpl(VipRepository vipRepository, VipMapper vipMapper) {
         this.vipRepository = vipRepository;
         this.vipMapper = vipMapper;
     }
@@ -85,4 +85,5 @@ public class VipServiceImpl implements VipService {
             vipRepository.saveAll(vips);
         }
     }
+    
 }

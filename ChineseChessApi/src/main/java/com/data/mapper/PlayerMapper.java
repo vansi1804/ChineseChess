@@ -59,4 +59,5 @@ public interface PlayerMapper {
         }
         return new int[] { win, lost, draw };
     }
+    
 }

@@ -8,6 +8,7 @@ import com.data.dto.MatchDetailDTO;
 import com.data.dto.MatchStartDTO;
 
 public interface MatchService {
+    
     List<MatchDTO> findAll();
 
     MatchDTO findById(long id);

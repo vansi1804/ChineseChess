@@ -50,11 +50,12 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     public PlayBoardDTO update(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
         PlayBoardDTO updatedBoard = new PlayBoardDTO(cloneStateArray(playBoardDTO.getState()));
 
-        // Update the piece's current position in the updatedBoard
         updatedBoard.getState()[pieceDTO.getCurrentCol() - 1][pieceDTO.getCurrentRow() - 1] = null;
-        PieceDTO updatedPieceDTO = new PieceDTO(pieceDTO);
+
+        PieceDTO updatedPieceDTO = pieceMapper.copy(pieceDTO);
         updatedPieceDTO.setCurrentCol(toCol);
         updatedPieceDTO.setCurrentRow(toRow);
+
         updatedBoard.getState()[toCol - 1][toRow - 1] = updatedPieceDTO;
 
         return updatedBoard;

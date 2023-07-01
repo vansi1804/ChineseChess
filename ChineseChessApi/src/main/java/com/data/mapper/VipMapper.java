@@ -7,6 +7,7 @@ import com.data.entity.Vip;
 
 @Mapper(componentModel = "spring")
 public interface VipMapper {
+    
     Vip toEntity(VipDTO vipDTO);
     
     VipDTO toDTO(Vip vip);

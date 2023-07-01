@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class MatchStartDTO {
+
     private MatchDTO matchDTO;
+
     private PlayBoardDTO playBoardStartDTO;
+    
 }

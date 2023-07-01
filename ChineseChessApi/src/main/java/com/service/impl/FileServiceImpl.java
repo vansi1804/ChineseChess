@@ -65,6 +65,7 @@ public class FileServiceImpl implements FileService {
         } catch (MalformedURLException e) {
             throw new ResourceNotFoundException(Collections.singletonMap("fileName", fileName));
         }
+
         return resource;
     }
 
@@ -76,4 +77,5 @@ public class FileServiceImpl implements FileService {
             e.printStackTrace();
         }
     }
+
 }

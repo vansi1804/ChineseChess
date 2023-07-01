@@ -12,8 +12,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class RankDTO{
+    
     private int id;
+
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String name;
+
     private int milestones;
+
 }

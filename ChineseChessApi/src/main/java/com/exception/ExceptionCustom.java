@@ -8,10 +8,12 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ExceptionCustom extends RuntimeException {
+
 	private final Object errors;
 
 	public ExceptionCustom(String msg, Object errors) {
 		super(msg);
 		this.errors = errors;
 	}
+    
 }

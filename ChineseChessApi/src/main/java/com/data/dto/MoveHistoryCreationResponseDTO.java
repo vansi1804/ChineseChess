@@ -8,7 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class MoveHistoryCreationResponseDTO {
+    
     private PieceDTO deadPieceDTO;
+
     private PieceDTO generalBeingChecked;
+
     private boolean isCheckMate; 
+
 }

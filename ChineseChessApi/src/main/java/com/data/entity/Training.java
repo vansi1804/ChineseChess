@@ -31,6 +31,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "training")
 public class Training {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
@@ -50,4 +51,5 @@ public class Training {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_date", updatable = false)
 	private Date createdDate;
+
 }

@@ -9,6 +9,7 @@ import com.data.dto.PlayerCreationDTO;
 import com.data.dto.PlayerProfileDTO;
 
 public interface PlayerService {
+    
     Page<PlayerDTO> findAll(int no, int limit, String sortBy);
 
     PlayerDTO findByUserId(long id);

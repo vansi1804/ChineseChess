@@ -21,7 +21,7 @@ import com.service.RankService;
 
 @Service
 public class RankServiceImpl implements RankService {
-   
+
     private final RankRepository rankRepository;
     private final RankMapper rankMapper;
 

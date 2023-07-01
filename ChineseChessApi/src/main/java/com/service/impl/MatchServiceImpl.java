@@ -77,9 +77,8 @@ public class MatchServiceImpl implements MatchService {
                 .map(m -> matchMapper.toDetailDTO(m))
                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
 
-                List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(id);
-                List<MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
-        
+        List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(id);
+        List<MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
 
         for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOs) {
             System.out.println("\n" + moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription());
@@ -117,7 +116,7 @@ public class MatchServiceImpl implements MatchService {
             throw new InvalidException(ErrorMessage.PLAYER_PLAYING, errors);
         }
 
-        Match match = matchRepository.saveAndFlush(matchMapper.toEntity(matchCreationDTO));
+        Match match = matchRepository.save(matchMapper.toEntity(matchCreationDTO));
 
         MatchStartDTO matchStartDTO = matchMapper.toStartDTO(match);
         matchStartDTO.setPlayBoardStartDTO(playBoardService.create());

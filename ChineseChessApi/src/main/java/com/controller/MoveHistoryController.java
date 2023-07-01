@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.data.dto.MoveHistoryCreationDTO;
 import com.data.dto.TrainingMoveHistoryCreationDTO;
+import com.data.dto.ValidMoveRequestDTO;
 import com.service.MoveHistoryService;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +29,8 @@ public class MoveHistoryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> findMoveValid(
-            @RequestParam("matchId") long matchId, @RequestParam("pieceId") int pieceId) {
-        return ResponseEntity.ok(moveHistoryService.findMoveValid(matchId, pieceId));
+    public ResponseEntity<?> findMoveValid(@Valid @RequestBody ValidMoveRequestDTO validMoveRequestDTO) {
+        return ResponseEntity.ok(moveHistoryService.findMoveValid(validMoveRequestDTO));
     }
 
     @PostMapping("")

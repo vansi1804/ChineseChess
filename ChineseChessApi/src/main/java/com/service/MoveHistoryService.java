@@ -12,9 +12,8 @@ import com.data.dto.ValidMoveRequestDTO;
 import com.data.entity.MoveHistory;
 
 public interface MoveHistoryService {
-    List<MoveHistoryDTO> build(List<MoveHistory> moveHistories);
 
-    boolean[][] findMoveValid(long matchId, int pieceId);
+    List<MoveHistoryDTO> build(List<MoveHistory> moveHistories);
 
     boolean[][] findMoveValid(ValidMoveRequestDTO validMoveRequestDTO);
 
@@ -23,6 +22,5 @@ public interface MoveHistoryService {
     
     @Transactional
     MoveHistoryCreationResponseDTO create(MoveHistoryCreationDTO moveHistoryCreationDTO);
-
 
 }

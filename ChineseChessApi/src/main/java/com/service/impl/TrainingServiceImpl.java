@@ -72,7 +72,7 @@ public class TrainingServiceImpl implements TrainingService {
             throw new ConflictException(errors);
         }
 
-        Training createdTraining = trainingRepository.saveAndFlush(trainingMapper.toEntity(trainingDTO));
+        Training createdTraining = trainingRepository.save(trainingMapper.toEntity(trainingDTO));
 
         return trainingMapper.toDTO(createdTraining);
     }
@@ -95,7 +95,7 @@ public class TrainingServiceImpl implements TrainingService {
         Training updateTraining = trainingMapper.toEntity(trainingDTO);
         updateTraining.setId(id);
 
-        return trainingMapper.toDTO(trainingRepository.saveAndFlush(updateTraining));
+        return trainingMapper.toDTO(trainingRepository.save(updateTraining));
     }
 
     @Override

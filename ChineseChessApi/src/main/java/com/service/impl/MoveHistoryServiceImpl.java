@@ -117,7 +117,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                         Collections.singletonMap("pieceId", validMoveRequestDTO.getPieceId())));
 
         PieceDTO foundPieceInBoard = pieceService.findOneInBoard(
-                validMoveRequestDTO.getPlayBoardDTO(), movingPieceDTO.getId());
+                validMoveRequestDTO.getCurrentBoard(), movingPieceDTO.getId());
         if (foundPieceInBoard == null) {
             throw new InvalidException(ErrorMessage.DEAD_PIECE,
                     Collections.singletonMap("pieceId", validMoveRequestDTO.getPieceId()));
@@ -127,21 +127,9 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         }
 
         System.out.println("current");
-        validMoveRequestDTO.getPlayBoardDTO().print(movingPieceDTO);
+        validMoveRequestDTO.getCurrentBoard().print(movingPieceDTO);
 
-        return findValidMove(validMoveRequestDTO.getPlayBoardDTO(), movingPieceDTO);
-    }
-
-    @Override
-    public boolean[][] findMoveValid(long matchId, int pieceId) {
-        if (!matchRepository.existsById(matchId)) {
-            new ResourceNotFoundException(Collections.singletonMap("matchId", matchId));
-        }
-
-        PlayBoardDTO currentBoard = playBoardService.buildPlayBoardByMoveHistories(
-                moveHistoryRepository.findAllByMatch_Id(matchId));
-
-        return findMoveValid(new ValidMoveRequestDTO(currentBoard, pieceId));
+        return findValidMove(validMoveRequestDTO.getCurrentBoard(), movingPieceDTO);
     }
 
     @Override
@@ -192,10 +180,8 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         System.out.println("current");
         currentBoard.print(movingPieceDTO);
 
-        boolean isValidMove = moveRuleService.isMoveValid(
-                currentBoard, movingPieceDTO,
-                trainingMHCreationDTO.getToCol(),
-                trainingMHCreationDTO.getToRow());
+        boolean isValidMove = moveRuleService.isMoveValid(currentBoard, movingPieceDTO,
+                trainingMHCreationDTO.getToCol(), trainingMHCreationDTO.getToRow());
         if (isValidMove) {
             MoveHistory moveHistory = moveHistoryMapper.toEntity(trainingMHCreationDTO);
             moveHistory.setTurn(newTurn);
@@ -277,6 +263,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             movingPieceDTO.setCurrentRow(foundPieceInBoard.getCurrentRow());
         }
 
+        // check color turn
         if (((newTurn % 2 != 0) && !movingPieceDTO.isRed()
                 || (newTurn % 2 == 0) && movingPieceDTO.isRed())) {
             Map<String, Object> errors = new HashMap<>();
@@ -286,6 +273,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             throw new InvalidException(ErrorMessage.OPPONENT_TURN, errors);
         }
 
+        // check player move valid piece
         if (movingPieceDTO.isRed() && (match.getPlayer1().getId() != mhCreationDTO.getPlayerId())) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("matchId", match.getId());
@@ -298,9 +286,8 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         System.out.println("current");
         currentBoard.print(movingPieceDTO);
 
-        boolean isValidMove = moveRuleService.isMoveValid(
-                currentBoard, movingPieceDTO, mhCreationDTO.getToCol(),
-                mhCreationDTO.getToRow());
+        boolean isValidMove = moveRuleService.isMoveValid(currentBoard, movingPieceDTO,
+                mhCreationDTO.getToCol(), mhCreationDTO.getToRow());
         if (isValidMove) {
             MoveHistory moveHistory = moveHistoryMapper.toEntity(mhCreationDTO);
             moveHistory.setTurn(newTurn);
@@ -316,10 +303,9 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             mhCreationResponseDTO.setGeneralBeingChecked(
                     findGeneralBeingChecked(currentBoard, !movingPieceDTO.isRed()));
 
-            boolean isCheckMate = isCheckMateState(currentBoard, movingPieceDTO.isRed());
-            mhCreationResponseDTO.setCheckMate(isCheckMate);
+            mhCreationResponseDTO.setCheckMate(isCheckMateState(currentBoard, movingPieceDTO.isRed()));
 
-            if (isCheckMate) {
+            if (mhCreationResponseDTO.isCheckMate()) {
                 match.setResult(mhCreationDTO.getPlayerId());
                 matchRepository.save(match);
             }
@@ -355,8 +341,8 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
         for (int toCol = 1; toCol <= col; toCol++) {
             for (int toRow = 1; toRow <= row; toRow++) {
-                validMoves[toCol - 1][toRow - 1] = moveRuleService.isMoveValid(playBoard, pieceDTO,
-                        toCol, toRow);
+                validMoves[toCol - 1][toRow - 1] = moveRuleService.isMoveValid(
+                        playBoard, pieceDTO, toCol, toRow);
             }
         }
         return validMoves;
