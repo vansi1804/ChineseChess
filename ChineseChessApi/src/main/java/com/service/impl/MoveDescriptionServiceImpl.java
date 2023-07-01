@@ -2,32 +2,32 @@ package com.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import java.util.stream.IntStream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.common.Default;
 import com.common.enumeration.EIndex;
-import com.common.enumeration.EMove;
+import com.common.enumeration.EMoveType;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.service.MoveDescriptionService;
+import com.service.MoveTypeService;
 import com.service.PieceService;
 
 @Service
 public class MoveDescriptionServiceImpl implements MoveDescriptionService {
-    private final int MAX_COL = Default.Game.PlayBoardSize.COL;
-    private final int MAX_ROW = Default.Game.PlayBoardSize.ROW;
+    private final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
 
     private final PieceService pieceService;
+    private final MoveTypeService moveTypeService;
 
     @Autowired
-    public MoveDescriptionServiceImpl(PieceService pieceService) {
+    public MoveDescriptionServiceImpl(PieceService pieceService, MoveTypeService moveTypeService) {
         this.pieceService = pieceService;
+        this.moveTypeService = moveTypeService;
     }
 
     @Override
-    public String buildDescription(PlayBoardDTO currentBoard, PieceDTO pieceDTO, int toCol, int toRow) {
+    public String build(PlayBoardDTO currentBoard, PieceDTO pieceDTO, int toCol, int toRow) {
         String shortNameOfPiece = pieceService.convertByName(pieceDTO.getName()).getShortNameValue();
 
         StringBuilder description = new StringBuilder();
@@ -47,18 +47,18 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         description.append(buildIndexDescription(currentBoard, pieceDTO));
         description.append(MAX_COL - pieceDTO.getCurrentCol() + 1);
 
-        if (isHorizontalMoving(pieceDTO.getCurrentRow(), toRow)) {
-            description.append(EMove.ACROSS.getValue())
+        if (moveTypeService.isHorizontalMoving(pieceDTO.getCurrentRow(), toRow)) {
+            description.append(EMoveType.ACROSS.getValue())
                     .append(MAX_COL - toCol + 1);
 
         } else {
-            if (isUpMoving(true, pieceDTO.getCurrentRow(), toRow)) {
-                description.append(EMove.UP.getValue());
+            if (moveTypeService.isUpMoving(true, pieceDTO.getCurrentRow(), toRow)) {
+                description.append(EMoveType.UP.getValue());
             } else {
-                description.append(EMove.DOWN.getValue());
+                description.append(EMoveType.DOWN.getValue());
             }
 
-            if (isVerticallyMoving(pieceDTO.getCurrentCol(), toCol)) {
+            if (moveTypeService.isVerticallyMoving(pieceDTO.getCurrentCol(), toCol)) {
                 description.append(Math.abs(pieceDTO.getCurrentRow() - toRow));
             } else {
                 description.append(MAX_COL - toCol + 1);
@@ -73,18 +73,18 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         description.append(buildIndexDescription(currentBoard, pieceDTO));
         description.append(pieceDTO.getCurrentCol());
 
-        if (isHorizontalMoving(pieceDTO.getCurrentRow(), toRow)) {
-            description.append(EMove.ACROSS.getValue())
+        if (moveTypeService.isHorizontalMoving(pieceDTO.getCurrentRow(), toRow)) {
+            description.append(EMoveType.ACROSS.getValue())
                     .append(toCol);
 
         } else {
-            if (isUpMoving(false, pieceDTO.getCurrentRow(), toRow)) {
-                description.append(EMove.UP.getValue());
+            if (moveTypeService.isUpMoving(false, pieceDTO.getCurrentRow(), toRow)) {
+                description.append(EMoveType.UP.getValue());
             } else {
-                description.append(EMove.DOWN.getValue());
+                description.append(EMoveType.DOWN.getValue());
             }
 
-            if (isVerticallyMoving(pieceDTO.getCurrentCol(), toCol)) {
+            if (moveTypeService.isVerticallyMoving(pieceDTO.getCurrentCol(), toCol)) {
                 description.append(Math.abs(pieceDTO.getCurrentRow() - toRow));
             } else {
                 description.append(toCol);
@@ -95,7 +95,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     }
 
     private String buildIndexDescription(PlayBoardDTO currentBoard, PieceDTO pieceDTO) {
-        PieceDTO foundPiece = findExistingTheSameInColPath(currentBoard, pieceDTO);
+        PieceDTO foundPiece = pieceService.findExistingTheSameInColPath(currentBoard, pieceDTO);
         return foundPiece == null
                 ? ""
                 : (pieceDTO.isRed() && (pieceDTO.getCurrentRow() < foundPiece.getCurrentRow()))
@@ -104,29 +104,4 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
                                 : EIndex.AFTER.getValue();
     }
 
-    private PieceDTO findExistingTheSameInColPath(PlayBoardDTO currentBoard, PieceDTO pieceDTO) {
-        return IntStream.rangeClosed(1, MAX_ROW)
-                .filter(row -> {
-                    PieceDTO currentPiece = currentBoard.getState()[pieceDTO.getCurrentCol() - 1][row - 1];
-                    return currentPiece != null
-                            && currentPiece.getId() != pieceDTO.getId()
-                            && currentPiece.isRed() == pieceDTO.isRed()
-                            && currentPiece.getName().equals(pieceDTO.getName());
-                })
-                .mapToObj(row -> currentBoard.getState()[pieceDTO.getCurrentCol() - 1][row - 1])
-                .findFirst()
-                .orElse(null);
-    }
-
-    private boolean isHorizontalMoving(int fromRow, int toRow) {
-        return fromRow == toRow;
-    }
-
-    private boolean isUpMoving(boolean isRed, int fromRow, int toRow) {
-        return (isRed && fromRow > toRow) || (!isRed && fromRow < toRow);
-    }
-
-    private boolean isVerticallyMoving(int fromCol, int toCol) {
-        return fromCol == toCol;
-    }
 }

@@ -33,8 +33,8 @@ public class MatchController {
     }
 
     @GetMapping("/id={id}")
-    public ResponseEntity<?> findMatchDetailById(@PathVariable long id) {
-        return ResponseEntity.ok(matchService.findMatchDetailById(id));
+    public ResponseEntity<?> findDetailById(@PathVariable long id) {
+        return ResponseEntity.ok(matchService.findDetailById(id));
     }
 
     @PostMapping("")

@@ -8,23 +8,29 @@ import org.springframework.stereotype.Service;
 import com.common.Default;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
+import com.data.entity.MoveHistory;
 import com.data.entity.Piece;
 import com.data.mapper.PieceMapper;
 import com.data.repository.PieceRepository;
 import com.service.PlayBoardService;
+import com.service.PieceService;
 
 @Service
 public class PlayBoardServiceImpl implements PlayBoardService {
-    private final int MAX_COL = Default.Game.PlayBoardSize.COL;
-    private final int MAX_ROW = Default.Game.PlayBoardSize.ROW;
+    private final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
+    private final int MAX_ROW = Default.Game.PlayBoardSize.ROW_MAX;
 
     private final PieceRepository pieceRepository;
     private final PieceMapper pieceMapper;
+    private final PieceService pieceService;
 
     @Autowired
-    public PlayBoardServiceImpl(PieceRepository pieceRepository, PieceMapper pieceMapper) {
+    public PlayBoardServiceImpl(PieceRepository pieceRepository,
+            PieceMapper pieceMapper,
+            PieceService pieceService) {
         this.pieceRepository = pieceRepository;
         this.pieceMapper = pieceMapper;
+        this.pieceService = pieceService;
     }
 
     @Override
@@ -60,6 +66,14 @@ public class PlayBoardServiceImpl implements PlayBoardService {
             copiedState[i] = state[i].clone();
         }
         return copiedState;
+    }
+
+    @Override
+    public PlayBoardDTO buildPlayBoardByMoveHistories(List<MoveHistory> moveHistories) {
+        return moveHistories.stream()
+                .reduce(create(), (board, mh) -> update(
+                        board, pieceService.findOneInBoard(board, mh.getPiece().getId()), mh.getToCol(), mh.getToRow()),
+                        (board1, board2) -> board2);
     }
 
 }
