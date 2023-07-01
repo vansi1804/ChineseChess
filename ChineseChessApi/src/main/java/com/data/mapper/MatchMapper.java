@@ -7,7 +7,6 @@ import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
 import com.data.dto.MatchStartDTO;
-import com.data.dto.TrainingMatchDTO;
 import com.data.entity.Match;
 
 @Mapper(componentModel = "spring", uses = { TrainingMapper.class })
@@ -37,9 +36,5 @@ public interface MatchMapper {
     @Mapping(ignore = true, target = "moveHistoryDTOs")
     @Mapping(ignore = true, target = "totalTurn")
     MatchDetailDTO toDetailDTO(Match match);
-
-    @Mapping(source = "training", target = "trainingDTO")
-    @Mapping(ignore = true, target = "playBoardStartDTO")
-    TrainingMatchDTO toTrainingDTO(Match match);
 
 }

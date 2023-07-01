@@ -2,13 +2,15 @@ package com.data.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MoveHistoryCreationDTO extends TrainingMoveHistoryCreationDTO{
+public class MoveHistoryCreationDTO{
+    private long matchId;
     private long playerId;
+    private int pieceId;
+    private int toCol;
+    private int toRow;
 }

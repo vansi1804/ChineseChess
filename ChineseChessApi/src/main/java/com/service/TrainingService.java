@@ -9,8 +9,6 @@ import com.data.dto.TrainingDetailDTO;
 
 public interface TrainingService {
 
-    List<TrainingDTO> findAll();
-
     List<TrainingDTO> findAllChildrenById(Long id);
     
     TrainingDTO findById(long id);
