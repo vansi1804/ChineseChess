@@ -7,6 +7,7 @@ import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 
 public interface PieceService {
+    
     List<PieceDTO> findAll();
 
     PieceDTO findById(int id);

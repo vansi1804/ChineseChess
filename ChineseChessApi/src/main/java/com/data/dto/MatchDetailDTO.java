@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class MatchDetailDTO {
+
     private MatchDTO matchDTO;
+
     private long totalTurn;
+
     private List<MoveHistoryDTO> moveHistoryDTOs;
+    
 }

@@ -7,6 +7,7 @@ import com.data.entity.Piece;
 
 @Mapper(componentModel = "spring")
 public interface PieceMapper {
+
     Piece toEntity(PieceDTO pieceDTO);
 
     Piece[] toEntity(PieceDTO[] pieceDTOs);
@@ -17,6 +18,8 @@ public interface PieceMapper {
 
     PieceDTO[] toDTO(Piece[] pieceDTOs);
 
-    PieceDTO[][] toDTO(Piece[][] boardDTO);
+    PieceDTO[][] toDTO(Piece[][] Pieces);
+
+    PieceDTO copy(PieceDTO pieceDTO);
 
 }

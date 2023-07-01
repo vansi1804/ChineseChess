@@ -11,6 +11,7 @@ import com.data.entity.Match;
 
 @Repository
 public interface MatchRepository extends JpaRepository<Match, Long> {
+
     @Query("SELECT m FROM Match m"
             + " WHERE m.result != NULL AND (m.player1.user.id = :playerId OR m.player2.user.id = :playerId)")
     List<Match> findAllByPlayerId(@Param("playerId") long playerId);
@@ -22,4 +23,5 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
             + " WHERE (m.player1.id = :playerId OR m.player2.id = :playerId)"
             + "     AND m.result IS NULL")
     boolean existsPlayingByPlayerId(@Param("playerId") long playerId);
+
 }

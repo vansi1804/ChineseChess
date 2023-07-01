@@ -1,5 +1,10 @@
 package com.data.dto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import com.common.ErrorMessage;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +13,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ValidMoveRequestDTO {
-    private PlayBoardDTO playBoardDTO;
+    
     private int pieceId;
+
+    @NotNull(message = ErrorMessage.BLANK_DATA)
+    @Valid
+    private PlayBoardDTO currentBoard;
+    
 }

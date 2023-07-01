@@ -76,8 +76,8 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             case General:
                 return checkGeneralMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
 
-            case Advisor:
-                return checkAdvisorMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
+            case Guard:
+                return checkGuardMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
 
             case Elephant:
                 return checkElephantMoveRule(playBoard, pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
@@ -177,7 +177,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      * ADVISORS can move only one space at a time diagonally in a move
      * and must stay within the palace.
      */
-    private boolean checkAdvisorMoveRule(boolean isRed, int fromCol, int toCol, int fromRow, int toRow) {
+    private boolean checkGuardMoveRule(boolean isRed, int fromCol, int toCol, int fromRow, int toRow) {
         int verticalSpace = Math.abs(toRow - fromRow);
         int horizontalSpace = Math.abs(toCol - fromCol);
         boolean isDiagonalMove = ((verticalSpace == 1) && (horizontalSpace == 1));
@@ -294,37 +294,4 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         return halfRow.contains(row);
     }
 
-    // private boolean existsBetweenInRowPath(PlayBoardDTO playBoard, int currentRow, int fromCol, int toCol) {
-    //     int startCol = Math.min(fromCol, toCol) + 1;
-    //     int endCol = Math.max(fromCol, toCol) - 1;
-
-    //     return IntStream.rangeClosed(startCol, endCol)
-    //             .anyMatch(col -> playBoard.getState()[col - 1][currentRow - 1] != null);
-    // }
-
-    // private boolean existsBetweenInColPath(PlayBoardDTO playBoard, int currentCol, int fromRow, int toRow) {
-    //     int startRow = Math.min(fromRow, toRow) + 1;
-    //     int endRow = Math.max(fromRow, toRow) - 1;
-
-    //     return IntStream.rangeClosed(startRow, endRow)
-    //             .anyMatch(row -> playBoard.getState()[currentCol - 1][row - 1] != null);
-    // }
-
-    // private int countBetweenInRowPath(PlayBoardDTO playBoard, int currentRow, int fromCol, int toCol) {
-    //     int startCol = Math.min(fromCol, toCol) + 1;
-    //     int endCol = Math.max(fromCol, toCol) - 1;
-
-    //     return (int) IntStream.rangeClosed(startCol, endCol)
-    //             .filter(col -> playBoard.getState()[col - 1][currentRow - 1] != null)
-    //             .count();
-    // }
-
-    // private int countBetweenInColPath(PlayBoardDTO playBoard, int currentCol, int fromRow, int toRow) {
-    //     int startRow = Math.min(fromRow, toRow) + 1;
-    //     int endRow = Math.max(fromRow, toRow) - 1;
-
-    //     return (int) IntStream.rangeClosed(startRow, endRow)
-    //             .filter(row -> playBoard.getState()[currentCol - 1][row - 1] != null)
-    //             .count();
-    // }
 }

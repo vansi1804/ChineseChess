@@ -11,4 +11,5 @@ public interface MoveRuleService {
     boolean isMoveValid(PlayBoardDTO playBoard, PieceDTO pieceDTO, int toCol, int toRow);
 
     boolean isGeneralBeingChecked(PlayBoardDTO playBoard, PieceDTO generalPiece);
+    
 }

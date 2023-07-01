@@ -14,9 +14,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TrainingDTO {
+    
     private Long id;
+
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String title;
+
     private Long parentTrainingId;
+
     private List<TrainingDTO> childTrainingDTOs;
+
 }

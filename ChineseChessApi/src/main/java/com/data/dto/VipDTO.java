@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class VipDTO{
+
     private int id;
+
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String name;
+    
 }

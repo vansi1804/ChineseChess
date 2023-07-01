@@ -5,6 +5,7 @@ import java.util.List;
 import com.data.dto.RankDTO;
 
 public interface RankService {
+
     List<RankDTO> findAll();
 
     RankDTO findById(int id);
@@ -16,4 +17,5 @@ public interface RankService {
     RankDTO update(int id, RankDTO rankDTO);
     
     void delete(int id);
+    
 }

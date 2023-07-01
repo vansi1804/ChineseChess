@@ -5,6 +5,7 @@ import java.util.List;
 import com.data.dto.VipDTO;
 
 public interface VipService {
+
     List<VipDTO> findAll();
 
     VipDTO findById(int id);
@@ -16,4 +17,5 @@ public interface VipService {
     VipDTO update(int id, VipDTO vipDTO);
     
     void delete(int id);
+    
 }

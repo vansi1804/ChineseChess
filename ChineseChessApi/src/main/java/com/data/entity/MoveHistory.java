@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "move_histories")
 public class MoveHistory implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
@@ -48,4 +49,5 @@ public class MoveHistory implements Serializable {
 
     @Column(name = "to_row")
     private int toRow;
+    
 }

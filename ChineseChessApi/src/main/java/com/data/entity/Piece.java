@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "pieces")
 public class Piece implements Serializable{
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)

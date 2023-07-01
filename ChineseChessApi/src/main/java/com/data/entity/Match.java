@@ -32,6 +32,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "matches")
 public class Match implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)

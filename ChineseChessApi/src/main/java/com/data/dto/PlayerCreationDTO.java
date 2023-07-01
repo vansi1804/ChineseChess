@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PlayerCreationDTO {
+
     @NotNull(message = "UserCreationDTO must not be null")
     @Valid
     private UserCreationDTO userCreationDTO;
+    
 }

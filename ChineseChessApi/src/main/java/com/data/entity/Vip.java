@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "vips")
 public  class Vip implements Serializable{
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)

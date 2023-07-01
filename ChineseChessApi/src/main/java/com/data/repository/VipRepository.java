@@ -9,9 +9,11 @@ import com.data.entity.Vip;
 
 @Repository
 public interface VipRepository extends JpaRepository<Vip, Integer> {
+
     boolean existsByName(String name);
 
     Optional<Vip> findByName(String name);
 
     boolean existsByIdNotAndName(int id, String name);
+    
 }

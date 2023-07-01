@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TrainingDetailDTO {
+    
     private TrainingDTO trainingDTO;
+
     private long totalTurn;
+
     private List<MoveHistoryDTO> moveHistoryDTOs;
+
 }

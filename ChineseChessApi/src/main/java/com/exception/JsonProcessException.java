@@ -32,4 +32,5 @@ public class JsonProcessException extends ExceptionCustom {
         }
         return fieldName;
     }
+    
 }

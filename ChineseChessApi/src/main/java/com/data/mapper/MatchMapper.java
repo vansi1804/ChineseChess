@@ -11,6 +11,7 @@ import com.data.entity.Match;
 
 @Mapper(componentModel = "spring", uses = { TrainingMapper.class })
 public interface MatchMapper {
+    
     @Mapping(ignore = true, target = "id")
     @Mapping(source = "player1Id", target = "player1.id")
     @Mapping(source = "player2Id", target = "player2.id")
