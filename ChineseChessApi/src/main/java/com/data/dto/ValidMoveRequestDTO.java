@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class TrainingMoveHistoryCreationDTO {
-    private long trainingId;
+public class ValidMoveRequestDTO {
+    private PlayBoardDTO playBoardDTO;
     private int pieceId;
-    private int toCol;
-    private int toRow;
 }

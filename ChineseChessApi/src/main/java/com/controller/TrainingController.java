@@ -16,7 +16,7 @@ import com.data.dto.TrainingDTO;
 import com.service.TrainingService;
 
 @RestController
-@RequestMapping("api/admin/trainings")
+@RequestMapping("api/trainings")
 public class TrainingController {
    
     private final TrainingService trainingService;
@@ -24,11 +24,6 @@ public class TrainingController {
     @Autowired
     public TrainingController(TrainingService trainingService) {
         this.trainingService = trainingService;
-    }
-
-    @GetMapping("")
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(trainingService.findAll());
     }
 
     @GetMapping("/id={id}")

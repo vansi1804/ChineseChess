@@ -13,8 +13,6 @@ public interface PieceService {
 
     EPiece convertByName(String name);
 
-    List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO);
-
     List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed);
 
     PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id);
@@ -22,5 +20,15 @@ public interface PieceService {
     PieceDTO findLastAtPosition(long matchId, long turn, int toCol, int toRow);
 
     List<PieceDTO> findAllDeadInPlayBoard(PlayBoardDTO playBoardDTO);
+
+    PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoard, PieceDTO pieceDTO);
+
+    boolean existsBetweenInRowPath(PlayBoardDTO playBoard, int currentRow, int fromCol, int toCol);
+
+    boolean existsBetweenInColPath(PlayBoardDTO playBoard, int currentCol, int fromRow, int toRow);
+
+    int countBetweenInRowPath(PlayBoardDTO playBoard, int currentRow, int fromCol, int toCol);
+
+    int countBetweenInColPath(PlayBoardDTO playBoard, int currentCol, int fromRow, int toRow);
 
 }

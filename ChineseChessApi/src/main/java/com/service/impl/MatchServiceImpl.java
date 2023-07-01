@@ -17,9 +17,11 @@ import com.data.dto.MatchStartDTO;
 import com.data.dto.TrainingMatchDTO;
 import com.data.dto.MoveHistoryDTO;
 import com.data.entity.Match;
+import com.data.entity.MoveHistory;
 import com.data.entity.Training;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
+import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PlayerRepository;
 import com.data.repository.TrainingRepository;
 import com.exception.InvalidException;
@@ -35,6 +37,7 @@ public class MatchServiceImpl implements MatchService {
     private final MatchMapper matchMapper;
     private final PlayerRepository playerRepository;
     private final PlayBoardService playBoardService;
+    private final MoveHistoryRepository moveHistoryRepository;
     private final MoveHistoryService moveHistoryService;
     private final TrainingRepository trainingRepository;
 
@@ -43,14 +46,14 @@ public class MatchServiceImpl implements MatchService {
             MatchMapper matchMapper,
             PlayerRepository playerRepository,
             PlayBoardService playBoardService,
-            MoveHistoryService moveHistoryService,
-            TrainingRepository trainingRepository) {
+            MoveHistoryRepository moveHistoryRepository,
+            MoveHistoryService moveHistoryService) {
         this.matchRepository = matchRepository;
         this.matchMapper = matchMapper;
         this.playerRepository = playerRepository;
         this.playBoardService = playBoardService;
+        this.moveHistoryRepository = moveHistoryRepository;
         this.moveHistoryService = moveHistoryService;
-        this.trainingRepository = trainingRepository;
     }
 
     @Override
@@ -73,13 +76,14 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public MatchDetailDTO findMatchDetailById(long id) {
+    public MatchDetailDTO findDetailById(long id) {
         MatchDetailDTO matchDetailDTO = matchRepository.findById(id)
                 .map(m -> matchMapper.toDetailDTO(m))
                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
 
-        List<MoveHistoryDTO> moveHistoryDTOs = moveHistoryService
-                .findAllByMatchId(matchDetailDTO.getMatchDTO().getId());
+                List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(id);
+                List<MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
+        
 
         for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOs) {
             System.out.println("\n" + moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription());
