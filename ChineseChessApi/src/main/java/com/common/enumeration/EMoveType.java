@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum EMove {
+public enum EMoveType {
     UP(':'),
     ACROSS('-'),
     DOWN('/');

@@ -1,5 +1,7 @@
 package com.data.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 
 import com.common.ErrorMessage;
@@ -16,4 +18,5 @@ public class TrainingDTO {
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String title;
     private Long parentTrainingId;
+    private List<TrainingDTO> childTrainingDTOs;
 }

@@ -29,8 +29,12 @@ public class MoveHistory implements Serializable {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "match_id", referencedColumnName = "id")
+    @JoinColumn(name = "match_id", updatable = false)
     private Match match;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "training_id",updatable = false)
+    private Training training;
 
     @Column(name = "turn")
     private long turn;

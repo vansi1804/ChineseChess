@@ -14,7 +14,7 @@ public interface MatchService {
 
     List<MatchDTO> findAllByPlayerId(long playerId);
 
-    MatchDetailDTO findMatchDetailById(long id);
+    MatchDetailDTO findDetailById(long id);
 
     MatchStartDTO create(MatchCreationDTO matchCreationDTO);
 
