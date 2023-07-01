@@ -14,16 +14,13 @@ import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
 import com.data.dto.MatchStartDTO;
-import com.data.dto.TrainingMatchDTO;
 import com.data.dto.MoveHistoryDTO;
 import com.data.entity.Match;
 import com.data.entity.MoveHistory;
-import com.data.entity.Training;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PlayerRepository;
-import com.data.repository.TrainingRepository;
 import com.exception.InvalidException;
 import com.exception.ResourceNotFoundException;
 import com.service.MatchService;
@@ -39,7 +36,6 @@ public class MatchServiceImpl implements MatchService {
     private final PlayBoardService playBoardService;
     private final MoveHistoryRepository moveHistoryRepository;
     private final MoveHistoryService moveHistoryService;
-    private final TrainingRepository trainingRepository;
 
     @Autowired
     public MatchServiceImpl(MatchRepository matchRepository,
@@ -145,19 +141,6 @@ public class MatchServiceImpl implements MatchService {
         match.setResult(winnerId);
 
         return matchMapper.toDTO(matchRepository.save(match));
-    }
-
-    @Override
-    public TrainingMatchDTO create(long trainingId) {
-        Training training = trainingRepository.findById(trainingId)
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("training.id", trainingId)));
-
-        Match match = new Match();
-        match.setTraining(training);
-
-        TrainingMatchDTO trainingMatchDTO = matchMapper.toTrainingDTO(matchRepository.saveAndFlush(match));
-        trainingMatchDTO.setPlayBoardStartDTO(playBoardService.create());
-        return trainingMatchDTO;
     }
 
 }

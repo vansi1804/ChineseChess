@@ -47,9 +47,4 @@ public class MatchController {
         return ResponseEntity.ok(matchService.updateResult(id, isRedWin));
     }
     
-    @PostMapping("/trainings/id={trainingId}")
-    public ResponseEntity<?> create(@PathVariable long trainingId) {
-        return ResponseEntity.ok(matchService.create(trainingId));
-    }
-
 }

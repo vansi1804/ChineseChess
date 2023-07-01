@@ -42,18 +42,6 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
-    public List<TrainingDTO> findAll() {
-        return findAllChildrenById(null);
-    }
-
-    @Override
-    public List<TrainingDTO> findAll() {
-        return trainingRepository.findAll().stream()
-                .map(t -> trainingMapper.toDTO(t))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<TrainingDTO> findAllChildrenById(Long id) {
         return trainingRepository.findAllByParentTraining_Id(id).stream()
                 .map(t -> trainingMapper.toDTO(t))
