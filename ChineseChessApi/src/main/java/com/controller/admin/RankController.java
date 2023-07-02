@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.common.ApiUrl;
 import com.data.dto.RankDTO;
 import com.service.RankService;
 
 @RestController
-@RequestMapping("api/admin/ranks")
+@RequestMapping(ApiUrl.RANKS)
 public class RankController {
 
     private final RankService rankService;

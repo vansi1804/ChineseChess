@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.common.ApiUrl;
 import com.service.RoleService;
 
 @RestController
-@RequestMapping("api/admin/roles")
+@RequestMapping(ApiUrl.ROLES)
 public class RoleController {
 
     private final RoleService roleService;

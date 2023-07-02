@@ -5,9 +5,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.common.ApiUrl;
 import com.data.dto.MoveHistoryCreationDTO;
 import com.data.dto.TrainingMoveHistoryCreationDTO;
 import com.data.dto.ValidMoveRequestDTO;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("api/moveHistories")
+@RequestMapping(ApiUrl.MOVE_HISTORIES)
 public class MoveHistoryController {
 
     private MoveHistoryService moveHistoryService;

@@ -14,13 +14,13 @@ public class UserDTO {
     
     private long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
-    private Date createdDate;
-
     private UserProfileDTO userProfileDTO;
 
     private String roleName;
 
     private String status;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
+    private Date createdDate;
+    
 }

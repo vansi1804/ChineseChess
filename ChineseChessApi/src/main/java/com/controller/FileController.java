@@ -21,10 +21,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.common.ApiUrl;
 import com.service.FileService;
 
 @RestController
-@RequestMapping("api/files")
+@RequestMapping(ApiUrl.FILES)
 public class FileController {
 
     private FileService fileService;

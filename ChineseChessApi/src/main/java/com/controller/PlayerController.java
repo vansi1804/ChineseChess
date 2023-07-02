@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.common.Default;
+import com.common.ApiUrl;
 import com.data.dto.PlayerCreationDTO;
 import com.data.dto.PlayerProfileDTO;
 import com.exception.InvalidException;
@@ -23,7 +24,7 @@ import com.service.PlayerService;
 import com.util.ValidationDataUtil;
 
 @RestController
-@RequestMapping("api/players")
+@RequestMapping(ApiUrl.PLAYERS)
 public class PlayerController {
 
     private final PlayerService playerService;
