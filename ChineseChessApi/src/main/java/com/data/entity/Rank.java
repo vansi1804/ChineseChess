@@ -39,14 +39,5 @@ public class Rank implements Serializable {
 
     @Column(name = "milestones")
     private int milestones;
-
-	@LastModifiedDate
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "last_modified_date")
-	private Date lastModifiedDate;
-
-	@LastModifiedBy
-	@Column(name = "last_modified_by_user_id")
-	private Long lastModifiedBy;
     
 }

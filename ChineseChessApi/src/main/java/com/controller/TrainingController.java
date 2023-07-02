@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.common.ApiUrl;
 import com.data.dto.TrainingDTO;
 import com.service.TrainingService;
 
 @RestController
-@RequestMapping("api/trainings")
+@RequestMapping(ApiUrl.TRAININGS)
 public class TrainingController {
    
     private final TrainingService trainingService;

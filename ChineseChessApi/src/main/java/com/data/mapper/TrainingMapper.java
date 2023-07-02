@@ -12,6 +12,7 @@ import com.data.entity.Training;
 public interface TrainingMapper {
 
     @Mapping(source = "parentTrainingId", target = "parentTraining", qualifiedByName = "mapParentTrainingToEntity")
+    @Mapping(ignore = true, target = "childTrainings")
     Training toEntity(TrainingDTO trainingDTO);
 
     @Named("mapParentTrainingToEntity")

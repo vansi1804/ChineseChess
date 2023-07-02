@@ -3,6 +3,7 @@ package com.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.common.ApiUrl;
 import com.data.dto.MatchCreationDTO;
 import com.service.MatchService;
 
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("api/matches")
+@RequestMapping(ApiUrl.MATCHES)
 public class MatchController {
     
     private MatchService matchService;
