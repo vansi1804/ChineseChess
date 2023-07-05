@@ -10,5 +10,7 @@ public class ApiUrl {
     public static final String MOVE_HISTORIES = Constant.API + Constant.MOVE_HISTORY;
     public static final String PLAYERS = Constant.API + Constant.PLAYER;
     public static final String TRAININGS = Constant.API + Constant.TRAINING;
+    public static final String LOGIN = Constant.API + Constant.LOGIN;
+    public static final String USER = Constant.API + Constant.USER;
 
 }

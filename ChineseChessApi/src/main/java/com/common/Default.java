@@ -27,15 +27,20 @@ public class Default {
 
     public static class User {
         // default for creating
-        public static final EStatus STATUS = EStatus.LOCK;
-        public static final ERank LEVEL = ERank.NOVICE;
+        public static final EStatus STATUS = EStatus.INACTIVE;
         public static final EVip VIP = EVip.VIP0;
     }
 
+    public static class Player {
+        // default for creating
+        public static final ERank RANK = ERank.NOVICE;
+        public static final int ELO = 1000;
+    }
+
     public static class JWT {
-        public static final String SECRET = "SECRET_KEY";
-        public static final long EXPIRATION_TIME = 900_000;
-        public static final String TOKEN_PREFIX = "Bearer ";
+        public static final String SECRET = "V2hlbiB5b3UgYXJlIGdvaW5nIHRvIGdpdmUgdXAsIHRoaW5rIGFib3V0IHRoZSByZWFzb24gbWFkZSB5b3Ugc3RhclQNCg==";
+        public static final long EXPIRATION_TIME = 1000 * 60 * 30;
+        public static final String TOKEN_PREFIX = "Bearer" + " ";
         public static final String HEADER_STRING = "Authorization";
     }
 

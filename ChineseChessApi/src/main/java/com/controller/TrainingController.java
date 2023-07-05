@@ -4,6 +4,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import com.common.ApiUrl;
 import com.data.dto.TrainingDTO;
 import com.service.TrainingService;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.TRAININGS)
 public class TrainingController {
@@ -28,36 +31,43 @@ public class TrainingController {
         this.trainingService = trainingService;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(trainingService.findAllChildrenById(null));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/id={id}/children")
     public ResponseEntity<?> findAllChildrenById(@PathVariable long id) {
         return ResponseEntity.ok(trainingService.findAllChildrenById(id));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/id={id}")
     public ResponseEntity<?> findById(@PathVariable long id) {
         return ResponseEntity.ok(trainingService.findById(id));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/id={id}/details")
     public ResponseEntity<?> findDetailsById(@PathVariable long id) {
         return ResponseEntity.ok(trainingService.findDetailById(id));
     }
 
+	@PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping("")
     public ResponseEntity<?> create(@Valid @RequestBody TrainingDTO trainingDTO) {
         return ResponseEntity.ok(trainingService.create(trainingDTO));
     }
 
+	@PreAuthorize(value = "hasAuthority('ADMIN')")
     @PutMapping("/id={id}")
     public ResponseEntity<?> update(@PathVariable long id, @Valid @RequestBody TrainingDTO trainingDTO) {
         return ResponseEntity.ok(trainingService.update(id, trainingDTO));
     }
 
+	@PreAuthorize(value = "hasAuthority('ADMIN')")
     @DeleteMapping("/id={id}")
     public ResponseEntity<?> deleteById(@PathVariable long id) {
         return ResponseEntity.ok(trainingService.deleteById(id));

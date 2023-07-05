@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,15 +18,14 @@ import com.data.dto.UserCreationDTO;
 import com.data.dto.UserDTO;
 import com.data.dto.UserProfileDTO;
 import com.data.entity.User;
-import com.exception.ConflictException;
-import com.exception.ResourceNotFoundException;
+import com.config.exception.ConflictException;
+import com.config.exception.ResourceNotFoundException;
 import com.data.mapper.UserMapper;
 import com.data.repository.RoleRepository;
 import com.data.repository.UserRepository;
 import com.data.repository.VipRepository;
 import com.service.FileService;
 import com.service.UserService;
-import com.util.EncodingUtil;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -35,18 +35,21 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final VipRepository vipRepository;
     private final FileService fileService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
             UserMapper userMapper,
             RoleRepository roleRepository,
             VipRepository vipRepository,
-            FileService fileService) {
+            FileService fileService,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.vipRepository = vipRepository;
         this.fileService = fileService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -85,7 +88,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User createUser = userMapper.toEntity(userCreationDTO);
-        createUser.setPassword(EncodingUtil.getMD5(userCreationDTO.getPassword()));
+        createUser.setPassword(passwordEncoder.encode(userCreationDTO.getPassword()));
         createUser.setAvatar(fileService.uploadFile(fileAvatar));
         createUser.setRole(roleRepository.findByName(eRole.name())
                 .orElseThrow(() -> new ResourceNotFoundException( // this should throw for back-end
@@ -127,12 +130,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateStatusById(long id, EStatus eStatus) {
+    public boolean lockById(long id) {
+        return updateStatusById(id, EStatus.LOCK);
+    }
+
+    @Override
+    public boolean unlockById(long id) {
+        return updateStatusById(id, EStatus.ACTIVE);
+    }
+
+    public boolean updateStatusById(long id, EStatus eStatus) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
 
         user.setStatus(eStatus.name());
-        return userMapper.toDTO(userRepository.save(user));
+        userRepository.save(user);
+
+        return true;
     }
 
 }

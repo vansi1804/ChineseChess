@@ -17,8 +17,8 @@ import com.data.entity.Training;
 import com.data.mapper.TrainingMapper;
 import com.data.repository.MoveHistoryRepository;
 import com.data.repository.TrainingRepository;
-import com.exception.ConflictException;
-import com.exception.ResourceNotFoundException;
+import com.config.exception.ConflictException;
+import com.config.exception.ResourceNotFoundException;
 import com.service.MoveHistoryService;
 import com.service.TrainingService;
 

@@ -2,7 +2,7 @@ package com.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.exception.JsonProcessException;
+import com.config.exception.JsonProcessException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.service.JsonProcessService;

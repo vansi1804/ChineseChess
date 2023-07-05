@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +20,12 @@ import com.common.Default;
 import com.common.ApiUrl;
 import com.data.dto.PlayerCreationDTO;
 import com.data.dto.PlayerProfileDTO;
-import com.exception.InvalidException;
+import com.config.exception.InvalidException;
 import com.service.JsonProcessService;
 import com.service.PlayerService;
-import com.util.ValidationDataUtil;
+import com.util.DataValidationUtil;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.PLAYERS)
 public class PlayerController {
@@ -36,6 +39,7 @@ public class PlayerController {
         this.jsonProcessService = jsonProcessService;
     }
 
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @GetMapping("")
     public ResponseEntity<?> findAll(
             @RequestParam(name = "no", required = false, defaultValue = Default.Page.NO) int no,
@@ -44,11 +48,13 @@ public class PlayerController {
         return ResponseEntity.ok(playerService.findAll(no, limit, sortBy));
     }
 
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @GetMapping("/users/id={userId}")
     public ResponseEntity<?> findByUserId(@PathVariable long userId) {
         return ResponseEntity.ok(playerService.findByUserId(userId));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/id={id}")
     public ResponseEntity<?> findById(@PathVariable long id) {
         return ResponseEntity.ok(playerService.findById(id));
@@ -59,17 +65,30 @@ public class PlayerController {
             @RequestPart(name = "playerCreationDTO") String playerCreationDTOJsonString,
             @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar) {
 
+        System.out.println("playerCreationDTOJsonString :" + playerCreationDTOJsonString);
+
         PlayerCreationDTO playerCreationDTO = jsonProcessService.readValue(
                 playerCreationDTOJsonString, PlayerCreationDTO.class);
+        
+        System.out.println("playerCreationDTO 1:" + playerCreationDTO);
 
-        Map<String, Object> validationErrors = ValidationDataUtil.errors(playerCreationDTO);
-        if (!validationErrors.isEmpty()) {
+        Map<String, Object> validationErrors = DataValidationUtil.validate(playerCreationDTO);
+        if (validationErrors != null) {
             throw new InvalidException(validationErrors);
         }
+        System.out.println("playerCreationDTO 2:"+playerCreationDTO);
 
         return ResponseEntity.ok(playerService.create(playerCreationDTO, fileAvatar));
     }
 
+    // @PostMapping("")
+    // public ResponseEntity<?> create(@Valid @RequestBody PlayerCreationDTO
+    // playerCreationDTO) {
+
+    // return ResponseEntity.ok(playerService.create(playerCreationDTO, null));
+    // }
+
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/id={id}")
     public ResponseEntity<?> update(@PathVariable long id,
             @RequestPart(name = "playerProfileDTO") String playerProfileDTOJsonString,
@@ -78,22 +97,12 @@ public class PlayerController {
         PlayerProfileDTO playerProfileDTO = jsonProcessService.readValue(
                 playerProfileDTOJsonString, PlayerProfileDTO.class);
 
-        Map<String, Object> validationErrors = ValidationDataUtil.errors(playerProfileDTO);
-        if (!validationErrors.isEmpty()) {
+        Map<String, Object> validationErrors = DataValidationUtil.validate(playerProfileDTO);
+        if (validationErrors != null) {
             throw new InvalidException(validationErrors);
         }
 
         return ResponseEntity.ok(playerService.update(id, playerProfileDTO, fileAvatar));
-    }
-
-    @PutMapping("/id={id}/lock")
-    public ResponseEntity<?> lockById(@PathVariable long id) {
-        return ResponseEntity.ok(playerService.lockById(id));
-    }
-
-    @PutMapping("/id={id}/unlock")
-    public ResponseEntity<?> unlockById(@PathVariable long id) {
-        return ResponseEntity.ok(playerService.unlockById(id));
     }
 
 }

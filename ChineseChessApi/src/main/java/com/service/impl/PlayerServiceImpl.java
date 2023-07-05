@@ -11,14 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.common.Default;
 import com.common.enumeration.ERole;
-import com.common.enumeration.EStatus;
 import com.data.dto.PlayerDTO;
 import com.data.dto.PlayerCreationDTO;
 import com.data.dto.PlayerProfileDTO;
 import com.data.dto.UserDTO;
 import com.data.dto.UserProfileDTO;
 import com.data.entity.Player;
-import com.exception.ResourceNotFoundException;
+import com.config.exception.ResourceNotFoundException;
 import com.data.mapper.PlayerMapper;
 import com.data.repository.RankRepository;
 import com.data.repository.MatchRepository;
@@ -71,15 +70,14 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public PlayerDTO create(PlayerCreationDTO playerCreationDTO, MultipartFile fileAvatar) {
-        UserDTO createdUserDTO = userService.create(playerCreationDTO.getUserCreationDTO(), fileAvatar,
-                ERole.PLAYER);
+        UserDTO createdUserDTO = userService.create(
+                playerCreationDTO.getUserCreationDTO(), fileAvatar, ERole.PLAYER);
 
         Player player = playerMapper.toEntity(playerCreationDTO);
         player.getUser().setId(createdUserDTO.getId());
-        String levelDefault = Default.User.LEVEL.name();
-        player.setRank(rankRepository.findByName(levelDefault)
+        player.setRank(rankRepository.findByName(Default.Player.RANK.name())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("level", levelDefault))));
+                        Collections.singletonMap("rank.name", Default.Player.RANK.name()))));
 
         PlayerDTO createdPlayerDTO = playerMapper.toDTO(playerRepository.save(player), null);
         createdPlayerDTO.setUserDTO(createdUserDTO);
@@ -110,30 +108,11 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerProfileDTO updateEloById(long id, int elo) {
         Player updatePlayer = playerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+
         updatePlayer.setElo(elo);
+        // update rank base on elo later
+        
         return playerMapper.toProfileDTO(updatePlayer, matchRepository.findAllByPlayerId(updatePlayer.getId()));
-    }
-
-    @Override
-    public PlayerDTO lockById(long id) {
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
-
-        PlayerDTO playerDTO = playerMapper.toDTO(player, matchRepository.findAllByPlayerId(player.getId()));
-        UserDTO lockedUserDTO = userService.updateStatusById(player.getUser().getId(), EStatus.LOCK);
-        playerDTO.setUserDTO(lockedUserDTO);
-        return playerDTO;
-    }
-
-    @Override
-    public PlayerDTO unlockById(long id) {
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
-
-        PlayerDTO playerDTO = playerMapper.toDTO(player, matchRepository.findAllByPlayerId(player.getId()));
-        UserDTO lockedUserDTO = userService.updateStatusById(player.getUser().getId(), EStatus.ACTIVE);
-        playerDTO.setUserDTO(lockedUserDTO);
-        return playerDTO;
     }
 
 }

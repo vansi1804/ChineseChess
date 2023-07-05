@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.common.enumeration.ERole;
 import com.data.dto.RoleDTO;
 import com.data.entity.Role;
-import com.exception.ResourceNotFoundException;
+import com.config.exception.ResourceNotFoundException;
 import com.data.mapper.RoleMapper;
 import com.data.repository.RoleRepository;
 import com.service.RoleService;

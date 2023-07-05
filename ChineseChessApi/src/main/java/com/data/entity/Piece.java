@@ -25,7 +25,7 @@ public class Piece implements Serializable{
     @Column(name = "id", updatable = false)
     private int id;
 
-    @Column(name = "name")
+    @Column(name = "name", columnDefinition = "nvarchar(255)")
     private String name;
 
     @Column(name = "is_red", updatable = false)

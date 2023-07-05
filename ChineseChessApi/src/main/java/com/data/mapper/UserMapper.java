@@ -17,7 +17,6 @@ public interface UserMapper {
     @Mapping(ignore = true, target = "role")
     @Mapping(ignore = true, target = "status")
     @Mapping(ignore = true, target = "createdDate")
-    @Mapping(ignore = true, target = "lastModifiedBy")
     @Mapping(ignore = true, target = "lastModifiedDate")
     User toEntity(UserCreationDTO userCreationDTO);
 
@@ -27,7 +26,6 @@ public interface UserMapper {
     @Mapping(ignore = true, target = "role")
     @Mapping(ignore = true, target = "status")
     @Mapping(ignore = true, target = "createdDate")
-    @Mapping(ignore = true, target = "lastModifiedBy")
     @Mapping(ignore = true, target = "lastModifiedDate")
     User toEntity(UserProfileDTO userProfileDTO);
 

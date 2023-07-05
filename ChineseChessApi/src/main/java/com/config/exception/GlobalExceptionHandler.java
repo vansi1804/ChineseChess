@@ -1,4 +1,4 @@
-package com.config;
+package com.config.exception;
 
 import java.util.Collections;
 
@@ -17,10 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.common.ErrorMessage;
 import com.data.dto.ErrorMessageResponseDTO;
-import com.exception.ConflictException;
-import com.exception.InvalidException;
-import com.exception.JsonProcessException;
-import com.exception.ResourceNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -32,29 +28,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status,
             WebRequest request) {
 
-        // String objectName = ex.getBindingResult().getObjectName();
         FieldError fieldError = ex.getBindingResult().getFieldErrors().get(0);
         String field = fieldError.getField();
         String defaultMessage = fieldError.getDefaultMessage();
-
-        // Map<String, Object> errors = new LinkedHashMap<>();
-        // errors.put("objectName", objectName);
-
-        // String[] fieldNames = field.split("\\.");
-
-        // Map<String, Object> currentError = errors;
-        // for (int i = 0; i < fieldNames.length; i++) {
-        //     if (i < fieldNames.length - 1) {
-        //         LinkedHashMap<String, Object> nestedError = new LinkedHashMap<>();
-        //         currentError.put("fieldName", nestedError);
-        //         currentError = nestedError;
-        //         currentError.put("objectName", fieldNames[i]);
-        //     } else {
-        //         currentError.put("fieldName", fieldNames[i]);
-        //     }
-        // }
-    
-        // errors.put("message", defaultMessage);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorMessageResponseDTO(ErrorMessage.INVALID_DATA, Collections.singletonMap(field, defaultMessage),
