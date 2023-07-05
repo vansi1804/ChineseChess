@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "training")
+@Table(name = "trainings")
 public class Training {
     
     @Id
@@ -37,11 +37,11 @@ public class Training {
     @Column(name = "id", updatable = false)
     private long id;
 
-    @Column(name = "title")
+    @Column(name = "title", columnDefinition = "nvarchar(255)")
     private String title;
     
     @ManyToOne(optional = true)
-    @JoinColumn(name = "parent_training_id")
+    @JoinColumn(name = "parent_training_id", referencedColumnName = "id")
     private Training parentTraining;
 
     @OneToMany(mappedBy = "parentTraining")

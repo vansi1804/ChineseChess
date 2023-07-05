@@ -33,7 +33,7 @@ public class Player implements Serializable {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rank_id")
+    @JoinColumn(name = "rank_id", referencedColumnName = "id")
     private Rank rank;
     
     @Column(name = "elo")

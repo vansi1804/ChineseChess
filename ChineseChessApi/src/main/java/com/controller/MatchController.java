@@ -11,12 +11,15 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.MATCHES)
 public class MatchController {
@@ -28,6 +31,7 @@ public class MatchController {
         this.matchService = matchService;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/players/id={playerId}")
     public ResponseEntity<?> findAllByPlayerId(@PathVariable long playerId) {
         return ResponseEntity.ok(matchService.findAllByPlayerId(playerId));

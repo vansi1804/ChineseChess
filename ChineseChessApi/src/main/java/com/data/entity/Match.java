@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -51,16 +50,12 @@ public class Match implements Serializable {
     private int bet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "player1_id", updatable = false)
+    @JoinColumn(name = "player1_id", referencedColumnName = "id", updatable = false)
     private Player player1;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "player2_id", updatable = false)
+    @JoinColumn(name = "player2_id", referencedColumnName = "id", updatable = false)
     private Player player2;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "training_id", updatable = false)
-    private Training training;
 
     @Column(name = "result")
     private Long result;

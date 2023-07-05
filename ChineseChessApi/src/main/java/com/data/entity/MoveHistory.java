@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -29,18 +28,18 @@ public class MoveHistory implements Serializable {
     @Column(name = "id", updatable = false)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "match_id", updatable = false)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "match_id", referencedColumnName = "id", updatable = false)
     private Match match;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "training_id",updatable = false)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "training_id", referencedColumnName = "id", updatable = false)
     private Training training;
 
     @Column(name = "turn")
     private long turn;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "piece_id", referencedColumnName = "id")
     private Piece piece;
     

@@ -14,7 +14,7 @@ import com.common.enumeration.EPiece;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.data.entity.MoveHistory;
-import com.exception.ResourceNotFoundException;
+import com.config.exception.ResourceNotFoundException;
 import com.data.mapper.PieceMapper;
 import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PieceRepository;

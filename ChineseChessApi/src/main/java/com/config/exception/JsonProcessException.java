@@ -1,9 +1,8 @@
-package com.exception;
+package com.config.exception;
 
 import java.util.Collections;
 
 import com.common.ErrorMessage;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 

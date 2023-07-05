@@ -17,7 +17,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -44,18 +43,18 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "name")
+    @Column(name = "name", columnDefinition = "nvarchar(255)")
     private String name;
 
     @Column(name = "avatar")
     private String avatar;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vip_id", referencedColumnName = "id")
+    @JoinColumn(name = "vip_id")
     private Vip vip;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @Column(name = "status")
@@ -70,9 +69,5 @@ public class User implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "last_modified_date")
 	private Date lastModifiedDate;
-
-	@LastModifiedBy
-	@Column(name = "last_modified_by_user_id")
-	private Long lastModifiedBy;
 
 }

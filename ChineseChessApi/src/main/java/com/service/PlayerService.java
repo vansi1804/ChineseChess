@@ -24,8 +24,4 @@ public interface PlayerService {
 
     PlayerProfileDTO updateEloById(long id, int elo);
 
-    PlayerDTO lockById(long id);
-
-    PlayerDTO unlockById(long id);
-
 }

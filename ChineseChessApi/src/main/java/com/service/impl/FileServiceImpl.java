@@ -7,7 +7,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.exception.ResourceNotFoundException;
+import com.config.exception.ResourceNotFoundException;
 import com.service.FileService;
 
 import java.io.File;
