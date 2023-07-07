@@ -37,12 +37,12 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(fileService.uploadFile(file));
     }
 
-    @GetMapping("/download/fileName={fileName}")
+    @GetMapping(value = "/download/fileName={fileName}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws IOException {
         Resource resource = fileService.downloadFile(fileName);
         if (resource != null) {
@@ -63,7 +63,7 @@ public class FileController {
         }
     }
 
-    @GetMapping("/display/fileName={fileName}") // view on web
+    @GetMapping(value = "/display/fileName={fileName}") // view on web
     public ResponseEntity<byte[]> displayFile(@PathVariable String fileName) throws IOException {
         Resource resource = fileService.downloadFile(fileName);
         if (resource != null) {

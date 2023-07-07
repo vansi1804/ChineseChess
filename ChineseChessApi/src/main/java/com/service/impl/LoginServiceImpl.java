@@ -2,11 +2,13 @@ package com.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.config.exception.UnauthorizedException;
 import com.config.security.JwtService;
 import com.data.dto.LoginDTO;
 import com.service.LoginService;
@@ -25,11 +27,17 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public String login(LoginDTO loginDTO) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDTO.getPhoneNumber(), loginDTO.getPassword()));
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtService.generateToken(userDetails.getUsername());
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginDTO.getPhoneNumber(), loginDTO.getPassword()));
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            
+            String token = jwtService.generateToken(userDetails.getUsername());
+            return token;
+            
+        } catch (BadCredentialsException ex) {
+            throw new UnauthorizedException();
+        }
 
-        return token;
     }
 }

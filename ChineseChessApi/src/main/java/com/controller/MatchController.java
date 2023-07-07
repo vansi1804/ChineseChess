@@ -32,22 +32,22 @@ public class MatchController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/players/id={playerId}")
+    @GetMapping(value = "/players/id={playerId}")
     public ResponseEntity<?> findAllByPlayerId(@PathVariable long playerId) {
         return ResponseEntity.ok(matchService.findAllByPlayerId(playerId));
     }
 
-    @GetMapping("/id={id}")
+    @GetMapping(value = "/id={id}")
     public ResponseEntity<?> findDetailById(@PathVariable long id) {
         return ResponseEntity.ok(matchService.findDetailById(id));
     }
 
-    @PostMapping("")
+    @PostMapping(value = "")
     public ResponseEntity<?> create(@Valid @RequestBody MatchCreationDTO matchCreationDTO) {
         return ResponseEntity.ok(matchService.create(matchCreationDTO));
     }
 
-    @PutMapping("/id={id}/{isRedWin}")
+    @PutMapping(value = "/id={id}/{isRedWin}")
     public ResponseEntity<?> updateResult(@PathVariable long id, @PathVariable Boolean isRedWin) {
         return ResponseEntity.ok(matchService.updateResult(id, isRedWin));
     }

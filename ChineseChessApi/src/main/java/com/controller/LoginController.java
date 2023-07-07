@@ -26,7 +26,7 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @PostMapping("")
+    @PostMapping(value = "")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
         return ResponseEntity.ok(loginService.login(loginDTO));
     }
