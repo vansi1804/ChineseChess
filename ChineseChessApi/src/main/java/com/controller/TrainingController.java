@@ -32,43 +32,43 @@ public class TrainingController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("")
+    @GetMapping(value = "")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(trainingService.findAllChildrenById(null));
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/id={id}/children")
+    @GetMapping(value = "/id={id}/children")
     public ResponseEntity<?> findAllChildrenById(@PathVariable long id) {
         return ResponseEntity.ok(trainingService.findAllChildrenById(id));
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/id={id}")
+    @GetMapping(value = "/id={id}")
     public ResponseEntity<?> findById(@PathVariable long id) {
         return ResponseEntity.ok(trainingService.findById(id));
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/id={id}/details")
+    @GetMapping(value = "/id={id}/details")
     public ResponseEntity<?> findDetailsById(@PathVariable long id) {
         return ResponseEntity.ok(trainingService.findDetailById(id));
     }
 
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
-    @PostMapping("")
+    @PostMapping(value = "")
     public ResponseEntity<?> create(@Valid @RequestBody TrainingDTO trainingDTO) {
         return ResponseEntity.ok(trainingService.create(trainingDTO));
     }
 
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
-    @PutMapping("/id={id}")
+    @PutMapping(value = "/id={id}")
     public ResponseEntity<?> update(@PathVariable long id, @Valid @RequestBody TrainingDTO trainingDTO) {
         return ResponseEntity.ok(trainingService.update(id, trainingDTO));
     }
 
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
-    @DeleteMapping("/id={id}")
+    @DeleteMapping(value = "/id={id}")
     public ResponseEntity<?> deleteById(@PathVariable long id) {
         return ResponseEntity.ok(trainingService.deleteById(id));
     }

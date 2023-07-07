@@ -31,19 +31,19 @@ public class MoveHistoryController {
         this.moveHistoryService = moveHistoryService;
     }
 
-    @GetMapping("")
+    @GetMapping(value = "")
     public ResponseEntity<?> findMoveValid(@Valid @RequestBody ValidMoveRequestDTO validMoveRequestDTO) {
         return ResponseEntity.ok(moveHistoryService.findMoveValid(validMoveRequestDTO));
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("")
+    @PostMapping(value = "")
     public ResponseEntity<?> create(@Valid @RequestBody MoveHistoryCreationDTO moveHistoryCreationDTO) {
         return ResponseEntity.ok(moveHistoryService.create(moveHistoryCreationDTO));
     }
 
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
-    @PostMapping("/training")
+    @PostMapping(value = "/training")
     public ResponseEntity<?> create(@Valid @RequestBody TrainingMoveHistoryCreationDTO trainingMoveHistoryCreationDTO) {
         return ResponseEntity.ok(moveHistoryService.create(trainingMoveHistoryCreationDTO));
     }

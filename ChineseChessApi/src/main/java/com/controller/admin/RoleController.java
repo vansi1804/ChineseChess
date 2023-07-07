@@ -24,7 +24,7 @@ public class RoleController {
     }
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
-    @GetMapping("")
+    @GetMapping(value = "")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(roleService.findAll());
     }

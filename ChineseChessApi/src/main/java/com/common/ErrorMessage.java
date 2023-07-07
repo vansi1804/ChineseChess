@@ -17,5 +17,7 @@ public class ErrorMessage {
     public static final String INVALID_PASSWORD_SIZE = "Password should have at least"
             + Validation.PASSWORD_SIZE_MIN + " characters";
     public static final String INVALID_FILE_TYPE = "Invalid file type";
+    public static final String ACCESS_DENIED = "Access denied";
+    public static final String UNAUTHORIZED = "UnAuthorized";
 
 }

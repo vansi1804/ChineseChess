@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.common.ErrorMessage;
 
-public class InvalidException extends ExceptionCustom {
+public class InvalidException extends ExceptionCustomize {
 
     public InvalidException(String msg, Map<String, Object> errors) {
         super(msg, errors);

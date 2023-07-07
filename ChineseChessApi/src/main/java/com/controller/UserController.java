@@ -24,13 +24,13 @@ public class UserController {
     }
 
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
-    @PutMapping("/id={id}/lock")
+    @PutMapping(value = "/id={id}/lock")
     public ResponseEntity<?> lockById(@PathVariable long id) {
         return ResponseEntity.ok(userService.lockById(id));
     }
 
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
-       @PutMapping("/id={id}/active")
+       @PutMapping(value = "/id={id}/active")
     public ResponseEntity<?> unlockById(@PathVariable long id) {
         return ResponseEntity.ok(userService.unlockById(id));
     }

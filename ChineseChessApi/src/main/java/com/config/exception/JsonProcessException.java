@@ -1,25 +1,25 @@
 package com.config.exception;
 
+import java.io.IOException;
 import java.util.Collections;
 
 import com.common.ErrorMessage;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public class JsonProcessException extends ExceptionCustom {
+public class JsonProcessException extends ExceptionCustomize {
 
-    public JsonProcessException(JsonProcessingException ex) {
+    public JsonProcessException(IOException ex) {
         super(ErrorMessage.INVALID_JSON_PAYLOAD, extractErrorMessage(ex));
     }
 
-    private static Object extractErrorMessage(JsonProcessingException ex) {
+    private static Object extractErrorMessage(IOException ex) {
         String fieldName = getFieldError(ex);
         return fieldName == null
-        ? ex.getOriginalMessage()
+        ? ex.getMessage()
         : Collections.singletonMap(fieldName, "UNRECOGNIZED");
     }
 
-    private static String getFieldError(JsonProcessingException e) {
+    private static String getFieldError(IOException e) {
         String fieldName = null;
         if (e instanceof JsonMappingException) {
             JsonMappingException jsonMappingException = (JsonMappingException) e;

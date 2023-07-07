@@ -24,7 +24,7 @@ public class VipController {
     }
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
-    @GetMapping("")
+    @GetMapping(value = "")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(vipService.findAll());
     }
