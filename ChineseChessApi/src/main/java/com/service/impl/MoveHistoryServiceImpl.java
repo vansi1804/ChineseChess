@@ -78,8 +78,10 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     public List<MoveHistoryDTO> build(List<MoveHistory> moveHistories) {
         AtomicReference<PlayBoardDTO> currentBoard = new AtomicReference<>(playBoardService.generate());
 
+        /* print test */
         System.out.println("start:");
         currentBoard.get().print(null);
+        /* =================================== */
 
         return moveHistories.stream()
                 .map(mh -> {
@@ -175,8 +177,10 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             throw new InvalidException(ErrorMessage.OPPONENT_TURN, errors);
         }
 
+        /* print test */
         System.out.println("current");
         currentBoard.print(movingPieceDTO);
+        /* =================================== */
 
         boolean isValidMove = moveRuleService.isMoveValid(currentBoard, movingPieceDTO,
                 trainingMHCreationDTO.getToCol(), trainingMHCreationDTO.getToRow());
@@ -197,9 +201,11 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
             mhCreationResponseDTO.setCheckMate(isCheckMateState(currentBoard, movingPieceDTO.isRed()));
 
+            /* print test */
             System.out.println("===========================================");
             System.out.println("Turn: " + newTurn);
             currentBoard.print(movingPieceDTO);
+            /* =================================== */
 
             return mhCreationResponseDTO;
         }
@@ -281,8 +287,10 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             throw new InvalidException(ErrorMessage.INVALID_PLAYER_MOVE_PIECE, errors);
         }
 
+        /* print test */
         System.out.println("current");
         currentBoard.print(movingPieceDTO);
+        /* =================================== */
 
         boolean isValidMove = moveRuleService.isMoveValid(currentBoard, movingPieceDTO,
                 mhCreationDTO.getToCol(), mhCreationDTO.getToRow());
@@ -308,9 +316,11 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                 matchRepository.save(match);
             }
 
+            /* print test */
             System.out.println("===========================================");
             System.out.println("Turn" + newTurn);
             currentBoard.print(movingPieceDTO);
+            /* =================================== */
 
             return mhCreationResponseDTO;
         }

@@ -15,7 +15,7 @@ public class PlayBoardDTO {
     
     @NotNull(message = ErrorMessage.BLANK_DATA)
     private PieceDTO[][] state;
-
+    /* print test */
     public void print(PieceDTO pieceDTO) {
         System.out.println("===========================================");
         for (int row = 1; row <= 10; row++) {
@@ -42,4 +42,5 @@ public class PlayBoardDTO {
         }
         System.out.println("===========================================");
     }
+        /* =================================== */
 }
