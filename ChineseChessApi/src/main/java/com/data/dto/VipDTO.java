@@ -17,5 +17,7 @@ public class VipDTO{
 
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String name;
+
+    private int depositMilestones;
     
 }

@@ -1,6 +1,5 @@
 package com.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +9,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.common.enumeration.EVip;
 import com.data.dto.VipDTO;
 import com.data.entity.Vip;
 import com.config.exception.ConflictException;
@@ -73,17 +71,9 @@ public class VipServiceImpl implements VipService {
 
     @PostConstruct
     public void init() {
-        List<Vip> vips = new ArrayList<>();
-        for (EVip eVip : EVip.values()) {
-            if (!vipRepository.existsByName(eVip.name())) {
-                Vip vip = new Vip();
-                vip.setName(eVip.name());
-                vips.add(vip);
-            }
-        }
-        if (!vips.isEmpty()) {
-            vipRepository.saveAll(vips);
+        if (vipRepository.count() == 0) {
+            vipRepository.save(new Vip(1, "Vip0", 0));
         }
     }
-    
+
 }

@@ -15,5 +15,9 @@ public interface VipRepository extends JpaRepository<Vip, Integer> {
     Optional<Vip> findByName(String name);
 
     boolean existsByIdNotAndName(int id, String name);
+
+    Optional<Vip> findFirstByOrderByDepositMilestonesAsc();
+
+    Optional<Vip> findFirstByOrderByDepositMilestonesDesc();
     
 }

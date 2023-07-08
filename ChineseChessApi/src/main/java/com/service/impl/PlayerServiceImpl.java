@@ -9,7 +9,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.common.Default;
 import com.common.enumeration.ERole;
 import com.data.dto.PlayerDTO;
 import com.data.dto.PlayerCreationDTO;
@@ -17,6 +16,8 @@ import com.data.dto.PlayerProfileDTO;
 import com.data.dto.UserDTO;
 import com.data.dto.UserProfileDTO;
 import com.data.entity.Player;
+import com.data.entity.Rank;
+import com.config.exception.InternalServerErrorException;
 import com.config.exception.ResourceNotFoundException;
 import com.data.mapper.PlayerMapper;
 import com.data.repository.RankRepository;
@@ -75,9 +76,12 @@ public class PlayerServiceImpl implements PlayerService {
 
         Player player = playerMapper.toEntity(playerCreationDTO);
         player.getUser().setId(createdUserDTO.getId());
-        player.setRank(rankRepository.findByName(Default.Player.RANK.name())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("rank.name", Default.Player.RANK.name()))));
+        
+        Rank defaultRank = rankRepository.findFirstByOrderByMilestonesAsc()
+                .orElseThrow(() -> new InternalServerErrorException("default rank"));
+        player.setRank(defaultRank);
+
+        player.setElo(defaultRank.getMilestones());
 
         PlayerDTO createdPlayerDTO = playerMapper.toDTO(playerRepository.save(player), null);
         createdPlayerDTO.setUserDTO(createdUserDTO);

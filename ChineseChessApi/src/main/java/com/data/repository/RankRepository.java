@@ -16,4 +16,6 @@ public interface RankRepository extends JpaRepository<Rank, Integer> {
 
     boolean existsByIdNotAndName(int id, String name);
 
+    Optional<Rank> findFirstByOrderByMilestonesAsc();
+
 }

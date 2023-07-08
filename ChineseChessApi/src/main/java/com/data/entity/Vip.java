@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "vips")
-public  class Vip implements Serializable{
-    
+public class Vip implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
@@ -26,5 +26,8 @@ public  class Vip implements Serializable{
 
     @Column(name = "name")
     private String name;
-    
+
+    @Column(name = "deposit_milestones")
+    private int depositMilestones;
+
 }
