@@ -1,7 +1,5 @@
 package com.service.impl;
 
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -9,11 +7,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.common.Default;
-import com.common.enumeration.ERole;
-import com.common.enumeration.EStatus;
-import com.config.exception.ResourceNotFoundException;
+import com.config.exception.InternalServerErrorException;
 import com.data.entity.Player;
+import com.data.entity.Rank;
+import com.data.entity.Role;
 import com.data.entity.User;
+import com.data.entity.Vip;
 import com.data.repository.PlayerRepository;
 import com.data.repository.RankRepository;
 import com.data.repository.RoleRepository;
@@ -22,10 +21,6 @@ import com.data.repository.VipRepository;
 
 @Service
 public class AdminInitializerServiceImpl implements ApplicationRunner {
-
-    private static final String PHONE_NUMBER = "0589176839";
-    private static final String PASSWORD = "admin";
-    private static final String NAME = "Admin";
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -64,35 +59,44 @@ public class AdminInitializerServiceImpl implements ApplicationRunner {
         Player adminPlayer = new Player();
 
         adminPlayer.setUser(adminUser);
-        adminPlayer.setRank(rankRepository.findByName(Default.Player.RANK.name())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("rank.name", Default.Player.RANK.name()))));
-        adminPlayer.setElo(Default.Player.ELO);
+
+        Rank defaultRank = rankRepository.findFirstByOrderByMilestonesAsc()
+                .orElseThrow(() -> new InternalServerErrorException("default rank"));
+        adminPlayer.setRank(defaultRank);
+        adminPlayer.setElo(defaultRank.getMilestones());
 
         playerRepository.save(adminPlayer);
     }
 
     private User initAdminUser() {
-        if (userRepository.existsByPhoneNumber(PHONE_NUMBER)) {
+        User existingAdminUser = userRepository.findByPhoneNumber(Default.User.Admin.PHONE_NUMBER).orElse(null);
+
+        if (existingAdminUser == null) {
+
+            User adminUser = new User();
+
+            adminUser.setPhoneNumber(Default.User.Admin.PHONE_NUMBER);
+            adminUser.setPassword(passwordEncoder.encode(Default.User.Admin.PASSWORD));
+            adminUser.setName(Default.User.Admin.NAME);
+
+            Role adminRole = roleRepository.findByName(Default.User.Admin.ROLE.name())
+                    .orElseThrow(() -> new InternalServerErrorException("admin's role"));
+            adminUser.setRole(adminRole);
+
+            Vip defaultVip = vipRepository.findFirstByOrderByDepositMilestonesDesc()
+                    .orElseThrow(() -> new InternalServerErrorException("admin's vip"));
+            adminUser.setVip(defaultVip);
+
+            adminUser.setStatus(Default.User.Admin.STATUS.name());
+
+            return userRepository.save(adminUser);
+        } else {
+            Vip defaultVip = vipRepository.findFirstByOrderByDepositMilestonesDesc()
+                    .orElseThrow(() -> new InternalServerErrorException("admin's vip"));
+            existingAdminUser.setVip(defaultVip);
+
             return null;
         }
-
-        User adminUser = new User();
-
-        adminUser.setPhoneNumber(PHONE_NUMBER);
-        adminUser.setPassword(passwordEncoder.encode(PASSWORD));
-        adminUser.setName(NAME);
-        adminUser.setRole(
-                roleRepository.findByName(ERole.ADMIN.name())
-                        .orElseThrow(() -> new ResourceNotFoundException(
-                                Collections.singletonMap("user.role.name", ERole.ADMIN.name()))));
-        adminUser.setVip(
-                vipRepository.findByName(Default.User.VIP.name())
-                        .orElseThrow(() -> new ResourceNotFoundException(
-                                Collections.singletonMap("user.vip.name", Default.User.VIP.name()))));
-        adminUser.setStatus(EStatus.ACTIVE.name());
-
-        return userRepository.save(adminUser);
     }
 
 }

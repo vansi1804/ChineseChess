@@ -7,7 +7,7 @@ import com.data.dto.MoveHistoryCreationDTO;
 import com.data.dto.TrainingMoveHistoryCreationDTO;
 import com.data.entity.MoveHistory;
 
-@Mapper(componentModel = "spring", uses = { MatchMapper.class})
+@Mapper(componentModel = "spring")
 public interface MoveHistoryMapper {
     
     @Mapping(ignore = true, target = "id")

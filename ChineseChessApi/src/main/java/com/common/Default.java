@@ -1,8 +1,7 @@
 package com.common;
 
-import com.common.enumeration.ERank;
+import com.common.enumeration.ERole;
 import com.common.enumeration.EStatus;
-import com.common.enumeration.EVip;
 
 public class Default {
 
@@ -28,13 +27,16 @@ public class Default {
     public static class User {
         // default for creating
         public static final EStatus STATUS = EStatus.INACTIVE;
-        public static final EVip VIP = EVip.VIP0;
-    }
 
-    public static class Player {
-        // default for creating
-        public static final ERank RANK = ERank.NOVICE;
-        public static final int ELO = 1000;
+        public static class Admin {
+            // default for creating
+            public static final String PHONE_NUMBER = "0589176839";
+            public static final String PASSWORD = "admin";
+            public static final String NAME = "Nguyễn Văn Sĩ";
+            public static final ERole ROLE = ERole.ADMIN;
+            public static final EStatus STATUS = EStatus.ACTIVE;
+
+        }
     }
 
     public static class JWT {

@@ -19,5 +19,6 @@ public class ErrorMessage {
     public static final String INVALID_FILE_TYPE = "Invalid file type";
     public static final String ACCESS_DENIED = "Access denied";
     public static final String UNAUTHORIZED = "UnAuthorized";
+    public static final String SERVER_ERROR = "An unexpected error occurred on the server";
 
 }

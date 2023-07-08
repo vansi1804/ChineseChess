@@ -17,7 +17,7 @@ public interface PlayerMapper {
     @Mapping(ignore = true, target = "id")
     @Mapping(source = "userCreationDTO", target = "user")
     @Mapping(ignore = true, target = "rank")
-    @Mapping(target = "elo", constant = "1000")
+    @Mapping(ignore = true, target = "elo")
     Player toEntity(PlayerCreationDTO playerCreationDTO);
 
     @Mapping(source = "userProfileDTO", target = "user")

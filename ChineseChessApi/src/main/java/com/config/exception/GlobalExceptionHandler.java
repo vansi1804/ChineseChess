@@ -4,6 +4,8 @@ import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import com.data.dto.ErrorMessageResponseDTO;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -38,6 +41,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ErrorMessageResponseDTO(ErrorMessage.INVALID_DATA,
                         Collections.singletonMap(field, defaultMessage),
                         ((ServletWebRequest) request).getRequest().getServletPath()));
+    }
+
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity<?> handleInternalServerErrorException(
+            InternalServerErrorException ex, HttpServletRequest request) {
+
+        logger.error("Error occurred while retrieving " + ex.getErrors().toString());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorMessageResponseDTO(ErrorMessage.SERVER_ERROR, null, request.getServletPath()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

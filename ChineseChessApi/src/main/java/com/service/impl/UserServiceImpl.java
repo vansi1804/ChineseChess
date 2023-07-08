@@ -17,8 +17,11 @@ import com.common.enumeration.EStatus;
 import com.data.dto.UserCreationDTO;
 import com.data.dto.UserDTO;
 import com.data.dto.UserProfileDTO;
+import com.data.entity.Role;
 import com.data.entity.User;
+import com.data.entity.Vip;
 import com.config.exception.ConflictException;
+import com.config.exception.InternalServerErrorException;
 import com.config.exception.ResourceNotFoundException;
 import com.data.mapper.UserMapper;
 import com.data.repository.RoleRepository;
@@ -90,14 +93,15 @@ public class UserServiceImpl implements UserService {
         User createUser = userMapper.toEntity(userCreationDTO);
         createUser.setPassword(passwordEncoder.encode(userCreationDTO.getPassword()));
         createUser.setAvatar(fileService.uploadFile(fileAvatar));
-        createUser.setRole(roleRepository.findByName(eRole.name())
-                .orElseThrow(() -> new ResourceNotFoundException( // this should throw for back-end
-                                                                  // (BE-exception)
-                        Collections.singletonMap("user.role.name", eRole.name()))));
-        String defaultVip = Default.User.VIP.name();
-        createUser.setVip(vipRepository.findByName(defaultVip)
-                .orElseThrow(() -> new ResourceNotFoundException( // (BE-exception)
-                        Collections.singletonMap("user.vip.name", eRole.name()))));
+
+        Role role = roleRepository.findByName(eRole.name())
+                .orElseThrow(() -> new InternalServerErrorException(eRole.name()));
+        createUser.setRole(role);
+
+        Vip defaultVip = vipRepository.findFirstByOrderByDepositMilestonesAsc()
+                .orElseThrow(() -> new InternalServerErrorException("default vip"));
+        createUser.setVip(defaultVip);
+        
         createUser.setStatus(Default.User.STATUS.name());
 
         return userMapper.toDTO(userRepository.save(createUser));

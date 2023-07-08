@@ -75,10 +75,12 @@ public class MatchServiceImpl implements MatchService {
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(id);
         List<MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
 
+        /* print test */
         for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOs) {
             System.out.println("\n" + moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription());
             moveHistoryDTO.getCurrentBoard().print(moveHistoryDTO.getMovingPieceDTO());
         }
+        /* =================================== */
 
         matchDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
         matchDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);

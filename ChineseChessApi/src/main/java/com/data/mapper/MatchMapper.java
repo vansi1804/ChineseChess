@@ -8,7 +8,7 @@ import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
 import com.data.entity.Match;
 
-@Mapper(componentModel = "spring", uses = { TrainingMapper.class })
+@Mapper(componentModel = "spring")
 public interface MatchMapper {
     
     @Mapping(ignore = true, target = "id")

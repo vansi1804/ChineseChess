@@ -1,6 +1,5 @@
 package com.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +9,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.common.enumeration.ERank;
 import com.data.dto.RankDTO;
 import com.data.entity.Rank;
 import com.config.exception.ConflictException;
@@ -75,16 +73,8 @@ public class RankServiceImpl implements RankService {
 
     @PostConstruct
     public void init() {
-        List<Rank> ranks = new ArrayList<>();
-        for (ERank eRank : ERank.values()) {
-            if (!rankRepository.existsByName(eRank.name())) {
-                Rank rank = new Rank();
-                rank.setName(eRank.name());
-                ranks.add(rank);
-            }
-        }
-        if (!ranks.isEmpty()) {
-            rankRepository.saveAll(ranks);
+        if (rankRepository.count() == 0) {
+            rankRepository.save(new Rank(1, "Novice", 2000));
         }
     }
 
