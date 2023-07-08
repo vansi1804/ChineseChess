@@ -12,5 +12,6 @@ public class ApiUrl {
     public static final String TRAININGS = Constant.API + Constant.TRAINING;
     public static final String LOGIN = Constant.API + Constant.LOGIN;
     public static final String USER = Constant.API + Constant.USER;
+    public static final String PLAY_BOARD = Constant.API + Constant.PLAY_BOARD;
 
 }

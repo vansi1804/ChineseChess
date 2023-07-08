@@ -28,7 +28,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
 
     @Override
     public String build(PlayBoardDTO currentBoard, PieceDTO pieceDTO, int toCol, int toRow) {
-        String shortNameOfPiece = pieceService.convertByName(pieceDTO.getName()).getShortNameValue();
+        String shortNameOfPiece = pieceService.convertByName(pieceDTO.getName()).getShortName();
 
         StringBuilder description = new StringBuilder();
         description.append(shortNameOfPiece);

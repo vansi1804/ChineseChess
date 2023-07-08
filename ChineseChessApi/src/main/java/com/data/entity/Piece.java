@@ -18,26 +18,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "pieces")
-public class Piece implements Serializable{
-    
+public class Piece implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
+    @Column(name = "id")
     private int id;
 
     @Column(name = "name", columnDefinition = "nvarchar(255)")
     private String name;
 
-    @Column(name = "is_red", updatable = false)
+    @Column(name = "is_red")
     private boolean isRed;
 
     @Column(name = "image")
-	private String image;
+    private String image;
 
-    @Column(name = "start_col", updatable = false)
+    @Column(name = "start_col")
     private int currentCol;
-    
-    @Column(name = "start_row", updatable = false)
+
+    @Column(name = "start_row")
     private int currentRow;
 
 }

@@ -8,7 +8,7 @@ import com.data.entity.MoveHistory;
 
 public interface PlayBoardService {
     
-    PlayBoardDTO create();
+    PlayBoardDTO generate();
 
     PlayBoardDTO update(PlayBoardDTO currentBoard, PieceDTO movingPieceDTO, int toCol, int toRow);
 
