@@ -34,7 +34,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     }
 
     @Override
-    public PlayBoardDTO create() {
+    public PlayBoardDTO generate() {
         PieceDTO[][] state = new PieceDTO[MAX_COL][MAX_ROW];
         PlayBoardDTO playBoardDTO = new PlayBoardDTO(state);
         List<Piece> pieces = pieceRepository.findAll();
@@ -72,7 +72,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     @Override
     public PlayBoardDTO buildPlayBoardByMoveHistories(List<MoveHistory> moveHistories) {
         return moveHistories.stream()
-                .reduce(create(), (board, mh) -> update(
+                .reduce(generate(), (board, mh) -> update(
                         board, pieceService.findOneInBoard(board, mh.getPiece().getId()), mh.getToCol(), mh.getToRow()),
                         (board1, board2) -> board2);
     }

@@ -1,5 +1,6 @@
 package com.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +76,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
     @Override
     public List<MoveHistoryDTO> build(List<MoveHistory> moveHistories) {
-        AtomicReference<PlayBoardDTO> currentBoard = new AtomicReference<>(playBoardService.create());
+        AtomicReference<PlayBoardDTO> currentBoard = new AtomicReference<>(playBoardService.generate());
 
         System.out.println("start:");
         currentBoard.get().print(null);
@@ -110,7 +111,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     @Override
-    public boolean[][] findMoveValid(ValidMoveRequestDTO validMoveRequestDTO) {
+    public List<int[]> findMoveValid(ValidMoveRequestDTO validMoveRequestDTO) {
         PieceDTO movingPieceDTO = pieceRepository.findById(validMoveRequestDTO.getPieceId())
                 .map(p -> pieceMapper.toDTO(p))
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -125,9 +126,6 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             movingPieceDTO.setCurrentCol(foundPieceInBoard.getCurrentCol());
             movingPieceDTO.setCurrentRow(foundPieceInBoard.getCurrentRow());
         }
-
-        System.out.println("current");
-        validMoveRequestDTO.getCurrentBoard().print(movingPieceDTO);
 
         return findValidMove(validMoveRequestDTO.getCurrentBoard(), movingPieceDTO);
     }
@@ -328,21 +326,26 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
     private PieceDTO findGeneralBeingChecked(PlayBoardDTO playBoard, boolean isRed) {
         // check opponent general is being check after moving
-        List<PieceDTO> generals = pieceService.findAllInBoard(playBoard, EPiece.General.getFullNameValue(), isRed);
+        List<PieceDTO> generals = pieceService.findAllInBoard(playBoard, EPiece.General.getFullName(), isRed);
         PieceDTO general = generals.isEmpty() ? null : generals.get(0);
 
         return moveRuleService.isGeneralBeingChecked(playBoard, general) ? general : null;
     }
 
-    private boolean[][] findValidMove(PlayBoardDTO playBoard, PieceDTO pieceDTO) {
+    private List<int[]> findValidMove(PlayBoardDTO playBoard, PieceDTO pieceDTO) {
         int col = playBoard.getState().length;
         int row = playBoard.getState()[0].length;
-        boolean[][] validMoves = new boolean[col][row];
+        List<int[]> validMoves = new ArrayList<>();
 
         for (int toCol = 1; toCol <= col; toCol++) {
             for (int toRow = 1; toRow <= row; toRow++) {
-                validMoves[toCol - 1][toRow - 1] = moveRuleService.isMoveValid(
-                        playBoard, pieceDTO, toCol, toRow);
+                boolean validMove = moveRuleService.isMoveValid(playBoard, pieceDTO, toCol, toRow);
+                if (validMove) {
+                    int[] index = new int[2];
+                    index[0] = toCol;
+                    index[1] = toRow;
+                    validMoves.add(index);
+                }
             }
         }
         return validMoves;

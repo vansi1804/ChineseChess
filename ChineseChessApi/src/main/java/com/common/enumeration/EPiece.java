@@ -6,14 +6,15 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum EPiece {
-    General("Tướng","Tg"),
-    Guard("Sĩ","S"),
-    Elephant("Tượng","T"),
-    Horse("Mã","M"),
-    Chariot("Xe","X"),
-    Cannon("Pháo","P"),
-    Soldier("Binh","B");
+    General("Tướng","Tg", 10000),
+    Guard("Sĩ","S", 20),
+    Elephant("Tượng","T", 40),
+    Horse("Mã","M", 60),
+    Chariot("Xe","X", 120),
+    Cannon("Pháo","P", 70),
+    Soldier("Binh","B", 30);
 
-    private final String fullNameValue;
-    private final String shortNameValue;
+    private final String fullName;
+    private final String shortName;
+    private final int power;
 }

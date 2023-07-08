@@ -119,7 +119,7 @@ public class MatchServiceImpl implements MatchService {
         Match match = matchRepository.save(matchMapper.toEntity(matchCreationDTO));
 
         MatchStartDTO matchStartDTO = matchMapper.toStartDTO(match);
-        matchStartDTO.setPlayBoardStartDTO(playBoardService.create());
+        matchStartDTO.setPlayBoardStartDTO(playBoardService.generate());
         return matchStartDTO;
     }
 

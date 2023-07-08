@@ -15,11 +15,11 @@ public interface MoveHistoryService {
 
     List<MoveHistoryDTO> build(List<MoveHistory> moveHistories);
 
-    boolean[][] findMoveValid(ValidMoveRequestDTO validMoveRequestDTO);
+    List<int[]> findMoveValid(ValidMoveRequestDTO validMoveRequestDTO);
 
     @Transactional
     MoveHistoryCreationResponseDTO create(TrainingMoveHistoryCreationDTO trainingMoveHistoryCreationDTO);
-    
+
     @Transactional
     MoveHistoryCreationResponseDTO create(MoveHistoryCreationDTO moveHistoryCreationDTO);
 

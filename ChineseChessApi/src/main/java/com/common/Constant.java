@@ -15,5 +15,6 @@ public class Constant {
     public static final String TRAINING = "/trainings";
     public static final String LOGIN = "/login";
     public static final String USER = "/users";
+    public static final String PLAY_BOARD = "/play-board";
     
 }

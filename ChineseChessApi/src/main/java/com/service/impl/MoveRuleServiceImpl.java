@@ -103,7 +103,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         PieceDTO sameColorGeneral = null;
         PieceDTO opponentGeneral = null;
 
-        List<PieceDTO> generalsPiece = pieceService.findAllInBoard(playBoard, EPiece.General.getFullNameValue(), null);
+        List<PieceDTO> generalsPiece = pieceService.findAllInBoard(playBoard, EPiece.General.getFullName(), null);
 
         if (generalsPiece.get(0).isRed() == pieceDTO.isRed()) {
             sameColorGeneral = generalsPiece.get(0);
