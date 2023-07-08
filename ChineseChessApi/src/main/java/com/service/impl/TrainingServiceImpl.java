@@ -120,7 +120,11 @@ public class TrainingServiceImpl implements TrainingService {
         List<MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
 
         for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOs) {
+
+            /* print test */
             System.out.println("\n" + moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription());
+            /* =================================== */
+
             moveHistoryDTO.getCurrentBoard().print(moveHistoryDTO.getMovingPieceDTO());
         }
 

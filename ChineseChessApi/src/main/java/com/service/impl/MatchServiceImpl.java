@@ -13,7 +13,6 @@ import com.common.ErrorMessage;
 import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
-import com.data.dto.MatchStartDTO;
 import com.data.dto.MoveHistoryDTO;
 import com.data.entity.Match;
 import com.data.entity.MoveHistory;
@@ -25,7 +24,6 @@ import com.config.exception.InvalidException;
 import com.config.exception.ResourceNotFoundException;
 import com.service.MatchService;
 import com.service.MoveHistoryService;
-import com.service.PlayBoardService;
 
 @Service
 public class MatchServiceImpl implements MatchService {
@@ -33,7 +31,6 @@ public class MatchServiceImpl implements MatchService {
     private final MatchRepository matchRepository;
     private final MatchMapper matchMapper;
     private final PlayerRepository playerRepository;
-    private final PlayBoardService playBoardService;
     private final MoveHistoryRepository moveHistoryRepository;
     private final MoveHistoryService moveHistoryService;
 
@@ -41,13 +38,11 @@ public class MatchServiceImpl implements MatchService {
     public MatchServiceImpl(MatchRepository matchRepository,
             MatchMapper matchMapper,
             PlayerRepository playerRepository,
-            PlayBoardService playBoardService,
             MoveHistoryRepository moveHistoryRepository,
             MoveHistoryService moveHistoryService) {
         this.matchRepository = matchRepository;
         this.matchMapper = matchMapper;
         this.playerRepository = playerRepository;
-        this.playBoardService = playBoardService;
         this.moveHistoryRepository = moveHistoryRepository;
         this.moveHistoryService = moveHistoryService;
     }
@@ -91,7 +86,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public MatchStartDTO create(MatchCreationDTO matchCreationDTO) {
+    public MatchDTO create(MatchCreationDTO matchCreationDTO) {
         Map<String, Object> errors = new HashMap<String, Object>();
 
         if (!playerRepository.existsById(matchCreationDTO.getPlayer1Id())) {
@@ -116,11 +111,7 @@ public class MatchServiceImpl implements MatchService {
             throw new InvalidException(ErrorMessage.PLAYER_PLAYING, errors);
         }
 
-        Match match = matchRepository.save(matchMapper.toEntity(matchCreationDTO));
-
-        MatchStartDTO matchStartDTO = matchMapper.toStartDTO(match);
-        matchStartDTO.setPlayBoardStartDTO(playBoardService.generate());
-        return matchStartDTO;
+        return matchMapper.toDTO(matchRepository.save(matchMapper.toEntity(matchCreationDTO)));
     }
 
     @Override
