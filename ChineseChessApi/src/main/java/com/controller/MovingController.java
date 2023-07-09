@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.common.ApiUrl;
 import com.data.dto.MatchMoveCreationDTO;
+import com.data.dto.MoveCreationDTO;
 import com.data.dto.TrainingMoveCreationDTO;
 import com.data.dto.ValidMoveRequestDTO;
 import com.service.MoveHistoryService;
@@ -22,12 +23,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.MOVE_HISTORIES)
-public class MoveHistoryController {
+public class MovingController {
 
     private MoveHistoryService moveHistoryService;
 
     @Autowired
-    public MoveHistoryController(MoveHistoryService moveHistoryService) {
+    public MovingController(MoveHistoryService moveHistoryService) {
         this.moveHistoryService = moveHistoryService;
     }
 
@@ -36,8 +37,13 @@ public class MoveHistoryController {
         return ResponseEntity.ok(moveHistoryService.findMoveValid(validMoveRequestDTO));
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "")
+    public ResponseEntity<?> create(@Valid @RequestBody MoveCreationDTO moveCreationDTO) {
+        return ResponseEntity.ok(moveHistoryService.create(moveCreationDTO));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping(value = "/match")
     public ResponseEntity<?> create(@Valid @RequestBody MatchMoveCreationDTO moveHistoryCreationDTO) {
         return ResponseEntity.ok(moveHistoryService.create(moveHistoryCreationDTO));
     }

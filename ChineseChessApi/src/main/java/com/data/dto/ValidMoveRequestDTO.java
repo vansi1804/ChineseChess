@@ -14,10 +14,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ValidMoveRequestDTO {
     
-    private int pieceId;
-
     @NotNull(message = ErrorMessage.BLANK_DATA)
+    private Integer pieceId;
+
+    @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
-    private PlayBoardDTO currentBoard;
+    private PlayBoardDTO currentBoardDTO;
     
 }

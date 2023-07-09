@@ -1,5 +1,9 @@
 package com.data.dto;
 
+import javax.validation.constraints.NotNull;
+
+import com.common.ErrorMessage;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TrainingMoveCreationDTO extends MoveDTO{
 
-    private long trainingId;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Long trainingId;
     
 }

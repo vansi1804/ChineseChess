@@ -1,5 +1,6 @@
 package com.service.impl;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,14 +51,15 @@ public class RoleServiceImpl implements RoleService {
 
     @PostConstruct
     public void init() {
-        List<Role> roles = new ArrayList<>();
-        for (ERole eRole : ERole.values()) {
-            if (!roleRepository.existsByName(eRole.name())) {
-                Role role = new Role();
-                role.setName(eRole.name());
-                roles.add(role);
-            }
-        }
+        List<Role> roles = Arrays.stream(ERole.values())
+                .filter(eRole -> !roleRepository.existsByName(eRole.name()))
+                .map(eRole -> {
+                    Role role = new Role();
+                    role.setName(eRole.name());
+                    return role;
+                })
+                .collect(Collectors.toList());
+
         if (!roles.isEmpty()) {
             roleRepository.saveAll(roles);
         }

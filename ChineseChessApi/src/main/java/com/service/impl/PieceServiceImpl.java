@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -54,12 +55,10 @@ public class PieceServiceImpl implements PieceService {
 
     @Override
     public EPiece convertByName(String name) {
-        for (EPiece piece : EPiece.values()) {
-            if (piece.getFullName().equalsIgnoreCase(name)) {
-                return piece;
-            }
-        }
-        throw new ResourceNotFoundException(Collections.singletonMap("name", name));
+        return Arrays.stream(EPiece.values())
+                .filter(ePiece -> ePiece.getFullName().equalsIgnoreCase(name))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("piece.name", name)));
     }
 
     @Override
@@ -71,7 +70,7 @@ public class PieceServiceImpl implements PieceService {
                             PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
                             return pieceDTO != null
                                     && (StringUtils.isBlank(name) || pieceDTO.getName().equals(name))
-                                    && (isRed == null || pieceDTO.isRed() == isRed);
+                                    && (isRed == null || pieceDTO.getColor() == isRed);
                         })
                         .mapToObj(row -> playBoardDTO.getState()[col][row]))
                 .toList();
@@ -118,7 +117,7 @@ public class PieceServiceImpl implements PieceService {
                     PieceDTO currentPiece = playBoard.getState()[pieceDTO.getCurrentCol() - 1][row - 1];
                     return currentPiece != null
                             && currentPiece.getId() != pieceDTO.getId()
-                            && currentPiece.isRed() == pieceDTO.isRed()
+                            && currentPiece.getColor() == pieceDTO.getColor()
                             && currentPiece.getName().equals(pieceDTO.getName());
                 })
                 .mapToObj(row -> playBoard.getState()[pieceDTO.getCurrentCol() - 1][row - 1])
@@ -169,72 +168,71 @@ public class PieceServiceImpl implements PieceService {
         List<Piece> defaultPieces = new ArrayList<>();
         // Red pieces
         defaultPieces.add(
-
-                new Piece(1, EPiece.Soldier.getFullName(), true, "red_soldier.png", 1, 7));
+                new Piece(1, EPiece.Soldier.getFullName(), Boolean.TRUE, "red_soldier.png", 1, 7));
         defaultPieces.add(
-                new Piece(2, EPiece.Soldier.getFullName(), true, "red_soldier.png", 3, 7));
+                new Piece(2, EPiece.Soldier.getFullName(), Boolean.TRUE, "red_soldier.png", 3, 7));
         defaultPieces.add(
-                new Piece(3, EPiece.Soldier.getFullName(), true, "red_soldier.png", 5, 7));
+                new Piece(3, EPiece.Soldier.getFullName(), Boolean.TRUE, "red_soldier.png", 5, 7));
         defaultPieces.add(
-                new Piece(4, EPiece.Soldier.getFullName(), true, "red_soldier.png", 7, 7));
+                new Piece(4, EPiece.Soldier.getFullName(), Boolean.TRUE, "red_soldier.png", 7, 7));
         defaultPieces.add(
-                new Piece(5, EPiece.Soldier.getFullName(), true, "red_soldier.png", 9, 7));
+                new Piece(5, EPiece.Soldier.getFullName(), Boolean.TRUE, "red_soldier.png", 9, 7));
         defaultPieces.add(
-                new Piece(6, EPiece.Cannon.getFullName(), true, "red_cannon.png", 2, 8));
+                new Piece(6, EPiece.Cannon.getFullName(), Boolean.TRUE, "red_cannon.png", 2, 8));
         defaultPieces.add(
-                new Piece(7, EPiece.Cannon.getFullName(), true, "red_cannon.png", 8, 8));
+                new Piece(7, EPiece.Cannon.getFullName(), Boolean.TRUE, "red_cannon.png", 8, 8));
         defaultPieces.add(
-                new Piece(8, EPiece.Chariot.getFullName(), true, "red_chariot.png", 1, 10));
+                new Piece(8, EPiece.Chariot.getFullName(), Boolean.TRUE, "red_chariot.png", 1, 10));
         defaultPieces.add(
-                new Piece(9, EPiece.Chariot.getFullName(), true, "red_chariot.png", 9, 10));
+                new Piece(9, EPiece.Chariot.getFullName(), Boolean.TRUE, "red_chariot.png", 9, 10));
         defaultPieces.add(
-                new Piece(10, EPiece.Horse.getFullName(), true, "red_horse.png", 2, 10));
+                new Piece(10, EPiece.Horse.getFullName(), Boolean.TRUE, "red_horse.png", 2, 10));
         defaultPieces.add(
-                new Piece(11, EPiece.Horse.getFullName(), true, "red_horse.png", 8, 10));
+                new Piece(11, EPiece.Horse.getFullName(), Boolean.TRUE, "red_horse.png", 8, 10));
         defaultPieces.add(
-                new Piece(12, EPiece.Elephant.getFullName(), true, "red_elephant.png", 3, 10));
+                new Piece(12, EPiece.Elephant.getFullName(), Boolean.TRUE, "red_elephant.png", 3, 10));
         defaultPieces.add(
-                new Piece(13, EPiece.Elephant.getFullName(), true, "red_elephant.png", 7, 10));
+                new Piece(13, EPiece.Elephant.getFullName(), Boolean.TRUE, "red_elephant.png", 7, 10));
         defaultPieces.add(
-                new Piece(14, EPiece.Guard.getFullName(), true, "red_guard.png", 4, 10));
+                new Piece(14, EPiece.Guard.getFullName(), Boolean.TRUE, "red_guard.png", 4, 10));
         defaultPieces.add(
-                new Piece(15, EPiece.Guard.getFullName(), true, "red_guard.png", 5, 10));
+                new Piece(15, EPiece.Guard.getFullName(), Boolean.TRUE, "red_guard.png", 6, 10));
         defaultPieces.add(
-                new Piece(16, EPiece.General.getFullName(), true, "red_general.png", 5, 10));
+                new Piece(16, EPiece.General.getFullName(), Boolean.TRUE, "red_general.png", 5, 10));
 
         // Black pieces
         defaultPieces.add(
-                new Piece(17, EPiece.Soldier.getFullName(), false, "black_soldier.png", 1, 4));
+                new Piece(17, EPiece.Soldier.getFullName(), Boolean.FALSE, "black_soldier.png", 1, 4));
         defaultPieces.add(
-                new Piece(18, EPiece.Soldier.getFullName(), false, "black_soldier.png", 3, 4));
+                new Piece(18, EPiece.Soldier.getFullName(), Boolean.FALSE, "black_soldier.png", 3, 4));
         defaultPieces.add(
-                new Piece(19, EPiece.Soldier.getFullName(), false, "black_soldier.png", 5, 4));
+                new Piece(19, EPiece.Soldier.getFullName(), Boolean.FALSE, "black_soldier.png", 5, 4));
         defaultPieces.add(
-                new Piece(20, EPiece.Soldier.getFullName(), false, "black_soldier.png", 7, 4));
+                new Piece(20, EPiece.Soldier.getFullName(), Boolean.FALSE, "black_soldier.png", 7, 4));
         defaultPieces.add(
-                new Piece(21, EPiece.Soldier.getFullName(), false, "black_soldier.png", 9, 4));
+                new Piece(21, EPiece.Soldier.getFullName(), Boolean.FALSE, "black_soldier.png", 9, 4));
         defaultPieces.add(
-                new Piece(22, EPiece.Cannon.getFullName(), false, "black_cannon.png", 2, 3));
+                new Piece(22, EPiece.Cannon.getFullName(), Boolean.FALSE, "black_cannon.png", 2, 3));
         defaultPieces.add(
-                new Piece(23, EPiece.Cannon.getFullName(), false, "black_cannon.png", 8, 3));
+                new Piece(23, EPiece.Cannon.getFullName(), Boolean.FALSE, "black_cannon.png", 8, 3));
         defaultPieces.add(
-                new Piece(24, EPiece.Chariot.getFullName(), false, "black_chariot.png", 1, 1));
+                new Piece(24, EPiece.Chariot.getFullName(), Boolean.FALSE, "black_chariot.png", 1, 1));
         defaultPieces.add(
-                new Piece(25, EPiece.Chariot.getFullName(), false, "black_chariot.png", 9, 1));
+                new Piece(25, EPiece.Chariot.getFullName(), Boolean.FALSE, "black_chariot.png", 9, 1));
         defaultPieces.add(
-                new Piece(26, EPiece.Horse.getFullName(), false, "black_horse.png", 2, 1));
+                new Piece(26, EPiece.Horse.getFullName(), Boolean.FALSE, "black_horse.png", 2, 1));
         defaultPieces.add(
-                new Piece(27, EPiece.Horse.getFullName(), false, "black_horse.png", 8, 1));
+                new Piece(27, EPiece.Horse.getFullName(), Boolean.FALSE, "black_horse.png", 8, 1));
         defaultPieces.add(
-                new Piece(28, EPiece.Elephant.getFullName(), false, "black_elephant.png", 3, 1));
+                new Piece(28, EPiece.Elephant.getFullName(), Boolean.FALSE, "black_elephant.png", 3, 1));
         defaultPieces.add(
-                new Piece(29, EPiece.Elephant.getFullName(), false, "black_elephant.png", 7, 1));
+                new Piece(29, EPiece.Elephant.getFullName(), Boolean.FALSE, "black_elephant.png", 7, 1));
         defaultPieces.add(
-                new Piece(30, EPiece.Guard.getFullName(), false, "black_guard.png", 4, 1));
+                new Piece(30, EPiece.Guard.getFullName(), Boolean.FALSE, "black_guard.png", 4, 1));
         defaultPieces.add(
-                new Piece(31, EPiece.Guard.getFullName(), false, "black_guard.png", 6, 1));
+                new Piece(31, EPiece.Guard.getFullName(), Boolean.FALSE, "black_guard.png", 6, 1));
         defaultPieces.add(
-                new Piece(32, EPiece.General.getFullName(), false, "black_general.png", 5, 1));
+                new Piece(32, EPiece.General.getFullName(), Boolean.FALSE, "black_general.png", 5, 1));
 
         pieceRepository.saveAll(defaultPieces);
 

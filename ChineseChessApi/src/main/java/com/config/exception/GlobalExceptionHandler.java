@@ -80,9 +80,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
+            ExpiredJwtException.class,
             DisabledException.class,
             LockedException.class,
-            ExpiredJwtException.class,
             AccessDeniedException.class
     })
     public ResponseEntity<ErrorMessageResponseDTO> handleForbiddenException(

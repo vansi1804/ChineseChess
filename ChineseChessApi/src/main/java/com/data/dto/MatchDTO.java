@@ -16,25 +16,17 @@ public class MatchDTO {
 
     private long id;
 
-    private int time;
+    private Integer time;
 
-    private int movingTime;
+    private Integer movingTime;
 
-    private int cumulativeTime;
+    private Integer cumulativeTime;
 
-    private int bet;
+    private Integer bet;
 
-    private long player1Id;
+    private PlayerProfileDTO player1ProfileDTO;
 
-    private String player1Name;
-
-    private String player1Avatar;
-
-    private long player2Id;
-
-    private String player2Name;
-
-    private String player2Avatar;
+    private PlayerProfileDTO player2ProfileDTO;
 
     private Long result;
 

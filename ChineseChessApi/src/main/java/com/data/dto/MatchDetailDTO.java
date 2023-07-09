@@ -1,6 +1,5 @@
 package com.data.dto;
 
-import java.util.List;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ public class MatchDetailDTO {
 
     private MatchDTO matchDTO;
 
-    private long totalTurn;
+    private Long totalTurn;
 
     private Map<Long, MoveHistoryDTO> moveHistoryDTOs;
 

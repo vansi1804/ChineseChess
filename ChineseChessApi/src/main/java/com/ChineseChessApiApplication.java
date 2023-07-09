@@ -15,4 +15,5 @@ public class ChineseChessApiApplication {
         SpringApplication.run(ChineseChessApiApplication.class, args);
 
     }
+    
 }

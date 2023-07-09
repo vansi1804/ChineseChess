@@ -1,6 +1,9 @@
 package com.data.dto;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import com.common.ErrorMessage;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,20 +14,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MatchCreationDTO {
 
-    @Min(value = 5, message = "time >= 5 minutes")
-    private int time;
+    @Min(value = 5, message = " < 5 (minutes)")
+    private Integer time;
 
-    @Min(value = 15, message = "movingTime >= 15 seconds")
-    private int movingTime;
+    @Min(value = 30, message = " < 30 (seconds)")
+    private Integer movingTime;
 
-    @Min(value = 1, message = "cumulativeTime > seconds")
-    private int cumulativeTime;
+    @Min(value = 3, message = " < 3 (seconds)")
+    private Integer cumulativeTime;
 
-    @Min(value = 1, message = "bet > 0")
-    private int bet;
+    @Min(value = 100, message = " < 100 (elo)")
+    private Integer bet;
 
-    private long player1Id;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Long player1Id;
 
-    private long player2Id;
-    
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Long player2Id;
+
 }

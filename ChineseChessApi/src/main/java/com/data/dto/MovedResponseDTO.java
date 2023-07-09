@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MovedResponseDTO {
     
+    private PieceDTO movedPieceDTO;
+
     private PieceDTO deadPieceDTO;
 
-    private PieceDTO generalBeingChecked;
-
-    private boolean isCheckMate; 
+    private PieceDTO checkedGeneralPieceDTO;
+    
+    private boolean isCheckMate;
 
 }

@@ -21,10 +21,9 @@ public class EncodingUtil {
     }
 
     private static String convertByteToHex(byte[] data) {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < data.length; i++) {
-            sb.append(Integer.toString((data[i] & 0xff) + 0x100, 16).substring(1));
-        }
-        return sb.toString();
+        return Arrays.stream(data)
+                .map(b -> String.format("%02x", b & 0xFF))
+                .collect(Collectors.joining());
     }
+
 }

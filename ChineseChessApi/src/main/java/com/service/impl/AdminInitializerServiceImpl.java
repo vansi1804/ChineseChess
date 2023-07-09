@@ -63,13 +63,14 @@ public class AdminInitializerServiceImpl implements ApplicationRunner {
         Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
                 .orElseThrow(() -> new InternalServerErrorException("default rank"));
         adminPlayer.setRank(defaultRank);
+
         adminPlayer.setElo(defaultRank.getEloMilestones());
 
         playerRepository.save(adminPlayer);
     }
 
     private User initAdminUser() {
-        if (userRepository.existsByPhoneNumber(Default.User.Admin.PHONE_NUMBER)) {
+        if (!userRepository.existsByPhoneNumber(Default.User.Admin.PHONE_NUMBER)) {
 
             User adminUser = new User();
 

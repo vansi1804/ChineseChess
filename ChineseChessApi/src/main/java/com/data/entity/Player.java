@@ -39,4 +39,13 @@ public class Player implements Serializable {
     @Column(name = "elo")
     private int elo;
 
+    @Column(name = "win")
+    private int win;
+
+    @Column(name = "draw")
+    private int draw;
+
+    @Column(name = "lose")
+    private int lose;
+
 }

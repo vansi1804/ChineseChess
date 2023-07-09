@@ -1,5 +1,7 @@
 package com.data.dto;
 
+import javax.validation.Valid;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,7 @@ public class PlayerProfileDTO {
     
     private long id;
 
+    @Valid
     private UserProfileDTO userProfileDTO;
 
     private String rankName;
@@ -17,8 +20,8 @@ public class PlayerProfileDTO {
 
     private int win;
 
-    private int lost;
-
     private int draw;
+
+    private int lose;
 
 }
