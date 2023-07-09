@@ -107,6 +107,7 @@ public class PlayerController {
     // return ResponseEntity.ok(playerService.update(id, playerProfileDTO,
     // fileAvatar));
     // }
+    
     @PreAuthorize("isAuthenticated()")
     @PutMapping(value = "/id={id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(@PathVariable long id,

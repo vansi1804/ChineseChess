@@ -31,10 +31,8 @@ public class LoginServiceImpl implements LoginService {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDTO.getPhoneNumber(), loginDTO.getPassword()));
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            
-            String token = jwtService.generateToken(userDetails.getUsername());
-            return token;
-            
+
+            return jwtService.generateToken(userDetails.getUsername());
         } catch (BadCredentialsException ex) {
             throw new UnauthorizedException();
         }

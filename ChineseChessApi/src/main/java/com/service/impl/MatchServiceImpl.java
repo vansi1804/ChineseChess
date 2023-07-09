@@ -49,14 +49,18 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<MatchDTO> findAll() {
-        return matchRepository.findAll().stream().map(m -> matchMapper.toDTO(m)).collect(Collectors.toList());
+        return matchRepository.findAll().stream()
+                .map(m -> matchMapper.toDTO(m))
+                .collect(Collectors.toList());
     }
 
     @Override
     public MatchDTO findById(long id) {
         return matchRepository.findById(id)
                 .map(m -> matchMapper.toDTO(m))
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
     }
 
     @Override
@@ -70,7 +74,9 @@ public class MatchServiceImpl implements MatchService {
     public MatchDetailDTO findDetailById(long id) {
         MatchDetailDTO matchDetailDTO = matchRepository.findById(id)
                 .map(m -> matchMapper.toDetailDTO(m))
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(id);
         Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
@@ -112,7 +118,9 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public MatchDTO updateResult(long id, Boolean isRedWin) {
         Match match = matchRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
 
         if (match.getResult() != null) {
             throw new InvalidException(ErrorMessage.END_MATCH, Collections.singletonMap("id", match.getId()));

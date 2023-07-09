@@ -37,6 +37,7 @@ public class AdminInitializerServiceImpl implements ApplicationRunner {
             RankRepository rankRepository,
             PlayerRepository playerRepository,
             PasswordEncoder passwordEncoder) {
+
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -90,8 +91,8 @@ public class AdminInitializerServiceImpl implements ApplicationRunner {
 
             return userRepository.save(adminUser);
         }
+
         return null;
-        
     }
 
 }

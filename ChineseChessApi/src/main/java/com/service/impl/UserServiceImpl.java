@@ -41,12 +41,14 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,
+    public UserServiceImpl(
+            UserRepository userRepository,
             UserMapper userMapper,
             RoleRepository roleRepository,
             VipRepository vipRepository,
             FileService fileService,
             PasswordEncoder passwordEncoder) {
+                
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
@@ -57,29 +59,37 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserDTO> findAll(int no, int limit, String sortBy) {
-        return userRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy))).map(u -> userMapper.toDTO(u));
+        return userRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
+                .map(u -> userMapper.toDTO(u));
     }
 
     @Override
     public UserDTO findById(long id) {
-        return userRepository.findById(id).map(u -> userMapper.toDTO(u))
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+        return userRepository.findById(id)
+                .map(u -> userMapper.toDTO(u))
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
 
     }
 
     @Override
     public UserDTO findByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber).map(u -> userMapper.toDTO(u))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("phoneNumber", phoneNumber)));
+        return userRepository.findByPhoneNumber(phoneNumber)
+                .map(u -> userMapper.toDTO(u))
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("phoneNumber", phoneNumber)));
 
     }
 
     @Override
     public UserDTO findByName(String name) {
-        return userRepository.findByName(name).map(u -> userMapper.toDTO(u))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("name", name)));
+        return userRepository.findByName(name)
+                .map(u -> userMapper.toDTO(u))
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("name", name)));
 
     }
 
@@ -95,13 +105,15 @@ public class UserServiceImpl implements UserService {
         createUser.setAvatar(fileService.uploadFile(fileAvatar));
 
         Role role = roleRepository.findByName(eRole.name())
-                .orElseThrow(() -> new InternalServerErrorException(eRole.name()));
+                .orElseThrow(
+                        () -> new InternalServerErrorException(eRole.name()));
         createUser.setRole(role);
 
         Vip defaultVip = vipRepository.findFirstByOrderByDepositMilestonesAsc()
-                .orElseThrow(() -> new InternalServerErrorException("default vip"));
+                .orElseThrow(
+                        () -> new InternalServerErrorException("default vip"));
         createUser.setVip(defaultVip);
-        
+
         createUser.setStatus(Default.User.STATUS.name());
 
         return userMapper.toDTO(userRepository.save(createUser));
@@ -110,7 +122,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserProfileDTO update(long id, UserProfileDTO userProfileDTO, MultipartFile fileAvatar) {
         User oldUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
 
         if (userRepository.existsByIdNotAndPhoneNumber(id, userProfileDTO.getPhoneNumber())) {
             throw new ResourceNotFoundException(
@@ -145,7 +159,9 @@ public class UserServiceImpl implements UserService {
 
     public boolean updateStatusById(long id, EStatus eStatus) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
 
         user.setStatus(eStatus.name());
         userRepository.save(user);

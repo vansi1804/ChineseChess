@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum EPiece {
+
     General("Tướng","Tg", 10000),
     Guard("Sĩ","S", 20),
     Elephant("Tượng","T", 40),
@@ -15,6 +16,9 @@ public enum EPiece {
     Soldier("Binh","B", 30);
 
     private final String fullName;
+    
     private final String shortName;
+
     private final int power;
+
 }

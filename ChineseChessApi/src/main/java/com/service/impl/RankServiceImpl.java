@@ -31,44 +31,56 @@ public class RankServiceImpl implements RankService {
 
     @Override
     public List<RankDTO> findAll() {
-        return rankRepository.findAll().stream().map(r -> rankMapper.toDTO(r)).collect(Collectors.toList());
+        return rankRepository.findAll().stream()
+                .map(r -> rankMapper.toDTO(r))
+                .collect(Collectors.toList());
     }
 
     @Override
     public RankDTO findById(int id) {
         return rankRepository.findById(id)
                 .map(r -> rankMapper.toDTO(r))
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
     }
 
     @Override
     public RankDTO findByName(String name) {
         return rankRepository.findByName(name)
                 .map(r -> rankMapper.toDTO(r))
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("name", name)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("name", name)));
     }
 
     @Override
     public RankDTO create(RankDTO rankDTO) {
         if (rankRepository.existsByName(rankDTO.getName())) {
-            throw new ConflictException(Collections.singletonMap("name", rankDTO.getName()));
+            throw new ConflictException(
+                    Collections.singletonMap("name", rankDTO.getName()));
         }
         if (rankRepository.existsByEloMilestones(rankDTO.getEloMilestones())) {
-            throw new ConflictException(Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones()));
+            throw new ConflictException(
+                    Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones()));
         }
+
         return rankMapper.toDTO(rankRepository.save(rankMapper.toEntity(rankDTO)));
     }
 
     @Override
     public RankDTO update(int id, RankDTO rankDTO) {
         if (!rankRepository.existsById(id)) {
-            throw new ResourceNotFoundException(Collections.singletonMap("id", id));
+            throw new ResourceNotFoundException(
+                    Collections.singletonMap("id", id));
         }
         if (rankRepository.existsByIdNotAndName(id, rankDTO.getName())) {
-            throw new ConflictException(Collections.singletonMap("name", rankDTO.getName()));
+            throw new ConflictException(
+                    Collections.singletonMap("name", rankDTO.getName()));
         }
         if (rankRepository.existsByIdNotAndEloMilestones(id, rankDTO.getEloMilestones())) {
-            throw new ConflictException(Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones()));
+            throw new ConflictException(
+                    Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones()));
         }
 
         Rank updateRank = rankMapper.toEntity(rankDTO);
@@ -80,7 +92,9 @@ public class RankServiceImpl implements RankService {
     @Override
     public void delete(int id) {
         rankRepository.delete(rankRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id))));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id))));
     }
 
     @PostConstruct

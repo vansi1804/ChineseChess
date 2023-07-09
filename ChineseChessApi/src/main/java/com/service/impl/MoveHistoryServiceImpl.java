@@ -56,7 +56,8 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     private final MoveRuleService moveRuleService;
 
     @Autowired
-    public MoveHistoryServiceImpl(MoveHistoryRepository moveHistoryRepository,
+    public MoveHistoryServiceImpl(
+            MoveHistoryRepository moveHistoryRepository,
             MoveHistoryMapper moveHistoryMapper,
             TrainingRepository trainingRepository,
             MatchRepository matchRepository,
@@ -66,6 +67,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             PieceMapper pieceMapper,
             PieceService pieceService,
             MoveRuleService moveRuleService) {
+
         this.moveHistoryRepository = moveHistoryRepository;
         this.moveHistoryMapper = moveHistoryMapper;
         this.trainingRepository = trainingRepository;
@@ -133,13 +135,15 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     public List<int[]> findMoveValid(ValidMoveRequestDTO validMoveRequestDTO) {
         PieceDTO movingPieceDTO = pieceRepository.findById(validMoveRequestDTO.getPieceId())
                 .map(p -> pieceMapper.toDTO(p))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("pieceId", validMoveRequestDTO.getPieceId())));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("pieceId", validMoveRequestDTO.getPieceId())));
 
         PieceDTO foundPieceInBoard = pieceService.findOneInBoard(
                 validMoveRequestDTO.getCurrentBoardDTO(), movingPieceDTO.getId());
         if (foundPieceInBoard == null) {
-            throw new InvalidException(ErrorMessage.DEAD_PIECE,
+            throw new InvalidException(
+                    ErrorMessage.DEAD_PIECE,
                     Collections.singletonMap("pieceId", validMoveRequestDTO.getPieceId()));
         } else {
             movingPieceDTO.setCurrentCol(foundPieceInBoard.getCurrentCol());
@@ -159,22 +163,22 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         PieceDTO movingPieceDTO = pieceService.findOneInBoard(
                 moveCreationDTO.getCurrentBoardDTO(), moveCreationDTO.getPieceId());
         if (movingPieceDTO == null) {
-            throw new InvalidException(ErrorMessage.DEAD_PIECE,
+            throw new InvalidException(
+                    ErrorMessage.DEAD_PIECE,
                     Collections.singletonMap("pieceId", moveCreationDTO.getPieceId()));
         }
 
-        MovedResponseDTO movedResponseDTO = buildMovedResponse(
+        return buildMovedResponse(
                 moveCreationDTO.getCurrentBoardDTO(), movingPieceDTO,
                 moveCreationDTO.getToCol(), moveCreationDTO.getToRow());
-
-        return movedResponseDTO;
     }
 
     @Override
     public MovedResponseDTO create(TrainingMoveCreationDTO trainingMoveCreationDTO) {
         Training training = trainingRepository.findById(trainingMoveCreationDTO.getTrainingId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("trainingId", trainingMoveCreationDTO.getTrainingId())));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("trainingId", trainingMoveCreationDTO.getTrainingId())));
 
         long newTurn = moveHistoryRepository.countTurnByTraining_Id(training.getId()) + 1;
 
@@ -234,17 +238,20 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     @Override
     public MovedResponseDTO create(MatchMoveCreationDTO matchMoveCreationDTO) {
         Match match = matchRepository.findById(matchMoveCreationDTO.getMatchId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("matchId", matchMoveCreationDTO.getMatchId())));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("matchId", matchMoveCreationDTO.getMatchId())));
 
         if (match.getResult() != null) {
-            throw new InvalidException(ErrorMessage.END_MATCH,
+            throw new InvalidException(
+                    ErrorMessage.END_MATCH,
                     Collections.singletonMap("matchId", match.getId()));
         }
 
         if ((match.getPlayer1().getId() != matchMoveCreationDTO.getPlayerId())
                 && (match.getPlayer2().getId() != matchMoveCreationDTO.getPlayerId())) {
-            throw new InvalidException(ErrorMessage.INVALID_MOVING_PLAYER,
+            throw new InvalidException(
+                    ErrorMessage.INVALID_MOVING_PLAYER,
                     Collections.singletonMap("playerId", matchMoveCreationDTO.getPlayerId()));
         }
 
@@ -339,7 +346,6 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     private List<int[]> findValidMove(PlayBoardDTO playBoard, PieceDTO pieceDTO) {
-
         return IntStream.rangeClosed(1, playBoard.getState().length)
                 .boxed()
                 .flatMap(toCol -> IntStream.rangeClosed(1, playBoard.getState()[0].length)
@@ -353,8 +359,10 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
         return opponentPiecesInBoard.stream()
                 .flatMap(opponentPiece -> {
-                    return IntStream.rangeClosed(1, playBoardDTO.getState().length).boxed()
-                            .flatMap(toCol -> IntStream.rangeClosed(1, playBoardDTO.getState()[0].length).boxed()
+                    return IntStream.rangeClosed(1, playBoardDTO.getState().length)
+                            .boxed()
+                            .flatMap(toCol -> IntStream.rangeClosed(1, playBoardDTO.getState()[0].length)
+                                    .boxed()
                                     .map(toRow -> new AbstractMap.SimpleEntry<>(toCol, toRow))
                                     .filter(entry -> moveRuleService.isMoveValid(
                                             playBoardDTO, opponentPiece, entry.getKey(), entry.getValue()))

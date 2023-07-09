@@ -1,7 +1,6 @@
 package com.service.impl;
 
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,20 +32,27 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<RoleDTO> findAll() {
-        return roleRepository.findAll().stream().map(r -> roleMapper.toDTO(r)).collect(Collectors.toList());
+        return roleRepository.findAll().stream()
+                .map(r -> roleMapper.toDTO(r))
+                .collect(Collectors.toList());
     }
 
     @Override
     public RoleDTO findById(int id) {
         return roleRepository.findById(id)
                 .map(r -> roleMapper.toDTO(r))
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
     }
 
     @Override
     public RoleDTO findByName(String name) {
-        return roleRepository.findByName(name).map(r -> roleMapper.toDTO(r))
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("name", name)));
+        return roleRepository.findByName(name)
+                .map(r -> roleMapper.toDTO(r))
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("name", name)));
     }
 
     @PostConstruct
