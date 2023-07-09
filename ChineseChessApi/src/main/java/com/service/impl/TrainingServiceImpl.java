@@ -117,19 +117,11 @@ public class TrainingServiceImpl implements TrainingService {
                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByTraining_Id(id);
-        List<MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
-
-        for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOs) {
-
-            /* print test */
-            System.out.println("\n" + moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription());
-            /* =================================== */
-
-            moveHistoryDTO.getCurrentBoard().print(moveHistoryDTO.getMovingPieceDTO());
-        }
-
+        Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
+        
         trainingDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
         trainingDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
+
         return trainingDetailDTO;
     }
 

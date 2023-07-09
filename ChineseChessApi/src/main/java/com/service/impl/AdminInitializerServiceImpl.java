@@ -60,18 +60,16 @@ public class AdminInitializerServiceImpl implements ApplicationRunner {
 
         adminPlayer.setUser(adminUser);
 
-        Rank defaultRank = rankRepository.findFirstByOrderByMilestonesAsc()
+        Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
                 .orElseThrow(() -> new InternalServerErrorException("default rank"));
         adminPlayer.setRank(defaultRank);
-        adminPlayer.setElo(defaultRank.getMilestones());
+        adminPlayer.setElo(defaultRank.getEloMilestones());
 
         playerRepository.save(adminPlayer);
     }
 
     private User initAdminUser() {
-        User existingAdminUser = userRepository.findByPhoneNumber(Default.User.Admin.PHONE_NUMBER).orElse(null);
-
-        if (existingAdminUser == null) {
+        if (userRepository.existsByPhoneNumber(Default.User.Admin.PHONE_NUMBER)) {
 
             User adminUser = new User();
 
@@ -83,20 +81,16 @@ public class AdminInitializerServiceImpl implements ApplicationRunner {
                     .orElseThrow(() -> new InternalServerErrorException("admin's role"));
             adminUser.setRole(adminRole);
 
-            Vip defaultVip = vipRepository.findFirstByOrderByDepositMilestonesDesc()
+            Vip adminVip = vipRepository.findFirstByOrderByDepositMilestonesDesc()
                     .orElseThrow(() -> new InternalServerErrorException("admin's vip"));
-            adminUser.setVip(defaultVip);
+            adminUser.setVip(adminVip);
 
             adminUser.setStatus(Default.User.Admin.STATUS.name());
 
             return userRepository.save(adminUser);
-        } else {
-            Vip defaultVip = vipRepository.findFirstByOrderByDepositMilestonesDesc()
-                    .orElseThrow(() -> new InternalServerErrorException("admin's vip"));
-            existingAdminUser.setVip(defaultVip);
-
-            return null;
         }
+        return null;
+        
     }
 
 }

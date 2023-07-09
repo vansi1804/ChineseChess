@@ -1,7 +1,5 @@
 package com.data.dto;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +19,6 @@ public class MoveHistoryDTO {
 
     private PieceDTO generalBeingChecked;
 
-    private List<PieceDTO> currentDeadPieceDTOs;
+    private PieceDTO deadPieceDTO;
 
 }

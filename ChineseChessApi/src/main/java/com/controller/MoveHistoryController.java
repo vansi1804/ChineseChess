@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.common.ApiUrl;
-import com.data.dto.MoveHistoryCreationDTO;
-import com.data.dto.TrainingMoveHistoryCreationDTO;
+import com.data.dto.MatchMoveCreationDTO;
+import com.data.dto.TrainingMoveCreationDTO;
 import com.data.dto.ValidMoveRequestDTO;
 import com.service.MoveHistoryService;
 
@@ -38,13 +38,13 @@ public class MoveHistoryController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "")
-    public ResponseEntity<?> create(@Valid @RequestBody MoveHistoryCreationDTO moveHistoryCreationDTO) {
+    public ResponseEntity<?> create(@Valid @RequestBody MatchMoveCreationDTO moveHistoryCreationDTO) {
         return ResponseEntity.ok(moveHistoryService.create(moveHistoryCreationDTO));
     }
 
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping(value = "/training")
-    public ResponseEntity<?> create(@Valid @RequestBody TrainingMoveHistoryCreationDTO trainingMoveHistoryCreationDTO) {
+    public ResponseEntity<?> create(@Valid @RequestBody TrainingMoveCreationDTO trainingMoveHistoryCreationDTO) {
         return ResponseEntity.ok(moveHistoryService.create(trainingMoveHistoryCreationDTO));
     }
 

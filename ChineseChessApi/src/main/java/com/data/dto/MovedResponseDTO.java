@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MoveHistoryCreationResponseDTO {
+public class MovedResponseDTO {
     
     private PieceDTO deadPieceDTO;
 
