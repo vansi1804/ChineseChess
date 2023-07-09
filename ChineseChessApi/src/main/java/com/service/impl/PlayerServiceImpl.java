@@ -21,7 +21,6 @@ import com.config.exception.InternalServerErrorException;
 import com.config.exception.ResourceNotFoundException;
 import com.data.mapper.PlayerMapper;
 import com.data.repository.RankRepository;
-import com.data.repository.MatchRepository;
 import com.data.repository.PlayerRepository;
 import com.service.PlayerService;
 import com.service.UserService;
@@ -32,32 +31,29 @@ public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final PlayerMapper playerMapper;
     private final UserService userService;
-    private final MatchRepository matchRepository;
     private final RankRepository rankRepository;
 
     @Autowired
     public PlayerServiceImpl(PlayerRepository playerRepository,
             PlayerMapper playerMapper,
             UserService userService,
-            MatchRepository matchRepository,
             RankRepository rankRepository) {
         this.playerRepository = playerRepository;
         this.playerMapper = playerMapper;
         this.userService = userService;
-        this.matchRepository = matchRepository;
         this.rankRepository = rankRepository;
     }
 
     @Override
     public Page<PlayerDTO> findAll(int no, int limit, String sortBy) {
         return playerRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
-                .map(p -> playerMapper.toDTO(p, matchRepository.findAllByPlayerId(p.getId())));
+                .map(p -> playerMapper.toDTO(p));
     }
 
     @Override
     public PlayerDTO findByUserId(long userId) {
         return playerRepository.findByUser_Id(userId)
-                .map(p -> playerMapper.toDTO(p, matchRepository.findAllByPlayerId(p.getId())))
+                .map(p -> playerMapper.toDTO(p))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         Collections.singletonMap("user.id", userId)));
     }
@@ -65,7 +61,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public PlayerProfileDTO findById(long id) {
         return playerRepository.findById(id)
-                .map(p -> playerMapper.toProfileDTO(p, matchRepository.findAllByPlayerId(p.getId())))
+                .map(p -> playerMapper.toProfileDTO(p))
                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
     }
 
@@ -83,7 +79,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         player.setElo(defaultRank.getEloMilestones());
 
-        PlayerDTO createdPlayerDTO = playerMapper.toDTO(playerRepository.save(player), null);
+        PlayerDTO createdPlayerDTO = playerMapper.toDTO(playerRepository.save(player));
         createdPlayerDTO.setUserDTO(createdUserDTO);
         return createdPlayerDTO;
     }
@@ -101,9 +97,11 @@ public class PlayerServiceImpl implements PlayerService {
         updatePlayer.getUser().setId(oldPlayer.getUser().getId());
         updatePlayer.setRank(oldPlayer.getRank());
         updatePlayer.setElo(oldPlayer.getElo());
+        updatePlayer.setWin(oldPlayer.getWin());
+        updatePlayer.setDraw(oldPlayer.getDraw());
+        updatePlayer.setLose(oldPlayer.getLose());
 
-        PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(
-                updatePlayer, matchRepository.findAllByPlayerId(updatePlayer.getId()));
+        PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(updatePlayer);
         updatedPlayerProfileDTO.setUserProfileDTO(updatedUserProfileDTO);
         return updatedPlayerProfileDTO;
     }
@@ -116,7 +114,7 @@ public class PlayerServiceImpl implements PlayerService {
         updatePlayer.setElo(elo);
         // update rank base on elo later
         
-        return playerMapper.toProfileDTO(updatePlayer, matchRepository.findAllByPlayerId(updatePlayer.getId()));
+        return playerMapper.toProfileDTO(updatePlayer);
     }
 
 }

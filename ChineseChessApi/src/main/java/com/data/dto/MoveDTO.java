@@ -1,5 +1,9 @@
 package com.data.dto;
 
+import javax.validation.constraints.NotNull;
+
+import com.common.ErrorMessage;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,10 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MoveDTO {
     
-    private int pieceId;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer pieceId;
 
-    private int toCol;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer toCol;
 
-    private int toRow;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer toRow;
 
 }

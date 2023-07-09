@@ -7,7 +7,6 @@ import com.common.enumeration.ERole;
 import com.data.dto.UserCreationDTO;
 import com.data.dto.UserDTO;
 import com.data.dto.UserProfileDTO;
-import com.data.entity.Vip;
 
 public interface UserService {
 

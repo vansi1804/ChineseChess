@@ -17,8 +17,8 @@ public class PlayerDTO {
 
     private int win;
 
-    private int lost;
-
     private int draw;
+
+    private int lose;
 
 }

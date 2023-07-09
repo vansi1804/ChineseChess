@@ -1,11 +1,15 @@
 package com.service.impl;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import com.common.ErrorMessage;
 import com.common.enumeration.EPiece;
 import com.data.dto.MovedResponseDTO;
 import com.data.dto.MatchMoveCreationDTO;
+import com.data.dto.MoveCreationDTO;
 import com.data.dto.MoveHistoryDTO;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
@@ -75,42 +80,53 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
     @Override
     public Map<Long, MoveHistoryDTO> build(List<MoveHistory> moveHistories) {
-        Map<Long, MoveHistoryDTO> movedHistoriesDTOs = new HashMap<>();
-
-        AtomicReference<PlayBoardDTO> currentBoard = new AtomicReference<>(playBoardService.generate());
+        AtomicReference<PlayBoardDTO> currentBoardDTO = new AtomicReference<>(playBoardService.generate());
+        AtomicReference<List<PieceDTO>> lastDeadPieceDTOs = new AtomicReference<>(new ArrayList<>());
 
         /* print test */
-        System.out.println("start:");
-        currentBoard.get().print(null);
-        /* =================================== */
+        currentBoardDTO.get().print("start:", null);
 
-        moveHistories.forEach(mh -> {
-            PieceDTO movingPieceDTO = pieceService.findOneInBoard(currentBoard.get(), mh.getPiece().getId());
+        return moveHistories.stream()
+                .map(mh -> {
+                    int toCol = mh.getToCol();
+                    int toRow = mh.getToRow();
 
-            MoveHistoryDTO moveHistoryDTO = new MoveHistoryDTO();
-            moveHistoryDTO.setTurn(mh.getTurn());
-            moveHistoryDTO.setMovingPieceDTO(movingPieceDTO);
-            moveHistoryDTO.setDescription(
-                    moveDescriptionService.build(
-                            currentBoard.get(), movingPieceDTO, mh.getToCol(), mh.getToRow()));
-            moveHistoryDTO.setDeadPieceDTO(currentBoard.get().getState()[mh.getToCol() - 1][mh.getToRow() - 1]);
+                    long turn = mh.getTurn();
+                    PieceDTO movedPieceDTO = pieceService.findOneInBoard(currentBoardDTO.get(), mh.getPiece().getId());
+                    String description = moveDescriptionService.build(
+                            currentBoardDTO.get(), movedPieceDTO, toCol, toRow);
+                    PieceDTO deadPieceDTO = currentBoardDTO.get().getState()[toCol - 1][toRow - 1];
 
-            currentBoard.set(playBoardService.update(
-                    currentBoard.get(), movingPieceDTO, mh.getToCol(), mh.getToRow()));
+                    // update board after moved
+                    currentBoardDTO.set(playBoardService.update(currentBoardDTO.get(), movedPieceDTO, toCol, toRow));
 
-            moveHistoryDTO.setCurrentBoard(currentBoard.get());
-            moveHistoryDTO.setGeneralBeingChecked(
-                    findGeneralBeingChecked(currentBoard.get(), !movingPieceDTO.isRed()));
+                    PieceDTO checkedGeneralPieceDTO = findGeneralBeingChecked(
+                            currentBoardDTO.get(), !movedPieceDTO.getColor());
+                    boolean isCheckMate = isCheckMateState(currentBoardDTO.get(), movedPieceDTO.getColor());
 
-            movedHistoriesDTOs.put(moveHistoryDTO.getTurn(), moveHistoryDTO);
-            
-            /* print test */
-            System.out.println("\n" + moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription());
-            moveHistoryDTO.getCurrentBoard().print(moveHistoryDTO.getMovingPieceDTO());
-            /* =================================== */
-        });
+                    MoveHistoryDTO moveHistoryDTO = new MoveHistoryDTO();
+                    moveHistoryDTO.setTurn(turn);
+                    moveHistoryDTO.setMovedPieceDTO(movedPieceDTO);
+                    moveHistoryDTO.setDescription(description);
+                    moveHistoryDTO.setDeadPieceDTO(deadPieceDTO);
+                    moveHistoryDTO.setCheckedGeneralPieceDTO(checkedGeneralPieceDTO);
+                    moveHistoryDTO.setCheckMate(isCheckMate);
+                    moveHistoryDTO.setCurrentBoardDTO(currentBoardDTO.get());
+                    moveHistoryDTO.setLastDeadPieceDTOs(lastDeadPieceDTOs.get());
 
-        return movedHistoriesDTOs;
+                    // add deadPiece in this turn to list for reusing in next turn
+                    if (deadPieceDTO != null) {
+                        lastDeadPieceDTOs.get().add(deadPieceDTO);
+                    }
+
+                    /* print test */
+                    moveHistoryDTO.getCurrentBoardDTO().print(
+                            moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription(),
+                            moveHistoryDTO.getMovedPieceDTO());
+
+                    return moveHistoryDTO;
+                })
+                .collect(Collectors.toMap(MoveHistoryDTO::getTurn, Function.identity()));
     }
 
     @Override
@@ -121,7 +137,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                         Collections.singletonMap("pieceId", validMoveRequestDTO.getPieceId())));
 
         PieceDTO foundPieceInBoard = pieceService.findOneInBoard(
-                validMoveRequestDTO.getCurrentBoard(), movingPieceDTO.getId());
+                validMoveRequestDTO.getCurrentBoardDTO(), movingPieceDTO.getId());
         if (foundPieceInBoard == null) {
             throw new InvalidException(ErrorMessage.DEAD_PIECE,
                     Collections.singletonMap("pieceId", validMoveRequestDTO.getPieceId()));
@@ -130,7 +146,28 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             movingPieceDTO.setCurrentRow(foundPieceInBoard.getCurrentRow());
         }
 
-        return findValidMove(validMoveRequestDTO.getCurrentBoard(), movingPieceDTO);
+        return findValidMove(validMoveRequestDTO.getCurrentBoardDTO(), movingPieceDTO);
+    }
+
+    @Override
+    public MovedResponseDTO create(MoveCreationDTO moveCreationDTO) {
+        if (!pieceRepository.existsById(moveCreationDTO.getPieceId())) {
+            throw new ResourceNotFoundException(
+                    Collections.singletonMap("pieceId", moveCreationDTO.getPieceId()));
+        }
+
+        PieceDTO movingPieceDTO = pieceService.findOneInBoard(
+                moveCreationDTO.getCurrentBoardDTO(), moveCreationDTO.getPieceId());
+        if (movingPieceDTO == null) {
+            throw new InvalidException(ErrorMessage.DEAD_PIECE,
+                    Collections.singletonMap("pieceId", moveCreationDTO.getPieceId()));
+        }
+
+        MovedResponseDTO movedResponseDTO = buildMovedResponse(
+                moveCreationDTO.getCurrentBoardDTO(), movingPieceDTO,
+                moveCreationDTO.getToCol(), moveCreationDTO.getToRow());
+
+        return movedResponseDTO;
     }
 
     @Override
@@ -141,47 +178,32 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
         long newTurn = moveHistoryRepository.countTurnByTraining_Id(training.getId()) + 1;
 
-        PieceDTO movingPieceDTO = pieceRepository.findById(trainingMoveCreationDTO.getPieceId())
-                .map(p -> pieceMapper.toDTO(p))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("pieceId", trainingMoveCreationDTO.getPieceId())));
+        if (!pieceRepository.existsById(trainingMoveCreationDTO.getPieceId())) {
+            throw new ResourceNotFoundException(
+                    Collections.singletonMap("pieceId", trainingMoveCreationDTO.getPieceId()));
+        }
 
         PlayBoardDTO currentBoard = playBoardService.buildPlayBoardByMoveHistories(
                 moveHistoryRepository.findAllByTraining_Id(training.getId()));
 
         // check piece input existing in currentBoard
-        PieceDTO foundPieceInBoard = pieceService.findOneInBoard(currentBoard, movingPieceDTO.getId());
-        if (foundPieceInBoard == null) {
-            int[] lastPosition = moveHistoryRepository.findLastPositionByTrainingIdAndPieceId(
-                    training.getId(), movingPieceDTO.getId());
-            if (lastPosition != null) {
-                movingPieceDTO.setCurrentCol(lastPosition[0]);
-                movingPieceDTO.setCurrentRow(lastPosition[1]);
-            }
-
+        PieceDTO movingPieceDTO = pieceService.findOneInBoard(currentBoard, trainingMoveCreationDTO.getPieceId());
+        if (movingPieceDTO == null) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("trainingId", training.getId());
             errors.put("turn", newTurn);
-            errors.put("pieceDTO", movingPieceDTO);
+            errors.put("pieceId", trainingMoveCreationDTO.getPieceId());
             throw new InvalidException(ErrorMessage.DEAD_PIECE, errors);
-        } else {
-            movingPieceDTO.setCurrentCol(foundPieceInBoard.getCurrentCol());
-            movingPieceDTO.setCurrentRow(foundPieceInBoard.getCurrentRow());
         }
 
-        if (((newTurn % 2 != 0) && !movingPieceDTO.isRed()
-                || (newTurn % 2 == 0) && movingPieceDTO.isRed())) {
+        if (((newTurn % 2 != 0) && !movingPieceDTO.getColor()
+                || (newTurn % 2 == 0) && movingPieceDTO.getColor())) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("trainingId", training.getId());
             errors.put("turn", newTurn);
             errors.put("pieceDTO", movingPieceDTO);
             throw new InvalidException(ErrorMessage.OPPONENT_TURN, errors);
         }
-
-        /* print test */
-        System.out.println("current");
-        currentBoard.print(movingPieceDTO);
-        /* =================================== */
 
         boolean isValidMove = moveRuleService.isMoveValid(currentBoard, movingPieceDTO,
                 trainingMoveCreationDTO.getToCol(), trainingMoveCreationDTO.getToRow());
@@ -190,15 +212,12 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             moveHistory.setTurn(newTurn);
             moveHistoryRepository.save(moveHistory);
 
-            MovedResponseDTO movedResponseDTO = create(
+            MovedResponseDTO movedResponseDTO = buildMovedResponse(
                     currentBoard, movingPieceDTO, trainingMoveCreationDTO.getToCol(),
                     trainingMoveCreationDTO.getToRow());
 
             /* print test */
-            System.out.println("===========================================");
-            System.out.println("Turn: " + newTurn);
-            currentBoard.print(movingPieceDTO);
-            /* =================================== */
+            currentBoard.print("Turn: " + newTurn, movingPieceDTO);
 
             return movedResponseDTO;
         }
@@ -231,38 +250,27 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
         long newTurn = moveHistoryRepository.countTurnByMatch_Id(match.getId()) + 1;
 
-        PieceDTO movingPieceDTO = pieceRepository.findById(matchMoveCreationDTO.getPieceId())
-                .map(p -> pieceMapper.toDTO(p))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("pieceId", matchMoveCreationDTO.getPieceId())));
+        if (!pieceRepository.existsById(matchMoveCreationDTO.getPieceId())) {
+            throw new ResourceNotFoundException(
+                    Collections.singletonMap("pieceId", matchMoveCreationDTO.getPieceId()));
+        }
 
         PlayBoardDTO currentBoard = playBoardService.buildPlayBoardByMoveHistories(
                 moveHistoryRepository.findAllByMatch_Id(match.getId()));
 
         // check piece input existing in currentBoard
-        PieceDTO foundPieceInBoard = pieceService.findOneInBoard(currentBoard, movingPieceDTO.getId());
-        if (foundPieceInBoard == null) {
-            int[] lastPosition = moveHistoryRepository.findLastPositionByMatchIdAndPieceId(
-                    match.getId(), movingPieceDTO.getId());
-            if (lastPosition != null) {
-                movingPieceDTO.setCurrentCol(lastPosition[0]);
-                movingPieceDTO.setCurrentRow(lastPosition[1]);
-            }
-
+        PieceDTO movingPieceDTO = pieceService.findOneInBoard(currentBoard, matchMoveCreationDTO.getPieceId());
+        if (movingPieceDTO == null) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("matchId", match.getId());
             errors.put("turn", newTurn);
-            errors.put("pieceDTO", movingPieceDTO);
+            errors.put("pieceId", matchMoveCreationDTO.getPieceId());
             throw new InvalidException(ErrorMessage.DEAD_PIECE, errors);
-
-        } else {
-            movingPieceDTO.setCurrentCol(foundPieceInBoard.getCurrentCol());
-            movingPieceDTO.setCurrentRow(foundPieceInBoard.getCurrentRow());
         }
 
         // check color turn
-        if (((newTurn % 2 != 0) && !movingPieceDTO.isRed()
-                || (newTurn % 2 == 0) && movingPieceDTO.isRed())) {
+        if (((newTurn % 2 != 0) && !movingPieceDTO.getColor()
+                || (newTurn % 2 == 0) && movingPieceDTO.getColor())) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("matchId", match.getId());
             errors.put("turn", newTurn);
@@ -271,7 +279,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         }
 
         // check player move valid piece
-        if (movingPieceDTO.isRed() && (match.getPlayer1().getId() != matchMoveCreationDTO.getPlayerId())) {
+        if (movingPieceDTO.getColor() && (match.getPlayer1().getId() != matchMoveCreationDTO.getPlayerId())) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("matchId", match.getId());
             errors.put("playerId", matchMoveCreationDTO.getPieceId());
@@ -280,11 +288,6 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             throw new InvalidException(ErrorMessage.INVALID_PLAYER_MOVE_PIECE, errors);
         }
 
-        /* print test */
-        System.out.println("current");
-        currentBoard.print(movingPieceDTO);
-        /* =================================== */
-
         boolean isValidMove = moveRuleService.isMoveValid(currentBoard, movingPieceDTO,
                 matchMoveCreationDTO.getToCol(), matchMoveCreationDTO.getToRow());
         if (isValidMove) {
@@ -292,7 +295,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             moveHistory.setTurn(newTurn);
             moveHistoryRepository.save(moveHistory);
 
-            MovedResponseDTO movedResponseDTO = create(
+            MovedResponseDTO movedResponseDTO = buildMovedResponse(
                     currentBoard, movingPieceDTO, matchMoveCreationDTO.getToCol(), matchMoveCreationDTO.getToRow());
 
             if (movedResponseDTO.isCheckMate()) {
@@ -301,9 +304,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             }
 
             /* print test */
-            System.out.println("===========================================");
-            System.out.println("Turn" + newTurn);
-            currentBoard.print(movingPieceDTO);
+            currentBoard.print("Turn" + newTurn, movingPieceDTO);
             /* =================================== */
 
             return movedResponseDTO;
@@ -318,6 +319,17 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         throw new InvalidException(ErrorMessage.INVALID_MOVE, errors);
     }
 
+    private MovedResponseDTO buildMovedResponse(
+            PlayBoardDTO playBoardDTO, PieceDTO movingPieceDTO, int toCol, int toRow) {
+
+        PieceDTO deadPieceDTO = playBoardDTO.getState()[toCol - 1][toRow - 1];
+        PlayBoardDTO updatedPlayBoardDTO = playBoardService.update(playBoardDTO, movingPieceDTO, toCol, toRow);
+        PieceDTO checkedGeneralPieceDTO = findGeneralBeingChecked(playBoardDTO, !movingPieceDTO.getColor());
+        boolean isCheckMate = isCheckMateState(updatedPlayBoardDTO, movingPieceDTO.getColor());
+
+        return new MovedResponseDTO(movingPieceDTO, deadPieceDTO, checkedGeneralPieceDTO, isCheckMate);
+    }
+
     private PieceDTO findGeneralBeingChecked(PlayBoardDTO playBoard, boolean isRed) {
         // check opponent general is being check after moving
         List<PieceDTO> generals = pieceService.findAllInBoard(playBoard, EPiece.General.getFullName(), isRed);
@@ -327,55 +339,30 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     private List<int[]> findValidMove(PlayBoardDTO playBoard, PieceDTO pieceDTO) {
-        int col = playBoard.getState().length;
-        int row = playBoard.getState()[0].length;
-        List<int[]> validMoves = new ArrayList<>();
 
-        for (int toCol = 1; toCol <= col; toCol++) {
-            for (int toRow = 1; toRow <= row; toRow++) {
-                boolean validMove = moveRuleService.isMoveValid(playBoard, pieceDTO, toCol, toRow);
-                if (validMove) {
-                    int[] index = new int[2];
-                    index[0] = toCol;
-                    index[1] = toRow;
-                    validMoves.add(index);
-                }
-            }
-        }
-        return validMoves;
+        return IntStream.rangeClosed(1, playBoard.getState().length)
+                .boxed()
+                .flatMap(toCol -> IntStream.rangeClosed(1, playBoard.getState()[0].length)
+                        .filter(toRow -> moveRuleService.isMoveValid(playBoard, pieceDTO, toCol, toRow))
+                        .mapToObj(toRow -> new int[] { toCol, toRow }))
+                .collect(Collectors.toList());
     }
 
-    private boolean isCheckMateState(PlayBoardDTO playBoard, boolean isRed) {
-        List<PieceDTO> opponentPiecesInBoard = pieceService.findAllInBoard(playBoard, null, !isRed);
-        int col = playBoard.getState().length;
-        int row = playBoard.getState()[0].length;
+    private boolean isCheckMateState(PlayBoardDTO playBoardDTO, boolean isRed) {
+        List<PieceDTO> opponentPiecesInBoard = pieceService.findAllInBoard(playBoardDTO, null, !isRed);
 
-        for (PieceDTO opponentPiece : opponentPiecesInBoard) {
-            boolean isValidMove = false;
-            for (int toCol = 1; toCol <= col; toCol++) {
-                for (int toRow = 1; toRow <= row; toRow++) {
-                    isValidMove = moveRuleService.isMoveValid(
-                            playBoard, opponentPiece, toCol, toRow);
-                }
-            }
-            if (isValidMove) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private MovedResponseDTO create(
-            PlayBoardDTO playBoard, PieceDTO movingPieceDTO, int toCol, int toRow) {
-
-        MovedResponseDTO movedResponseDTO = new MovedResponseDTO();
-
-        movedResponseDTO.setDeadPieceDTO(playBoard.getState()[toCol - 1][toCol - 1]);
-        playBoard = playBoardService.update(playBoard, movingPieceDTO, toCol, toRow);
-        movedResponseDTO.setGeneralBeingChecked(findGeneralBeingChecked(playBoard, !movingPieceDTO.isRed()));
-        movedResponseDTO.setCheckMate(isCheckMateState(playBoard, movingPieceDTO.isRed()));
-
-        return movedResponseDTO;
+        return opponentPiecesInBoard.stream()
+                .flatMap(opponentPiece -> {
+                    return IntStream.rangeClosed(1, playBoardDTO.getState().length).boxed()
+                            .flatMap(toCol -> IntStream.rangeClosed(1, playBoardDTO.getState()[0].length).boxed()
+                                    .map(toRow -> new AbstractMap.SimpleEntry<>(toCol, toRow))
+                                    .filter(entry -> moveRuleService.isMoveValid(
+                                            playBoardDTO, opponentPiece, entry.getKey(), entry.getValue()))
+                                    .findFirst()
+                                    .stream());
+                })
+                .findAny()
+                .isEmpty();
     }
 
 }

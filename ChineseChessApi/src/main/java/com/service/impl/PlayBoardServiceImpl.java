@@ -1,5 +1,6 @@
 package com.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +40,22 @@ public class PlayBoardServiceImpl implements PlayBoardService {
         PlayBoardDTO playBoardDTO = new PlayBoardDTO(state);
         List<Piece> pieces = pieceRepository.findAll();
 
-        for (Piece piece : pieces) {
-            playBoardDTO.getState()[piece.getCurrentCol() - 1][piece.getCurrentRow() - 1] = pieceMapper.toDTO(piece);
-        }
+        pieces.stream()
+                .map(p -> pieceMapper.toDTO(p))
+                .forEach(pDTO -> playBoardDTO.getState()[pDTO.getCurrentCol() - 1][pDTO.getCurrentRow() - 1] = pDTO);
 
         return playBoardDTO;
+    }
+
+    @Override
+    public PlayBoardDTO buildPlayBoardByMoveHistories(List<MoveHistory> moveHistories) {
+        return moveHistories.stream()
+                .reduce(generate(), (board, mh) -> update(
+                        board,
+                        pieceService.findOneInBoard(board, mh.getPiece().getId()),
+                        mh.getToCol(),
+                        mh.getToRow()),
+                        (board1, board2) -> board2);
     }
 
     @Override
@@ -62,19 +74,9 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     }
 
     private PieceDTO[][] cloneStateArray(PieceDTO[][] state) {
-        PieceDTO[][] copiedState = new PieceDTO[state.length][];
-        for (int i = 0; i < state.length; i++) {
-            copiedState[i] = state[i].clone();
-        }
-        return copiedState;
-    }
-
-    @Override
-    public PlayBoardDTO buildPlayBoardByMoveHistories(List<MoveHistory> moveHistories) {
-        return moveHistories.stream()
-                .reduce(generate(), (board, mh) -> update(
-                        board, pieceService.findOneInBoard(board, mh.getPiece().getId()), mh.getToCol(), mh.getToRow()),
-                        (board1, board2) -> board2);
+        return Arrays.stream(state)
+                .map(PieceDTO[]::clone)
+                .toArray(PieceDTO[][]::new);
     }
 
 }

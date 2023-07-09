@@ -1,5 +1,9 @@
 package com.data.dto;
 
+import javax.validation.constraints.NotNull;
+
+import com.common.ErrorMessage;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,16 +13,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PieceDTO {
 
-    private int id;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer id;
 
     private String name;
 
-    private boolean isRed;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Boolean color;
 
     private String image;
 
-    private int currentCol;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer currentCol;
 
-    private int currentRow;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer currentRow;
 
 }

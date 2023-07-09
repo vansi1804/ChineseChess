@@ -33,7 +33,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         StringBuilder description = new StringBuilder();
         description.append(shortNameOfPiece);
 
-        if (pieceDTO.isRed()) {
+        if (pieceDTO.getColor()) {
             description.append(buildRedPieceDescription(currentBoard, pieceDTO, toCol, toRow));
         } else {
             description.append(buildBlackPieceDescription(currentBoard, pieceDTO, toCol, toRow));
@@ -98,8 +98,8 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         PieceDTO foundPiece = pieceService.findExistingTheSameInColPath(currentBoard, pieceDTO);
         return foundPiece == null
                 ? ""
-                : (pieceDTO.isRed() && (pieceDTO.getCurrentRow() < foundPiece.getCurrentRow()))
-                        || (!pieceDTO.isRed() && (pieceDTO.getCurrentRow() > foundPiece.getCurrentRow()))
+                : (pieceDTO.getColor() && (pieceDTO.getCurrentRow() < foundPiece.getCurrentRow()))
+                        || (!pieceDTO.getColor() && (pieceDTO.getCurrentRow() > foundPiece.getCurrentRow()))
                                 ? EIndex.BEFORE.getValue()
                                 : EIndex.AFTER.getValue();
     }

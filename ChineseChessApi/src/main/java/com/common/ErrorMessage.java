@@ -14,6 +14,7 @@ public class ErrorMessage {
     public static final String DATA_NOT_FOUND = "Data not found";
     public static final String DATA_ALREADY_EXISTS = "Data already exists";
     public static final String BLANK_DATA = "Data is blank";
+    public static final String NULL_DATA = "Data is null";
     public static final String INVALID_PASSWORD_SIZE = "Password should have at least"
             + Validation.PASSWORD_SIZE_MIN + " characters";
     public static final String INVALID_FILE_TYPE = "Invalid file type";

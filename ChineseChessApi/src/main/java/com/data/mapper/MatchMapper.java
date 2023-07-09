@@ -8,7 +8,7 @@ import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
 import com.data.entity.Match;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { PlayerMapper.class })
 public interface MatchMapper {
     
     @Mapping(ignore = true, target = "id")
@@ -19,12 +19,8 @@ public interface MatchMapper {
     @Mapping(ignore = true, target = "stopAt")
     Match toEntity(MatchCreationDTO matchCreationDTO);
 
-    @Mapping(source = "player1.id", target = "player1Id")
-    @Mapping(source = "player1.user.name", target = "player1Name")
-    @Mapping(source = "player1.user.avatar", target = "player1Avatar")
-    @Mapping(source = "player2.id", target = "player2Id")
-    @Mapping(source = "player2.user.name", target = "player2Name")
-    @Mapping(source = "player2.user.avatar", target = "player2Avatar")
+    @Mapping(source = "player1", target = "player1ProfileDTO")
+    @Mapping(source = "player2", target = "player2ProfileDTO")
     MatchDTO toDTO(Match match);
 
     @Mapping(expression = "java(toDTO(match))", target = "matchDTO")

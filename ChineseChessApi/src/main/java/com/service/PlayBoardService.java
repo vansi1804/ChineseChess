@@ -9,9 +9,10 @@ import com.data.entity.MoveHistory;
 public interface PlayBoardService {
     
     PlayBoardDTO generate();
+    
+    PlayBoardDTO buildPlayBoardByMoveHistories(List<MoveHistory> moveHistories);
 
     PlayBoardDTO update(PlayBoardDTO currentBoard, PieceDTO movingPieceDTO, int toCol, int toRow);
 
-    PlayBoardDTO buildPlayBoardByMoveHistories(List<MoveHistory> moveHistories);
 
 }

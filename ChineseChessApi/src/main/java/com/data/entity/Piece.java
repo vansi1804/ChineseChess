@@ -28,10 +28,10 @@ public class Piece implements Serializable {
     @Column(name = "name", columnDefinition = "nvarchar(255)")
     private String name;
 
-    @Column(name = "is_red")
-    private boolean isRed;
+    @Column(name = "color")
+    private Boolean color;
 
-    @Column(name = "image")
+    @Column(name = "image", columnDefinition = "nvarchar(255)")
     private String image;
 
     @Column(name = "start_col")
