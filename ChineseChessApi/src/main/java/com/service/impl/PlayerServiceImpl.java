@@ -34,10 +34,12 @@ public class PlayerServiceImpl implements PlayerService {
     private final RankRepository rankRepository;
 
     @Autowired
-    public PlayerServiceImpl(PlayerRepository playerRepository,
+    public PlayerServiceImpl(
+            PlayerRepository playerRepository,
             PlayerMapper playerMapper,
             UserService userService,
             RankRepository rankRepository) {
+
         this.playerRepository = playerRepository;
         this.playerMapper = playerMapper;
         this.userService = userService;
@@ -54,15 +56,18 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerDTO findByUserId(long userId) {
         return playerRepository.findByUser_Id(userId)
                 .map(p -> playerMapper.toDTO(p))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("user.id", userId)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("user.id", userId)));
     }
 
     @Override
     public PlayerProfileDTO findById(long id) {
         return playerRepository.findById(id)
                 .map(p -> playerMapper.toProfileDTO(p))
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
     }
 
     @Override
@@ -72,9 +77,10 @@ public class PlayerServiceImpl implements PlayerService {
 
         Player player = playerMapper.toEntity(playerCreationDTO);
         player.getUser().setId(createdUserDTO.getId());
-        
+
         Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
-                .orElseThrow(() -> new InternalServerErrorException("default rank"));
+                .orElseThrow(
+                        () -> new InternalServerErrorException("default rank"));
         player.setRank(defaultRank);
 
         player.setElo(defaultRank.getEloMilestones());
@@ -87,7 +93,9 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO, MultipartFile fileAvatar) {
         Player oldPlayer = playerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
 
         UserProfileDTO updatedUserProfileDTO = userService.update(
                 oldPlayer.getUser().getId(), playerProfileDTO.getUserProfileDTO(), fileAvatar);
@@ -109,11 +117,13 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public PlayerProfileDTO updateEloById(long id, int elo) {
         Player updatePlayer = playerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
 
         updatePlayer.setElo(elo);
         // update rank base on elo later
-        
+
         return playerMapper.toProfileDTO(updatePlayer);
     }
 

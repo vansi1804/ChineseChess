@@ -16,6 +16,7 @@ public class JsonProcessServiceImpl implements JsonProcessService {
     public <U> U readValue(String content, Class<U> valueType) {
         try {
             byte[] jsonBytes = content.getBytes(StandardCharsets.UTF_8);
+
             return new ObjectMapper().readValue(new String(jsonBytes, StandardCharsets.UTF_8), valueType);
         } catch (IOException e) {
             throw new JsonProcessException(e);

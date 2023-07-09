@@ -2,6 +2,8 @@ package com.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class EncodingUtil {
 
@@ -21,8 +23,8 @@ public class EncodingUtil {
     }
 
     private static String convertByteToHex(byte[] data) {
-        return Arrays.stream(data)
-                .map(b -> String.format("%02x", b & 0xFF))
+        return IntStream.range(0, data.length)
+                .mapToObj(i -> String.format("%02x", data[i] & 0xFF))
                 .collect(Collectors.joining());
     }
 

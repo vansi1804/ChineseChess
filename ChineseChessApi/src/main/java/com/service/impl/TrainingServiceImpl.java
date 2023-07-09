@@ -31,10 +31,12 @@ public class TrainingServiceImpl implements TrainingService {
     private final MoveHistoryService moveHistoryService;
 
     @Autowired
-    public TrainingServiceImpl(TrainingMapper trainingMapper,
+    public TrainingServiceImpl(
+            TrainingMapper trainingMapper,
             TrainingRepository trainingRepository,
             MoveHistoryService moveHistoryService,
             MoveHistoryRepository moveHistoryRepository) {
+                
         this.trainingMapper = trainingMapper;
         this.trainingRepository = trainingRepository;
         this.moveHistoryRepository = moveHistoryRepository;
@@ -43,16 +45,18 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public List<TrainingDTO> findAllChildrenById(Long id) {
-        return trainingRepository.findAllByParentTraining_Id(id).stream()
+        return trainingRepository.findAllByParentTrainingId(id).stream()
                 .map(t -> trainingMapper.toDTO(t))
                 .collect(Collectors.toList());
     }
 
     @Override
     public TrainingDTO findById(long id) {
-        return trainingRepository.findById(id).map(t -> trainingMapper.toDTO(t))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        Collections.singletonMap("id", id)));
+        return trainingRepository.findById(id)
+                .map(t -> trainingMapper.toDTO(t))
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
     }
 
     @Override
@@ -80,7 +84,8 @@ public class TrainingServiceImpl implements TrainingService {
     @Override
     public TrainingDTO update(long id, TrainingDTO trainingDTO) {
         if (!trainingRepository.existsById(id)) {
-            throw new ResourceNotFoundException(Collections.singletonMap("id", id));
+            throw new ResourceNotFoundException(
+                    Collections.singletonMap("id", id));
         }
 
         if (trainingRepository.existByParentTrainingIdAndTitle(
@@ -101,7 +106,8 @@ public class TrainingServiceImpl implements TrainingService {
     @Override
     public boolean deleteById(long id) {
         if (!trainingRepository.existsById(id)) {
-            throw new ResourceNotFoundException(Collections.singletonMap("id", id));
+            throw new ResourceNotFoundException(
+                    Collections.singletonMap("id", id));
         }
 
         moveHistoryRepository.deleteAllByTraining_Id(id);
@@ -114,11 +120,13 @@ public class TrainingServiceImpl implements TrainingService {
     public TrainingDetailDTO findDetailById(long id) {
         TrainingDetailDTO trainingDetailDTO = trainingRepository.findById(id)
                 .map(m -> trainingMapper.toDetailDTO(m))
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByTraining_Id(id);
         Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
-        
+
         trainingDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
         trainingDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
 

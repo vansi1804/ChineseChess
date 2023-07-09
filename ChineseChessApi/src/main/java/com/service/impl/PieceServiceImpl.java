@@ -33,9 +33,11 @@ public class PieceServiceImpl implements PieceService {
     private final MoveHistoryRepository moveHistoryRepository;
 
     @Autowired
-    public PieceServiceImpl(PieceRepository pieceRepository,
+    public PieceServiceImpl(
+            PieceRepository pieceRepository,
             PieceMapper pieceMapper,
             MoveHistoryRepository moveHistoryRepository) {
+
         this.pieceRepository = pieceRepository;
         this.pieceMapper = pieceMapper;
         this.moveHistoryRepository = moveHistoryRepository;
@@ -43,14 +45,18 @@ public class PieceServiceImpl implements PieceService {
 
     @Override
     public List<PieceDTO> findAll() {
-        return pieceRepository.findAll().stream().map(p -> pieceMapper.toDTO(p)).collect(Collectors.toList());
+        return pieceRepository.findAll().stream()
+                .map(p -> pieceMapper.toDTO(p))
+                .collect(Collectors.toList());
     }
 
     @Override
     public PieceDTO findById(int id) {
         return pieceRepository.findById(id)
                 .map(p -> pieceMapper.toDTO(p))
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
     }
 
     @Override
@@ -58,7 +64,9 @@ public class PieceServiceImpl implements PieceService {
         return Arrays.stream(EPiece.values())
                 .filter(ePiece -> ePiece.getFullName().equalsIgnoreCase(name))
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("piece.name", name)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("piece.name", name)));
     }
 
     @Override
@@ -81,7 +89,9 @@ public class PieceServiceImpl implements PieceService {
         List<PieceDTO> piecesInBoard = findAllInBoard(playBoardDTO, null, null);
         List<PieceDTO> deadPieces = findAll();
         // remove all alive pieces in board
-        deadPieces.removeIf(p1 -> piecesInBoard.stream().map(p2 -> p2.getId()).toList().contains(p1.getId()));
+        deadPieces.removeIf(
+                deadPiece -> piecesInBoard.stream().map(alivePiece -> alivePiece.getId()).toList()
+                        .contains(deadPiece.getId()));
 
         return deadPieces;
     }
@@ -101,7 +111,7 @@ public class PieceServiceImpl implements PieceService {
     @Override
     public PieceDTO findLastAtPosition(long matchId, long turn, int toCol, int toRow) {
         Optional<MoveHistory> lastMoveToPosition = moveHistoryRepository
-                .findLastByMatchIdAndPositionUntilTurn(matchId, turn, toCol, toRow);
+                .findFirstByMatch_IdAndToColAndToRowAndTurnLessThanEqualOrderByTurnDesc(matchId, toCol, toRow, turn);
 
         return lastMoveToPosition.isPresent()
                 ? pieceMapper.toDTO(lastMoveToPosition.get().getPiece())

@@ -19,14 +19,18 @@ import com.service.PlayBoardService;
 
 @Service
 public class MoveRuleServiceImpl implements MoveRuleService {
+
     private static final int MIN_AREA = Default.Game.PlayBoardSize.AREA_Min;
     private static final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
     private static final int MAX_ROW = Default.Game.PlayBoardSize.ROW_MAX;
-    private static final List<Integer> PALACE_CENTER_COLS = IntStream.rangeClosed(4, 6).boxed()
+    private static final List<Integer> PALACE_CENTER_COLS = IntStream.rangeClosed(4, 6)
+            .boxed()
             .collect(Collectors.toList());
-    private static final List<Integer> PALACE_CENTER_ROWS_FOR_BLACK = IntStream.rangeClosed(1, 3).boxed()
+    private static final List<Integer> PALACE_CENTER_ROWS_FOR_BLACK = IntStream.rangeClosed(1, 3)
+            .boxed()
             .collect(Collectors.toList());
-    private static final List<Integer> PALACE_CENTER_ROWS_FOR_RED = IntStream.rangeClosed(8, 10).boxed()
+    private static final List<Integer> PALACE_CENTER_ROWS_FOR_RED = IntStream.rangeClosed(8, 10)
+            .boxed()
             .collect(Collectors.toList());
 
     private final PieceService pieceService;
@@ -38,6 +42,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             PieceService pieceService,
             PlayBoardService playBoardService,
             MoveTypeService moveTypeService) {
+                
         this.pieceService = pieceService;
         this.playBoardService = playBoardService;
         this.moveTypeService = moveTypeService;
@@ -140,6 +145,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -157,7 +163,6 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      * and must always stay within the palace
      */
     private boolean checkGeneralMoveRule(boolean isRed, int fromCol, int toCol, int fromRow, int toRow) {
-
         return isInAreaCenter(isRed, toCol, toRow)
                 && ((moveTypeService.isHorizontalMoving(fromRow, toRow) && Math.abs(toCol - fromCol) == 1)
                         || (moveTypeService.isVerticallyMoving(fromCol, toCol) && Math.abs(toRow - fromRow) == 1));
@@ -206,7 +211,6 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      * or vertical direction), the horse is blocked and the move is not allowed.
      */
     private boolean checkHorseMoveRule(PlayBoardDTO playBoard, int fromCol, int toCol, int fromRow, int toRow) {
-
         int verticalSpace = Math.abs(toRow - fromRow);
         int horizontalSpace = Math.abs(toCol - fromCol);
 
@@ -230,7 +234,6 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      * without any pieces between
      */
     private boolean checkChariotMoveRule(PlayBoardDTO playBoard, int fromCol, int toCol, int fromRow, int toRow) {
-
         return (moveTypeService.isVerticallyMoving(fromCol, toCol)
                 && !pieceService.existsBetweenInColPath(playBoard, fromCol, fromRow, toRow))
                 || (moveTypeService.isHorizontalMoving(fromRow, toRow)
@@ -256,6 +259,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             // check position moving to and number of piece between in two case
             return targetPiece == null ? numPiecesBetween == 0 : numPiecesBetween == 1;
         }
+
         return false;
     }
 

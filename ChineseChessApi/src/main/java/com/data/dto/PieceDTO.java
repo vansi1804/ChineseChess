@@ -16,11 +16,13 @@ public class PieceDTO {
     @NotNull(message = ErrorMessage.NULL_DATA)
     private Integer id;
 
+    @NotNull(message = ErrorMessage.NULL_DATA)
     private String name;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     private Boolean color;
 
+    @NotNull(message = ErrorMessage.NULL_DATA)
     private String image;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
