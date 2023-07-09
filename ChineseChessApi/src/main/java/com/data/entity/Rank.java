@@ -30,7 +30,7 @@ public class Rank implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "milestones")
-    private int milestones;
+    @Column(name = "elo_milestones")
+    private int eloMilestones;
     
 }

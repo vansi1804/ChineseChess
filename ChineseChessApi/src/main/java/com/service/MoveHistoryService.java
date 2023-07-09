@@ -1,26 +1,27 @@
 package com.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.data.dto.MoveHistoryCreationResponseDTO;
-import com.data.dto.MoveHistoryCreationDTO;
+import com.data.dto.MovedResponseDTO;
+import com.data.dto.MatchMoveCreationDTO;
 import com.data.dto.MoveHistoryDTO;
-import com.data.dto.TrainingMoveHistoryCreationDTO;
+import com.data.dto.TrainingMoveCreationDTO;
 import com.data.dto.ValidMoveRequestDTO;
 import com.data.entity.MoveHistory;
 
 public interface MoveHistoryService {
 
-    List<MoveHistoryDTO> build(List<MoveHistory> moveHistories);
+    Map<Long, MoveHistoryDTO> build(List<MoveHistory> moveHistories);
 
     List<int[]> findMoveValid(ValidMoveRequestDTO validMoveRequestDTO);
 
     @Transactional
-    MoveHistoryCreationResponseDTO create(TrainingMoveHistoryCreationDTO trainingMoveHistoryCreationDTO);
+    MovedResponseDTO create(TrainingMoveCreationDTO trainingMoveHistoryCreationDTO);
 
     @Transactional
-    MoveHistoryCreationResponseDTO create(MoveHistoryCreationDTO moveHistoryCreationDTO);
+    MovedResponseDTO create(MatchMoveCreationDTO moveHistoryCreationDTO);
 
 }

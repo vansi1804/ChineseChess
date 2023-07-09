@@ -77,11 +77,11 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = playerMapper.toEntity(playerCreationDTO);
         player.getUser().setId(createdUserDTO.getId());
         
-        Rank defaultRank = rankRepository.findFirstByOrderByMilestonesAsc()
+        Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
                 .orElseThrow(() -> new InternalServerErrorException("default rank"));
         player.setRank(defaultRank);
 
-        player.setElo(defaultRank.getMilestones());
+        player.setElo(defaultRank.getEloMilestones());
 
         PlayerDTO createdPlayerDTO = playerMapper.toDTO(playerRepository.save(player), null);
         createdPlayerDTO.setUserDTO(createdUserDTO);

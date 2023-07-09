@@ -1,6 +1,7 @@
 package com.data.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.common.ErrorMessage;
 
@@ -18,6 +19,8 @@ public class RankDTO{
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String name;
 
-    private int milestones;
+    @NotBlank(message = ErrorMessage.BLANK_DATA)
+    @Size(min = 1, message = "eloMilestones > 0")
+    private Integer eloMilestones;
 
 }

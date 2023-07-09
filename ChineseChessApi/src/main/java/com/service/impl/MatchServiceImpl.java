@@ -73,14 +73,7 @@ public class MatchServiceImpl implements MatchService {
                 .orElseThrow(() -> new ResourceNotFoundException(Collections.singletonMap("id", id)));
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(id);
-        List<MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
-
-        /* print test */
-        for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOs) {
-            System.out.println("\n" + moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription());
-            moveHistoryDTO.getCurrentBoard().print(moveHistoryDTO.getMovingPieceDTO());
-        }
-        /* =================================== */
+        Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
 
         matchDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
         matchDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);

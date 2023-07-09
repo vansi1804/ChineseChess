@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class TrainingMoveHistoryCreationDTO extends MoveDTO{
-
-    private long trainingId;
+public class MatchMoveCreationDTO extends MoveDTO{
     
+    private long matchId;
+
+    private long playerId;
+
 }
