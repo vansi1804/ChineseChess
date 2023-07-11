@@ -43,8 +43,6 @@ public class PlayBoardServiceImpl implements PlayBoardService {
                 .map(p -> pieceMapper.toDTO(p))
                 .forEach(pDTO -> playBoardDTO.getState()[pDTO.getCurrentCol()][pDTO.getCurrentRow()] = pDTO);
 
-        playBoardDTO.print("start: ", null);
-
         return playBoardDTO;
     }
 
@@ -78,6 +76,77 @@ public class PlayBoardServiceImpl implements PlayBoardService {
         return Arrays.stream(state)
                 .map(PieceDTO[]::clone)
                 .toArray(PieceDTO[][]::new);
+    }
+
+    @Override
+    public void printTest(Object title, PlayBoardDTO currentBoardDTO, PieceDTO pieceDTO) {
+        System.out.println("\n===========================================");
+        System.out.println(title.toString());
+        System.out.println("===========================================");
+
+        for (int row = 0; row < currentBoardDTO.getState()[0].length; row++) {
+            for (int col = 0; col < currentBoardDTO.getState().length; col++) {
+                PieceDTO indexPieceDTO = currentBoardDTO.getState()[col][row];
+                System.out.print(getSymbolOutput(pieceDTO, col, row, indexPieceDTO, false));
+            }
+            System.out.println("\n\n");
+        }
+
+        System.out.println("===========================================");
+    }
+
+    @Override
+    public void printTest(PlayBoardDTO currentBoardDTO, PieceDTO pieceDTO, List<int[]> availableMoveIndexes) {
+        System.out.println("\n===========================================");
+        System.out.println("Available move: ");
+        System.out.println("===========================================");
+
+        for (int row = 0; row < currentBoardDTO.getState()[0].length; row++) {
+            for (int col = 0; col < currentBoardDTO.getState().length; col++) {
+                PieceDTO indexPieceDTO = currentBoardDTO.getState()[col][row];
+                int[] index = new int[] { col, row };
+                boolean containsIndex = availableMoveIndexes.stream()
+                        .anyMatch(arr -> Arrays.equals(arr, index));
+                if (containsIndex) {
+                    System.out.print(getSymbolOutput(null, col, row, indexPieceDTO, true));
+                } else {
+                    System.out.print(getSymbolOutput(pieceDTO, col, row, indexPieceDTO, false));
+                }
+            }
+            System.out.println("\n\n\n");
+        }
+
+        System.out.println("===========================================");
+    }
+
+    private String getSymbolOutput(PieceDTO pieceDTO, int col, int row, PieceDTO indexPieceDTO,
+            boolean isValidMoveFinding) {
+        if (indexPieceDTO == null) {
+            if ((pieceDTO != null) && ((col == pieceDTO.getCurrentCol()) && (row == pieceDTO.getCurrentRow()))) {
+                return "   [ ]   ";
+            } else if (isValidMoveFinding) {
+                return "    O    ";
+            } else {
+                return "    +    ";
+            }
+        } else {
+            String symbolId = String.valueOf(indexPieceDTO.getId());
+            symbolId = symbolId.length() == 1 ? "0" + symbolId : symbolId;
+
+            String p = pieceService.convertByName(indexPieceDTO.getName()).getShortName();
+            p = (p.length() == 1 ? " " + p : p)
+                    + (indexPieceDTO.isRed() ? "1" : "2")
+                    + "_"
+                    + (p.length() == 1 ? symbolId + " " : symbolId);
+
+            if ((pieceDTO != null) && (indexPieceDTO.getId() == pieceDTO.getId())) {
+                return "[" + p + "]";
+            } else if (isValidMoveFinding) {
+                return "(" + p + ")";
+            } else {
+                return " " + p + " ";
+            }
+        }
     }
 
 }

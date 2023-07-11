@@ -14,5 +14,8 @@ public interface PlayBoardService {
 
     PlayBoardDTO update(PlayBoardDTO currentBoard, PieceDTO movingPieceDTO, int toCol, int toRow);
 
+    void printTest(Object title, PlayBoardDTO currentBoard, PieceDTO pieceDTO);
+
+    void printTest(PlayBoardDTO currentBoard, PieceDTO pieceDTO,List<int[]> availableMoveIndexes);
 
 }

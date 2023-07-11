@@ -49,8 +49,8 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     }
 
     @Override
-    public boolean isMoveValid(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
-        boolean isValidMoveRule = checkMoveRule(playBoardDTO, pieceDTO, toCol, toRow);
+    public boolean isAvailableMove(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
+        boolean isValidMoveRule = isValidMove(playBoardDTO, pieceDTO, toCol, toRow);
         if (isValidMoveRule) {
             PlayBoardDTO playBoardDTOAfterMoving = playBoardDTOService.update(playBoardDTO, pieceDTO, toCol, toRow);
             // check general in safe after moving
@@ -61,7 +61,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     }
 
     @Override
-    public boolean checkMoveRule(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
+    public boolean isValidMove(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
         int fromCol = pieceDTO.getCurrentCol();
         int fromRow = pieceDTO.getCurrentRow();
 
@@ -131,7 +131,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         List<PieceDTO> opponentPiecesInBoard = pieceService.findAllInBoard(playBoardDTO, null, !generalPiece.isRed());
 
         return opponentPiecesInBoard.stream()
-                .anyMatch(opponentPiece -> checkMoveRule(
+                .anyMatch(opponentPiece -> isValidMove(
                         playBoardDTO, opponentPiece, generalPiece.getCurrentCol(), generalPiece.getCurrentRow()));
     }
 
