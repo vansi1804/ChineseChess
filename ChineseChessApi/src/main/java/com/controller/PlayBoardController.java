@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.common.ApiUrl;
+import com.data.dto.PlayBoardDTO;
 import com.service.PlayBoardService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -24,7 +25,12 @@ public class PlayBoardController {
 
     @GetMapping(value = "/generate")
     public ResponseEntity<?> generate() {
-        return ResponseEntity.ok(playBoardDTOService.generate());
+        PlayBoardDTO playBoardDTO = playBoardDTOService.generate();
+
+        /* print test */
+        playBoardDTOService.printTest("start: ", playBoardDTO, null);
+
+        return ResponseEntity.ok(playBoardDTO);
     }
 
 }

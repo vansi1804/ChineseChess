@@ -60,11 +60,11 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        initRoles();
-        initVip();
-        initRank();
-        initAdminPlayer();
-        innitPiece();
+        // initRoles();
+        // initVip();
+        // initRank();
+        // initAdminPlayer();
+        // innitPiece();
     }
 
     public void initRoles() {

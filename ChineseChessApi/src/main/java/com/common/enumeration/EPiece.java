@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum EPiece {
 
-    GENERAL("Tướng","Tg", 10000),
+    GENERAL("Tướng","T.g", 10000),
     GUARD("Sĩ","S", 20),
     ELEPHANT("Tượng","T", 40),
     HORSE("Mã","M", 60),

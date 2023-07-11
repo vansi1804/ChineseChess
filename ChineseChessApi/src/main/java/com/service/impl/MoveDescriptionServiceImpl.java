@@ -72,11 +72,11 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     private String buildBlackPieceDescription(PlayBoardDTO currentBoard, PieceDTO pieceDTO, int toCol, int toRow) {
         StringBuilder description = new StringBuilder();
         description.append(buildIndexDescription(currentBoard, pieceDTO));
-        description.append(pieceDTO.getCurrentCol());
+        description.append(pieceDTO.getCurrentCol() + 1);
 
         if (moveTypeService.isHorizontalMoving(pieceDTO.getCurrentRow(), toRow)) {
             description.append(EMoveType.ACROSS.getValue())
-                    .append(toCol);
+                    .append(toCol + 1);
 
         } else {
             if (moveTypeService.isUpMoving(false, pieceDTO.getCurrentRow(), toRow)) {
@@ -88,7 +88,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
             if (moveTypeService.isVerticallyMoving(pieceDTO.getCurrentCol(), toCol)) {
                 description.append(Math.abs(pieceDTO.getCurrentRow() - toRow));
             } else {
-                description.append(toCol);
+                description.append(toCol + 1);
             }
         }
 
