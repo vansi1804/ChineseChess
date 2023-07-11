@@ -1,18 +1,14 @@
 package com.service.impl;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.common.enumeration.ERole;
 import com.data.dto.RoleDTO;
-import com.data.entity.Role;
 import com.config.exception.ResourceNotFoundException;
 import com.data.mapper.RoleMapper;
 import com.data.repository.RoleRepository;
@@ -53,22 +49,6 @@ public class RoleServiceImpl implements RoleService {
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 Collections.singletonMap("name", name)));
-    }
-
-    @PostConstruct
-    public void init() {
-        List<Role> roles = Arrays.stream(ERole.values())
-                .filter(eRole -> !roleRepository.existsByName(eRole.name()))
-                .map(eRole -> {
-                    Role role = new Role();
-                    role.setName(eRole.name());
-                    return role;
-                })
-                .collect(Collectors.toList());
-
-        if (!roles.isEmpty()) {
-            roleRepository.saveAll(roles);
-        }
     }
 
 }

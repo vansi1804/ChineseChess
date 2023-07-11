@@ -22,22 +22,22 @@ public class Piece implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     private int id;
 
-    @Column(name = "name", columnDefinition = "nvarchar(255)")
+    @Column(name = "name", columnDefinition = "nvarchar(255)", updatable = false)
     private String name;
 
-    @Column(name = "color")
-    private Boolean color;
+    @Column(name = "is_red", updatable = false)
+    private boolean isRed;
 
     @Column(name = "image", columnDefinition = "nvarchar(255)")
     private String image;
 
-    @Column(name = "start_col")
+    @Column(name = "start_col", updatable = false)
     private int currentCol;
 
-    @Column(name = "start_row")
+    @Column(name = "start_row", updatable = false)
     private int currentRow;
 
 }

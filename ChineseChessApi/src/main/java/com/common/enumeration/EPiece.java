@@ -7,13 +7,13 @@ import lombok.Getter;
 @Getter
 public enum EPiece {
 
-    General("Tướng","Tg", 10000),
-    Guard("Sĩ","S", 20),
-    Elephant("Tượng","T", 40),
-    Horse("Mã","M", 60),
-    Chariot("Xe","X", 120),
-    Cannon("Pháo","P", 70),
-    Soldier("Binh","B", 30);
+    GENERAL("Tướng","Tg", 10000),
+    GUARD("Sĩ","S", 20),
+    ELEPHANT("Tượng","T", 40),
+    HORSE("Mã","M", 60),
+    CHARIOT("Xe","X", 120),
+    CANNON("Pháo","P", 70),
+    SOLDIER("Binh","B", 30);
 
     private final String fullName;
     

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class RoleDTO{
+public class RoleDTO {
 
     private int id;
 

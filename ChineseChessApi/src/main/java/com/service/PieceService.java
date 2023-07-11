@@ -16,20 +16,24 @@ public interface PieceService {
 
     List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed);
 
+    List<PieceDTO> findAllInBoard(
+        PlayBoardDTO playBoardDTO, String name, Boolean isRed, 
+        int fromCol, int fromRow, int toCol, int toRow);
+
     PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id);
 
     PieceDTO findLastAtPosition(long matchId, long turn, int toCol, int toRow);
 
     List<PieceDTO> findAllDeadInPlayBoard(PlayBoardDTO playBoardDTO);
 
-    PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoard, PieceDTO pieceDTO);
+    PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO);
 
-    boolean existsBetweenInRowPath(PlayBoardDTO playBoard, int currentRow, int fromCol, int toCol);
+    boolean existsBetweenInRowPath(PlayBoardDTO playBoardDTO, int row, int fromCol, int toCol);
 
-    boolean existsBetweenInColPath(PlayBoardDTO playBoard, int currentCol, int fromRow, int toRow);
+    boolean existsBetweenInColPath(PlayBoardDTO playBoardDTO, int col, int fromRow, int toRow);
 
-    int countBetweenInRowPath(PlayBoardDTO playBoard, int currentRow, int fromCol, int toCol);
+    int countBetweenInRowPath(PlayBoardDTO playBoardDTO, int row, int fromCol, int toCol);
 
-    int countBetweenInColPath(PlayBoardDTO playBoard, int currentCol, int fromRow, int toRow);
+    int countBetweenInColPath(PlayBoardDTO playBoardDTO, int col, int fromRow, int toRow);
 
 }

@@ -1,7 +1,5 @@
 package com.data.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "move_histories")
-public class MoveHistory implements Serializable {
+public class MoveHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

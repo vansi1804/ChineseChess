@@ -17,8 +17,6 @@ public class MoveHistoryDTO extends MovedResponseDTO{
 
     private String description;
 
-    private PlayBoardDTO currentBoardDTO;
-
     private List<PieceDTO> lastDeadPieceDTOs;
 
 }

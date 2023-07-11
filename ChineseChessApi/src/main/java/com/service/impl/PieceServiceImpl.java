@@ -1,6 +1,5 @@
 package com.service.impl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import com.common.enumeration.EPiece;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.data.entity.MoveHistory;
-import com.data.entity.Piece;
 import com.config.exception.ResourceNotFoundException;
 import com.data.mapper.PieceMapper;
 import com.data.repository.MoveHistoryRepository;
@@ -62,7 +59,7 @@ public class PieceServiceImpl implements PieceService {
     @Override
     public EPiece convertByName(String name) {
         return Arrays.stream(EPiece.values())
-                .filter(ePiece -> ePiece.getFullName().equalsIgnoreCase(name))
+                .filter(ePiece -> ePiece.name().equalsIgnoreCase(name))
                 .findFirst()
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
@@ -70,18 +67,30 @@ public class PieceServiceImpl implements PieceService {
     }
 
     @Override
-    public List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed) {
-        return IntStream.range(0, playBoardDTO.getState().length)
+    public List<PieceDTO> findAllInBoard(
+            PlayBoardDTO playBoardDTO, String name, Boolean isRed, int fromCol, int fromRow, int toCol, int toRow) {
+
+        return IntStream.rangeClosed(fromCol, toCol)
                 .boxed()
-                .flatMap(col -> IntStream.range(0, playBoardDTO.getState()[col].length)
+                .flatMap(col -> IntStream.rangeClosed(fromRow, toRow)
                         .filter(row -> {
                             PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
                             return pieceDTO != null
                                     && (StringUtils.isBlank(name) || pieceDTO.getName().equals(name))
-                                    && (isRed == null || pieceDTO.getColor() == isRed);
+                                    && (isRed == null || pieceDTO.isRed() == isRed);
                         })
                         .mapToObj(row -> playBoardDTO.getState()[col][row]))
                 .toList();
+    }
+
+    @Override
+    public List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed) {
+        int fromCol = 0;
+        int fromRow = 0;
+        int toCol = playBoardDTO.getState().length - 1;
+        int toRow = playBoardDTO.getState()[0].length - 1;
+
+        return findAllInBoard(playBoardDTO, name, isRed, fromCol, fromRow, toCol, toRow);
     }
 
     @Override
@@ -98,9 +107,14 @@ public class PieceServiceImpl implements PieceService {
 
     @Override
     public PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id) {
-        return IntStream.range(0, playBoardDTO.getState().length)
+        int fromCol = 0;
+        int fromRow = 0;
+        int toCol = playBoardDTO.getState().length - 1;
+        int toRow = playBoardDTO.getState()[0].length - 1;
+
+        return IntStream.rangeClosed(fromCol, toCol)
                 .boxed()
-                .flatMap(col -> IntStream.range(0, playBoardDTO.getState()[col].length)
+                .flatMap(col -> IntStream.rangeClosed(fromRow, toRow)
                         .filter(row -> playBoardDTO.getState()[col][row] != null
                                 && playBoardDTO.getState()[col][row].getId() == id)
                         .mapToObj(row -> playBoardDTO.getState()[col][row]))
@@ -121,131 +135,60 @@ public class PieceServiceImpl implements PieceService {
     }
 
     @Override
-    public PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoard, PieceDTO pieceDTO) {
-        return IntStream.rangeClosed(1, playBoard.getState()[0].length)
+    public PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO) {
+        int col = pieceDTO.getCurrentCol();
+        int fromRow = 0;
+        int toRow = playBoardDTO.getState()[0].length - 1;
+
+        return IntStream.rangeClosed(fromRow, toRow)
                 .filter(row -> {
-                    PieceDTO currentPiece = playBoard.getState()[pieceDTO.getCurrentCol() - 1][row - 1];
+                    PieceDTO currentPiece = playBoardDTO.getState()[col][row];
                     return currentPiece != null
                             && currentPiece.getId() != pieceDTO.getId()
-                            && currentPiece.getColor() == pieceDTO.getColor()
+                            && currentPiece.isRed() == pieceDTO.isRed()
                             && currentPiece.getName().equals(pieceDTO.getName());
                 })
-                .mapToObj(row -> playBoard.getState()[pieceDTO.getCurrentCol() - 1][row - 1])
+                .mapToObj(row -> playBoardDTO.getState()[col][row])
                 .findFirst()
                 .orElse(null);
     }
 
     @Override
-    public boolean existsBetweenInRowPath(PlayBoardDTO playBoard, int currentRow, int fromCol, int toCol) {
+    public boolean existsBetweenInRowPath(PlayBoardDTO playBoardDTO, int currentRow, int fromCol, int toCol) {
         int startCol = Math.min(fromCol, toCol) + 1;
         int endCol = Math.max(fromCol, toCol) - 1;
 
         return IntStream.rangeClosed(startCol, endCol)
-                .anyMatch(col -> playBoard.getState()[col - 1][currentRow - 1] != null);
+                .anyMatch(col -> playBoardDTO.getState()[col][currentRow] != null);
     }
 
     @Override
-    public boolean existsBetweenInColPath(PlayBoardDTO playBoard, int currentCol, int fromRow, int toRow) {
+    public boolean existsBetweenInColPath(PlayBoardDTO playBoardDTO, int currentCol, int fromRow, int toRow) {
         int startRow = Math.min(fromRow, toRow) + 1;
         int endRow = Math.max(fromRow, toRow) - 1;
 
         return IntStream.rangeClosed(startRow, endRow)
-                .anyMatch(row -> playBoard.getState()[currentCol - 1][row - 1] != null);
+                .anyMatch(row -> playBoardDTO.getState()[currentCol][row] != null);
     }
 
     @Override
-    public int countBetweenInRowPath(PlayBoardDTO playBoard, int currentRow, int fromCol, int toCol) {
+    public int countBetweenInRowPath(PlayBoardDTO playBoardDTO, int currentRow, int fromCol, int toCol) {
         int startCol = Math.min(fromCol, toCol) + 1;
         int endCol = Math.max(fromCol, toCol) - 1;
 
         return (int) IntStream.rangeClosed(startCol, endCol)
-                .filter(col -> playBoard.getState()[col - 1][currentRow - 1] != null)
+                .filter(col -> playBoardDTO.getState()[col][currentRow] != null)
                 .count();
     }
 
     @Override
-    public int countBetweenInColPath(PlayBoardDTO playBoard, int currentCol, int fromRow, int toRow) {
+    public int countBetweenInColPath(PlayBoardDTO playBoardDTO, int currentCol, int fromRow, int toRow) {
         int startRow = Math.min(fromRow, toRow) + 1;
         int endRow = Math.max(fromRow, toRow) - 1;
 
         return (int) IntStream.rangeClosed(startRow, endRow)
-                .filter(row -> playBoard.getState()[currentCol - 1][row - 1] != null)
+                .filter(row -> playBoardDTO.getState()[currentCol][row] != null)
                 .count();
-    }
-
-    @PostConstruct
-    public void init() {
-        List<Piece> defaultPieces = new ArrayList<>();
-        // Red pieces
-        defaultPieces.add(
-                new Piece(1, EPiece.Soldier.getFullName(), Boolean.TRUE, "red_soldier.png", 1, 7));
-        defaultPieces.add(
-                new Piece(2, EPiece.Soldier.getFullName(), Boolean.TRUE, "red_soldier.png", 3, 7));
-        defaultPieces.add(
-                new Piece(3, EPiece.Soldier.getFullName(), Boolean.TRUE, "red_soldier.png", 5, 7));
-        defaultPieces.add(
-                new Piece(4, EPiece.Soldier.getFullName(), Boolean.TRUE, "red_soldier.png", 7, 7));
-        defaultPieces.add(
-                new Piece(5, EPiece.Soldier.getFullName(), Boolean.TRUE, "red_soldier.png", 9, 7));
-        defaultPieces.add(
-                new Piece(6, EPiece.Cannon.getFullName(), Boolean.TRUE, "red_cannon.png", 2, 8));
-        defaultPieces.add(
-                new Piece(7, EPiece.Cannon.getFullName(), Boolean.TRUE, "red_cannon.png", 8, 8));
-        defaultPieces.add(
-                new Piece(8, EPiece.Chariot.getFullName(), Boolean.TRUE, "red_chariot.png", 1, 10));
-        defaultPieces.add(
-                new Piece(9, EPiece.Chariot.getFullName(), Boolean.TRUE, "red_chariot.png", 9, 10));
-        defaultPieces.add(
-                new Piece(10, EPiece.Horse.getFullName(), Boolean.TRUE, "red_horse.png", 2, 10));
-        defaultPieces.add(
-                new Piece(11, EPiece.Horse.getFullName(), Boolean.TRUE, "red_horse.png", 8, 10));
-        defaultPieces.add(
-                new Piece(12, EPiece.Elephant.getFullName(), Boolean.TRUE, "red_elephant.png", 3, 10));
-        defaultPieces.add(
-                new Piece(13, EPiece.Elephant.getFullName(), Boolean.TRUE, "red_elephant.png", 7, 10));
-        defaultPieces.add(
-                new Piece(14, EPiece.Guard.getFullName(), Boolean.TRUE, "red_guard.png", 4, 10));
-        defaultPieces.add(
-                new Piece(15, EPiece.Guard.getFullName(), Boolean.TRUE, "red_guard.png", 6, 10));
-        defaultPieces.add(
-                new Piece(16, EPiece.General.getFullName(), Boolean.TRUE, "red_general.png", 5, 10));
-
-        // Black pieces
-        defaultPieces.add(
-                new Piece(17, EPiece.Soldier.getFullName(), Boolean.FALSE, "black_soldier.png", 1, 4));
-        defaultPieces.add(
-                new Piece(18, EPiece.Soldier.getFullName(), Boolean.FALSE, "black_soldier.png", 3, 4));
-        defaultPieces.add(
-                new Piece(19, EPiece.Soldier.getFullName(), Boolean.FALSE, "black_soldier.png", 5, 4));
-        defaultPieces.add(
-                new Piece(20, EPiece.Soldier.getFullName(), Boolean.FALSE, "black_soldier.png", 7, 4));
-        defaultPieces.add(
-                new Piece(21, EPiece.Soldier.getFullName(), Boolean.FALSE, "black_soldier.png", 9, 4));
-        defaultPieces.add(
-                new Piece(22, EPiece.Cannon.getFullName(), Boolean.FALSE, "black_cannon.png", 2, 3));
-        defaultPieces.add(
-                new Piece(23, EPiece.Cannon.getFullName(), Boolean.FALSE, "black_cannon.png", 8, 3));
-        defaultPieces.add(
-                new Piece(24, EPiece.Chariot.getFullName(), Boolean.FALSE, "black_chariot.png", 1, 1));
-        defaultPieces.add(
-                new Piece(25, EPiece.Chariot.getFullName(), Boolean.FALSE, "black_chariot.png", 9, 1));
-        defaultPieces.add(
-                new Piece(26, EPiece.Horse.getFullName(), Boolean.FALSE, "black_horse.png", 2, 1));
-        defaultPieces.add(
-                new Piece(27, EPiece.Horse.getFullName(), Boolean.FALSE, "black_horse.png", 8, 1));
-        defaultPieces.add(
-                new Piece(28, EPiece.Elephant.getFullName(), Boolean.FALSE, "black_elephant.png", 3, 1));
-        defaultPieces.add(
-                new Piece(29, EPiece.Elephant.getFullName(), Boolean.FALSE, "black_elephant.png", 7, 1));
-        defaultPieces.add(
-                new Piece(30, EPiece.Guard.getFullName(), Boolean.FALSE, "black_guard.png", 4, 1));
-        defaultPieces.add(
-                new Piece(31, EPiece.Guard.getFullName(), Boolean.FALSE, "black_guard.png", 6, 1));
-        defaultPieces.add(
-                new Piece(32, EPiece.General.getFullName(), Boolean.FALSE, "black_general.png", 5, 1));
-
-        pieceRepository.saveAll(defaultPieces);
-
     }
 
 }

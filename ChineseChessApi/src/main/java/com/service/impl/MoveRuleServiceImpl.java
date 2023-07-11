@@ -20,48 +20,48 @@ import com.service.PlayBoardService;
 @Service
 public class MoveRuleServiceImpl implements MoveRuleService {
 
-    private static final int MIN_AREA = Default.Game.PlayBoardSize.AREA_Min;
-    private static final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
-    private static final int MAX_ROW = Default.Game.PlayBoardSize.ROW_MAX;
-    private static final List<Integer> PALACE_CENTER_COLS = IntStream.rangeClosed(4, 6)
+    private static final int MIN_AREA = 0;
+    private static final int MAX_COL = Default.Game.PlayBoardSize.COL;
+    private static final int MAX_ROW = Default.Game.PlayBoardSize.ROW;
+    private static final List<Integer> PALACE_CENTER_COLS = IntStream.rangeClosed(3, 5)
             .boxed()
             .collect(Collectors.toList());
-    private static final List<Integer> PALACE_CENTER_ROWS_FOR_BLACK = IntStream.rangeClosed(1, 3)
+    private static final List<Integer> PALACE_CENTER_ROWS_FOR_BLACK = IntStream.rangeClosed(0, 2)
             .boxed()
             .collect(Collectors.toList());
-    private static final List<Integer> PALACE_CENTER_ROWS_FOR_RED = IntStream.rangeClosed(8, 10)
+    private static final List<Integer> PALACE_CENTER_ROWS_FOR_RED = IntStream.rangeClosed(7, 9)
             .boxed()
             .collect(Collectors.toList());
 
     private final PieceService pieceService;
-    private final PlayBoardService playBoardService;
+    private final PlayBoardService playBoardDTOService;
     private final MoveTypeService moveTypeService;
 
     @Autowired
     public MoveRuleServiceImpl(
             PieceService pieceService,
-            PlayBoardService playBoardService,
+            PlayBoardService playBoardDTOService,
             MoveTypeService moveTypeService) {
                 
         this.pieceService = pieceService;
-        this.playBoardService = playBoardService;
+        this.playBoardDTOService = playBoardDTOService;
         this.moveTypeService = moveTypeService;
     }
 
     @Override
-    public boolean isMoveValid(PlayBoardDTO playBoard, PieceDTO pieceDTO, int toCol, int toRow) {
-        boolean isValidMoveRule = checkMoveRule(playBoard, pieceDTO, toCol, toRow);
+    public boolean isMoveValid(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
+        boolean isValidMoveRule = checkMoveRule(playBoardDTO, pieceDTO, toCol, toRow);
         if (isValidMoveRule) {
-            PlayBoardDTO playBoardAfterMoving = playBoardService.update(playBoard, pieceDTO, toCol, toRow);
+            PlayBoardDTO playBoardDTOAfterMoving = playBoardDTOService.update(playBoardDTO, pieceDTO, toCol, toRow);
             // check general in safe after moving
-            return isGeneralInSafe(playBoardAfterMoving, pieceDTO);
+            return isGeneralInSafe(playBoardDTOAfterMoving, pieceDTO);
         }
 
         return false;
     }
 
     @Override
-    public boolean checkMoveRule(PlayBoardDTO playBoard, PieceDTO pieceDTO, int toCol, int toRow) {
+    public boolean checkMoveRule(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
         int fromCol = pieceDTO.getCurrentCol();
         int fromRow = pieceDTO.getCurrentRow();
 
@@ -69,48 +69,48 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             return false;
         }
 
-        PieceDTO targetPiece = playBoard.getState()[toCol - 1][toRow - 1];
+        PieceDTO targetPiece = playBoardDTO.getState()[toCol][toRow];
         // check targetPiece is the same color with pieceDTO
-        if (targetPiece != null && targetPiece.getColor() == pieceDTO.getColor()) {
+        if (targetPiece != null && targetPiece.isRed() == pieceDTO.isRed()) {
             return false;
         }
 
         EPiece pieceType = pieceService.convertByName(pieceDTO.getName());
         switch (pieceType) {
 
-            case General:
-                return checkGeneralMoveRule(pieceDTO.getColor(), fromCol, toCol, fromRow, toRow);
+            case GENERAL:
+                return checkGeneralMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
 
-            case Guard:
-                return checkGuardMoveRule(pieceDTO.getColor(), fromCol, toCol, fromRow, toRow);
+            case GUARD:
+                return checkGuardMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
 
-            case Elephant:
-                return checkElephantMoveRule(playBoard, pieceDTO.getColor(), fromCol, toCol, fromRow, toRow);
+            case ELEPHANT:
+                return checkElephantMoveRule(playBoardDTO, pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
 
-            case Horse:
-                return checkHorseMoveRule(playBoard, fromCol, toCol, fromRow, toRow);
+            case HORSE:
+                return checkHorseMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
 
-            case Chariot:
-                return checkChariotMoveRule(playBoard, fromCol, toCol, fromRow, toRow);
+            case CHARIOT:
+                return checkChariotMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
 
-            case Cannon:
-                return checkCannonMoveRule(playBoard, fromCol, toCol, fromRow, toRow);
+            case CANNON:
+                return checkCannonMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
 
-            case Soldier:
-                return checkSoldierMoveRule(pieceDTO.getColor(), fromCol, toCol, fromRow, toRow);
+            case SOLDIER:
+                return checkSoldierMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
 
             default:
                 return false;
         }
     }
 
-    private boolean isGeneralInSafe(PlayBoardDTO playBoard, PieceDTO pieceDTO) {
+    private boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO) {
         PieceDTO sameColorGeneral = null;
         PieceDTO opponentGeneral = null;
 
-        List<PieceDTO> generalsPiece = pieceService.findAllInBoard(playBoard, EPiece.General.getFullName(), null);
+        List<PieceDTO> generalsPiece = pieceService.findAllInBoard(playBoardDTO, EPiece.GENERAL.name(), null);
 
-        if (generalsPiece.get(0).getColor() == pieceDTO.getColor()) {
+        if (generalsPiece.get(0).isRed() == pieceDTO.isRed()) {
             sameColorGeneral = generalsPiece.get(0);
             opponentGeneral = generalsPiece.get(1);
         } else {
@@ -119,29 +119,29 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         }
 
         if (sameColorGeneral != null && opponentGeneral != null) {
-            return !areTwoGeneralsFacing(playBoard, sameColorGeneral, opponentGeneral)
-                    && !isGeneralBeingChecked(playBoard, sameColorGeneral);
+            return !areTwoGeneralsFacing(playBoardDTO, sameColorGeneral, opponentGeneral)
+                    && !isGeneralBeingChecked(playBoardDTO, sameColorGeneral);
         }
 
         return false;
     }
 
     @Override
-    public boolean isGeneralBeingChecked(PlayBoardDTO playBoard, PieceDTO generalPiece) {
-        List<PieceDTO> opponentPiecesInBoard = pieceService.findAllInBoard(playBoard, null, !generalPiece.getColor());
+    public boolean isGeneralBeingChecked(PlayBoardDTO playBoardDTO, PieceDTO generalPiece) {
+        List<PieceDTO> opponentPiecesInBoard = pieceService.findAllInBoard(playBoardDTO, null, !generalPiece.isRed());
 
         return opponentPiecesInBoard.stream()
                 .anyMatch(opponentPiece -> checkMoveRule(
-                        playBoard, opponentPiece, generalPiece.getCurrentCol(), generalPiece.getCurrentRow()));
+                        playBoardDTO, opponentPiece, generalPiece.getCurrentCol(), generalPiece.getCurrentRow()));
     }
 
-    private boolean areTwoGeneralsFacing(PlayBoardDTO playBoard, PieceDTO generalPiece1, PieceDTO generalPiece2) {
+    private boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPiece1, PieceDTO generalPiece2) {
         if (generalPiece1.getCurrentCol() == generalPiece2.getCurrentCol()) {
             int currentCol = generalPiece1.getCurrentCol();
             int fromRow = generalPiece1.getCurrentRow();
             int toRow = generalPiece2.getCurrentRow();
 
-            if (!pieceService.existsBetweenInColPath(playBoard, currentCol, fromRow, toRow)) {
+            if (!pieceService.existsBetweenInColPath(playBoardDTO, currentCol, fromRow, toRow)) {
                 return true;
             }
         }
@@ -188,7 +188,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      * intended position, the elephant is blocked and not allowed.
      */
     private boolean checkElephantMoveRule(
-            PlayBoardDTO playBoard, boolean isRed, int fromCol, int toCol, int fromRow, int toRow) {
+            PlayBoardDTO playBoardDTO, boolean isRed, int fromCol, int toCol, int fromRow, int toRow) {
 
         int verticalSpace = Math.abs(toRow - fromRow);
         int horizontalSpace = Math.abs(toCol - fromCol);
@@ -199,7 +199,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
 
         int middleCol = (fromCol + toCol) / 2;
         int middleRow = (fromRow + toRow) / 2;
-        boolean existingObstacle = playBoard.getState()[middleCol - 1][middleRow - 1] != null;
+        boolean existingObstacle = playBoardDTO.getState()[middleCol][middleRow] != null;
 
         return isDiagonalMove && isWithinOwnHalf && !existingObstacle;
     }
@@ -210,7 +210,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      * If there is an obstacle (a piece next to the horse in the horizontal
      * or vertical direction), the horse is blocked and the move is not allowed.
      */
-    private boolean checkHorseMoveRule(PlayBoardDTO playBoard, int fromCol, int toCol, int fromRow, int toRow) {
+    private boolean checkHorseMoveRule(PlayBoardDTO playBoardDTO, int fromCol, int toCol, int fromRow, int toRow) {
         int verticalSpace = Math.abs(toRow - fromRow);
         int horizontalSpace = Math.abs(toCol - fromCol);
 
@@ -218,12 +218,12 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             int obstacleCol = fromCol;
             int obstacleRow = (fromRow + toRow) / 2;
 
-            return playBoard.getState()[obstacleCol - 1][obstacleRow - 1] == null; // No obstacle, Invalid move
+            return playBoardDTO.getState()[obstacleCol][obstacleRow] == null; // No obstacle, Invalid move
         } else if (verticalSpace == 1 && horizontalSpace == 2) {
             int obstacleCol = (fromCol + toCol) / 2;
             int obstacleRow = fromRow;
 
-            return playBoard.getState()[obstacleCol - 1][obstacleRow - 1] == null; // No obstacle, Invalid move
+            return playBoardDTO.getState()[obstacleCol][obstacleRow] == null; // No obstacle, Invalid move
         }
 
         return false; // Invalid move
@@ -233,11 +233,11 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      * CHARIOTS can move one or more spaces vertically or horizontally in a move
      * without any pieces between
      */
-    private boolean checkChariotMoveRule(PlayBoardDTO playBoard, int fromCol, int toCol, int fromRow, int toRow) {
+    private boolean checkChariotMoveRule(PlayBoardDTO playBoardDTO, int fromCol, int toCol, int fromRow, int toRow) {
         return (moveTypeService.isVerticallyMoving(fromCol, toCol)
-                && !pieceService.existsBetweenInColPath(playBoard, fromCol, fromRow, toRow))
+                && !pieceService.existsBetweenInColPath(playBoardDTO, fromCol, fromRow, toRow))
                 || (moveTypeService.isHorizontalMoving(fromRow, toRow)
-                        && !pieceService.existsBetweenInRowPath(playBoard, fromRow, fromCol, toCol));
+                        && !pieceService.existsBetweenInRowPath(playBoardDTO, fromRow, fromCol, toCol));
     }
 
     /*
@@ -245,16 +245,16 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      * If moving to an empty position, there must not be existing any pieces between
      * If moving to a non-empty position, there must be exactly 1 between
      */
-    private boolean checkCannonMoveRule(PlayBoardDTO playBoard, int fromCol, int toCol, int fromRow, int toRow) {
-        PieceDTO targetPiece = playBoard.getState()[toCol - 1][toRow - 1];
+    private boolean checkCannonMoveRule(PlayBoardDTO playBoardDTO, int fromCol, int toCol, int fromRow, int toRow) {
+        PieceDTO targetPiece = playBoardDTO.getState()[toCol][toRow];
 
         boolean isVerticallyMoving = moveTypeService.isVerticallyMoving(fromCol, toCol);
         boolean isHorizontalMoving = moveTypeService.isHorizontalMoving(fromRow, toRow);
         // check move Vertically or Horizontal
         if (isVerticallyMoving || isHorizontalMoving) {
             int numPiecesBetween = isVerticallyMoving
-                    ? pieceService.countBetweenInColPath(playBoard, fromCol, fromRow, toRow)
-                    : pieceService.countBetweenInRowPath(playBoard, fromRow, fromCol, toCol);
+                    ? pieceService.countBetweenInColPath(playBoardDTO, fromCol, fromRow, toRow)
+                    : pieceService.countBetweenInRowPath(playBoardDTO, fromRow, fromCol, toCol);
 
             // check position moving to and number of piece between in two case
             return targetPiece == null ? numPiecesBetween == 0 : numPiecesBetween == 1;

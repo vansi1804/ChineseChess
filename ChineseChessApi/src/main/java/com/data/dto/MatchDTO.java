@@ -1,18 +1,15 @@
 package com.data.dto;
 
-import java.util.Date;
-
-import com.common.Default;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MatchDTO {
+public class MatchDTO extends AuditingDTO{
 
     private long id;
 
@@ -29,11 +26,5 @@ public class MatchDTO {
     private PlayerProfileDTO player2ProfileDTO;
 
     private Long result;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
-    private Date startAt;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
-    private Date stopAt;
     
 }

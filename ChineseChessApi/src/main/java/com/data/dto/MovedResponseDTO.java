@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MovedResponseDTO {
+public class MovedResponseDTO{
     
     private PieceDTO movedPieceDTO;
+
+    private PlayBoardDTO currentBoardDTO;
 
     private PieceDTO deadPieceDTO;
 
