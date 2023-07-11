@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -96,6 +97,10 @@ public class PlayerServiceImpl implements PlayerService {
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 Collections.singletonMap("id", id)));
+        
+        if (!userService.isCurrentUser(oldPlayer.getUser().getId())) {
+            throw new AccessDeniedException(null);
+        }
 
         UserProfileDTO updatedUserProfileDTO = userService.update(
                 oldPlayer.getUser().getId(), playerProfileDTO.getUserProfileDTO(), fileAvatar);
