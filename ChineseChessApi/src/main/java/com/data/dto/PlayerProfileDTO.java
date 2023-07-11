@@ -2,9 +2,11 @@ package com.data.dto;
 
 import javax.validation.Valid;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
 @Data
 @NoArgsConstructor
 public class PlayerProfileDTO { 

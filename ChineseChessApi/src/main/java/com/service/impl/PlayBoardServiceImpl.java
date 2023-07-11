@@ -19,8 +19,8 @@ import com.service.PieceService;
 @Service
 public class PlayBoardServiceImpl implements PlayBoardService {
 
-    private final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
-    private final int MAX_ROW = Default.Game.PlayBoardSize.ROW_MAX;
+    private final int MAX_COL = Default.Game.PlayBoardSize.COL;
+    private final int MAX_ROW = Default.Game.PlayBoardSize.ROW;
 
     private final PieceRepository pieceRepository;
     private final PieceMapper pieceMapper;
@@ -41,7 +41,9 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
         pieces.stream()
                 .map(p -> pieceMapper.toDTO(p))
-                .forEach(pDTO -> playBoardDTO.getState()[pDTO.getCurrentCol() - 1][pDTO.getCurrentRow() - 1] = pDTO);
+                .forEach(pDTO -> playBoardDTO.getState()[pDTO.getCurrentCol()][pDTO.getCurrentRow()] = pDTO);
+
+        playBoardDTO.print("start: ", null);
 
         return playBoardDTO;
     }
@@ -49,27 +51,27 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     @Override
     public PlayBoardDTO buildPlayBoardByMoveHistories(List<MoveHistory> moveHistories) {
         return moveHistories.stream()
-                .reduce(generate(), (board, mh) -> update(
-                        board,
-                        pieceService.findOneInBoard(board, mh.getPiece().getId()),
-                        mh.getToCol(),
-                        mh.getToRow()),
-                        (board1, board2) -> board2);
+                .reduce(
+                        generate(),
+                        (currentBoardDTO, mh) -> update(
+                                currentBoardDTO, pieceService.findOneInBoard(currentBoardDTO, mh.getPiece().getId()),
+                                mh.getToCol(), mh.getToRow()),
+                        (currentBoardDTO, updatedBoardDTO) -> updatedBoardDTO);
     }
 
     @Override
     public PlayBoardDTO update(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
-        PlayBoardDTO updatedBoard = new PlayBoardDTO(cloneStateArray(playBoardDTO.getState()));
+        PlayBoardDTO updatePlayBoardDTO = new PlayBoardDTO(cloneStateArray(playBoardDTO.getState()));
 
-        updatedBoard.getState()[pieceDTO.getCurrentCol() - 1][pieceDTO.getCurrentRow() - 1] = null;
+        updatePlayBoardDTO.getState()[pieceDTO.getCurrentCol()][pieceDTO.getCurrentRow()] = null;
 
         PieceDTO updatedPieceDTO = pieceMapper.copy(pieceDTO);
         updatedPieceDTO.setCurrentCol(toCol);
         updatedPieceDTO.setCurrentRow(toRow);
 
-        updatedBoard.getState()[toCol - 1][toRow - 1] = updatedPieceDTO;
+        updatePlayBoardDTO.getState()[toCol][toRow] = updatedPieceDTO;
 
-        return updatedBoard;
+        return updatePlayBoardDTO;
     }
 
     private PieceDTO[][] cloneStateArray(PieceDTO[][] state) {

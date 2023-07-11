@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,13 +93,6 @@ public class RankServiceImpl implements RankService {
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 Collections.singletonMap("id", id))));
-    }
-
-    @PostConstruct
-    public void init() {
-        if (rankRepository.count() == 0) {
-            rankRepository.save(new Rank(1, "Novice", 2000));
-        }
     }
 
 }

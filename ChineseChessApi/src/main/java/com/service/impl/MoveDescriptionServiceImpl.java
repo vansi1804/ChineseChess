@@ -16,7 +16,7 @@ import com.service.PieceService;
 @Service
 public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     
-    private final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
+    private final int MAX_COL = Default.Game.PlayBoardSize.COL;
 
     private final PieceService pieceService;
     private final MoveTypeService moveTypeService;
@@ -34,7 +34,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         StringBuilder description = new StringBuilder();
         description.append(shortNameOfPiece);
 
-        if (pieceDTO.getColor()) {
+        if (pieceDTO.isRed()) {
             description.append(buildRedPieceDescription(currentBoard, pieceDTO, toCol, toRow));
         } else {
             description.append(buildBlackPieceDescription(currentBoard, pieceDTO, toCol, toRow));
@@ -46,11 +46,11 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     private String buildRedPieceDescription(PlayBoardDTO currentBoard, PieceDTO pieceDTO, int toCol, int toRow) {
         StringBuilder description = new StringBuilder();
         description.append(buildIndexDescription(currentBoard, pieceDTO));
-        description.append(MAX_COL - pieceDTO.getCurrentCol() + 1);
+        description.append(MAX_COL - pieceDTO.getCurrentCol());
 
         if (moveTypeService.isHorizontalMoving(pieceDTO.getCurrentRow(), toRow)) {
             description.append(EMoveType.ACROSS.getValue())
-                    .append(MAX_COL - toCol + 1);
+                    .append(MAX_COL - toCol);
 
         } else {
             if (moveTypeService.isUpMoving(true, pieceDTO.getCurrentRow(), toRow)) {
@@ -62,7 +62,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
             if (moveTypeService.isVerticallyMoving(pieceDTO.getCurrentCol(), toCol)) {
                 description.append(Math.abs(pieceDTO.getCurrentRow() - toRow));
             } else {
-                description.append(MAX_COL - toCol + 1);
+                description.append(MAX_COL - toCol);
             }
         }
 
@@ -99,8 +99,8 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         PieceDTO foundPiece = pieceService.findExistingTheSameInColPath(currentBoard, pieceDTO);
         return foundPiece == null
                 ? ""
-                : (pieceDTO.getColor() && (pieceDTO.getCurrentRow() < foundPiece.getCurrentRow()))
-                        || (!pieceDTO.getColor() && (pieceDTO.getCurrentRow() > foundPiece.getCurrentRow()))
+                : (pieceDTO.isRed() && (pieceDTO.getCurrentRow() < foundPiece.getCurrentRow()))
+                        || (!pieceDTO.isRed() && (pieceDTO.getCurrentRow() > foundPiece.getCurrentRow()))
                                 ? EIndex.BEFORE.getValue()
                                 : EIndex.AFTER.getValue();
     }

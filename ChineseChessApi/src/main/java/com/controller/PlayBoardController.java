@@ -15,16 +15,16 @@ import com.service.PlayBoardService;
 @RequestMapping(ApiUrl.PLAY_BOARD)
 public class PlayBoardController {
 
-    private final PlayBoardService playBoardService;
+    private final PlayBoardService playBoardDTOService;
 
     @Autowired
-    public PlayBoardController(PlayBoardService playBoardService) {
-        this.playBoardService = playBoardService;
+    public PlayBoardController(PlayBoardService playBoardDTOService) {
+        this.playBoardDTOService = playBoardDTOService;
     }
 
     @GetMapping(value = "/generate")
     public ResponseEntity<?> generate() {
-        return ResponseEntity.ok(playBoardService.generate());
+        return ResponseEntity.ok(playBoardDTOService.generate());
     }
 
 }

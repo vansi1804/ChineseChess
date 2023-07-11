@@ -1,7 +1,5 @@
 package com.data.dto;
 
-import java.util.stream.IntStream;
-
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
@@ -24,25 +22,27 @@ public class PlayBoardDTO {
         System.out.println(title.toString());
         System.out.println("===========================================");
 
-        IntStream.rangeClosed(1, state.length)
-                .boxed()
-                .flatMap(col -> IntStream.rangeClosed(1, state[0].length)
-                        .mapToObj(row -> getSymbolOutput(pieceDTO, col, row)))
-                .forEach(System.out::print);
+        for (int row = 0; row < state[0].length; row++) {
+            for (int col = 0; col < state.length; col++) {
+                System.out.print(getSymbolOutput(pieceDTO, col, row));
+            }
+            System.out.println();
+        }
 
         System.out.println("===========================================");
     }
 
     private String getSymbolOutput(PieceDTO pieceDTO, int col, int row) {
-        if (state[col - 1][row - 1] == null) {
-            if ((pieceDTO != null) && ((col == pieceDTO.getCurrentCol()) && (row == pieceDTO.getCurrentRow()))) {
+        if (state[col][row] == null) {
+            if ((pieceDTO != null)
+                    && ((col == pieceDTO.getCurrentCol() - 1) && (row == pieceDTO.getCurrentRow() - 1))) {
                 return "[  ] ";
             } else {
                 return " +   ";
             }
         } else {
-            String p = state[col - 1][row - 1].getName().charAt(0) + (state[col - 1][row - 1].getColor() ? "1" : "2");
-            if ((pieceDTO != null) && (state[col - 1][row - 1].getId() == pieceDTO.getId())) {
+            String p = state[col][row].getName().charAt(0) + (state[col][row].isRed() ? "1" : "2");
+            if ((pieceDTO != null) && (state[col][row].getId() == pieceDTO.getId())) {
                 return "[" + p + "] ";
             } else {
                 return " " + p + "  ";

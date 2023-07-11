@@ -6,10 +6,10 @@ import com.data.dto.PieceDTO;
 
 public interface MoveRuleService {
 
-    boolean checkMoveRule(PlayBoardDTO playBoard, PieceDTO pieceDTO, int toCol, int toRow);
+    boolean checkMoveRule(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow);
 
-    boolean isMoveValid(PlayBoardDTO playBoard, PieceDTO pieceDTO, int toCol, int toRow);
+    boolean isMoveValid(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow);
 
-    boolean isGeneralBeingChecked(PlayBoardDTO playBoard, PieceDTO generalPiece);
+    boolean isGeneralBeingChecked(PlayBoardDTO playBoardDTO, PieceDTO generalPiece);
     
 }

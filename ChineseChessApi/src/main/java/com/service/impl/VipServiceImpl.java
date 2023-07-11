@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -94,13 +92,6 @@ public class VipServiceImpl implements VipService {
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 Collections.singletonMap("id", id))));
-    }
-
-    @PostConstruct
-    public void init() {
-        if (vipRepository.count() == 0) {
-            vipRepository.save(new Vip(1, "Vip0", 0));
-        }
     }
 
 }

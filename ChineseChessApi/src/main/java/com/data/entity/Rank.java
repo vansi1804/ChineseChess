@@ -1,26 +1,24 @@
 package com.data.entity;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "ranks")
-public class Rank implements Serializable {
+public class Rank extends Auditing {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
