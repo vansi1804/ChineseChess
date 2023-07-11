@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
     private final VipRepository vipRepository;
     private final FileService fileService;
     private final PasswordEncoder passwordEncoder;
+    private final AuditorAware<User> auditorAware;
 
     @Autowired
     public UserServiceImpl(
@@ -47,14 +49,16 @@ public class UserServiceImpl implements UserService {
             RoleRepository roleRepository,
             VipRepository vipRepository,
             FileService fileService,
-            PasswordEncoder passwordEncoder) {
-                
+            PasswordEncoder passwordEncoder,
+            AuditorAware<User> auditorAware) {
+
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.vipRepository = vipRepository;
         this.fileService = fileService;
         this.passwordEncoder = passwordEncoder;
+        this.auditorAware = auditorAware;
     }
 
     @Override
@@ -167,6 +171,12 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return true;
+    }
+
+    @Override
+    public boolean isCurrentUser(long id) {
+        User currentUser = auditorAware.getCurrentAuditor().orElse(null);
+        return currentUser == null || currentUser.getId() == id;
     }
 
 }

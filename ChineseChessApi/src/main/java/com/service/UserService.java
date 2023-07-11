@@ -26,4 +26,6 @@ public interface UserService {
 
     boolean unlockById(long id);
 
+    boolean isCurrentUser(long id);
+
 }
