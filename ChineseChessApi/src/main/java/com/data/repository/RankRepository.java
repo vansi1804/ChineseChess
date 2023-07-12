@@ -22,4 +22,6 @@ public interface RankRepository extends JpaRepository<Rank, Integer> {
 
     boolean existsByIdNotAndEloMilestones(int id, int eloMilestones);
 
+    Optional<Rank> findFirstByEloMilestonesLessThanEqualOrderByEloMilestonesDesc(int elo);
+
 }

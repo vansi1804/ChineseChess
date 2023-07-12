@@ -105,7 +105,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         adminPlayer.setUser(adminUser);
 
         Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
-                .orElseThrow(() -> new InternalServerErrorException("default rank"));
+                .orElseThrow(() -> new InternalServerErrorException("No rank found"));
         adminPlayer.setRank(defaultRank);
 
         adminPlayer.setElo(defaultRank.getEloMilestones());
@@ -123,11 +123,11 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
             adminUser.setName(Default.User.Admin.NAME);
 
             Role adminRole = roleRepository.findByName(Default.User.Admin.ROLE.name())
-                    .orElseThrow(() -> new InternalServerErrorException("admin's role"));
+                    .orElseThrow(() -> new InternalServerErrorException("No role found"));
             adminUser.setRole(adminRole);
 
             Vip adminVip = vipRepository.findFirstByOrderByDepositMilestonesDesc()
-                    .orElseThrow(() -> new InternalServerErrorException("admin's vip"));
+                    .orElseThrow(() -> new InternalServerErrorException("No vip found"));
             adminUser.setVip(adminVip);
 
             adminUser.setStatus(Default.User.Admin.STATUS.name());

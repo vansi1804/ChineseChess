@@ -10,6 +10,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.common.Default;
+import com.common.enumeration.EResult;
 import com.common.enumeration.ERole;
 import com.data.dto.PlayerDTO;
 import com.data.dto.PlayerCreationDTO;
@@ -81,7 +83,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
                 .orElseThrow(
-                        () -> new InternalServerErrorException("default rank"));
+                        () -> new InternalServerErrorException("No rank found"));
         player.setRank(defaultRank);
 
         player.setElo(defaultRank.getEloMilestones());
@@ -97,7 +99,7 @@ public class PlayerServiceImpl implements PlayerService {
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 Collections.singletonMap("id", id)));
-        
+
         if (!userService.isCurrentUser(oldPlayer.getUser().getId())) {
             throw new AccessDeniedException(null);
         }
@@ -120,14 +122,32 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerProfileDTO updateEloById(long id, int elo) {
+    public PlayerProfileDTO updateByEloBetAndResult(long id, int eloBet, EResult eResult) {
         Player updatePlayer = playerRepository.findById(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 Collections.singletonMap("id", id)));
 
-        updatePlayer.setElo(elo);
-        // update rank base on elo later
+        switch (eResult) {
+            case WIN:
+                updatePlayer.setElo((int) (updatePlayer.getElo() + eloBet * Default.Game.ELO_WIN_RECEIVE_PERCENT));
+                updatePlayer.setWin(updatePlayer.getWin() + 1);
+                break;
+
+            case LOSE:
+                updatePlayer.setElo((int) (updatePlayer.getElo() - eloBet));
+                updatePlayer.setLose(updatePlayer.getLose() + 1);
+                break;
+
+            default:
+                updatePlayer.setDraw(updatePlayer.getDraw() + 1);
+                break;
+        }
+
+        Rank rank = rankRepository.findFirstByEloMilestonesLessThanEqualOrderByEloMilestonesDesc(eloBet)
+                .orElseThrow(
+                        () -> new InternalServerErrorException("No rank found for updating for player by elo"));
+        updatePlayer.setRank(rank);
 
         return playerMapper.toProfileDTO(updatePlayer);
     }

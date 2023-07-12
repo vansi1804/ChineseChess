@@ -25,6 +25,6 @@ public class MatchDTO extends AuditingDTO{
 
     private PlayerProfileDTO player2ProfileDTO;
 
-    private Long result;
+    private Integer result;
     
 }

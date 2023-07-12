@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.data.dto.PlayerDTO;
+import com.common.enumeration.EResult;
 import com.data.dto.PlayerCreationDTO;
 import com.data.dto.PlayerProfileDTO;
 
@@ -22,6 +23,7 @@ public interface PlayerService {
     @Transactional
     PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO, MultipartFile fileAvatar);
 
-    PlayerProfileDTO updateEloById(long id, int elo);
+    @Transactional
+    PlayerProfileDTO updateByEloBetAndResult(long id, int eloBet, EResult eResult);
 
 }
