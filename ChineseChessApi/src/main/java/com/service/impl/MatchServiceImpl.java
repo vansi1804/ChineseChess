@@ -10,12 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.ErrorMessage;
+import com.common.enumeration.EResult;
 import com.data.dto.MatchCreationDTO;
 import com.data.dto.MatchDTO;
 import com.data.dto.MatchDetailDTO;
 import com.data.dto.MoveHistoryDTO;
+import com.data.dto.PlayerProfileDTO;
 import com.data.entity.Match;
 import com.data.entity.MoveHistory;
+import com.data.entity.Player;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.MoveHistoryRepository;
@@ -24,6 +27,7 @@ import com.config.exception.InvalidException;
 import com.config.exception.ResourceNotFoundException;
 import com.service.MatchService;
 import com.service.MoveHistoryService;
+import com.service.PlayerService;
 
 @Service
 public class MatchServiceImpl implements MatchService {
@@ -31,18 +35,23 @@ public class MatchServiceImpl implements MatchService {
     private final MatchRepository matchRepository;
     private final MatchMapper matchMapper;
     private final PlayerRepository playerRepository;
+    private final PlayerService playerService;
     private final MoveHistoryRepository moveHistoryRepository;
     private final MoveHistoryService moveHistoryService;
 
     @Autowired
-    public MatchServiceImpl(MatchRepository matchRepository,
+    public MatchServiceImpl(
+            MatchRepository matchRepository,
             MatchMapper matchMapper,
             PlayerRepository playerRepository,
+            PlayerService playerService,
             MoveHistoryRepository moveHistoryRepository,
             MoveHistoryService moveHistoryService) {
+
         this.matchRepository = matchRepository;
         this.matchMapper = matchMapper;
         this.playerRepository = playerRepository;
+        this.playerService = playerService;
         this.moveHistoryRepository = moveHistoryRepository;
         this.moveHistoryService = moveHistoryService;
     }
@@ -88,27 +97,38 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public MatchDTO create(MatchCreationDTO matchCreationDTO) {
-        Map<String, Object> errors = new HashMap<String, Object>();
+        Player player1 = playerRepository.findById(matchCreationDTO.getPlayer1Id())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("player1Id", matchCreationDTO.getPlayer1Id())));
+        Player player2 = playerRepository.findById(matchCreationDTO.getPlayer2Id())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("player2Id", matchCreationDTO.getPlayer2Id())));
 
-        if (!playerRepository.existsById(matchCreationDTO.getPlayer1Id())) {
-            errors.put("player1Id", matchCreationDTO.getPlayer1Id());
+        if (matchRepository.existsPlayingByPlayerId(player1.getId())) {
+            throw new InvalidException(
+                ErrorMessage.PLAYER_PLAYING,  
+                Collections.singletonMap("player1Id", player1.getId()));
         }
-        if (!playerRepository.existsById(matchCreationDTO.getPlayer2Id())) {
-            errors.put("player2Id", matchCreationDTO.getPlayer2Id());
-        }
-        if (!errors.isEmpty()) {
-            throw new ResourceNotFoundException(errors);
-        }
-
-        if (matchRepository.existsPlayingByPlayerId(matchCreationDTO.getPlayer1Id())) {
-            errors.put("player1Id", matchCreationDTO.getPlayer1Id());
+        if (matchRepository.existsPlayingByPlayerId(player2.getId())) {
+            throw new InvalidException(
+                ErrorMessage.PLAYER_PLAYING,  
+                Collections.singletonMap("player2Id", player2.getId()));
         }
 
-        if (matchRepository.existsPlayingByPlayerId(matchCreationDTO.getPlayer2Id())) {
-            errors.put("player2Id", matchCreationDTO.getPlayer2Id());
+        if (player1.getElo() < matchCreationDTO.getEloBet()) {
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("player1Id", player1.getId());
+            errors.put("elo", player1.getElo());
+            errors.put("eloBet", player1.getElo());
+            throw new InvalidException(ErrorMessage.PLAYER_PLAYING, errors);
         }
-
-        if (!errors.isEmpty()) {
+        if (player2.getElo() < matchCreationDTO.getEloBet()) {
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("player2Id", player2.getId());
+            errors.put("elo", player2.getElo());
+            errors.put("eloBet", player2.getElo());
             throw new InvalidException(ErrorMessage.PLAYER_PLAYING, errors);
         }
 
@@ -126,14 +146,29 @@ public class MatchServiceImpl implements MatchService {
             throw new InvalidException(ErrorMessage.END_MATCH, Collections.singletonMap("id", match.getId()));
         }
 
-        long winnerId = (isRedWin == null)
-                ? 0
-                : isRedWin
-                        ? match.getPlayer1().getId()
-                        : match.getPlayer2().getId();
-        match.setResult(winnerId);
+        EResult eResult;
+        if (isRedWin == null) {
+            match.setResult(EResult.DRAW.getValue());
+            eResult = EResult.DRAW;
+        } else if (isRedWin) {
+            match.setResult(EResult.WIN.getValue());
+            eResult = EResult.WIN;
+        } else {
+            match.setResult(EResult.LOSE.getValue());
+            eResult = EResult.LOSE;
+        }
 
-        return matchMapper.toDTO(matchRepository.save(match));
+        MatchDTO matchDTO = matchMapper.toDTO(matchRepository.save(match));
+
+        PlayerProfileDTO player1ProfileDTO = playerService.updateByEloBetAndResult(
+                    match.getPlayer1().getId(), match.getEloBet(), eResult);
+        matchDTO.setPlayer1ProfileDTO(player1ProfileDTO);
+
+        PlayerProfileDTO player2ProfileDTO = playerService.updateByEloBetAndResult(
+                    match.getPlayer2().getId(), match.getEloBet(), eResult);
+        matchDTO.setPlayer2ProfileDTO(player2ProfileDTO);
+
+        return matchDTO;
     }
 
 }

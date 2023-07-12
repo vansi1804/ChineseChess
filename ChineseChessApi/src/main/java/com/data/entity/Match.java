@@ -38,7 +38,7 @@ public class Match extends Auditing {
     private int cumulativeTime;
 
     @Column(name = "bet", updatable = false)
-    private int bet;
+    private int eloBet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player1_id", referencedColumnName = "id", updatable = false)
@@ -49,6 +49,6 @@ public class Match extends Auditing {
     private Player player2;
 
     @Column(name = "result")
-    private Long result;
+    private Integer result;
 
 }

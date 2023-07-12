@@ -15,13 +15,15 @@ public class Default {
 
     public static class Game {
 
-        public class PlayBoardSize {
+        public static class PlayBoardSize {
 
             public static final int COL = 9;
 
             public static final int ROW = 10;
 
         }
+
+        public static final float ELO_WIN_RECEIVE_PERCENT = 0.95F;
 
     }
 

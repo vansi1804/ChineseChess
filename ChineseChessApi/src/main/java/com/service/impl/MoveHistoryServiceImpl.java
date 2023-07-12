@@ -310,11 +310,6 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             MovedResponseDTO movedResponseDTO = buildMovedResponse(
                     currentBoard, movingPieceDTO, matchMoveCreationDTO.getToCol(), matchMoveCreationDTO.getToRow());
 
-            if (movedResponseDTO.isCheckMate()) {
-                match.setResult(matchMoveCreationDTO.getPlayerId());
-                matchRepository.save(match);
-            }
-
             playBoardService.printTest("Turn: " + newTurn, movedResponseDTO.getCurrentBoardDTO(), movingPieceDTO);
 
             return movedResponseDTO;

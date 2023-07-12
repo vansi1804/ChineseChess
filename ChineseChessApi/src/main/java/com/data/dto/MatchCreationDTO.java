@@ -24,7 +24,7 @@ public class MatchCreationDTO {
     private Integer cumulativeTime;
 
     @Min(value = 100, message = " < 100 (elo)")
-    private Integer bet;
+    private Integer eloBet;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     private Long player1Id;
