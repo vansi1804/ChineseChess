@@ -34,7 +34,7 @@ public class MovingController {
 
     @GetMapping(value = "")
     public ResponseEntity<?> findMoveValid(@Valid @RequestBody ValidMoveRequestDTO validMoveRequestDTO) {
-        return ResponseEntity.ok(moveHistoryService.findMoveValid(validMoveRequestDTO));
+        return ResponseEntity.ok(moveHistoryService.findAllAvailableMoves(validMoveRequestDTO));
     }
 
     @PostMapping(value = "")

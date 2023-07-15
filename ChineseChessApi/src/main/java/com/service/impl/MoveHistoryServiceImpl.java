@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.common.ErrorMessage;
 import com.common.enumeration.EPiece;
 import com.data.dto.MovedResponseDTO;
+import com.data.dto.BestMoveDTO;
 import com.data.dto.MatchMoveCreationDTO;
 import com.data.dto.MoveCreationDTO;
 import com.data.dto.MoveHistoryDTO;
@@ -129,7 +130,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     @Override
-    public List<int[]> findMoveValid(ValidMoveRequestDTO validMoveRequestDTO) {
+    public List<int[]> findAllAvailableMoves(ValidMoveRequestDTO validMoveRequestDTO) {
         PieceDTO movingPieceDTO = pieceRepository.findById(validMoveRequestDTO.getPieceId())
                 .map(p -> pieceMapper.toDTO(p))
                 .orElseThrow(
@@ -322,6 +323,15 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         errors.put("toCol", matchMoveCreationDTO.getToCol());
         errors.put("toRow", matchMoveCreationDTO.getToRow());
         throw new InvalidException(ErrorMessage.INVALID_MOVE, errors);
+    }
+
+    @Override
+    public List<BestMoveDTO> findAllBestMoves(PlayBoardDTO playBoardDTO, int depth) {
+
+        List<PieceDTO> pieceDTOsInBoard = pieceService.findAllInBoard(playBoardDTO, null, null);
+        
+        
+        return null;
     }
 
     private MovedResponseDTO buildMovedResponse(
