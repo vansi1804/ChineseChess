@@ -3,9 +3,9 @@ package com.data.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.data.dto.UserDTO;
-import com.data.dto.UserCreationDTO;
-import com.data.dto.UserProfileDTO;
+import com.data.dto.user.UserCreationDTO;
+import com.data.dto.user.UserDTO;
+import com.data.dto.user.UserProfileDTO;
 import com.data.entity.User;
 
 @Mapper(componentModel = "spring")

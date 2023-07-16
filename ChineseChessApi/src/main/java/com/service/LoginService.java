@@ -1,6 +1,6 @@
 package com.service;
 
-import com.data.dto.LoginDTO;
+import com.data.dto.login.LoginDTO;
 
 public interface LoginService {
 

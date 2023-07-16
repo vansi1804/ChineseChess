@@ -5,14 +5,14 @@ import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.data.dto.MovedResponseDTO;
 import com.data.dto.PlayBoardDTO;
-import com.data.dto.BestMoveDTO;
-import com.data.dto.MatchMoveCreationDTO;
-import com.data.dto.MoveCreationDTO;
-import com.data.dto.MoveHistoryDTO;
-import com.data.dto.TrainingMoveCreationDTO;
-import com.data.dto.ValidMoveRequestDTO;
+import com.data.dto.move.MoveCreationDTO;
+import com.data.dto.move.MovedResponseDTO;
+import com.data.dto.move.BestMoveDTO;
+import com.data.dto.move.MatchMoveCreationDTO;
+import com.data.dto.move.MoveHistoryDTO;
+import com.data.dto.move.TrainingMoveCreationDTO;
+import com.data.dto.move.ValidMoveRequestDTO;
 import com.data.entity.MoveHistory;
 
 public interface MoveHistoryService {

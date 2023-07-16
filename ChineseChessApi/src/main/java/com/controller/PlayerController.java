@@ -19,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.common.Default;
 import com.common.ApiUrl;
-import com.data.dto.PlayerCreationDTO;
-import com.data.dto.PlayerProfileDTO;
+import com.data.dto.player.PlayerCreationDTO;
+import com.data.dto.player.PlayerProfileDTO;
 import com.service.PlayerService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)

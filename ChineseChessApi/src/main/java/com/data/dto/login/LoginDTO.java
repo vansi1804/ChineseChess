@@ -1,4 +1,4 @@
-package com.data.dto;
+package com.data.dto.login;
 
 import javax.validation.constraints.NotBlank;
 
@@ -11,16 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class UserProfileDTO {  
-    
+public class LoginDTO {
+
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String phoneNumber;
 
     @NotBlank(message = ErrorMessage.BLANK_DATA)
-    private String name;
-
-    private String avatar;
-
-    private String vipName;
-
+    private String password;
+    
 }

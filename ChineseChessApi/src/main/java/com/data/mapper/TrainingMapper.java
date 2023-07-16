@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import com.data.dto.TrainingDTO;
-import com.data.dto.TrainingDetailDTO;
+import com.data.dto.training.TrainingDTO;
+import com.data.dto.training.TrainingDetailDTO;
 import com.data.entity.Training;
 
 @Mapper(componentModel = "spring")

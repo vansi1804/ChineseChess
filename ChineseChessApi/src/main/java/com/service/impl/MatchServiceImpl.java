@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.common.ErrorMessage;
 import com.common.enumeration.EResult;
-import com.data.dto.MatchCreationDTO;
-import com.data.dto.MatchDTO;
-import com.data.dto.MatchDetailDTO;
-import com.data.dto.MoveHistoryDTO;
-import com.data.dto.PlayerProfileDTO;
+import com.data.dto.match.MatchDetailDTO;
+import com.data.dto.match.MatchCreationDTO;
+import com.data.dto.match.MatchDTO;
+import com.data.dto.move.MoveHistoryDTO;
+import com.data.dto.player.PlayerProfileDTO;
 import com.data.entity.Match;
 import com.data.entity.MoveHistory;
 import com.data.entity.Player;

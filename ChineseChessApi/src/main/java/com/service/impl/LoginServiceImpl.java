@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.config.exception.UnauthorizedException;
 import com.config.security.JwtService;
-import com.data.dto.LoginDTO;
+import com.data.dto.login.LoginDTO;
 import com.service.LoginService;
 
 @Service

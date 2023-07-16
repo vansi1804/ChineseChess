@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.common.ApiUrl;
-import com.data.dto.MatchMoveCreationDTO;
-import com.data.dto.MoveCreationDTO;
-import com.data.dto.TrainingMoveCreationDTO;
-import com.data.dto.ValidMoveRequestDTO;
+import com.data.dto.move.MoveCreationDTO;
+import com.data.dto.move.MatchMoveCreationDTO;
+import com.data.dto.move.TrainingMoveCreationDTO;
+import com.data.dto.move.ValidMoveRequestDTO;
 import com.service.MoveHistoryService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;

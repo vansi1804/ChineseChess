@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.data.dto.MoveHistoryDTO;
-import com.data.dto.TrainingDTO;
-import com.data.dto.TrainingDetailDTO;
+import com.data.dto.move.MoveHistoryDTO;
+import com.data.dto.training.TrainingDTO;
+import com.data.dto.training.TrainingDetailDTO;
 import com.data.entity.MoveHistory;
 import com.data.entity.Training;
 import com.data.mapper.TrainingMapper;

@@ -1,9 +1,10 @@
-package com.data.dto;
+package com.data.dto.move;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
+import com.data.dto.PlayBoardDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

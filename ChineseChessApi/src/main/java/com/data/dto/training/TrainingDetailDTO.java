@@ -1,6 +1,8 @@
-package com.data.dto;
+package com.data.dto.training;
 
 import java.util.Map;
+
+import com.data.dto.move.MoveHistoryDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,11 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MatchDetailDTO {
+public class TrainingDetailDTO {
+    
+    private TrainingDTO trainingDTO;
 
-    private MatchDTO matchDTO;
-
-    private Long totalTurn;
+    private long totalTurn;
 
     private Map<Long, MoveHistoryDTO> moveHistoryDTOs;
 

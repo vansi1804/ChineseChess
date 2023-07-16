@@ -1,6 +1,8 @@
-package com.data.dto;
+package com.data.dto.move;
 
 import java.util.List;
+
+import com.data.dto.PieceDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
