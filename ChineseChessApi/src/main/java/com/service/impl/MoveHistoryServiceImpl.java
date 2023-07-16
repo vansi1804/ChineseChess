@@ -344,6 +344,8 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
         MovedResponseDTO movedResponseDTO = new MovedResponseDTO();
         movedResponseDTO.setMovedPieceDTO(movingPieceDTO);
+        movedResponseDTO.setToCol(toCol);
+        movedResponseDTO.setToRow(toRow);
         movedResponseDTO.setDeadPieceDTO(deadPieceDTO);
         movedResponseDTO.setCurrentBoardDTO(updatedPlayBoardDTO);
         movedResponseDTO.setCheckedGeneralPieceDTO(checkedGeneralPieceDTO);

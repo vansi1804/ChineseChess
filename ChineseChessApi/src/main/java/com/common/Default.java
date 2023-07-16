@@ -38,11 +38,10 @@ public class Default {
     }
 
     public static class User {
-        // default for creating
         public static final EStatus STATUS = EStatus.INACTIVE;
 
         public static class Admin {
-            // default for creating
+            
             public static final String PHONE_NUMBER = "0589176839";
 
             public static final String PASSWORD = "admin";
@@ -61,7 +60,9 @@ public class Default {
 
         public static final String SECRET = "V2hlbiB5b3UgYXJlIGdvaW5nIHRvIGdpdmUgdXAsIHRoaW5rIGFib3V0IHRoZSByZWFzb24gbWFkZSB5b3Ugc3RhclQNCg==";
         
-        public static final long EXPIRATION_TIME = 1000 * 60 * 30;
+        public static final long EXPIRATION_TIME = 1000 * 60 * 60;
+
+        public static final long REFRESH_EXPIRATION_TIME = EXPIRATION_TIME * 24;
         
         public static final String TOKEN_PREFIX = "Bearer" + " ";
         

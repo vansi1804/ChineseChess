@@ -14,6 +14,10 @@ public class MovedResponseDTO{
     
     private PieceDTO movedPieceDTO;
 
+    private int toCol;
+
+    private int toRow;
+
     private PlayBoardDTO currentBoardDTO;
 
     private PieceDTO deadPieceDTO;
