@@ -3,9 +3,9 @@ package com.data.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.data.dto.MatchCreationDTO;
-import com.data.dto.MatchDTO;
-import com.data.dto.MatchDetailDTO;
+import com.data.dto.match.MatchDetailDTO;
+import com.data.dto.match.MatchCreationDTO;
+import com.data.dto.match.MatchDTO;
 import com.data.entity.Match;
 
 @Mapper(componentModel = "spring", uses = { PlayerMapper.class })

@@ -3,9 +3,9 @@ package com.data.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.data.dto.PlayerDTO;
-import com.data.dto.PlayerCreationDTO;
-import com.data.dto.PlayerProfileDTO;
+import com.data.dto.player.PlayerCreationDTO;
+import com.data.dto.player.PlayerDTO;
+import com.data.dto.player.PlayerProfileDTO;
 import com.data.entity.Player;
 
 @Mapper(componentModel = "spring", uses = { UserMapper.class })

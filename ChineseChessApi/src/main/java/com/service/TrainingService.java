@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.data.dto.TrainingDTO;
-import com.data.dto.TrainingDetailDTO;
+import com.data.dto.training.TrainingDTO;
+import com.data.dto.training.TrainingDetailDTO;
 
 public interface TrainingService {
 

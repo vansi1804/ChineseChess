@@ -4,10 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.data.dto.PlayerDTO;
 import com.common.enumeration.EResult;
-import com.data.dto.PlayerCreationDTO;
-import com.data.dto.PlayerProfileDTO;
+import com.data.dto.player.PlayerCreationDTO;
+import com.data.dto.player.PlayerDTO;
+import com.data.dto.player.PlayerProfileDTO;
 
 public interface PlayerService {
     

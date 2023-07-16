@@ -1,4 +1,7 @@
-package com.data.dto;
+package com.data.dto.move;
+
+import com.data.dto.PieceDTO;
+import com.data.dto.PlayBoardDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

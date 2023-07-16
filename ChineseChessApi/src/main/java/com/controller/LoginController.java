@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.common.ApiUrl;
-import com.data.dto.LoginDTO;
+import com.data.dto.login.LoginDTO;
 import com.service.LoginService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)

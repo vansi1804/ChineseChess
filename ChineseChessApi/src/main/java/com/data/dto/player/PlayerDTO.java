@@ -1,6 +1,6 @@
-package com.data.dto;
+package com.data.dto.player;
 
-import javax.validation.Valid;
+import com.data.dto.user.UserDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class PlayerProfileDTO { 
-    
-    private Long id;
+public class PlayerDTO {
 
-    @Valid
-    private UserProfileDTO userProfileDTO;
+    private long id;
+
+    private UserDTO userDTO;
 
     private String rankName;
 

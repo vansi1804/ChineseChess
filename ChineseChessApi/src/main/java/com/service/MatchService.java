@@ -2,9 +2,9 @@ package com.service;
 
 import java.util.List;
 
-import com.data.dto.MatchCreationDTO;
-import com.data.dto.MatchDTO;
-import com.data.dto.MatchDetailDTO;
+import com.data.dto.match.MatchCreationDTO;
+import com.data.dto.match.MatchDTO;
+import com.data.dto.match.MatchDetailDTO;
 
 public interface MatchService {
     

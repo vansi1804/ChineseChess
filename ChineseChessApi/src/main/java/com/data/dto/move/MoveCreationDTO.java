@@ -1,8 +1,10 @@
-package com.data.dto;
+package com.data.dto.move;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
+import com.data.dto.PlayBoardDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,12 +15,10 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MatchMoveCreationDTO extends MoveDTO{
+public class MoveCreationDTO extends MoveDTO{
     
     @NotNull(message = ErrorMessage.NULL_DATA)
-    private Long matchId;
-
-    @NotNull(message = ErrorMessage.NULL_DATA)
-    private Long playerId;
+    @Valid
+    private PlayBoardDTO currentBoardDTO;
 
 }

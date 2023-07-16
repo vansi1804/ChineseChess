@@ -1,6 +1,8 @@
-package com.data.dto;
+package com.data.dto.login;
 
 import java.util.List;
+
+import com.data.dto.JwtResponseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,12 +13,10 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MoveHistoryDTO extends MovedResponseDTO{
+public class LoginResponseDTO extends JwtResponseDTO{
     
-    private long turn;
+    private long userId;
 
-    private String description;
-
-    private List<PieceDTO> lastDeadPieceDTOs;
+    private List<String> roleNames;
 
 }

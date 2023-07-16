@@ -1,4 +1,6 @@
-package com.data.dto;
+package com.data.dto.user;
+
+import com.data.dto.AuditingDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

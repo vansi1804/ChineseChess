@@ -1,10 +1,11 @@
-package com.data.dto;
+package com.data.dto.training;
+
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 import com.common.ErrorMessage;
-import com.common.Validation;
+import com.data.dto.AuditingDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,10 +16,15 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class UserCreationDTO extends UserProfileDTO{
+public class TrainingDTO extends AuditingDTO {
     
+    private Long id;
+
     @NotBlank(message = ErrorMessage.BLANK_DATA)
-    @Size(min = Validation.PASSWORD_SIZE_MIN, message = ErrorMessage.INVALID_PASSWORD_SIZE)
-    private String password;
+    private String title;
+
+    private Long parentTrainingId;
+
+    private List<TrainingDTO> childTrainingDTOs;
 
 }

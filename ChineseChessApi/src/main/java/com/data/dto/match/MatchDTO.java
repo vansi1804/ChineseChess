@@ -1,4 +1,7 @@
-package com.data.dto;
+package com.data.dto.match;
+
+import com.data.dto.AuditingDTO;
+import com.data.dto.player.PlayerProfileDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +22,7 @@ public class MatchDTO extends AuditingDTO{
 
     private Integer cumulativeTime;
 
-    private Integer bet;
+    private Integer eloBet;
 
     private PlayerProfileDTO player1ProfileDTO;
 

@@ -1,4 +1,4 @@
-package com.data.dto;
+package com.data.dto.match;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
