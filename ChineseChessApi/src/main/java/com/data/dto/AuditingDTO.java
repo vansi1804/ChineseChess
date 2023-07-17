@@ -1,5 +1,6 @@
 package com.data.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.MappedSuperclass;
@@ -11,7 +12,7 @@ import lombok.Data;
 
 @Data
 @MappedSuperclass
-public abstract class AuditingDTO {
+public abstract class AuditingDTO implements Serializable{
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
 	protected Date createdDate;

@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.data.dto.PlayBoardDTO;
 import com.data.dto.move.MoveCreationDTO;
-import com.data.dto.move.MovedResponseDTO;
+import com.data.dto.move.MoveCreationResponseDTO;
 import com.data.dto.move.BestMoveDTO;
 import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.MoveHistoryDTO;
@@ -21,13 +21,13 @@ public interface MoveHistoryService {
 
     List<int[]> findAllAvailableMoves(ValidMoveRequestDTO validMoveRequestDTO);
 
-    MovedResponseDTO create(MoveCreationDTO moveCreationDTO);
+    MoveCreationResponseDTO create(MoveCreationDTO moveCreationDTO);
 
     @Transactional
-    MovedResponseDTO create(TrainingMoveCreationDTO trainingMoveHistoryCreationDTO);
+    MoveCreationResponseDTO create(TrainingMoveCreationDTO trainingMoveHistoryCreationDTO);
 
     @Transactional
-    MovedResponseDTO create(MatchMoveCreationDTO moveHistoryCreationDTO);
+    MoveCreationResponseDTO create(MatchMoveCreationDTO moveHistoryCreationDTO);
 
     List<BestMoveDTO> findAllBestMoves(PlayBoardDTO playBoardDTO, int depth);
 

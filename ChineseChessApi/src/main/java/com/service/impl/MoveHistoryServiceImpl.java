@@ -19,7 +19,7 @@ import com.common.enumeration.EPiece;
 import com.data.dto.move.MoveCreationDTO;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
-import com.data.dto.move.MovedResponseDTO;
+import com.data.dto.move.MoveCreationResponseDTO;
 import com.data.dto.move.BestMoveDTO;
 import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.MoveHistoryDTO;
@@ -99,7 +99,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                     String description = moveDescriptionService.build(
                             currentBoardDTO.get(), movedPieceDTO, toCol, toRow);
 
-                    MovedResponseDTO movedResponseDTO = buildMovedResponse(
+                    MoveCreationResponseDTO movedResponseDTO = buildMovedResponse(
                             currentBoardDTO.get(), movedPieceDTO, toCol, toRow);
 
                     MoveHistoryDTO moveHistoryDTO = new MoveHistoryDTO();
@@ -158,7 +158,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     @Override
-    public MovedResponseDTO create(MoveCreationDTO moveCreationDTO) {
+    public MoveCreationResponseDTO create(MoveCreationDTO moveCreationDTO) {
         if (!pieceRepository.existsById(moveCreationDTO.getPieceId())) {
             throw new ResourceNotFoundException(
                     Collections.singletonMap("pieceId", moveCreationDTO.getPieceId()));
@@ -179,7 +179,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     @Override
-    public MovedResponseDTO create(TrainingMoveCreationDTO trainingMoveCreationDTO) {
+    public MoveCreationResponseDTO create(TrainingMoveCreationDTO trainingMoveCreationDTO) {
         Training training = trainingRepository.findById(trainingMoveCreationDTO.getTrainingId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
@@ -223,7 +223,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             moveHistory.setTurn(newTurn);
             moveHistoryRepository.save(moveHistory);
 
-            MovedResponseDTO movedResponseDTO = buildMovedResponse(
+            MoveCreationResponseDTO movedResponseDTO = buildMovedResponse(
                     currentBoard, movingPieceDTO, trainingMoveCreationDTO.getToCol(),
                     trainingMoveCreationDTO.getToRow());
 
@@ -242,7 +242,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     @Override
-    public MovedResponseDTO create(MatchMoveCreationDTO matchMoveCreationDTO) {
+    public MoveCreationResponseDTO create(MatchMoveCreationDTO matchMoveCreationDTO) {
         Match match = matchRepository.findById(matchMoveCreationDTO.getMatchId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
@@ -308,7 +308,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             moveHistory.setTurn(newTurn);
             moveHistoryRepository.save(moveHistory);
 
-            MovedResponseDTO movedResponseDTO = buildMovedResponse(
+            MoveCreationResponseDTO movedResponseDTO = buildMovedResponse(
                     currentBoard, movingPieceDTO, matchMoveCreationDTO.getToCol(), matchMoveCreationDTO.getToRow());
 
             playBoardService.printTest("Turn: " + newTurn, movedResponseDTO.getCurrentBoardDTO(), movingPieceDTO);
@@ -334,7 +334,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         return null;
     }
 
-    private MovedResponseDTO buildMovedResponse(
+    private MoveCreationResponseDTO buildMovedResponse(
             PlayBoardDTO playBoardDTO, PieceDTO movingPieceDTO, int toCol, int toRow) {
 
         PieceDTO deadPieceDTO = playBoardDTO.getState()[toCol][toRow];
@@ -342,7 +342,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         PieceDTO checkedGeneralPieceDTO = findGeneralBeingChecked(playBoardDTO, !movingPieceDTO.isRed());
         boolean isCheckMate = isCheckMateState(updatedPlayBoardDTO, movingPieceDTO.isRed());
 
-        MovedResponseDTO movedResponseDTO = new MovedResponseDTO();
+        MoveCreationResponseDTO movedResponseDTO = new MoveCreationResponseDTO();
         movedResponseDTO.setMovedPieceDTO(movingPieceDTO);
         movedResponseDTO.setToCol(toCol);
         movedResponseDTO.setToRow(toRow);

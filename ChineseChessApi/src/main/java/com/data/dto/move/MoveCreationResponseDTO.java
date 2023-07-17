@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MovedResponseDTO{
+public class MoveCreationResponseDTO{
     
     private PieceDTO movedPieceDTO;
 

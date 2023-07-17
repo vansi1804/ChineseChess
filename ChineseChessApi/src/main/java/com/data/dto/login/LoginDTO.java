@@ -1,5 +1,7 @@
 package com.data.dto.login;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotBlank;
 
 import com.common.ErrorMessage;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class LoginDTO {
+public class LoginDTO implements Serializable{
 
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String phoneNumber;

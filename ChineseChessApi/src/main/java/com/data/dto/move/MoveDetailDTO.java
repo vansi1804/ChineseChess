@@ -1,5 +1,7 @@
 package com.data.dto.move;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MoveDTO {
+public class MoveDetailDTO implements Serializable{
     
     @NotNull(message = ErrorMessage.NULL_DATA)
     private Integer pieceId;

@@ -1,6 +1,5 @@
 package com.data.entity;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,8 +20,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "players")
-public class Player implements Serializable {
-    
+public class Player {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
@@ -35,7 +34,7 @@ public class Player implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rank_id", referencedColumnName = "id")
     private Rank rank;
-    
+
     @Column(name = "elo")
     private int elo;
 

@@ -1,5 +1,7 @@
 package com.data.dto;
 
+import java.io.Serializable;
+
 import com.common.Default;
 
 import lombok.AllArgsConstructor;
@@ -9,12 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class JwtResponseDTO {
+public class JwtResponseDTO implements Serializable{
 
     private final String tokenType = Default.JWT.TOKEN_PREFIX.trim();
 
     private String accessToken;
 
-    private String refeshToken;
+    private String refreshToken;
 
 }
