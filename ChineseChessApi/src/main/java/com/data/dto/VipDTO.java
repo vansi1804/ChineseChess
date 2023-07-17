@@ -23,7 +23,7 @@ public class VipDTO extends AuditingDTO {
     private String name;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
-    @Size(min = 1, message = " <= 0")
+    @Size(min = 1, message = " >= 0")
     private Integer depositMilestones;
     
 }

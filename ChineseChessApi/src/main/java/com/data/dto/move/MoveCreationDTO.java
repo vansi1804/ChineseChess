@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MoveCreationDTO extends MoveDTO{
+public class MoveCreationDTO extends MoveDetailDTO{
     
     @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
