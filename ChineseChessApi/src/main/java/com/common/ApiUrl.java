@@ -18,7 +18,7 @@ public class ApiUrl {
     
     public static final String TRAININGS = Constant.API + Constant.TRAINING;
     
-    public static final String LOGIN = Constant.API + Constant.LOGIN;
+    public static final String AUTH = Constant.API + Constant.AUTH;
     
     public static final String USER = Constant.API + Constant.USER;
     

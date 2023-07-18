@@ -15,18 +15,18 @@ import org.springframework.stereotype.Service;
 import com.config.exception.UnauthorizedException;
 import com.config.security.JwtService;
 import com.config.security.UserDetailsImpl;
-import com.data.dto.login.LoginDTO;
-import com.data.dto.login.LoginResponseDTO;
-import com.service.LoginService;
+import com.data.dto.auth.LoginDTO;
+import com.data.dto.auth.LoginResponseDTO;
+import com.service.AuthService;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
     @Autowired
-    public LoginServiceImpl(AuthenticationManager authenticationManager, JwtService jwtService) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
     }

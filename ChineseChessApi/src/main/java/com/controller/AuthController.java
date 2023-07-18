@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.common.ApiUrl;
-import com.data.dto.login.LoginDTO;
-import com.service.LoginService;
+import com.data.dto.auth.LoginDTO;
+import com.service.AuthService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(ApiUrl.LOGIN)
-public class LoginController {
+@RequestMapping(ApiUrl.AUTH)
+public class AuthController {
     
-    private final LoginService loginService;
+    private final AuthService loginService;
 
     @Autowired
-    public LoginController(LoginService loginService) {
+    public AuthController(AuthService loginService) {
         this.loginService = loginService;
     }
 
-    @PostMapping(value = "")
+    @PostMapping(value = "/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
         return ResponseEntity.ok(loginService.login(loginDTO));
     }

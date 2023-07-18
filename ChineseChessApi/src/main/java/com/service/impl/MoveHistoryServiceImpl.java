@@ -91,32 +91,31 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
         return moveHistories.stream()
                 .map(mh -> {
-                    int toCol = mh.getToCol();
-                    int toRow = mh.getToRow();
-
                     long turn = mh.getTurn();
                     PieceDTO movedPieceDTO = pieceService.findOneInBoard(currentBoardDTO.get(), mh.getPiece().getId());
                     String description = moveDescriptionService.build(
-                            currentBoardDTO.get(), movedPieceDTO, toCol, toRow);
+                            currentBoardDTO.get(), movedPieceDTO, mh.getToCol(), mh.getToRow());
 
-                    MoveCreationResponseDTO movedResponseDTO = buildMovedResponse(
-                            currentBoardDTO.get(), movedPieceDTO, toCol, toRow);
+                    MoveCreationResponseDTO moveCreationResponseDTO = buildMoveCreationResponse(
+                            currentBoardDTO.get(), movedPieceDTO, mh.getToCol(), mh.getToRow());
 
                     MoveHistoryDTO moveHistoryDTO = new MoveHistoryDTO();
                     moveHistoryDTO.setLastDeadPieceDTOs(lastDeadPieceDTOs.get());
                     moveHistoryDTO.setTurn(turn);
-                    moveHistoryDTO.setMovedPieceDTO(movedResponseDTO.getMovedPieceDTO());
+                    moveHistoryDTO.setMovedPieceDTO(moveCreationResponseDTO.getMovedPieceDTO());
+                    moveHistoryDTO.setToCol(moveCreationResponseDTO.getToCol());
+                    moveHistoryDTO.setToRow(moveCreationResponseDTO.getToRow());
                     moveHistoryDTO.setDescription(description);
-                    moveHistoryDTO.setDeadPieceDTO(movedResponseDTO.getDeadPieceDTO());
-                    moveHistoryDTO.setCurrentBoardDTO(movedResponseDTO.getCurrentBoardDTO());
-                    moveHistoryDTO.setCheckedGeneralPieceDTO(movedResponseDTO.getCheckedGeneralPieceDTO());
-                    moveHistoryDTO.setCheckMate(movedResponseDTO.isCheckMate());
+                    moveHistoryDTO.setDeadPieceDTO(moveCreationResponseDTO.getDeadPieceDTO());
+                    moveHistoryDTO.setCurrentBoardDTO(moveCreationResponseDTO.getCurrentBoardDTO());
+                    moveHistoryDTO.setCheckedGeneralPieceDTO(moveCreationResponseDTO.getCheckedGeneralPieceDTO());
+                    moveHistoryDTO.setCheckMate(moveCreationResponseDTO.isCheckMate());
 
-                    // update board after moved
-                    currentBoardDTO.set(movedResponseDTO.getCurrentBoardDTO());
+                    // update board after moved for reusing in next turn
+                    currentBoardDTO.set(moveCreationResponseDTO.getCurrentBoardDTO());
                     // add deadPiece in this turn to list for reusing in next turn
-                    if (movedResponseDTO.getDeadPieceDTO() != null) {
-                        lastDeadPieceDTOs.get().add(movedResponseDTO.getDeadPieceDTO());
+                    if (moveCreationResponseDTO.getDeadPieceDTO() != null) {
+                        lastDeadPieceDTOs.get().add(moveCreationResponseDTO.getDeadPieceDTO());
                     }
 
                     playBoardService.printTest(
@@ -173,7 +172,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                     Collections.singletonMap("pieceId", moveCreationDTO.getPieceId()));
         }
 
-        return buildMovedResponse(
+        return buildMoveCreationResponse(
                 moveCreationDTO.getCurrentBoardDTO(), movingPieceDTO,
                 moveCreationDTO.getToCol(), moveCreationDTO.getToRow());
     }
@@ -223,13 +222,13 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             moveHistory.setTurn(newTurn);
             moveHistoryRepository.save(moveHistory);
 
-            MoveCreationResponseDTO movedResponseDTO = buildMovedResponse(
+            MoveCreationResponseDTO moveCreationResponseDTO = buildMoveCreationResponse(
                     currentBoard, movingPieceDTO, trainingMoveCreationDTO.getToCol(),
                     trainingMoveCreationDTO.getToRow());
 
-            playBoardService.printTest("Turn: " + newTurn, movedResponseDTO.getCurrentBoardDTO(), movingPieceDTO);
+            playBoardService.printTest("Turn: " + newTurn, moveCreationResponseDTO.getCurrentBoardDTO(), movingPieceDTO);
 
-            return movedResponseDTO;
+            return moveCreationResponseDTO;
         }
 
         Map<String, Object> errors = new HashMap<>();
@@ -308,12 +307,12 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             moveHistory.setTurn(newTurn);
             moveHistoryRepository.save(moveHistory);
 
-            MoveCreationResponseDTO movedResponseDTO = buildMovedResponse(
+            MoveCreationResponseDTO moveCreationResponseDTO = buildMoveCreationResponse(
                     currentBoard, movingPieceDTO, matchMoveCreationDTO.getToCol(), matchMoveCreationDTO.getToRow());
 
-            playBoardService.printTest("Turn: " + newTurn, movedResponseDTO.getCurrentBoardDTO(), movingPieceDTO);
+            playBoardService.printTest("Turn: " + newTurn, moveCreationResponseDTO.getCurrentBoardDTO(), movingPieceDTO);
 
-            return movedResponseDTO;
+            return moveCreationResponseDTO;
         }
 
         Map<String, Object> errors = new HashMap<>();
@@ -330,11 +329,10 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
 
         List<PieceDTO> pieceDTOsInBoard = pieceService.findAllInBoard(playBoardDTO, null, null);
         
-        
         return null;
     }
 
-    private MoveCreationResponseDTO buildMovedResponse(
+    private MoveCreationResponseDTO buildMoveCreationResponse(
             PlayBoardDTO playBoardDTO, PieceDTO movingPieceDTO, int toCol, int toRow) {
 
         PieceDTO deadPieceDTO = playBoardDTO.getState()[toCol][toRow];
@@ -342,16 +340,16 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
         PieceDTO checkedGeneralPieceDTO = findGeneralBeingChecked(playBoardDTO, !movingPieceDTO.isRed());
         boolean isCheckMate = isCheckMateState(updatedPlayBoardDTO, movingPieceDTO.isRed());
 
-        MoveCreationResponseDTO movedResponseDTO = new MoveCreationResponseDTO();
-        movedResponseDTO.setMovedPieceDTO(movingPieceDTO);
-        movedResponseDTO.setToCol(toCol);
-        movedResponseDTO.setToRow(toRow);
-        movedResponseDTO.setDeadPieceDTO(deadPieceDTO);
-        movedResponseDTO.setCurrentBoardDTO(updatedPlayBoardDTO);
-        movedResponseDTO.setCheckedGeneralPieceDTO(checkedGeneralPieceDTO);
-        movedResponseDTO.setCheckMate(isCheckMate);
+        MoveCreationResponseDTO moveCreationResponseDTO = new MoveCreationResponseDTO();
+        moveCreationResponseDTO.setMovedPieceDTO(movingPieceDTO);
+        moveCreationResponseDTO.setToCol(toCol);
+        moveCreationResponseDTO.setToRow(toRow);
+        moveCreationResponseDTO.setDeadPieceDTO(deadPieceDTO);
+        moveCreationResponseDTO.setCurrentBoardDTO(updatedPlayBoardDTO);
+        moveCreationResponseDTO.setCheckedGeneralPieceDTO(checkedGeneralPieceDTO);
+        moveCreationResponseDTO.setCheckMate(isCheckMate);
 
-        return movedResponseDTO;
+        return moveCreationResponseDTO;
     }
 
     private PieceDTO findGeneralBeingChecked(PlayBoardDTO playBoardDTO, boolean isRed) {
