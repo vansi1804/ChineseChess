@@ -24,7 +24,7 @@ public class Constant {
 
     public static final String TRAINING = "/trainings";
 
-    public static final String LOGIN = "/login";
+    public static final String AUTH = "/auth";
 
     public static final String USER = "/users";
 

@@ -13,19 +13,6 @@ public class Default {
 
     }
 
-    public static class Game {
-
-        public static class PlayBoardSize {
-
-            public static final int COL = 9;
-
-            public static final int ROW = 10;
-
-        }
-
-        public static final float ELO_WIN_RECEIVE_PERCENT = 0.95F;
-
-    }
 
     public static class Page {
 
@@ -70,4 +57,18 @@ public class Default {
 
     }
 
+    public static class Game {
+
+        public static class PlayBoardSize {
+
+            public static final int COL = 9;
+
+            public static final int ROW = 10;
+
+        }
+
+        public static final float ELO_WIN_RECEIVE_PERCENT = 0.95F;
+
+    }
+    
 }

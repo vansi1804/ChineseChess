@@ -1,8 +1,6 @@
-package com.data.dto.login;
+package com.data.dto.auth;
 
 import java.util.List;
-
-import com.data.dto.JwtResponseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

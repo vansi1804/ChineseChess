@@ -16,16 +16,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MatchCreationDTO implements Serializable{
 
-    @Min(value = 5, message = " > 5 (minutes)")
+    @Min(value = 5, message = " < 5 (minutes)")
     private Integer time;
 
-    @Min(value = 30, message = " > 30 (seconds)")
+    @Min(value = 30, message = " < 30 (seconds)")
     private Integer movingTime;
 
-    @Min(value = 3, message = " > 3 (seconds)")
+    @Min(value = 3, message = " < 3 (seconds)")
     private Integer cumulativeTime;
 
-    @Min(value = 100, message = " > 100 (elo)")
+    @Min(value = 100, message = " < 100 (elo)")
     private Integer eloBet;
 
     @NotNull(message = ErrorMessage.NULL_DATA)

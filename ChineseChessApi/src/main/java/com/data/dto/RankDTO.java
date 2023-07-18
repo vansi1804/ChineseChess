@@ -23,7 +23,7 @@ public class RankDTO extends AuditingDTO{
     private String name;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
-    @Size(min = 1, message = " >= 0 (elo)")
+    @Size(min = 1, message = " < 0 (elo)")
     private Integer eloMilestones;
 
 }

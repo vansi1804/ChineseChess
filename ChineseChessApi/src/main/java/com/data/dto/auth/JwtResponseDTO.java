@@ -1,4 +1,4 @@
-package com.data.dto;
+package com.data.dto.auth;
 
 import java.io.Serializable;
 
