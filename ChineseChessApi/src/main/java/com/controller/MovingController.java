@@ -13,7 +13,7 @@ import com.data.dto.move.MoveCreationDTO;
 import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.TrainingMoveCreationDTO;
 import com.data.dto.move.ValidMoveRequestDTO;
-import com.service.MoveHistoryService;
+import com.service.MoveService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,33 +25,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping(ApiUrl.MOVE_HISTORIES)
 public class MovingController {
 
-    private MoveHistoryService moveHistoryService;
+    private MoveService moveService;
 
     @Autowired
-    public MovingController(MoveHistoryService moveHistoryService) {
-        this.moveHistoryService = moveHistoryService;
+    public MovingController(MoveService moveService) {
+        this.moveService = moveService;
     }
 
     @GetMapping(value = "")
     public ResponseEntity<?> findMoveValid(@Valid @RequestBody ValidMoveRequestDTO validMoveRequestDTO) {
-        return ResponseEntity.ok(moveHistoryService.findAllAvailableMoves(validMoveRequestDTO));
+        return ResponseEntity.ok(moveService.findAllAvailableMoves(validMoveRequestDTO));
     }
 
     @PostMapping(value = "")
     public ResponseEntity<?> create(@Valid @RequestBody MoveCreationDTO moveCreationDTO) {
-        return ResponseEntity.ok(moveHistoryService.create(moveCreationDTO));
+        return ResponseEntity.ok(moveService.create(moveCreationDTO));
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/match")
     public ResponseEntity<?> create(@Valid @RequestBody MatchMoveCreationDTO moveHistoryCreationDTO) {
-        return ResponseEntity.ok(moveHistoryService.create(moveHistoryCreationDTO));
+        return ResponseEntity.ok(moveService.create(moveHistoryCreationDTO));
     }
 
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping(value = "/training")
     public ResponseEntity<?> create(@Valid @RequestBody TrainingMoveCreationDTO trainingMoveHistoryCreationDTO) {
-        return ResponseEntity.ok(moveHistoryService.create(trainingMoveHistoryCreationDTO));
+        return ResponseEntity.ok(moveService.create(trainingMoveHistoryCreationDTO));
     }
 
 }

@@ -26,7 +26,7 @@ import com.data.repository.PlayerRepository;
 import com.config.exception.InvalidException;
 import com.config.exception.ResourceNotFoundException;
 import com.service.MatchService;
-import com.service.MoveHistoryService;
+import com.service.MoveService;
 import com.service.PlayerService;
 
 @Service
@@ -37,7 +37,7 @@ public class MatchServiceImpl implements MatchService {
     private final PlayerRepository playerRepository;
     private final PlayerService playerService;
     private final MoveHistoryRepository moveHistoryRepository;
-    private final MoveHistoryService moveHistoryService;
+    private final MoveService moveService;
 
     @Autowired
     public MatchServiceImpl(
@@ -46,14 +46,14 @@ public class MatchServiceImpl implements MatchService {
             PlayerRepository playerRepository,
             PlayerService playerService,
             MoveHistoryRepository moveHistoryRepository,
-            MoveHistoryService moveHistoryService) {
+            MoveService moveService) {
 
         this.matchRepository = matchRepository;
         this.matchMapper = matchMapper;
         this.playerRepository = playerRepository;
         this.playerService = playerService;
         this.moveHistoryRepository = moveHistoryRepository;
-        this.moveHistoryService = moveHistoryService;
+        this.moveService = moveService;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class MatchServiceImpl implements MatchService {
                                 Collections.singletonMap("id", id)));
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(id);
-        Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
+        Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.build(moveHistories);
 
         matchDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
         matchDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
