@@ -1,15 +1,14 @@
 
 package com.service.impl;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.Default;
 import com.common.enumeration.EPiece;
+import com.config.exception.InvalidException;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.service.MoveRuleService;
@@ -20,18 +19,19 @@ import com.service.PlayBoardService;
 @Service
 public class MoveRuleServiceImpl implements MoveRuleService {
 
-    private static final int MIN_AREA = 0;
-    private static final int MAX_COL = Default.Game.PlayBoardSize.COL;
-    private static final int MAX_ROW = Default.Game.PlayBoardSize.ROW;
-    private static final List<Integer> PALACE_CENTER_COLS = IntStream.rangeClosed(3, 5)
-            .boxed()
-            .collect(Collectors.toList());
-    private static final List<Integer> PALACE_CENTER_ROWS_FOR_BLACK = IntStream.rangeClosed(0, 2)
-            .boxed()
-            .collect(Collectors.toList());
-    private static final List<Integer> PALACE_CENTER_ROWS_FOR_RED = IntStream.rangeClosed(7, 9)
-            .boxed()
-            .collect(Collectors.toList());
+    private static final int AREA_INDEX_MIN = Default.Game.PlayBoardSize.AREA_MIN - 1;
+    private static final int COL_MAX = Default.Game.PlayBoardSize.COL_MAX;
+    private static final int ROW_MAX = Default.Game.PlayBoardSize.ROW_MAX;
+    private static final int CENTER_COL_INDEX_MIN = Default.Game.PlayBoardSize.CENTER_COL_MIN - 1;
+    private static final int CENTER_COL_INDEX_MAX = Default.Game.PlayBoardSize.CENTER_COL_MAX - 1;
+
+    private static final int BLACK_ROW_INDEX_MAX = Default.Game.PlayBoardSize.BlackArea.ROW_MAX - 1;
+    private static final int BLACK_CENTER_ROW_INDEX_MIN = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MIN - 1;
+    private static final int BLACK_CENTER_ROW_INDEX_MAX = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MAX - 1;
+
+    private static final int RED_ROW_INDEX_MIN = Default.Game.PlayBoardSize.RedArea.ROW_MIN - 1;
+    private static final int RED_CENTER_ROW_INDEX_MIN = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MIN - 1;
+    private static final int RED_CENTER_ROW_INDEX_MAX = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX - 1;
 
     private final PieceService pieceService;
     private final PlayBoardService playBoardDTOService;
@@ -42,7 +42,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             PieceService pieceService,
             PlayBoardService playBoardDTOService,
             MoveTypeService moveTypeService) {
-                
+
         this.pieceService = pieceService;
         this.playBoardDTOService = playBoardDTOService;
         this.moveTypeService = moveTypeService;
@@ -52,9 +52,8 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     public boolean isAvailableMove(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
         boolean isValidMoveRule = isValidMove(playBoardDTO, pieceDTO, toCol, toRow);
         if (isValidMoveRule) {
-            PlayBoardDTO playBoardDTOAfterMoving = playBoardDTOService.update(playBoardDTO, pieceDTO, toCol, toRow);
-            // check general in safe after moving
-            return isGeneralInSafe(playBoardDTOAfterMoving, pieceDTO);
+            PlayBoardDTO updatedPlayBoardDTO = playBoardDTOService.update(playBoardDTO, pieceDTO, toCol, toRow);
+            return isGeneralInSafe(updatedPlayBoardDTO, pieceDTO);
         }
 
         return false;
@@ -105,25 +104,54 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     }
 
     private boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO) {
-        PieceDTO sameColorGeneral = null;
-        PieceDTO opponentGeneral = null;
+        final int CENTER_COL_INDEX_MIN = Default.Game.PlayBoardSize.CENTER_COL_MIN - 1;
+        final int CENTER_COL_INDEX_MAX = Default.Game.PlayBoardSize.CENTER_COL_MAX - 1;
+        final int BLACK_CENTER_ROW_INDEX_MIN = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MIN - 1;
+        final int BLACK_CENTER_ROW_INDEX_MAX = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MAX - 1;
+        final int RED_CENTER_ROW_INDEX_MIN = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MIN - 1;
+        final int RED_CENTER_ROW_INDEX_MAX = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX - 1;
 
-        List<PieceDTO> generalsPiece = pieceService.findAllInBoard(playBoardDTO, EPiece.GENERAL.name(), null);
+        int theSameColorFromRow;
+        int theSameColorToRow;
+        int opponentFromRow;
+        int opponentToRow;
 
-        if (generalsPiece.get(0).isRed() == pieceDTO.isRed()) {
-            sameColorGeneral = generalsPiece.get(0);
-            opponentGeneral = generalsPiece.get(1);
+        if (pieceDTO.isRed()) {
+            theSameColorFromRow = RED_CENTER_ROW_INDEX_MIN;
+            theSameColorToRow = RED_CENTER_ROW_INDEX_MAX;
+            opponentFromRow = BLACK_CENTER_ROW_INDEX_MIN;
+            opponentToRow = BLACK_CENTER_ROW_INDEX_MAX;
         } else {
-            sameColorGeneral = generalsPiece.get(1);
-            opponentGeneral = generalsPiece.get(0);
+            theSameColorFromRow = BLACK_CENTER_ROW_INDEX_MIN;
+            theSameColorToRow = BLACK_CENTER_ROW_INDEX_MAX;
+            opponentFromRow = RED_CENTER_ROW_INDEX_MIN;
+            opponentToRow = RED_CENTER_ROW_INDEX_MAX;
         }
 
-        if (sameColorGeneral != null && opponentGeneral != null) {
+        PieceDTO sameColorGeneral = pieceService.findAllInBoard(
+                playBoardDTO, EPiece.GENERAL.name(), null,
+                CENTER_COL_INDEX_MIN, theSameColorFromRow, CENTER_COL_INDEX_MAX, theSameColorToRow)
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        PieceDTO opponentGeneral = pieceService.findAllInBoard(
+                playBoardDTO, EPiece.GENERAL.name(), null,
+                CENTER_COL_INDEX_MIN, opponentFromRow, CENTER_COL_INDEX_MAX, opponentToRow)
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        if (sameColorGeneral == null) {
+            throw new InvalidException(Collections.singletonMap("message",
+                    (pieceDTO.isRed() ? "Red" : "Black") + " general piece is not found in center palace"));
+        } else if (opponentGeneral != null) {
+            throw new InvalidException(Collections.singletonMap("message",
+                    (pieceDTO.isRed() ? "Black" : "Red") + " general piece is not found in center palace"));
+        } else {
             return !areTwoGeneralsFacing(playBoardDTO, sameColorGeneral, opponentGeneral)
                     && !isGeneralBeingChecked(playBoardDTO, sameColorGeneral);
         }
-
-        return false;
     }
 
     @Override
@@ -154,8 +182,8 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     }
 
     private boolean isValidArea(int fromCol, int toCol, int fromRow, int toRow) {
-        return fromCol >= MIN_AREA && fromCol <= MAX_COL && toCol >= MIN_AREA && toCol <= MAX_COL
-                && fromRow >= MIN_AREA && fromRow <= MAX_ROW && toRow >= MIN_AREA && toRow <= MAX_ROW;
+        return fromCol >= AREA_INDEX_MIN && fromCol <= COL_MAX && toCol >= AREA_INDEX_MIN && toCol <= COL_MAX
+                && fromRow >= AREA_INDEX_MIN && fromRow <= ROW_MAX && toRow >= AREA_INDEX_MIN && toRow <= ROW_MAX;
     }
 
     /*
@@ -195,7 +223,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
 
         boolean isDiagonalMove = ((verticalSpace == 2) && (horizontalSpace == 2));
 
-        boolean isWithinOwnHalf = !isOutOfOwnHalf(isRed, toRow);
+        boolean isWithinOwnHalf = !isOverTheRiver(isRed, toRow);
 
         int middleCol = (fromCol + toCol) / 2;
         int middleRow = (fromRow + toRow) / 2;
@@ -226,7 +254,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             return playBoardDTO.getState()[obstacleCol][obstacleRow] == null; // No obstacle, Invalid move
         }
 
-        return false; // Invalid move
+        return false; 
     }
 
     /*
@@ -272,20 +300,17 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         return (moveTypeService.isVerticallyMoving(fromCol, toCol)
                 && (isRed ? (fromRow - toRow == 1) : (toRow - fromRow == 1)))
                 || (moveTypeService.isHorizontalMoving(fromRow, toRow)
-                        && isOutOfOwnHalf(isRed, fromRow) && (Math.abs(fromCol - toCol) == 1));
+                        && isOverTheRiver(isRed, fromRow) && (Math.abs(fromCol - toCol) == 1));
     }
 
     private boolean isInAreaCenter(boolean isRed, int col, int row) {
-        List<Integer> centerCols = PALACE_CENTER_COLS;
-        List<Integer> centerRows = isRed ? PALACE_CENTER_ROWS_FOR_RED : PALACE_CENTER_ROWS_FOR_BLACK;
-
-        return centerCols.contains(col) && centerRows.contains(row);
+        return (CENTER_COL_INDEX_MIN <= col && col <= CENTER_COL_INDEX_MAX)
+                && (isRed ? (RED_CENTER_ROW_INDEX_MIN <= row && row <= RED_CENTER_ROW_INDEX_MAX)
+                        : (BLACK_CENTER_ROW_INDEX_MIN <= row && row <= BLACK_CENTER_ROW_INDEX_MAX));
     }
 
-    private boolean isOutOfOwnHalf(boolean isRed, int row) {
-        List<Integer> halfRow = isRed ? PALACE_CENTER_ROWS_FOR_BLACK : PALACE_CENTER_ROWS_FOR_RED;
-
-        return halfRow.contains(row);
+    private boolean isOverTheRiver(boolean isRed, int row) {
+        return isRed ? (row < RED_ROW_INDEX_MIN) : (row > BLACK_ROW_INDEX_MAX);
     }
 
 }

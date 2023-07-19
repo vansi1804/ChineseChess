@@ -58,7 +58,7 @@ public class JwtService {
 
     private String createToken(Map<String, Object> claims, String userName) {
         final Date createdDate = new Date();
-        final Date expirationDate = new Date(createdDate.getTime() + Default.JWT.EXPIRATION_TIME);
+        final Date expirationDate = new Date(createdDate.getTime() + Default.JWT.ACCESS_TOKEN_EXPIRATION_TIME);
 
         return Jwts.builder()
                 .setClaims(claims)

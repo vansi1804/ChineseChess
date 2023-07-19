@@ -15,7 +15,7 @@ import com.data.dto.move.TrainingMoveCreationDTO;
 import com.data.dto.move.ValidMoveRequestDTO;
 import com.data.entity.MoveHistory;
 
-public interface MoveHistoryService {
+public interface MoveService {
 
     Map<Long, MoveHistoryDTO> build(List<MoveHistory> moveHistories);
 

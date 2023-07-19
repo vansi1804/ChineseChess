@@ -16,7 +16,7 @@ import com.service.PieceService;
 @Service
 public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     
-    private final int MAX_COL = Default.Game.PlayBoardSize.COL;
+    private final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
 
     private final PieceService pieceService;
     private final MoveTypeService moveTypeService;

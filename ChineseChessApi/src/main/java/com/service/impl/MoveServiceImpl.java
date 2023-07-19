@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.common.Default;
 import com.common.ErrorMessage;
 import com.common.enumeration.EPiece;
 import com.data.dto.move.MoveCreationDTO;
@@ -36,14 +37,14 @@ import com.data.repository.TrainingRepository;
 import com.data.repository.PieceRepository;
 import com.config.exception.InvalidException;
 import com.config.exception.ResourceNotFoundException;
-import com.service.MoveHistoryService;
+import com.service.MoveService;
 import com.service.MoveRuleService;
 import com.service.MoveDescriptionService;
 import com.service.PlayBoardService;
 import com.service.PieceService;
 
 @Service
-public class MoveHistoryServiceImpl implements MoveHistoryService {
+public class MoveServiceImpl implements MoveService {
 
     private final MoveHistoryRepository moveHistoryRepository;
     private final MoveHistoryMapper moveHistoryMapper;
@@ -57,7 +58,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     private final MoveRuleService moveRuleService;
 
     @Autowired
-    public MoveHistoryServiceImpl(
+    public MoveServiceImpl(
             MoveHistoryRepository moveHistoryRepository,
             MoveHistoryMapper moveHistoryMapper,
             TrainingRepository trainingRepository,
@@ -114,9 +115,11 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                     // update board after moved for reusing in next turn
                     currentBoardDTO.set(moveCreationResponseDTO.getCurrentBoardDTO());
                     // add deadPiece in this turn to list for reusing in next turn
+                    List<PieceDTO> tempLastDeadPieceDTOs = new ArrayList<>(lastDeadPieceDTOs.get());
                     if (moveCreationResponseDTO.getDeadPieceDTO() != null) {
-                        lastDeadPieceDTOs.get().add(moveCreationResponseDTO.getDeadPieceDTO());
+                        tempLastDeadPieceDTOs.add(moveCreationResponseDTO.getDeadPieceDTO());
                     }
+                    lastDeadPieceDTOs.set(tempLastDeadPieceDTOs);
 
                     playBoardService.printTest(
                             moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription(),
@@ -226,7 +229,8 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
                     currentBoard, movingPieceDTO, trainingMoveCreationDTO.getToCol(),
                     trainingMoveCreationDTO.getToRow());
 
-            playBoardService.printTest("Turn: " + newTurn, moveCreationResponseDTO.getCurrentBoardDTO(), movingPieceDTO);
+            playBoardService.printTest("Turn: " + newTurn, moveCreationResponseDTO.getCurrentBoardDTO(),
+                    movingPieceDTO);
 
             return moveCreationResponseDTO;
         }
@@ -310,7 +314,8 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
             MoveCreationResponseDTO moveCreationResponseDTO = buildMoveCreationResponse(
                     currentBoard, movingPieceDTO, matchMoveCreationDTO.getToCol(), matchMoveCreationDTO.getToRow());
 
-            playBoardService.printTest("Turn: " + newTurn, moveCreationResponseDTO.getCurrentBoardDTO(), movingPieceDTO);
+            playBoardService.printTest("Turn: " + newTurn, moveCreationResponseDTO.getCurrentBoardDTO(),
+                    movingPieceDTO);
 
             return moveCreationResponseDTO;
         }
@@ -328,7 +333,7 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     public List<BestMoveDTO> findAllBestMoves(PlayBoardDTO playBoardDTO, int depth) {
 
         List<PieceDTO> pieceDTOsInBoard = pieceService.findAllInBoard(playBoardDTO, null, null);
-        
+
         return null;
     }
 
@@ -353,9 +358,20 @@ public class MoveHistoryServiceImpl implements MoveHistoryService {
     }
 
     private PieceDTO findGeneralBeingChecked(PlayBoardDTO playBoardDTO, boolean isRed) {
+        final int CENTER_COL_INDEX_MIN = Default.Game.PlayBoardSize.CENTER_COL_MIN - 1;
+        final int CENTER_COL_INDEX_MAX = Default.Game.PlayBoardSize.CENTER_COL_MAX - 1;
+        final int CENTER_ROW_INDEX_MIN = (isRed ? Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MIN
+                : Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MIN) - 1;
+        final int CENTER_ROW_INDEX_MAX = (isRed ? Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX
+                : Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MAX) - 1;
+
         // check opponent general is being check after moving
-        List<PieceDTO> generals = pieceService.findAllInBoard(playBoardDTO, EPiece.GENERAL.name(), isRed);
-        PieceDTO general = generals.isEmpty() ? null : generals.get(0);
+        PieceDTO general = pieceService.findAllInBoard(
+                playBoardDTO, EPiece.GENERAL.name(), isRed,
+                CENTER_COL_INDEX_MIN, CENTER_ROW_INDEX_MIN, CENTER_COL_INDEX_MAX, CENTER_ROW_INDEX_MAX)
+                .stream()
+                .findFirst()
+                .get();
 
         return moveRuleService.isGeneralBeingChecked(playBoardDTO, general) ? general : null;
     }

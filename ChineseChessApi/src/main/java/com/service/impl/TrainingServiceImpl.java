@@ -19,7 +19,7 @@ import com.data.repository.MoveHistoryRepository;
 import com.data.repository.TrainingRepository;
 import com.config.exception.ConflictException;
 import com.config.exception.ResourceNotFoundException;
-import com.service.MoveHistoryService;
+import com.service.MoveService;
 import com.service.TrainingService;
 
 @Service
@@ -28,19 +28,19 @@ public class TrainingServiceImpl implements TrainingService {
     private final TrainingMapper trainingMapper;
     private final TrainingRepository trainingRepository;
     private final MoveHistoryRepository moveHistoryRepository;
-    private final MoveHistoryService moveHistoryService;
+    private final MoveService moveService;
 
     @Autowired
     public TrainingServiceImpl(
             TrainingMapper trainingMapper,
             TrainingRepository trainingRepository,
-            MoveHistoryService moveHistoryService,
+            MoveService moveService,
             MoveHistoryRepository moveHistoryRepository) {
                 
         this.trainingMapper = trainingMapper;
         this.trainingRepository = trainingRepository;
         this.moveHistoryRepository = moveHistoryRepository;
-        this.moveHistoryService = moveHistoryService;
+        this.moveService = moveService;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class TrainingServiceImpl implements TrainingService {
                                 Collections.singletonMap("id", id)));
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByTraining_Id(id);
-        Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveHistoryService.build(moveHistories);
+        Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.build(moveHistories);
 
         trainingDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
         trainingDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);

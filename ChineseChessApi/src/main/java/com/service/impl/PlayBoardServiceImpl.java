@@ -19,8 +19,8 @@ import com.service.PieceService;
 @Service
 public class PlayBoardServiceImpl implements PlayBoardService {
 
-    private final int MAX_COL = Default.Game.PlayBoardSize.COL;
-    private final int MAX_ROW = Default.Game.PlayBoardSize.ROW;
+    private final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
+    private final int MAX_ROW = Default.Game.PlayBoardSize.ROW_MAX;
 
     private final PieceRepository pieceRepository;
     private final PieceMapper pieceMapper;
