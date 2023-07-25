@@ -12,14 +12,14 @@ import com.data.dto.move.BestMoveResponseDTO;
 import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.MoveHistoryDTO;
 import com.data.dto.move.TrainingMoveCreationDTO;
-import com.data.dto.move.ValidMoveRequestDTO;
+import com.data.dto.move.AvailableMoveRequest;
 import com.data.entity.MoveHistory;
 
 public interface MoveService {
 
     Map<Long, MoveHistoryDTO> build(List<MoveHistory> moveHistories);
 
-    List<int[]> findAllAvailableMoves(ValidMoveRequestDTO validMoveRequestDTO);
+    List<int[]> findAllAvailableMoves(AvailableMoveRequest validMoveRequestDTO);
 
     MoveCreationResponseDTO create(MoveCreationDTO moveCreationDTO);
 

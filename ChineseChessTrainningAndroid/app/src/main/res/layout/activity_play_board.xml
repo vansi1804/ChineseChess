@@ -7,101 +7,106 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background"
         android:orientation="vertical"
         android:weightSum="20"
-        android:background="@drawable/background"
         tools:ignore="UselessParent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:weightSum="6"
             android:orientation="horizontal"
+            android:weightSum="6"
             tools:ignore="NestedWeights">
 
             <ImageButton
                 android:id="@+id/img_btn_home"
+                style="@style/icon_image_button_style"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                style="@style/icon_image_button_style"
                 android:background="@drawable/home"
                 tools:ignore="ContentDescription" />
 
             <ImageButton
                 android:id="@+id/img_btn_back"
+                style="@style/icon_image_button_style"
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                style="@style/icon_image_button_style"
                 android:background="@drawable/back"
                 tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/img_btn_home2"
+                style="@style/icon_image_button_style"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                style="@style/icon_image_button_style"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/img_btn_home3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                style="@style/icon_image_button_style"
+                android:layout_weight="2"
                 tools:ignore="ContentDescription" />
 
             <ImageButton
                 android:id="@+id/img_btn_speaker"
+                style="@style/icon_image_button_style"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                style="@style/icon_image_button_style"
                 android:background="@drawable/speaker_on"
                 tools:ignore="ContentDescription" />
 
             <ImageButton
                 android:id="@+id/img_btn_music"
+                style="@style/icon_image_button_style"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                style="@style/icon_image_button_style"
                 android:background="@drawable/music_on"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_training_title"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0sp"
-            android:layout_weight="3"
-            android:gravity="center"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:layout_height="0dp"
+            android:layout_weight="2.5"
+            android:orientation="horizontal"
+            tools:ignore="NestedWeights">
+            <TextView
+                android:id="@+id/tv_training_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="@color/teal_200"
+                android:singleLine="true"
+                android:text="title"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold|italic"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/layout_play_board"
             android:layout_width="match_parent"
             android:layout_height="0sp"
-            android:layout_weight="15"
+            android:layout_weight="11"
             android:orientation="vertical"
             tools:ignore="UselessParent">
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="0sp"
-                android:layout_weight="10"
+                android:layout_height="match_parent"
                 android:background="@drawable/board"
                 tools:ignore="NestedWeights">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="7sp"
-                    android:layout_marginEnd="7sp"
                     android:layout_marginTop="19sp"
+                    android:layout_marginEnd="7sp"
                     android:layout_marginBottom="19sp"
                     android:orientation="vertical"
                     android:weightSum="10"
@@ -118,56 +123,65 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_0_0"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_chariot"/>
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_chariot"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_1_0"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_horse"/>
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_horse"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_2_0"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_elephant"/>
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_elephant"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_3_0"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_guard"/>
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_guard"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_4_0"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_general"/>
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_general"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_5_0"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_guard"/>
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_guard"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_6_0"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_elephant"/>
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_elephant"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_7_0"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_horse"/>
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_horse"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_8_0"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_chariot" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_chariot"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
                     </LinearLayout>
 
                     <LinearLayout
@@ -238,8 +252,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_1_2"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_cannon" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_cannon"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_2_2"
@@ -269,8 +284,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_7_2"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_cannon" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_cannon"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_8_2"
@@ -288,8 +304,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_0_3"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_soldier" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_soldier"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_1_3"
@@ -299,8 +316,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_2_3"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_soldier" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_soldier"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_3_3"
@@ -310,8 +328,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_4_3"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_soldier" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_soldier"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_5_3"
@@ -321,8 +340,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_6_3"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_soldier" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_soldier"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_7_3"
@@ -332,8 +352,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_8_3"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/black_soldier" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/black_soldier"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
                     </LinearLayout>
 
                     <LinearLayout
@@ -452,8 +473,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_0_6"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_soldier" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_soldier"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_1_6"
@@ -463,8 +485,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_2_6"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_soldier" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_soldier"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_3_6"
@@ -474,19 +497,21 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_4_6"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_soldier" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_soldier"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_5_6"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription,TooManyViews" />
+                            tools:ignore="ContentDescription" />
 
                         <ImageButton
                             android:id="@+id/img_btn_position_6_6"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_soldier" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_soldier"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_7_6"
@@ -496,8 +521,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_8_6"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_soldier" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_soldier"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
                     </LinearLayout>
 
                     <LinearLayout
@@ -515,8 +541,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_1_7"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_cannon" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_cannon"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_2_7"
@@ -526,7 +553,7 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_3_7"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription,TooManyViews" />
+                            tools:ignore="ContentDescription" />
 
                         <ImageButton
                             android:id="@+id/img_btn_position_4_7"
@@ -546,8 +573,9 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_7_7"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_cannon" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_cannon"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_8_7"
@@ -618,105 +646,140 @@
                         <ImageButton
                             android:id="@+id/img_btn_position_0_9"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_chariot" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_chariot"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_1_9"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_horse" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_horse"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_2_9"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_elephant" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_elephant"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_3_9"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_guard" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_guard"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_4_9"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_general" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_general"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_5_9"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_guard" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_guard"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_6_9"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_elephant" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_elephant"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_7_9"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_horse" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_horse"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
 
                         <ImageButton
                             android:id="@+id/img_btn_position_8_9"
                             style="@style/pieces_image_button_style"
-                            tools:ignore="ContentDescription"
-                            android:background="@drawable/red_chariot" />
+                            android:contentDescription="TODO" />
+                        <!--                            android:background="@drawable/red_chariot"-->
+                        <!--                            tools:ignore="ContentDescription" />-->
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="4.5"
+            android:orientation="vertical"
+            android:weightSum="2">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0sp"
-                android:layout_weight="4.5"
-                android:orientation="vertical"
-                android:weightSum="6">
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="5"
+                tools:ignore="NestedWeights,UselessLeaf">
 
+                <ImageButton
+                    android:id="@+id/btn_swap_board"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/previous_turn"
+                    tools:ignore="ContentDescription,NestedWeights" />
+
+                <TextView
+                    android:id="@+id/tv_move_description"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold|italic"
+                    tools:ignore="ContentDescription" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageButton
+                    android:id="@+id/btn_previous_turn"
+                    style="@style/icon_image_button_training_detail_control_style"
+                    android:background="@drawable/previous_turn"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_turn"
-                    android:layout_width="match_parent"
-                    android:layout_height="0sp"
-                    android:layout_weight="2"
-                    android:gravity="center|top"
-                    android:textSize="40sp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="0/turns"
                     android:textColor="@color/white"
-                    android:textStyle="italic"/>
+                    android:textSize="40sp"
+                    android:textStyle="italic"
+                    tools:ignore="HardcodedText,NestedWeights" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0sp"
-                    android:layout_weight="4"
-                    android:weightSum="3"
-                    android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/btn_next_turn"
+                    style="@style/icon_image_button_training_detail_control_style"
+                    android:background="@drawable/next_turn"
+                    tools:ignore="ContentDescription" />
 
-                    <ImageButton
-                        android:id="@+id/btn_previous_turn"
-                        android:background="@drawable/previous_turn"
-                        style="@style/icon_image_button_match_detail_control_style"
-                        tools:ignore="ContentDescription" />
-
-                    <ImageView
-                        android:id="@+id/img_view_turn"
-                        style="@style/icon_image_view_style"
-                        tools:ignore="ContentDescription" />
-
-                    <ImageButton
-                        android:id="@+id/btn_next_turn"
-                        android:background="@drawable/next_turn"
-                        style="@style/icon_image_button_match_detail_control_style"
-                        tools:ignore="ContentDescription" />
-
-                </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

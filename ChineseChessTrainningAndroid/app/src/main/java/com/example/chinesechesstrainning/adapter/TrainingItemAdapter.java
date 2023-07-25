@@ -14,7 +14,7 @@ import com.example.chinesechesstrainning.model.training.TrainingDTO;
 
 import java.util.ArrayList;
 
-public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHolder> {
+public class TrainingItemAdapter extends RecyclerView.Adapter<TrainingItemAdapter.ViewHolder> {
 
     public interface IMatchItemOnClick {
         void setClick(TrainingDTO trainingDTOClicked);
@@ -24,7 +24,7 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
     private final ArrayList<TrainingDTO> trainingDTOS;
     private final IMatchItemOnClick matchItemOnClick;
 
-    public TrainingAdapter(ArrayList<TrainingDTO> trainingDTOS, Context context, IMatchItemOnClick matchItemOnClick) {
+    public TrainingItemAdapter(ArrayList<TrainingDTO> trainingDTOS, Context context, IMatchItemOnClick matchItemOnClick) {
         this.trainingDTOS = trainingDTOS;
         this.context = context;
         this.matchItemOnClick = matchItemOnClick;

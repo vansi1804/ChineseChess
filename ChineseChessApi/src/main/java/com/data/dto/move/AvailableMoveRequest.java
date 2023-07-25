@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class ValidMoveRequestDTO {
+public class AvailableMoveRequest {
     
     @NotNull(message = ErrorMessage.BLANK_DATA)
     private Integer pieceId;
