@@ -111,6 +111,8 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         final int RED_CENTER_ROW_INDEX_MIN = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MIN - 1;
         final int RED_CENTER_ROW_INDEX_MAX = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX - 1;
 
+        int fromCol = CENTER_COL_INDEX_MIN;
+        int toCol = CENTER_COL_INDEX_MAX;
         int theSameColorFromRow;
         int theSameColorToRow;
         int opponentFromRow;
@@ -130,14 +132,14 @@ public class MoveRuleServiceImpl implements MoveRuleService {
 
         PieceDTO sameColorGeneral = pieceService.findAllInBoard(
                 playBoardDTO, EPiece.GENERAL.name(), null,
-                CENTER_COL_INDEX_MIN, theSameColorFromRow, CENTER_COL_INDEX_MAX, theSameColorToRow)
+                fromCol, theSameColorFromRow, toCol, theSameColorToRow)
                 .stream()
                 .findFirst()
                 .orElse(null);
 
         PieceDTO opponentGeneral = pieceService.findAllInBoard(
                 playBoardDTO, EPiece.GENERAL.name(), null,
-                CENTER_COL_INDEX_MIN, opponentFromRow, CENTER_COL_INDEX_MAX, opponentToRow)
+                fromCol, opponentFromRow, toCol, opponentToRow)
                 .stream()
                 .findFirst()
                 .orElse(null);
@@ -145,7 +147,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         if (sameColorGeneral == null) {
             throw new InvalidException(Collections.singletonMap("message",
                     (pieceDTO.isRed() ? "Red" : "Black") + " general piece is not found in center palace"));
-        } else if (opponentGeneral != null) {
+        } else if (opponentGeneral == null) {
             throw new InvalidException(Collections.singletonMap("message",
                     (pieceDTO.isRed() ? "Black" : "Red") + " general piece is not found in center palace"));
         } else {

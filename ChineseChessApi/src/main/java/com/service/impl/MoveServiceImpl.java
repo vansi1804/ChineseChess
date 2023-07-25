@@ -21,7 +21,8 @@ import com.data.dto.move.MoveCreationDTO;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.data.dto.move.MoveCreationResponseDTO;
-import com.data.dto.move.BestMoveDTO;
+import com.data.dto.move.BestMoveRequestDTO;
+import com.data.dto.move.BestMoveResponseDTO;
 import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.MoveHistoryDTO;
 import com.data.dto.move.TrainingMoveCreationDTO;
@@ -93,17 +94,17 @@ public class MoveServiceImpl implements MoveService {
         return moveHistories.stream()
                 .map(mh -> {
                     long turn = mh.getTurn();
-                    PieceDTO movedPieceDTO = pieceService.findOneInBoard(currentBoardDTO.get(), mh.getPiece().getId());
+                    PieceDTO movingPieceDTO = pieceService.findOneInBoard(currentBoardDTO.get(), mh.getPiece().getId());
                     String description = moveDescriptionService.build(
-                            currentBoardDTO.get(), movedPieceDTO, mh.getToCol(), mh.getToRow());
+                            currentBoardDTO.get(), movingPieceDTO, mh.getToCol(), mh.getToRow());
 
                     MoveCreationResponseDTO moveCreationResponseDTO = buildMoveCreationResponse(
-                            currentBoardDTO.get(), movedPieceDTO, mh.getToCol(), mh.getToRow());
+                            currentBoardDTO.get(), movingPieceDTO, mh.getToCol(), mh.getToRow());
 
                     MoveHistoryDTO moveHistoryDTO = new MoveHistoryDTO();
                     moveHistoryDTO.setLastDeadPieceDTOs(lastDeadPieceDTOs.get());
                     moveHistoryDTO.setTurn(turn);
-                    moveHistoryDTO.setMovedPieceDTO(moveCreationResponseDTO.getMovedPieceDTO());
+                    moveHistoryDTO.setMovingPieceDTO(moveCreationResponseDTO.getMovingPieceDTO());
                     moveHistoryDTO.setToCol(moveCreationResponseDTO.getToCol());
                     moveHistoryDTO.setToRow(moveCreationResponseDTO.getToRow());
                     moveHistoryDTO.setDescription(description);
@@ -124,7 +125,7 @@ public class MoveServiceImpl implements MoveService {
                     playBoardService.printTest(
                             moveHistoryDTO.getTurn() + ":\t" + moveHistoryDTO.getDescription(),
                             moveHistoryDTO.getCurrentBoardDTO(),
-                            moveHistoryDTO.getMovedPieceDTO());
+                            moveHistoryDTO.getMovingPieceDTO());
 
                     return moveHistoryDTO;
                 })
@@ -330,11 +331,92 @@ public class MoveServiceImpl implements MoveService {
     }
 
     @Override
-    public List<BestMoveDTO> findAllBestMoves(PlayBoardDTO playBoardDTO, int depth) {
+    public List<BestMoveResponseDTO> findAllBestMoves(BestMoveRequestDTO bestMoveRequestDTO) {
+        List<PieceDTO> pieceDTOsInBoard = pieceService.findAllInBoard(
+                bestMoveRequestDTO.getPlayBoardDTO(), null, bestMoveRequestDTO.getIsRed());
 
-        List<PieceDTO> pieceDTOsInBoard = pieceService.findAllInBoard(playBoardDTO, null, null);
+        List<BestMoveResponseDTO> bestMoves = new ArrayList<>();
 
-        return null;
+        for (PieceDTO pieceDTO : pieceDTOsInBoard) {
+            List<int[]> availableMoveIndexes = findAllAvailableMoveIndexes(
+                    bestMoveRequestDTO.getPlayBoardDTO(), pieceDTO);
+
+            for (int[] index : availableMoveIndexes) {
+                PlayBoardDTO updatedBoard = playBoardService.update(
+                        bestMoveRequestDTO.getPlayBoardDTO(), pieceDTO, index[0], index[1]);
+
+                // Flip isRed for the opponent
+                int score = minimax(updatedBoard, !pieceDTO.isRed(), bestMoveRequestDTO.getDepth() - 1);
+
+                BestMoveResponseDTO bestMove = new BestMoveResponseDTO();
+                bestMove.setPieceDTO(pieceDTO);
+                bestMove.setBestAvailableMoveIndexes(availableMoveIndexes);
+                bestMove.setScore(score);
+
+                bestMoves.add(bestMove);
+            }
+        }
+
+        return bestMoves;
+    }
+
+    private int minimax(PlayBoardDTO playBoardDTO, boolean isRed, int depth) {
+        // break when depth == 0 or (red or black is in checkmate state)
+        if (depth == 0 || isCheckMateState(playBoardDTO, true) || isCheckMateState(playBoardDTO, false)) {
+            return evaluatePlayBoard(playBoardDTO);
+        }
+        if (isRed) {
+            int maxScore = Integer.MIN_VALUE;
+            List<PieceDTO> sameColorPieceDTOsInBoard = pieceService.findAllInBoard(playBoardDTO, null, isRed);
+            
+            for (PieceDTO pieceDTO : sameColorPieceDTOsInBoard) {
+                List<int[]> availableMoveIndexes = findAllAvailableMoveIndexes(playBoardDTO, pieceDTO);
+                for (int[] index : availableMoveIndexes) {
+                    int toCol = index[0];
+                    int toRow = index[1];
+                    PlayBoardDTO updatedBoard = playBoardService.update(playBoardDTO, pieceDTO, toCol, toRow);
+                    System.out.println("depth: " + (depth - 1));
+                    int eval = minimax(updatedBoard, !isRed, depth - 1);
+                    maxScore = Math.max(maxScore, eval);
+                }
+            }
+
+            return maxScore;
+        } else {
+            int minScore = Integer.MAX_VALUE;
+            List<PieceDTO> opponentPieceDTOsInBoard = pieceService.findAllInBoard(playBoardDTO, null, !isRed);
+            
+            for (PieceDTO pieceDTO : opponentPieceDTOsInBoard) {
+                List<int[]> availableMoveIndexes = findAllAvailableMoveIndexes(playBoardDTO, pieceDTO);
+                for (int[] index : availableMoveIndexes) {
+                    int toCol = index[0];
+                    int toRow = index[1];
+                    PlayBoardDTO updatedBoard = playBoardService.update(playBoardDTO, pieceDTO, toCol, toRow);
+                    System.out.println("depth: " + (depth - 1));
+                    int eval = minimax(updatedBoard, isRed, depth - 1);
+                    minScore = Math.min(minScore, eval);
+                }
+            }
+
+            return minScore;
+        }
+    }
+
+    private int evaluatePlayBoard(PlayBoardDTO playBoardDTO) {
+        int fromCol = 0;
+        int fromRow = 0;
+        int toCol = playBoardDTO.getState().length - 1;
+        int toRow = playBoardDTO.getState()[0].length - 1;
+
+        return IntStream.rangeClosed(fromCol, toCol)
+                .flatMap(col -> IntStream.rangeClosed(fromRow, toRow)
+                        .filter(row -> playBoardDTO.getState()[col][row] != null)
+                        .map(row -> {
+                            PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
+                            int piecePower = pieceService.convertByName(pieceDTO.getName()).getPower();
+                            return pieceDTO.isRed() ? piecePower : -piecePower;
+                        }))
+                .sum();
     }
 
     private MoveCreationResponseDTO buildMoveCreationResponse(
@@ -346,7 +428,7 @@ public class MoveServiceImpl implements MoveService {
         boolean isCheckMate = isCheckMateState(updatedPlayBoardDTO, movingPieceDTO.isRed());
 
         MoveCreationResponseDTO moveCreationResponseDTO = new MoveCreationResponseDTO();
-        moveCreationResponseDTO.setMovedPieceDTO(movingPieceDTO);
+        moveCreationResponseDTO.setMovingPieceDTO(movingPieceDTO);
         moveCreationResponseDTO.setToCol(toCol);
         moveCreationResponseDTO.setToRow(toRow);
         moveCreationResponseDTO.setDeadPieceDTO(deadPieceDTO);
