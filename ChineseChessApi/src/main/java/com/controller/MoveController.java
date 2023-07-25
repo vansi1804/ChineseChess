@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.common.ApiUrl;
 import com.data.dto.move.MoveCreationDTO;
+import com.data.dto.move.BestMoveRequestDTO;
 import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.TrainingMoveCreationDTO;
 import com.data.dto.move.ValidMoveRequestDTO;
@@ -23,12 +24,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.MOVE_HISTORIES)
-public class MovingController {
+public class MoveController {
 
     private MoveService moveService;
 
     @Autowired
-    public MovingController(MoveService moveService) {
+    public MoveController(MoveService moveService) {
         this.moveService = moveService;
     }
 
@@ -52,6 +53,11 @@ public class MovingController {
     @PostMapping(value = "/training")
     public ResponseEntity<?> create(@Valid @RequestBody TrainingMoveCreationDTO trainingMoveHistoryCreationDTO) {
         return ResponseEntity.ok(moveService.create(trainingMoveHistoryCreationDTO));
+    }
+
+     @GetMapping(value = "/best-moves")
+    public ResponseEntity<?> findAllBestMoves(@Valid @RequestBody BestMoveRequestDTO bestMoveRequestDTO) {
+        return ResponseEntity.ok(moveService.findAllBestMoves(bestMoveRequestDTO));
     }
 
 }

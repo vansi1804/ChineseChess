@@ -11,10 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class BestMoveDTO {
+public class BestMoveResponseDTO {
 
-    private  PieceDTO pieceDTO;
+    private PieceDTO pieceDTO;
 
-    private List<int[]> bestMoves;
+    private List<int[]> bestAvailableMoveIndexes;
+
+    private int score;
     
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,83 +15,28 @@
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:weightSum="6"
-            android:orientation="horizontal"
-            tools:ignore="NestedWeights">
-
-            <ImageButton
-                android:id="@+id/img_btn_home"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                style="@style/icon_image_button_style"
-                android:background="@drawable/home"
-                tools:ignore="ContentDescription" />
-
-            <ImageButton
-                android:id="@+id/img_btn_back"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                style="@style/icon_image_button_style"
-                android:background="@drawable/back"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/tv"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                style="@style/icon_image_button_style"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/tv1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                style="@style/icon_image_button_style"
-                tools:ignore="ContentDescription" />
-
-            <ImageButton
-                android:id="@+id/img_btn_speaker"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                style="@style/icon_image_button_style"
-                android:background="@drawable/speaker_on"
-                tools:ignore="ContentDescription" />
-
-            <ImageButton
-                android:id="@+id/img_btn_music"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                style="@style/icon_image_button_style"
-                android:background="@drawable/music_on"
-                tools:ignore="ContentDescription" />
-        </LinearLayout>
-
         <TextView
             android:id="@+id/tv_training_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4"
+            android:layout_weight="2"
             android:layout_marginTop="80dp"
+            android:ellipsize="marquee"
             android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="@color/teal_200"
+            android:singleLine="true"
+            android:text="title"
+            android:textColor="@color/white"
             android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:textStyle="bold|italic"
+            tools:ignore="HardcodedText"/>
 
         <LinearLayout
             android:id="@+id/layout_active"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="9"
+            android:layout_weight="10"
             android:weightSum="1"
             android:orientation="vertical">
 

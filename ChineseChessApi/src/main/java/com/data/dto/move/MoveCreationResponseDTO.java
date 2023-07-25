@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MoveCreationResponseDTO{
     
-    private PieceDTO movedPieceDTO;
+    private PieceDTO movingPieceDTO;
 
     private int toCol;
 

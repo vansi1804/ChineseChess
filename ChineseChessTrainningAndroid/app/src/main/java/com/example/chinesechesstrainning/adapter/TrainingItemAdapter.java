@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chinesechesstrainning.R;
-import com.example.chinesechesstrainning.model.Training;
+import com.example.chinesechesstrainning.model.training.TrainingDTO;
 
 import java.util.ArrayList;
 
 public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHolder> {
 
     public interface IMatchItemOnClick {
-        void setClick(Training trainingClicked);
+        void setClick(TrainingDTO trainingDTOClicked);
     }
 
     private final Context context;
-    private final ArrayList<Training> trainings;
+    private final ArrayList<TrainingDTO> trainingDTOS;
     private final IMatchItemOnClick matchItemOnClick;
 
-    public TrainingAdapter(ArrayList<Training> trainings, Context context, IMatchItemOnClick matchItemOnClick) {
-        this.trainings = trainings;
+    public TrainingAdapter(ArrayList<TrainingDTO> trainingDTOS, Context context, IMatchItemOnClick matchItemOnClick) {
+        this.trainingDTOS = trainingDTOS;
         this.context = context;
         this.matchItemOnClick = matchItemOnClick;
     }
@@ -40,12 +40,12 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(trainings.get(position), matchItemOnClick);
+        holder.bind(trainingDTOS.get(position), matchItemOnClick);
     }
 
     @Override
     public int getItemCount() {
-        return trainings.size();
+        return trainingDTOS.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -54,9 +54,9 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
             super(itemView);
             title = itemView.findViewById(R.id.tv_training_title);
         }
-        public void bind(final Training trainingItem, final IMatchItemOnClick matchItemOnClick) {
-            title.setText(trainingItem.getName().replaceAll("Tuyển tập","Tuyển tập\n"));
-            itemView.setOnClickListener(v -> matchItemOnClick.setClick(trainingItem));
+        public void bind(final TrainingDTO trainingDTOItem, final IMatchItemOnClick matchItemOnClick) {
+            title.setText(trainingDTOItem.getTitle().replaceAll("Tuyển tập","Tuyển tập\n"));
+            itemView.setOnClickListener(v -> matchItemOnClick.setClick(trainingDTOItem));
         }
     }
 }
