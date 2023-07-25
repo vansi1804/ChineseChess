@@ -7,13 +7,13 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_margin">1sp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:contentDescription">piece</item>
+        <item name="android:contentDescription">pieceDTO</item>
     </style>
     <style name="icon_image_button_style">
         <item name="android:background">@null</item>
         <item name="android:scaleType">fitXY</item>
     </style>
-    <style name="icon_image_button_match_detail_control_style">
+    <style name="icon_image_button_training_detail_control_style">
         <item name="android:layout_width">0sp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>

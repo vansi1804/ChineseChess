@@ -13,7 +13,7 @@ import com.data.dto.move.MoveCreationDTO;
 import com.data.dto.move.BestMoveRequestDTO;
 import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.TrainingMoveCreationDTO;
-import com.data.dto.move.ValidMoveRequestDTO;
+import com.data.dto.move.AvailableMoveRequest;
 import com.service.MoveService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,7 +34,7 @@ public class MoveController {
     }
 
     @GetMapping(value = "")
-    public ResponseEntity<?> findMoveValid(@Valid @RequestBody ValidMoveRequestDTO validMoveRequestDTO) {
+    public ResponseEntity<?> findMoveValid(@Valid @RequestBody AvailableMoveRequest validMoveRequestDTO) {
         return ResponseEntity.ok(moveService.findAllAvailableMoves(validMoveRequestDTO));
     }
 

@@ -1,10 +1,8 @@
 package com.example.chinesechesstrainning.model;
 
-import com.example.chinesechesstrainning.support.Support;
-
 import java.io.Serializable;
 
-public class Piece implements Serializable {
+public class PieceDTO implements Serializable {
     private long id;
     private String name;
     private boolean isRed;
@@ -12,16 +10,16 @@ public class Piece implements Serializable {
     private int currentRow;
     private int image;
 
-    public Piece(Piece piece) {
-      setId(piece.getId());
-      setName(piece.getName());
-      setRed(piece.isRed());
-      setCurrentCol(piece.getCurrentCol());
-      setCurrentRow(piece.getCurrentRow());
-      setImage(piece.getImage());
+    public PieceDTO(PieceDTO pieceDTO) {
+      setId(pieceDTO.getId());
+      setName(pieceDTO.getName());
+      setRed(pieceDTO.isRed());
+      setCurrentCol(pieceDTO.getCurrentCol());
+      setCurrentRow(pieceDTO.getCurrentRow());
+      setImage(pieceDTO.getImage());
     }
 
-    public Piece(long id, String name, boolean isRed, int currentCol, int currentRow, int image) {
+    public PieceDTO(long id, String name, boolean isRed, int currentCol, int currentRow, int image) {
         this.id = id;
         this.name = name;
         this.isRed = isRed;
@@ -30,7 +28,7 @@ public class Piece implements Serializable {
         this.image = image;
     }
 
-    public Piece() {
+    public PieceDTO() {
 
     }
 

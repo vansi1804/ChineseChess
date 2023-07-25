@@ -26,7 +26,7 @@ import com.data.dto.move.BestMoveResponseDTO;
 import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.MoveHistoryDTO;
 import com.data.dto.move.TrainingMoveCreationDTO;
-import com.data.dto.move.ValidMoveRequestDTO;
+import com.data.dto.move.AvailableMoveRequest;
 import com.data.entity.Match;
 import com.data.entity.MoveHistory;
 import com.data.entity.Training;
@@ -133,7 +133,7 @@ public class MoveServiceImpl implements MoveService {
     }
 
     @Override
-    public List<int[]> findAllAvailableMoves(ValidMoveRequestDTO validMoveRequestDTO) {
+    public List<int[]> findAllAvailableMoves(AvailableMoveRequest validMoveRequestDTO) {
         PieceDTO movingPieceDTO = pieceRepository.findById(validMoveRequestDTO.getPieceId())
                 .map(p -> pieceMapper.toDTO(p))
                 .orElseThrow(

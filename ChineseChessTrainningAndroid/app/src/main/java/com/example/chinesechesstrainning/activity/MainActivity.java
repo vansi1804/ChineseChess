@@ -20,7 +20,7 @@ import com.example.chinesechesstrainning.support.Support;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrainingActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageButton imgBtnBack;
     private ImageButton imgBtnHome;
@@ -171,4 +171,5 @@ public class TrainingActivity extends AppCompatActivity implements View.OnClickL
             imgBtnSpeaker.setBackground(getDrawable(R.drawable.speaker_off));
         }
     }
+
 }
