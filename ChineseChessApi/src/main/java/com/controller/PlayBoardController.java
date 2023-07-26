@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.common.ApiUrl;
-import com.data.dto.PlayBoardDTO;
 import com.service.PlayBoardService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -16,21 +15,16 @@ import com.service.PlayBoardService;
 @RequestMapping(ApiUrl.PLAY_BOARD)
 public class PlayBoardController {
 
-    private final PlayBoardService playBoardDTOService;
+    private final PlayBoardService playBoardService;
 
     @Autowired
-    public PlayBoardController(PlayBoardService playBoardDTOService) {
-        this.playBoardDTOService = playBoardDTOService;
+    public PlayBoardController(PlayBoardService playBoardService) {
+        this.playBoardService = playBoardService;
     }
 
     @GetMapping(value = "/generate")
     public ResponseEntity<?> generate() {
-        PlayBoardDTO playBoardDTO = playBoardDTOService.generate();
-
-        /* print test */
-        playBoardDTOService.printTest("start: ", playBoardDTO, null);
-
-        return ResponseEntity.ok(playBoardDTO);
+        return ResponseEntity.ok(playBoardService.generate());
     }
 
 }

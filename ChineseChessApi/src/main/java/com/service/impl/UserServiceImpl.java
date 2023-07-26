@@ -100,8 +100,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO create(UserCreationDTO userCreationDTO, MultipartFile fileAvatar, ERole eRole) {
         if (userRepository.existsByPhoneNumber(userCreationDTO.getPhoneNumber())) {
-            throw new ConflictException(
-                    Collections.singletonMap("phoneNumber", userCreationDTO.getPhoneNumber()));
+            throw new ConflictException(Collections.singletonMap("phoneNumber", userCreationDTO.getPhoneNumber()));
         }
 
         User createUser = userMapper.toEntity(userCreationDTO);

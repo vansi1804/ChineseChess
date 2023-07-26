@@ -2,6 +2,10 @@ package com.data.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
+import com.common.ErrorMessage;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,16 +15,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PieceDTO implements Serializable{
 
-    private int id;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer id;
 
+    @NotNull(message = ErrorMessage.NULL_DATA)
     private String name;
 
     private boolean isRed;
 
     private String image;
 
-    private int currentCol;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer currentCol;
 
-    private int currentRow;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer currentRow;
 
 }

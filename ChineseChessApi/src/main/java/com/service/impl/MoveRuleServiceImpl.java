@@ -1,14 +1,11 @@
-
 package com.service.impl;
 
-import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.Default;
 import com.common.enumeration.EPiece;
-import com.config.exception.InvalidException;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.service.MoveRuleService;
@@ -34,25 +31,26 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     private static final int RED_CENTER_ROW_INDEX_MAX = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX - 1;
 
     private final PieceService pieceService;
-    private final PlayBoardService playBoardDTOService;
+    private final PlayBoardService playBoardService;
     private final MoveTypeService moveTypeService;
 
     @Autowired
     public MoveRuleServiceImpl(
             PieceService pieceService,
-            PlayBoardService playBoardDTOService,
+            PlayBoardService playBoardService,
             MoveTypeService moveTypeService) {
 
         this.pieceService = pieceService;
-        this.playBoardDTOService = playBoardDTOService;
+        this.playBoardService = playBoardService;
         this.moveTypeService = moveTypeService;
     }
 
     @Override
     public boolean isAvailableMove(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
         boolean isValidMoveRule = isValidMove(playBoardDTO, pieceDTO, toCol, toRow);
+       
         if (isValidMoveRule) {
-            PlayBoardDTO updatedPlayBoardDTO = playBoardDTOService.update(playBoardDTO, pieceDTO, toCol, toRow);
+            PlayBoardDTO updatedPlayBoardDTO = playBoardService.update(playBoardDTO, pieceDTO, toCol, toRow);
             return isGeneralInSafe(updatedPlayBoardDTO, pieceDTO);
         }
 
@@ -104,56 +102,11 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     }
 
     private boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO) {
-        final int CENTER_COL_INDEX_MIN = Default.Game.PlayBoardSize.CENTER_COL_MIN - 1;
-        final int CENTER_COL_INDEX_MAX = Default.Game.PlayBoardSize.CENTER_COL_MAX - 1;
-        final int BLACK_CENTER_ROW_INDEX_MIN = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MIN - 1;
-        final int BLACK_CENTER_ROW_INDEX_MAX = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MAX - 1;
-        final int RED_CENTER_ROW_INDEX_MIN = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MIN - 1;
-        final int RED_CENTER_ROW_INDEX_MAX = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX - 1;
+        PieceDTO sameColorGeneral = pieceService.findGeneralInBoard(playBoardDTO, pieceDTO.isRed());
+        PieceDTO opponentGeneral = pieceService.findGeneralInBoard(playBoardDTO, !pieceDTO.isRed());
 
-        int fromCol = CENTER_COL_INDEX_MIN;
-        int toCol = CENTER_COL_INDEX_MAX;
-        int theSameColorFromRow;
-        int theSameColorToRow;
-        int opponentFromRow;
-        int opponentToRow;
-
-        if (pieceDTO.isRed()) {
-            theSameColorFromRow = RED_CENTER_ROW_INDEX_MIN;
-            theSameColorToRow = RED_CENTER_ROW_INDEX_MAX;
-            opponentFromRow = BLACK_CENTER_ROW_INDEX_MIN;
-            opponentToRow = BLACK_CENTER_ROW_INDEX_MAX;
-        } else {
-            theSameColorFromRow = BLACK_CENTER_ROW_INDEX_MIN;
-            theSameColorToRow = BLACK_CENTER_ROW_INDEX_MAX;
-            opponentFromRow = RED_CENTER_ROW_INDEX_MIN;
-            opponentToRow = RED_CENTER_ROW_INDEX_MAX;
-        }
-
-        PieceDTO sameColorGeneral = pieceService.findAllInBoard(
-                playBoardDTO, EPiece.GENERAL.name(), null,
-                fromCol, theSameColorFromRow, toCol, theSameColorToRow)
-                .stream()
-                .findFirst()
-                .orElse(null);
-
-        PieceDTO opponentGeneral = pieceService.findAllInBoard(
-                playBoardDTO, EPiece.GENERAL.name(), null,
-                fromCol, opponentFromRow, toCol, opponentToRow)
-                .stream()
-                .findFirst()
-                .orElse(null);
-
-        if (sameColorGeneral == null) {
-            throw new InvalidException(Collections.singletonMap("message",
-                    (pieceDTO.isRed() ? "Red" : "Black") + " general piece is not found in center palace"));
-        } else if (opponentGeneral == null) {
-            throw new InvalidException(Collections.singletonMap("message",
-                    (pieceDTO.isRed() ? "Black" : "Red") + " general piece is not found in center palace"));
-        } else {
-            return !areTwoGeneralsFacing(playBoardDTO, sameColorGeneral, opponentGeneral)
-                    && !isGeneralBeingChecked(playBoardDTO, sameColorGeneral);
-        }
+        return !areTwoGeneralsFacing(playBoardDTO, sameColorGeneral, opponentGeneral)
+                && !isGeneralBeingChecked(playBoardDTO, sameColorGeneral);
     }
 
     @Override
@@ -256,7 +209,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             return playBoardDTO.getState()[obstacleCol][obstacleRow] == null; // No obstacle, Invalid move
         }
 
-        return false; 
+        return false;
     }
 
     /*
@@ -280,6 +233,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
 
         boolean isVerticallyMoving = moveTypeService.isVerticallyMoving(fromCol, toCol);
         boolean isHorizontalMoving = moveTypeService.isHorizontalMoving(fromRow, toRow);
+       
         // check move Vertically or Horizontal
         if (isVerticallyMoving || isHorizontalMoving) {
             int numPiecesBetween = isVerticallyMoving

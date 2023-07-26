@@ -15,6 +15,7 @@ import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.TrainingMoveCreationDTO;
 import com.data.dto.move.AvailableMoveRequest;
 import com.service.MoveService;
+import com.service.PlayBoardService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,20 +27,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping(ApiUrl.MOVE_HISTORIES)
 public class MoveController {
 
-    private MoveService moveService;
+    private final MoveService moveService;
+    private final PlayBoardService playBoardService;
 
     @Autowired
-    public MoveController(MoveService moveService) {
+    public MoveController(MoveService moveService, PlayBoardService playBoardService) {
         this.moveService = moveService;
+        this.playBoardService = playBoardService;
     }
 
     @GetMapping(value = "")
-    public ResponseEntity<?> findMoveValid(@Valid @RequestBody AvailableMoveRequest validMoveRequestDTO) {
-        return ResponseEntity.ok(moveService.findAllAvailableMoves(validMoveRequestDTO));
+    public ResponseEntity<?> findMoveValid(@Valid @RequestBody AvailableMoveRequest availableMoveRequest) {
+        playBoardService.validatePlayBoard(availableMoveRequest.getPlayBoardDTO());
+        
+        return ResponseEntity.ok(moveService.findAllAvailableMoves(availableMoveRequest));
     }
 
     @PostMapping(value = "")
     public ResponseEntity<?> create(@Valid @RequestBody MoveCreationDTO moveCreationDTO) {
+        playBoardService.validatePlayBoard(moveCreationDTO.getPlayBoardDTO());
+        
         return ResponseEntity.ok(moveService.create(moveCreationDTO));
     }
 
@@ -57,6 +64,8 @@ public class MoveController {
 
      @GetMapping(value = "/best-moves")
     public ResponseEntity<?> findAllBestMoves(@Valid @RequestBody BestMoveRequestDTO bestMoveRequestDTO) {
+        playBoardService.validatePlayBoard(bestMoveRequestDTO.getPlayBoardDTO());
+       
         return ResponseEntity.ok(moveService.findAllBestMoves(bestMoveRequestDTO));
     }
 

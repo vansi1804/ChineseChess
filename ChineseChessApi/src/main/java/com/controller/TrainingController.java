@@ -31,25 +31,16 @@ public class TrainingController {
         this.trainingService = trainingService;
     }
 
-    // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "")
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(trainingService.findAllChildrenById(null));
+    public ResponseEntity<?> findAllBase() {
+        return ResponseEntity.ok(trainingService.findAllBase());
     }
 
-    // @PreAuthorize("isAuthenticated()")
-    @GetMapping(value = "/id={id}/children")
-    public ResponseEntity<?> findAllChildrenById(@PathVariable long id) {
-        return ResponseEntity.ok(trainingService.findAllChildrenById(id));
-    }
-
-    // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/id={id}")
     public ResponseEntity<?> findById(@PathVariable long id) {
         return ResponseEntity.ok(trainingService.findById(id));
     }
 
-    // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/id={id}/details")
     public ResponseEntity<?> findDetailsById(@PathVariable long id) {
         return ResponseEntity.ok(trainingService.findDetailById(id));

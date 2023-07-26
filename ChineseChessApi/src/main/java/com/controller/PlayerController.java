@@ -45,6 +45,7 @@ public class PlayerController {
             @RequestParam(name = "no", required = false, defaultValue = Default.Page.NO) int no,
             @RequestParam(name = "limit", required = false, defaultValue = Default.Page.LIMIT) int limit,
             @RequestParam(name = "sort-by", required = false, defaultValue = Default.Page.SORT_BY) String sortBy) {
+        
         return ResponseEntity.ok(playerService.findAll(no, limit, sortBy));
     }
 

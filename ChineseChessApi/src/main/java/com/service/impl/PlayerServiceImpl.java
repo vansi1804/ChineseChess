@@ -141,7 +141,6 @@ public class PlayerServiceImpl implements PlayerService {
 
             default:
                 updatePlayer.setDraw(updatePlayer.getDraw() + 1);
-                break;
         }
 
         Rank rank = rankRepository.findFirstByEloMilestonesLessThanEqualOrderByEloMilestonesDesc(eloBet)
