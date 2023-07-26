@@ -36,7 +36,7 @@ public class TrainingServiceImpl implements TrainingService {
             TrainingRepository trainingRepository,
             MoveService moveService,
             MoveHistoryRepository moveHistoryRepository) {
-                
+
         this.trainingMapper = trainingMapper;
         this.trainingRepository = trainingRepository;
         this.moveHistoryRepository = moveHistoryRepository;
@@ -44,8 +44,8 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
-    public List<TrainingDTO> findAllChildrenById(Long id) {
-        return trainingRepository.findAllByParentTrainingId(id).stream()
+    public List<TrainingDTO> findAllBase() {
+        return trainingRepository.findAllBase().stream()
                 .map(t -> trainingMapper.toDTO(t))
                 .collect(Collectors.toList());
     }
@@ -63,6 +63,7 @@ public class TrainingServiceImpl implements TrainingService {
     public TrainingDTO create(TrainingDTO trainingDTO) {
         if (trainingDTO.getParentTrainingId() != null
                 && !trainingRepository.existsById(trainingDTO.getParentTrainingId())) {
+
             throw new ResourceNotFoundException(
                     Collections.singletonMap("parentTrainingId", trainingDTO.getParentTrainingId()));
         }
@@ -73,6 +74,7 @@ public class TrainingServiceImpl implements TrainingService {
             Map<String, Object> errors = new HashMap<>();
             errors.put("parentTrainingId", trainingDTO.getParentTrainingId());
             errors.put("title", trainingDTO.getTitle());
+
             throw new ConflictException(errors);
         }
 
@@ -84,8 +86,7 @@ public class TrainingServiceImpl implements TrainingService {
     @Override
     public TrainingDTO update(long id, TrainingDTO trainingDTO) {
         if (!trainingRepository.existsById(id)) {
-            throw new ResourceNotFoundException(
-                    Collections.singletonMap("id", id));
+            throw new ResourceNotFoundException(Collections.singletonMap("id", id));
         }
 
         if (trainingRepository.existByParentTrainingIdAndTitle(
@@ -94,6 +95,7 @@ public class TrainingServiceImpl implements TrainingService {
             Map<String, Object> errors = new HashMap<>();
             errors.put("parentTrainingId", trainingDTO.getParentTrainingId());
             errors.put("title", trainingDTO.getTitle());
+
             throw new ConflictException(errors);
         }
 
@@ -106,8 +108,7 @@ public class TrainingServiceImpl implements TrainingService {
     @Override
     public boolean deleteById(long id) {
         if (!trainingRepository.existsById(id)) {
-            throw new ResourceNotFoundException(
-                    Collections.singletonMap("id", id));
+            throw new ResourceNotFoundException(Collections.singletonMap("id", id));
         }
 
         moveHistoryRepository.deleteAllByTraining_Id(id);

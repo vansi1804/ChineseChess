@@ -20,6 +20,6 @@ public class AvailableMoveRequest {
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
-    private PlayBoardDTO currentBoardDTO;
+    private PlayBoardDTO playBoardDTO;
     
 }

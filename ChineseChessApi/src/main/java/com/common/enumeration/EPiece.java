@@ -15,7 +15,7 @@ public enum EPiece {
     CANNON("Pháo","P", 70),
     SOLDIER("Binh","B", 30);
 
-    private final String fullName;
+    private final String vietnameseName;
     
     private final String shortName;
 

@@ -7,11 +7,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.common.Default;
 import com.common.enumeration.EPiece;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
@@ -189,6 +189,26 @@ public class PieceServiceImpl implements PieceService {
         return (int) IntStream.rangeClosed(startRow, endRow)
                 .filter(row -> playBoardDTO.getState()[currentCol][row] != null)
                 .count();
+    }
+
+    @Override
+    public PieceDTO findGeneralInBoard(PlayBoardDTO playBoardDTO, boolean isRed) {
+        int fromCol = Default.Game.PlayBoardSize.CENTER_COL_MIN - 1;
+        int toCol = Default.Game.PlayBoardSize.CENTER_COL_MAX - 1;
+        int fromRow;
+        int toRow;
+
+        if (isRed) {
+            fromRow = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MIN - 1;
+            toRow = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX - 1;
+        } else {
+            fromRow = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MIN - 1;
+            toRow = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MAX - 1;
+        }
+
+        return findAllInBoard(playBoardDTO, EPiece.GENERAL.name(), null, fromCol, fromRow, toCol, toRow).stream()
+                .findFirst()
+                .orElse(null);
     }
 
 }

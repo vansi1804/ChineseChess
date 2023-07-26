@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MoveCreationResponseDTO{
+public class MoveDTO{
     
     private PieceDTO movingPieceDTO;
 
@@ -18,7 +18,7 @@ public class MoveCreationResponseDTO{
 
     private int toRow;
 
-    private PlayBoardDTO currentBoardDTO;
+    private PlayBoardDTO playBoardDTO;
 
     private PieceDTO deadPieceDTO;
 

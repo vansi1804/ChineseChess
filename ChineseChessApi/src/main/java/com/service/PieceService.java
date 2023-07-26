@@ -36,4 +36,6 @@ public interface PieceService {
 
     int countBetweenInColPath(PlayBoardDTO playBoardDTO, int col, int fromRow, int toRow);
 
+    PieceDTO findGeneralInBoard(PlayBoardDTO playBoardDTO, boolean isRed);
+
 }

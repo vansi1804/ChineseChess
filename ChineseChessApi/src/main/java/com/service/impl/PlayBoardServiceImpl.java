@@ -1,12 +1,18 @@
 package com.service.impl;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.Default;
+import com.common.enumeration.EPiece;
+import com.config.exception.InvalidException;
+import com.config.exception.ResourceNotFoundException;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.data.entity.MoveHistory;
@@ -51,10 +57,10 @@ public class PlayBoardServiceImpl implements PlayBoardService {
         return moveHistories.stream()
                 .reduce(
                         generate(),
-                        (currentBoardDTO, mh) -> update(
-                                currentBoardDTO, pieceService.findOneInBoard(currentBoardDTO, mh.getPiece().getId()),
+                        (playBoardDTO, mh) -> update(
+                                playBoardDTO, pieceService.findOneInBoard(playBoardDTO, mh.getPiece().getId()),
                                 mh.getToCol(), mh.getToRow()),
-                        (currentBoardDTO, updatedBoardDTO) -> updatedBoardDTO);
+                        (playBoardDTO, updatedBoardDTO) -> updatedBoardDTO);
     }
 
     @Override
@@ -72,6 +78,50 @@ public class PlayBoardServiceImpl implements PlayBoardService {
         return updatePlayBoardDTO;
     }
 
+    @Override
+    public void validatePlayBoard(PlayBoardDTO playBoardDTO) {
+        boolean existsRedGeneral = false;
+        boolean existsBlackGeneral = false;
+
+        for (int col = 0; col < playBoardDTO.getState().length; col++) {
+            for (int row = 0; row < playBoardDTO.getState()[0].length; row++) {
+                PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
+                if (pieceDTO != null) {
+                    if (!pieceRepository.existsById(pieceDTO.getId())) {
+                        throw new ResourceNotFoundException(Collections.singletonMap("pieceId", pieceDTO.getId()));
+                    }
+
+                    if (!existsRedGeneral || !existsBlackGeneral) {
+                        if (EPiece.GENERAL.name().equals(pieceDTO.getName())) {
+                            if (pieceDTO.isRed()) {
+                                existsRedGeneral = true;
+                            } else {
+                                existsBlackGeneral = true;
+                            }
+                        }
+                    }
+
+                    if (col != pieceDTO.getCurrentCol() || row != pieceDTO.getCurrentRow()) {
+                        Map<String, Object> errors = new HashMap<>();
+                        errors.put("pieceDTO", pieceDTO);
+                        errors.put("col", col);
+                        errors.put("row", row);
+
+                        throw new InvalidException(errors);
+                    }
+                }
+            }
+        }
+
+        if (existsRedGeneral) {
+            throw new InvalidException(Collections.singletonMap("message", "Red general is not found in board"));
+        }
+        
+        if (existsBlackGeneral) {
+            throw new InvalidException(Collections.singletonMap("message", "Black general is not found in board"));
+        }
+    }
+
     private PieceDTO[][] cloneStateArray(PieceDTO[][] state) {
         return Arrays.stream(state)
                 .map(PieceDTO[]::clone)
@@ -79,14 +129,14 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     }
 
     @Override
-    public void printTest(Object title, PlayBoardDTO currentBoardDTO, PieceDTO pieceDTO) {
+    public void printTest(Object title, PlayBoardDTO playBoardDTO, PieceDTO pieceDTO) {
         System.out.println("\n===========================================");
         System.out.println(title.toString());
         System.out.println("===========================================");
 
-        for (int row = 0; row < currentBoardDTO.getState()[0].length; row++) {
-            for (int col = 0; col < currentBoardDTO.getState().length; col++) {
-                PieceDTO indexPieceDTO = currentBoardDTO.getState()[col][row];
+        for (int row = 0; row < playBoardDTO.getState()[0].length; row++) {
+            for (int col = 0; col < playBoardDTO.getState().length; col++) {
+                PieceDTO indexPieceDTO = playBoardDTO.getState()[col][row];
                 System.out.print(getSymbolOutput(pieceDTO, col, row, indexPieceDTO, false));
             }
             System.out.println("\n\n");
@@ -96,14 +146,14 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     }
 
     @Override
-    public void printTest(PlayBoardDTO currentBoardDTO, PieceDTO pieceDTO, List<int[]> availableMoveIndexes) {
+    public void printTest(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, List<int[]> availableMoveIndexes) {
         System.out.println("\n===========================================");
         System.out.println("Available move: ");
         System.out.println("===========================================");
 
-        for (int row = 0; row < currentBoardDTO.getState()[0].length; row++) {
-            for (int col = 0; col < currentBoardDTO.getState().length; col++) {
-                PieceDTO indexPieceDTO = currentBoardDTO.getState()[col][row];
+        for (int row = 0; row < playBoardDTO.getState()[0].length; row++) {
+            for (int col = 0; col < playBoardDTO.getState().length; col++) {
+                PieceDTO indexPieceDTO = playBoardDTO.getState()[col][row];
                 int[] index = new int[] { col, row };
                 boolean containsIndex = availableMoveIndexes.stream()
                         .anyMatch(arr -> Arrays.equals(arr, index));

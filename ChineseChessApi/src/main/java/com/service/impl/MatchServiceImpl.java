@@ -92,6 +92,7 @@ public class MatchServiceImpl implements MatchService {
 
         matchDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
         matchDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
+
         return matchDetailDTO;
     }
 
@@ -101,6 +102,7 @@ public class MatchServiceImpl implements MatchService {
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 Collections.singletonMap("player1Id", matchCreationDTO.getPlayer1Id())));
+
         Player player2 = playerRepository.findById(matchCreationDTO.getPlayer2Id())
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
@@ -108,13 +110,14 @@ public class MatchServiceImpl implements MatchService {
 
         if (matchRepository.existsPlayingByPlayerId(player1.getId())) {
             throw new InvalidException(
-                ErrorMessage.PLAYER_PLAYING,  
-                Collections.singletonMap("player1Id", player1.getId()));
+                    ErrorMessage.PLAYER_PLAYING,
+                    Collections.singletonMap("player1Id", player1.getId()));
         }
+
         if (matchRepository.existsPlayingByPlayerId(player2.getId())) {
             throw new InvalidException(
-                ErrorMessage.PLAYER_PLAYING,  
-                Collections.singletonMap("player2Id", player2.getId()));
+                    ErrorMessage.PLAYER_PLAYING,
+                    Collections.singletonMap("player2Id", player2.getId()));
         }
 
         if (player1.getElo() < matchCreationDTO.getEloBet()) {
@@ -124,6 +127,7 @@ public class MatchServiceImpl implements MatchService {
             errors.put("eloBet", player1.getElo());
             throw new InvalidException(ErrorMessage.PLAYER_PLAYING, errors);
         }
+
         if (player2.getElo() < matchCreationDTO.getEloBet()) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("player2Id", player2.getId());
@@ -161,11 +165,11 @@ public class MatchServiceImpl implements MatchService {
         MatchDTO matchDTO = matchMapper.toDTO(matchRepository.save(match));
 
         PlayerProfileDTO player1ProfileDTO = playerService.updateByEloBetAndResult(
-                    match.getPlayer1().getId(), match.getEloBet(), eResult);
+                match.getPlayer1().getId(), match.getEloBet(), eResult);
         matchDTO.setPlayer1ProfileDTO(player1ProfileDTO);
 
         PlayerProfileDTO player2ProfileDTO = playerService.updateByEloBetAndResult(
-                    match.getPlayer2().getId(), match.getEloBet(), eResult);
+                match.getPlayer2().getId(), match.getEloBet(), eResult);
         matchDTO.setPlayer2ProfileDTO(player2ProfileDTO);
 
         return matchDTO;
