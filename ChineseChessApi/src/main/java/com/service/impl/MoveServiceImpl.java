@@ -121,12 +121,12 @@ public class MoveServiceImpl implements MoveService {
     @Override
     public List<int[]> findAllAvailableMoves(AvailableMoveRequest validMoveRequestDTO) {
         PieceDTO movingPieceDTO = pieceService.findOneInBoard(
-                validMoveRequestDTO.getPlayBoardDTO(), validMoveRequestDTO.getPieceId());
+                validMoveRequestDTO.getPlayBoardDTO(), validMoveRequestDTO.getMovingPieceId());
 
         if (movingPieceDTO == null) {
             throw new InvalidException(
                     ErrorMessage.DEAD_PIECE,
-                    Collections.singletonMap("pieceId", validMoveRequestDTO.getPieceId()));
+                    Collections.singletonMap("movingPieceId", validMoveRequestDTO.getMovingPieceId()));
         }
 
         List<int[]> availableMoveIndexes = findAllAvailableMoveIndexes(
@@ -140,12 +140,12 @@ public class MoveServiceImpl implements MoveService {
     @Override
     public MoveDTO create(MoveCreationDTO moveCreationDTO) {
         PieceDTO movingPieceDTO = pieceService.findOneInBoard(
-                moveCreationDTO.getPlayBoardDTO(), moveCreationDTO.getPieceId());
+                moveCreationDTO.getPlayBoardDTO(), moveCreationDTO.getMovingPieceId());
 
         if (movingPieceDTO == null) {
             throw new InvalidException(
                     ErrorMessage.DEAD_PIECE,
-                    Collections.singletonMap("pieceId", moveCreationDTO.getPieceId()));
+                    Collections.singletonMap("movingPieceId", moveCreationDTO.getMovingPieceId()));
         }
 
         return buildMoveCreationResponse(
@@ -166,12 +166,12 @@ public class MoveServiceImpl implements MoveService {
                 moveHistoryRepository.findAllByTraining_Id(training.getId()));
 
         // check piece input existing in playBoardDTO
-        PieceDTO movingPieceDTO = pieceService.findOneInBoard(playBoardDTO, trainingMoveCreationDTO.getPieceId());
+        PieceDTO movingPieceDTO = pieceService.findOneInBoard(playBoardDTO, trainingMoveCreationDTO.getMovingPieceId());
         if (movingPieceDTO == null) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("trainingId", training.getId());
             errors.put("turn", newTurn);
-            errors.put("pieceId", trainingMoveCreationDTO.getPieceId());
+            errors.put("movingPieceId", trainingMoveCreationDTO.getMovingPieceId());
 
             throw new InvalidException(ErrorMessage.DEAD_PIECE, errors);
         }
@@ -236,12 +236,12 @@ public class MoveServiceImpl implements MoveService {
                 moveHistoryRepository.findAllByMatch_Id(match.getId()));
 
         // check piece input existing in playBoardDTO
-        PieceDTO movingPieceDTO = pieceService.findOneInBoard(playBoardDTO, matchMoveCreationDTO.getPieceId());
+        PieceDTO movingPieceDTO = pieceService.findOneInBoard(playBoardDTO, matchMoveCreationDTO.getMovingPieceId());
         if (movingPieceDTO == null) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("matchId", match.getId());
             errors.put("turn", newTurn);
-            errors.put("pieceId", matchMoveCreationDTO.getPieceId());
+            errors.put("movingPieceId", matchMoveCreationDTO.getMovingPieceId());
 
             throw new InvalidException(ErrorMessage.DEAD_PIECE, errors);
         }
@@ -261,7 +261,7 @@ public class MoveServiceImpl implements MoveService {
         if (movingPieceDTO.isRed() && (match.getPlayer1().getId() != matchMoveCreationDTO.getPlayerId())) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("matchId", match.getId());
-            errors.put("playerId", matchMoveCreationDTO.getPieceId());
+            errors.put("playerId", matchMoveCreationDTO.getMovingPieceId());
             errors.put("turn", newTurn);
             errors.put("movingPieceDTO", movingPieceDTO);
 
