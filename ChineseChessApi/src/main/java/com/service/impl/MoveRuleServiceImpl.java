@@ -1,15 +1,10 @@
 package com.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.Default;
-import com.common.ErrorMessage;
 import com.common.enumeration.EPiece;
-import com.config.exception.InvalidException;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.service.MoveRuleService;
@@ -44,13 +39,9 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         int fromCol = pieceDTO.getCurrentCol();
         int fromRow = pieceDTO.getCurrentRow();
 
-        if (!isMoving(fromCol, fromRow, toCol, toRow)) {
-            Map<String, Object> errors = new HashMap<>();
-            errors.put("pieceDTO", pieceDTO);
-            errors.put("toCol", toCol);
-            errors.put("toRow", toRow);
-            
-            throw new InvalidException(ErrorMessage.PIECE_NOT_MOVE, errors);
+        // check piece is not moving out current index
+        if(fromCol == toCol && fromRow == toRow){
+            return false;
         }
 
         PieceDTO targetPiece = playBoardDTO.getState()[toCol][toRow];
@@ -82,11 +73,6 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             default:     //case GENERAL:
                 return checkGeneralMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
         }
-    }
-
-    // check piece is moving out current index
-    private boolean isMoving(int fromCol, int fromRow, int toCol, int toRow) {
-        return fromCol != toCol || fromRow != toRow;
     }
 
     /*
