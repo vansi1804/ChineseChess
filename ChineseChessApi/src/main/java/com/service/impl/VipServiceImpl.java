@@ -85,11 +85,13 @@ public class VipServiceImpl implements VipService {
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         vipRepository.delete(vipRepository.findById(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 Collections.singletonMap("id", id))));
+
+        return true;
     }
 
 }

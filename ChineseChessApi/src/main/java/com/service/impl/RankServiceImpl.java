@@ -86,11 +86,13 @@ public class RankServiceImpl implements RankService {
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         rankRepository.delete(rankRepository.findById(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 Collections.singletonMap("id", id))));
+
+        return true;
     }
 
 }

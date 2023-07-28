@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.common.Default;
 import com.common.enumeration.EIndex;
 import com.common.enumeration.EMoveType;
 import com.data.dto.PieceDTO;
@@ -12,11 +11,12 @@ import com.data.dto.PlayBoardDTO;
 import com.service.MoveDescriptionService;
 import com.service.MoveTypeService;
 import com.service.PieceService;
+import com.common.Validation;
 
 @Service
 public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     
-    private final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
+    private final int MAX_COL = Validation.COL_MAX;
 
     private final PieceService pieceService;
     private final MoveTypeService moveTypeService;

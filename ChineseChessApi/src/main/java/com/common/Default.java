@@ -80,12 +80,6 @@ public class Default {
             // +--+--+--+--+--+--+--+--+ 9
             // |::|::|::|/ | \|::|::|::|
             // +--+--+--+--+--+--+--+--+ 10
-            
-            public static final int AREA_MIN = 1;
-
-            public static final int COL_MAX = 9;
-
-            public static final int ROW_MAX = 10;
 
             public static final int CENTER_COL_MIN = 4;
 

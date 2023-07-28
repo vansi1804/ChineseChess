@@ -23,7 +23,6 @@ public interface PlayerService {
     @Transactional
     PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO, MultipartFile fileAvatar);
 
-    @Transactional
     PlayerProfileDTO updateByEloBetAndResult(long id, int eloBet, EResult eResult);
 
 }

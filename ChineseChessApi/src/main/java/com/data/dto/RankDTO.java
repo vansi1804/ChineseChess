@@ -1,10 +1,11 @@
 package com.data.dto;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.common.ErrorMessage;
+import com.common.Validation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class RankDTO extends AuditingDTO{
     private String name;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
-    @Size(min = 1, message = " < 0 (elo)")
+    @Min(value = Validation.ELO_MILESTONES, message = ErrorMessage.ELO_MILESTONES)
     private Integer eloMilestones;
 
 }
