@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class MoveDetailDTO implements Serializable {
 
     @NotNull(message = ErrorMessage.NULL_DATA)
-    private Integer pieceId;
+    private Integer movingPieceId;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     @Min(value = Validation.AREA_MIN -1, message = ErrorMessage.COL)

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class AvailableMoveRequest {
     
     @NotNull(message = ErrorMessage.BLANK_DATA)
-    private Integer pieceId;
+    private Integer movingPieceId;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
