@@ -16,6 +16,6 @@ public interface VipService {
 
     VipDTO update(int id, VipDTO vipDTO);
     
-    void delete(int id);
+    boolean delete(int id);
     
 }

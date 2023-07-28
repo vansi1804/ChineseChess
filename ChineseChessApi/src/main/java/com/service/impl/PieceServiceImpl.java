@@ -59,7 +59,7 @@ public class PieceServiceImpl implements PieceService {
     @Override
     public EPiece convertByName(String name) {
         return Arrays.stream(EPiece.values())
-                .filter(ePiece -> ePiece.name().equalsIgnoreCase(name))
+                .filter(ePiece -> ePiece.name().equals(name))
                 .findFirst()
                 .orElseThrow(
                         () -> new ResourceNotFoundException(

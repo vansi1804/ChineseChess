@@ -2,6 +2,8 @@ package com.service;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.data.dto.RankDTO;
 
 public interface RankService {
@@ -16,6 +18,7 @@ public interface RankService {
 
     RankDTO update(int id, RankDTO rankDTO);
     
-    void delete(int id);
+    @Transactional
+    boolean delete(int id);
     
 }

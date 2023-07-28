@@ -6,6 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
+import com.common.Validation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,16 +17,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MatchCreationDTO implements Serializable{
 
-    @Min(value = 5, message = " < 5 (minutes)")
+    @Min(value = Validation.MATCH_TIME, message = ErrorMessage.MATCH_TIME)
     private Integer time;
 
-    @Min(value = 30, message = " < 30 (seconds)")
+    @Min(value = Validation.MOVING_TIME, message = ErrorMessage.MOVING_TIME)
     private Integer movingTime;
 
-    @Min(value = 3, message = " < 3 (seconds)")
+    @Min(value = Validation.CUMULATIVE_TIME, message = ErrorMessage.CUMULATIVE_TIME)
     private Integer cumulativeTime;
 
-    @Min(value = 100, message = " < 100 (elo)")
+    @Min(value = Validation.BET_ELO, message = ErrorMessage.BET_ELO)
     private Integer eloBet;
 
     @NotNull(message = ErrorMessage.NULL_DATA)

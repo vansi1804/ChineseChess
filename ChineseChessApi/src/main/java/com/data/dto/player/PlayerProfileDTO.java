@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayerProfileDTO { 
     
-    private Long id;
+    private long id;
 
     @Valid
     private UserProfileDTO userProfileDTO;

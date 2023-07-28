@@ -9,7 +9,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.common.Default;
 import com.common.enumeration.EPiece;
 import com.config.exception.InvalidException;
 import com.config.exception.ResourceNotFoundException;
@@ -20,23 +19,33 @@ import com.data.entity.Piece;
 import com.data.mapper.PieceMapper;
 import com.data.repository.PieceRepository;
 import com.service.PlayBoardService;
+import com.service.MoveRuleService;
 import com.service.PieceService;
+import com.common.ErrorMessage;
+import com.common.Validation;
 
 @Service
 public class PlayBoardServiceImpl implements PlayBoardService {
 
-    private final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
-    private final int MAX_ROW = Default.Game.PlayBoardSize.ROW_MAX;
+    private final int MAX_COL = Validation.COL_MAX;
+    private final int MAX_ROW = Validation.ROW_MAX;
 
     private final PieceRepository pieceRepository;
     private final PieceMapper pieceMapper;
     private final PieceService pieceService;
+    private final MoveRuleService moveRuleService;
 
     @Autowired
-    public PlayBoardServiceImpl(PieceRepository pieceRepository, PieceMapper pieceMapper, PieceService pieceService) {
+    public PlayBoardServiceImpl(
+            PieceRepository pieceRepository,
+            PieceMapper pieceMapper,
+            PieceService pieceService,
+            MoveRuleService moveRuleService) {
+
         this.pieceRepository = pieceRepository;
         this.pieceMapper = pieceMapper;
         this.pieceService = pieceService;
+        this.moveRuleService = moveRuleService;
     }
 
     @Override
@@ -80,46 +89,67 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
     @Override
     public void validatePlayBoard(PlayBoardDTO playBoardDTO) {
-        boolean existsRedGeneral = false;
-        boolean existsBlackGeneral = false;
+        int colLength = playBoardDTO.getState().length;
+        int rowLength = playBoardDTO.getState()[0].length;
 
-        for (int col = 0; col < playBoardDTO.getState().length; col++) {
-            for (int row = 0; row < playBoardDTO.getState()[0].length; row++) {
-                PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
-                if (pieceDTO != null) {
-                    if (!pieceRepository.existsById(pieceDTO.getId())) {
-                        throw new ResourceNotFoundException(Collections.singletonMap("pieceId", pieceDTO.getId()));
-                    }
+        if (MAX_COL != colLength || MAX_ROW != rowLength) {
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("colLength", ErrorMessage.COL_LENGTH);
+            errors.put("rowLength", ErrorMessage.ROW_LENGTH);
 
-                    if (!existsRedGeneral || !existsBlackGeneral) {
-                        if (EPiece.GENERAL.name().equals(pieceDTO.getName())) {
-                            if (pieceDTO.isRed()) {
-                                existsRedGeneral = true;
-                            } else {
-                                existsBlackGeneral = true;
+            throw new InvalidException(ErrorMessage.PLAY_BOARD_SIZE, errors);
+        } else {
+            boolean existsRedGeneral = false;
+            boolean existsBlackGeneral = false;
+
+            for (int col = 0; col < playBoardDTO.getState().length; col++) {
+                for (int row = 0; row < playBoardDTO.getState()[0].length; row++) {
+                    PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
+                    if (pieceDTO != null) {
+                        // validate id
+                        if (!pieceRepository.existsById(pieceDTO.getId())) {
+                            throw new ResourceNotFoundException(buildValidateErrors(pieceDTO, col, row));
+                        }
+
+                        // validate name
+                        EPiece ePiece = pieceService.convertByName(pieceDTO.getName());
+
+                        // check exists generals
+                        if (!existsRedGeneral || !existsBlackGeneral) {
+                            if (EPiece.GENERAL == ePiece) {
+                                if (pieceDTO.isRed()) {
+                                    existsRedGeneral = true;
+                                } else {
+                                    existsBlackGeneral = true;
+                                }
                             }
                         }
-                    }
 
-                    if (col != pieceDTO.getCurrentCol() || row != pieceDTO.getCurrentRow()) {
-                        Map<String, Object> errors = new HashMap<>();
-                        errors.put("pieceDTO", pieceDTO);
-                        errors.put("col", col);
-                        errors.put("row", row);
-
-                        throw new InvalidException(errors);
+                        // validate index
+                        if (col != pieceDTO.getCurrentCol() || row != pieceDTO.getCurrentRow()) {
+                            throw new InvalidException(buildValidateErrors(pieceDTO, col, row));
+                        }
                     }
                 }
             }
-        }
 
-        if (existsRedGeneral) {
-            throw new InvalidException(Collections.singletonMap("message", "Red general is not found in board"));
+            if (!existsRedGeneral) {
+                throw new InvalidException(Collections.singletonMap("message", "Red general is not found in board"));
+            }
+
+            if (!existsBlackGeneral) {
+                throw new InvalidException(Collections.singletonMap("message", "Black general is not found in board"));
+            }
         }
-        
-        if (existsBlackGeneral) {
-            throw new InvalidException(Collections.singletonMap("message", "Black general is not found in board"));
-        }
+    }
+
+    private Map<String, Object> buildValidateErrors(PieceDTO pieceDTO, int col, int row) {
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("pieceDTO", pieceDTO);
+        errors.put("col", col);
+        errors.put("row", row);
+
+        return errors;
     }
 
     private PieceDTO[][] cloneStateArray(PieceDTO[][] state) {
@@ -197,6 +227,40 @@ public class PlayBoardServiceImpl implements PlayBoardService {
                 return " " + p + " ";
             }
         }
+    }
+
+    @Override
+    public boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPiece1, PieceDTO generalPiece2) {
+        if (generalPiece1.getCurrentCol() == generalPiece2.getCurrentCol()) {
+            int currentCol = generalPiece1.getCurrentCol();
+            int fromRow = generalPiece1.getCurrentRow();
+            int toRow = generalPiece2.getCurrentRow();
+
+            if (!pieceService.existsBetweenInColPath(playBoardDTO, currentCol, fromRow, toRow)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isGeneralBeingChecked(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO) {
+        List<PieceDTO> opponentPieceDTOsInBoard = pieceService.findAllInBoard(
+                playBoardDTO, null, !generalPieceDTO.isRed());
+
+        return opponentPieceDTOsInBoard.stream()
+                .anyMatch(opponentPiece -> moveRuleService.isValidMove(
+                        playBoardDTO, opponentPiece, generalPieceDTO.getCurrentCol(), generalPieceDTO.getCurrentRow()));
+    }
+
+    @Override
+    public boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, boolean isRed) {
+        PieceDTO sameColorGeneral = pieceService.findGeneralInBoard(playBoardDTO, isRed);
+        PieceDTO opponentGeneral = pieceService.findGeneralInBoard(playBoardDTO, !isRed);
+
+        return !areTwoGeneralsFacing(playBoardDTO, sameColorGeneral, opponentGeneral)
+                && !isGeneralBeingChecked(playBoardDTO, sameColorGeneral);
     }
 
 }

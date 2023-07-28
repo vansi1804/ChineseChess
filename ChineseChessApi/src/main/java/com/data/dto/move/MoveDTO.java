@@ -18,9 +18,9 @@ public class MoveDTO{
 
     private int toRow;
 
-    private PlayBoardDTO playBoardDTO;
-
     private PieceDTO deadPieceDTO;
+
+    private PlayBoardDTO playBoardDTO;
 
     private PieceDTO checkedGeneralPieceDTO;
     

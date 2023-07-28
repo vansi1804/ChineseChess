@@ -85,8 +85,15 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public TrainingDTO update(long id, TrainingDTO trainingDTO) {
-        if (!trainingRepository.existsById(id)) {
-            throw new ResourceNotFoundException(Collections.singletonMap("id", id));
+        Training oldTraining = trainingRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                Collections.singletonMap("id", id)));
+
+        if (trainingDTO.getParentTrainingId() != null
+                && !trainingRepository.existsById(trainingDTO.getParentTrainingId())) {
+            throw new ResourceNotFoundException(
+                    Collections.singletonMap("parentTrainingId", trainingDTO.getParentTrainingId()));
         }
 
         if (trainingRepository.existByParentTrainingIdAndTitle(
@@ -100,7 +107,7 @@ public class TrainingServiceImpl implements TrainingService {
         }
 
         Training updateTraining = trainingMapper.toEntity(trainingDTO);
-        updateTraining.setId(id);
+        updateTraining.setId(oldTraining.getId());
 
         return trainingMapper.toDTO(trainingRepository.save(updateTraining));
     }

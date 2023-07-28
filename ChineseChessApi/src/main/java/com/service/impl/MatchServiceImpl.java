@@ -125,6 +125,7 @@ public class MatchServiceImpl implements MatchService {
             errors.put("player1Id", player1.getId());
             errors.put("elo", player1.getElo());
             errors.put("eloBet", player1.getElo());
+
             throw new InvalidException(ErrorMessage.PLAYER_PLAYING, errors);
         }
 
@@ -133,6 +134,7 @@ public class MatchServiceImpl implements MatchService {
             errors.put("player2Id", player2.getId());
             errors.put("elo", player2.getElo());
             errors.put("eloBet", player2.getElo());
+            
             throw new InvalidException(ErrorMessage.PLAYER_PLAYING, errors);
         }
 

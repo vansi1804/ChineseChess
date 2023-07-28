@@ -20,4 +20,10 @@ public interface PlayBoardService {
 
     void printTest(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, List<int[]> availableMoveIndexes);
 
+    boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, boolean isRed);
+
+    boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPiece1, PieceDTO generalPiece2);
+
+    boolean isGeneralBeingChecked(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO);
+
 }
