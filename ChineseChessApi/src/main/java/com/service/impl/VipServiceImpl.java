@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.data.dto.VipDTO;
 import com.data.entity.Vip;
-import com.config.exception.ConflictException;
-import com.config.exception.ResourceNotFoundException;
+import com.config.exception.ConflictExceptionCustomize;
+import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.mapper.VipMapper;
 import com.data.repository.VipRepository;
 import com.service.VipService;
@@ -39,7 +39,7 @@ public class VipServiceImpl implements VipService {
         return vipRepository.findById(id)
                 .map(r -> vipMapper.toDTO(r))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
     }
 
@@ -48,18 +48,18 @@ public class VipServiceImpl implements VipService {
         return vipRepository.findByName(name)
                 .map(r -> vipMapper.toDTO(r))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("name", name)));
     }
 
     @Override
     public VipDTO create(VipDTO vipDTO) {
         if (vipRepository.existsByName(vipDTO.getName())) {
-            throw new ConflictException(Collections.singletonMap("name", vipDTO.getName()));
+            throw new ConflictExceptionCustomize(Collections.singletonMap("name", vipDTO.getName()));
         }
 
         if (vipRepository.existsByDepositMilestones(vipDTO.getDepositMilestones())) {
-            throw new ConflictException(Collections.singletonMap("depositMilestones", vipDTO.getDepositMilestones()));
+            throw new ConflictExceptionCustomize(Collections.singletonMap("depositMilestones", vipDTO.getDepositMilestones()));
         }
 
         Vip createdVip = vipRepository.save(vipMapper.toEntity(vipDTO));
@@ -70,15 +70,15 @@ public class VipServiceImpl implements VipService {
     @Override
     public VipDTO update(int id, VipDTO vipDTO) {
         if (!vipRepository.existsById(id)) {
-            throw new ResourceNotFoundException(Collections.singletonMap("id", id));
+            throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id));
         }
 
         if (vipRepository.existsByIdNotAndName(id, vipDTO.getName())) {
-            throw new ConflictException(Collections.singletonMap("name", vipDTO.getName()));
+            throw new ConflictExceptionCustomize(Collections.singletonMap("name", vipDTO.getName()));
         }
 
         if (vipRepository.existsByIdNotAndDepositMilestones(id, vipDTO.getDepositMilestones())) {
-            throw new ConflictException(Collections.singletonMap("depositMilestones", vipDTO.getDepositMilestones()));
+            throw new ConflictExceptionCustomize(Collections.singletonMap("depositMilestones", vipDTO.getDepositMilestones()));
         }
 
         return vipMapper.toDTO(vipRepository.save(vipMapper.toEntity(vipDTO)));
@@ -88,7 +88,7 @@ public class VipServiceImpl implements VipService {
     public boolean delete(int id) {
         vipRepository.delete(vipRepository.findById(id)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id))));
 
         return true;

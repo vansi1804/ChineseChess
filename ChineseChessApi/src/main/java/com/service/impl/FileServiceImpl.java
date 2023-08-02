@@ -7,7 +7,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.config.exception.ResourceNotFoundException;
+import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.service.FileService;
 
 import java.io.File;
@@ -52,7 +52,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public Resource downloadFile(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
-            throw new ResourceNotFoundException(Collections.singletonMap("fileName", fileName));
+            throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
         }
 
         Path filePath = Paths.get(UPLOAD_DIR, fileName);
@@ -60,10 +60,10 @@ public class FileServiceImpl implements FileService {
         try {
             resource = new UrlResource(filePath.toUri());
             if (!resource.exists() || !resource.isReadable()) {
-                throw new ResourceNotFoundException(Collections.singletonMap("fileName", fileName));
+                throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
             }
         } catch (MalformedURLException e) {
-            throw new ResourceNotFoundException(Collections.singletonMap("fileName", fileName));
+            throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
         }
 
         return resource;

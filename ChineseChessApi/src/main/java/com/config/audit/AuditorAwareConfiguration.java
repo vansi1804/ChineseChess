@@ -1,4 +1,4 @@
-package com.config;
+package com.config.audit;
 
 import java.util.Optional;
 
@@ -17,6 +17,7 @@ import com.data.repository.UserRepository;
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class AuditorAwareConfiguration {
+    
     @Autowired
     private UserRepository userRepository;
 

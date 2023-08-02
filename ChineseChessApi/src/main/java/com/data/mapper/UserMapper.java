@@ -8,7 +8,7 @@ import com.data.dto.user.UserDTO;
 import com.data.dto.user.UserProfileDTO;
 import com.data.entity.User;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {RoleMapper.class, VipMapper.class})
 public interface UserMapper {
 
     @Mapping(ignore = true, target = "id")
@@ -33,14 +33,11 @@ public interface UserMapper {
     @Mapping(ignore = true, target = "lastModifiedBy")
     User toEntity(UserProfileDTO userProfileDTO);
 
-    @Mapping(source = "vip.name", target = "vipName")
+    @Mapping(source = "vip", target = "vipDTO")
     UserProfileDTO toProfileDTO(User user);
 
-    @Mapping(source = "phoneNumber", target = "userProfileDTO.phoneNumber")
-    @Mapping(source = "name", target = "userProfileDTO.name")
-    @Mapping(source = "avatar", target = "userProfileDTO.avatar")
-    @Mapping(source = "vip.name", target = "userProfileDTO.vipName")
-    @Mapping(source = "role.name", target = "roleName")
+    @Mapping(expression = "java(toProfileDTO(user))", target = "userProfileDTO")
+    @Mapping(source = "role", target = "roleDTO")
     @Mapping(source = "createdBy.id", target = "createdByUserId")
     @Mapping(source = "lastModifiedBy.id", target = "lastModifiedByUserId")
     UserDTO toDTO(User user);

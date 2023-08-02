@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class RankDTO extends AuditingDTO{
-    
+public class RankDTO extends AuditingDTO {
+
     private Integer id;
 
     @NotBlank(message = ErrorMessage.BLANK_DATA)

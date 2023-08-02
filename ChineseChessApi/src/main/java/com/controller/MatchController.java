@@ -43,7 +43,7 @@ public class MatchController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<?> create(@Valid @RequestBody MatchCreationDTO matchCreationDTO) {
+    public ResponseEntity<?> create(@RequestBody @Valid MatchCreationDTO matchCreationDTO) {
         return ResponseEntity.ok(matchService.create(matchCreationDTO));
     }
 

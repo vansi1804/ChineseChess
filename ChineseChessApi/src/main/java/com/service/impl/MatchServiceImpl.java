@@ -23,8 +23,8 @@ import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PlayerRepository;
-import com.config.exception.InvalidException;
-import com.config.exception.ResourceNotFoundException;
+import com.config.exception.InvalidExceptionCustomize;
+import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.service.MatchService;
 import com.service.MoveService;
 import com.service.PlayerService;
@@ -68,7 +68,7 @@ public class MatchServiceImpl implements MatchService {
         return matchRepository.findById(id)
                 .map(m -> matchMapper.toDTO(m))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
     }
 
@@ -84,7 +84,7 @@ public class MatchServiceImpl implements MatchService {
         MatchDetailDTO matchDetailDTO = matchRepository.findById(id)
                 .map(m -> matchMapper.toDetailDTO(m))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(id);
@@ -100,42 +100,42 @@ public class MatchServiceImpl implements MatchService {
     public MatchDTO create(MatchCreationDTO matchCreationDTO) {
         Player player1 = playerRepository.findById(matchCreationDTO.getPlayer1Id())
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("player1Id", matchCreationDTO.getPlayer1Id())));
 
         Player player2 = playerRepository.findById(matchCreationDTO.getPlayer2Id())
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("player2Id", matchCreationDTO.getPlayer2Id())));
 
         if (matchRepository.existsPlayingByPlayerId(player1.getId())) {
-            throw new InvalidException(
+            throw new InvalidExceptionCustomize(
                     ErrorMessage.PLAYER_PLAYING,
                     Collections.singletonMap("player1Id", player1.getId()));
         }
 
         if (matchRepository.existsPlayingByPlayerId(player2.getId())) {
-            throw new InvalidException(
+            throw new InvalidExceptionCustomize(
                     ErrorMessage.PLAYER_PLAYING,
                     Collections.singletonMap("player2Id", player2.getId()));
         }
 
-        if (player1.getElo() < matchCreationDTO.getEloBet()) {
+        if (player1.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("player1Id", player1.getId());
             errors.put("elo", player1.getElo());
             errors.put("eloBet", player1.getElo());
 
-            throw new InvalidException(ErrorMessage.PLAYER_PLAYING, errors);
+            throw new InvalidExceptionCustomize(ErrorMessage.PLAYER_PLAYING, errors);
         }
 
-        if (player2.getElo() < matchCreationDTO.getEloBet()) {
+        if (player2.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("player2Id", player2.getId());
             errors.put("elo", player2.getElo());
             errors.put("eloBet", player2.getElo());
             
-            throw new InvalidException(ErrorMessage.PLAYER_PLAYING, errors);
+            throw new InvalidExceptionCustomize(ErrorMessage.PLAYER_PLAYING, errors);
         }
 
         return matchMapper.toDTO(matchRepository.save(matchMapper.toEntity(matchCreationDTO)));
@@ -145,11 +145,11 @@ public class MatchServiceImpl implements MatchService {
     public MatchDTO updateResult(long id, Boolean isRedWin) {
         Match match = matchRepository.findById(id)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
         if (match.getResult() != null) {
-            throw new InvalidException(ErrorMessage.END_MATCH, Collections.singletonMap("id", match.getId()));
+            throw new InvalidExceptionCustomize(ErrorMessage.END_MATCH, Collections.singletonMap("id", match.getId()));
         }
 
         EResult eResult;

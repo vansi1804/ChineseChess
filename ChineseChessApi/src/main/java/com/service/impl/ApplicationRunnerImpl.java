@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.common.Default;
 import com.common.enumeration.EPiece;
 import com.common.enumeration.ERole;
-import com.config.exception.InternalServerErrorException;
+import com.config.exception.InternalServerErrorExceptionCustomize;
 import com.data.entity.Piece;
 import com.data.entity.Player;
 import com.data.entity.Rank;
@@ -60,14 +60,14 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        // initRoles();
+        // initRole();
         // initVip();
         // initRank();
         // initAdminPlayer();
         // innitPiece();
     }
 
-    public void initRoles() {
+    public void initRole() {
         List<Role> roles = Arrays.stream(ERole.values())
                 .filter(eRole -> !roleRepository.existsByName(eRole.name()))
                 .map(eRole -> {
@@ -105,7 +105,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         adminPlayer.setUser(adminUser);
 
         Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
-                .orElseThrow(() -> new InternalServerErrorException("No rank found"));
+                .orElseThrow(() -> new InternalServerErrorExceptionCustomize("No rank found"));
         adminPlayer.setRank(defaultRank);
 
         adminPlayer.setElo(defaultRank.getEloMilestones());
@@ -123,11 +123,11 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
             adminUser.setName(Default.User.Admin.NAME);
 
             Role adminRole = roleRepository.findByName(Default.User.Admin.ROLE.name())
-                    .orElseThrow(() -> new InternalServerErrorException("No role found"));
+                    .orElseThrow(() -> new InternalServerErrorExceptionCustomize("No role found"));
             adminUser.setRole(adminRole);
 
             Vip adminVip = vipRepository.findFirstByOrderByDepositMilestonesDesc()
-                    .orElseThrow(() -> new InternalServerErrorException("No vip found"));
+                    .orElseThrow(() -> new InternalServerErrorExceptionCustomize("No vip found"));
             adminUser.setVip(adminVip);
 
             adminUser.setStatus(Default.User.Admin.STATUS.name());

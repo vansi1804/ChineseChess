@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MoveDTO{
-    
+public class MoveDTO {
+
     private PieceDTO movingPieceDTO;
 
     private int toCol;
@@ -23,7 +23,7 @@ public class MoveDTO{
     private PlayBoardDTO playBoardDTO;
 
     private PieceDTO checkedGeneralPieceDTO;
-    
+
     private boolean isCheckMate;
 
 }

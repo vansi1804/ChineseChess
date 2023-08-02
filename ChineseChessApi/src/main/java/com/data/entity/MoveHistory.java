@@ -27,18 +27,18 @@ public class MoveHistory {
     private long id;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "match_id", referencedColumnName = "id", updatable = false)
+    @JoinColumn(name = "match_id", updatable = false)
     private Match match;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "training_id", referencedColumnName = "id", updatable = false)
+    @JoinColumn(name = "training_id", updatable = false)
     private Training training;
 
     @Column(name = "turn")
     private long turn;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "piece_id", referencedColumnName = "id")
+    @JoinColumn(name = "piece_id")
     private Piece piece;
     
     @Column(name = "to_col")

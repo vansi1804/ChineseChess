@@ -1,10 +1,9 @@
 package com.data.dto.user;
 
-import java.io.Serializable;
-
 import javax.validation.constraints.NotBlank;
 
 import com.common.ErrorMessage;
+import com.data.dto.VipDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class UserProfileDTO implements Serializable{  
+public class UserProfileDTO {  
     
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     private String phoneNumber;
@@ -23,6 +22,6 @@ public class UserProfileDTO implements Serializable{
 
     private String avatar;
 
-    private String vipName;
+    private VipDTO vipDTO;
 
 }

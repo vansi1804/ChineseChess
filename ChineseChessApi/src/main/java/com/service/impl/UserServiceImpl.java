@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.common.Default;
 import com.common.enumeration.ERole;
@@ -21,9 +20,9 @@ import com.data.dto.user.UserProfileDTO;
 import com.data.entity.Role;
 import com.data.entity.User;
 import com.data.entity.Vip;
-import com.config.exception.ConflictException;
-import com.config.exception.InternalServerErrorException;
-import com.config.exception.ResourceNotFoundException;
+import com.config.exception.ConflictExceptionCustomize;
+import com.config.exception.InternalServerErrorExceptionCustomize;
+import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.mapper.UserMapper;
 import com.data.repository.RoleRepository;
 import com.data.repository.UserRepository;
@@ -72,7 +71,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .map(u -> userMapper.toDTO(u))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
     }
@@ -82,7 +81,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByPhoneNumber(phoneNumber)
                 .map(u -> userMapper.toDTO(u))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("phoneNumber", phoneNumber)));
 
     }
@@ -92,29 +91,28 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByName(name)
                 .map(u -> userMapper.toDTO(u))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("name", name)));
 
     }
 
     @Override
-    public UserDTO create(UserCreationDTO userCreationDTO, MultipartFile fileAvatar, ERole eRole) {
+    public UserDTO create(UserCreationDTO userCreationDTO, ERole eRole) {
         if (userRepository.existsByPhoneNumber(userCreationDTO.getPhoneNumber())) {
-            throw new ConflictException(Collections.singletonMap("phoneNumber", userCreationDTO.getPhoneNumber()));
+            throw new ConflictExceptionCustomize(Collections.singletonMap("phoneNumber", userCreationDTO.getPhoneNumber()));
         }
 
         User createUser = userMapper.toEntity(userCreationDTO);
         createUser.setPassword(passwordEncoder.encode(userCreationDTO.getPassword()));
-        createUser.setAvatar(fileService.uploadFile(fileAvatar));
 
         Role role = roleRepository.findByName(eRole.name())
                 .orElseThrow(
-                        () -> new InternalServerErrorException(eRole.name()));
+                        () -> new InternalServerErrorExceptionCustomize(eRole.name()));
         createUser.setRole(role);
 
         Vip defaultVip = vipRepository.findFirstByOrderByDepositMilestonesAsc()
                 .orElseThrow(
-                        () -> new InternalServerErrorException("default vip"));
+                        () -> new InternalServerErrorExceptionCustomize("default vip"));
         createUser.setVip(defaultVip);
 
         createUser.setStatus(Default.User.STATUS.name());
@@ -123,14 +121,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileDTO update(long id, UserProfileDTO userProfileDTO, MultipartFile fileAvatar) {
+    public UserProfileDTO update(long id, UserProfileDTO userProfileDTO) {
         User oldUser = userRepository.findById(id)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
         if (userRepository.existsByIdNotAndPhoneNumber(id, userProfileDTO.getPhoneNumber())) {
-            throw new ResourceNotFoundException(
+            throw new ResourceNotFoundExceptionCustomize(
                     Collections.singletonMap("phoneNumber", userProfileDTO.getPhoneNumber()));
         }
 
@@ -138,10 +136,8 @@ public class UserServiceImpl implements UserService {
         updateUser.setId(oldUser.getId());
         updateUser.setPassword(oldUser.getPassword());
         // check update file Avatar
-        if (!StringUtils.equals(updateUser.getAvatar(), oldUser.getAvatar())
-                || (fileAvatar != null && !fileAvatar.isEmpty())) {
+        if (!StringUtils.equals(updateUser.getAvatar(), oldUser.getAvatar())) {
             fileService.deleteFile(oldUser.getAvatar());
-            updateUser.setAvatar(fileService.uploadFile(fileAvatar));
         }
         updateUser.setRole(oldUser.getRole());
         updateUser.setVip(oldUser.getVip());
@@ -163,7 +159,7 @@ public class UserServiceImpl implements UserService {
     public boolean updateStatusById(long id, EStatus eStatus) {
         User user = userRepository.findById(id)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
         user.setStatus(eStatus.name());

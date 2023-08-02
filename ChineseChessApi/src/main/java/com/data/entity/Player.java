@@ -28,11 +28,11 @@ public class Player {
     private long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false)
+    @JoinColumn(name = "user_id", updatable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rank_id", referencedColumnName = "id")
+    @JoinColumn(name = "rank_id")
     private Rank rank;
 
     @Column(name = "elo")

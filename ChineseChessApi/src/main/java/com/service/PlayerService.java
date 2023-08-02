@@ -2,7 +2,6 @@ package com.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.common.enumeration.EResult;
 import com.data.dto.player.PlayerCreationDTO;
@@ -18,10 +17,10 @@ public interface PlayerService {
     PlayerProfileDTO findById(long id);
 
     @Transactional
-    PlayerDTO create(PlayerCreationDTO playerCreationDTO, MultipartFile fileAvatar);
+    PlayerDTO create(PlayerCreationDTO playerCreationDTO);
 
     @Transactional
-    PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO, MultipartFile fileAvatar);
+    PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO);
 
     PlayerProfileDTO updateByEloBetAndResult(long id, int eloBet, EResult eResult);
 

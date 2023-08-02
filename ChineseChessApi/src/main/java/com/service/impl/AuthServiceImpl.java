@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.config.exception.UnauthorizedException;
+import com.config.exception.UnauthorizedExceptionCustomize;
 import com.config.security.JwtService;
 import com.config.security.UserDetailsImpl;
 import com.data.dto.auth.LoginDTO;
@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
 
             return loginResponseDTO;
         } catch (BadCredentialsException ex) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedExceptionCustomize();
         }
     }
 }

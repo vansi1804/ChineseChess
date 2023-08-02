@@ -1,7 +1,6 @@
 package com.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.common.enumeration.ERole;
 import com.data.dto.user.UserCreationDTO;
@@ -18,9 +17,9 @@ public interface UserService {
 
     UserDTO findByName(String name);
 
-    UserDTO create(UserCreationDTO userCreationDTO, MultipartFile fileAvatar, ERole eRole);
+    UserDTO create(UserCreationDTO userCreationDTO, ERole eRole);
 
-    UserProfileDTO update(long id, UserProfileDTO userProfileDTO, MultipartFile fileAvatar);
+    UserProfileDTO update(long id, UserProfileDTO userProfileDTO);
 
     boolean lockById(long id);
 

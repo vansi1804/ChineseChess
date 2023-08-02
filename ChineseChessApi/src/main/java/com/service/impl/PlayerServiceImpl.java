@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.common.Default;
 import com.common.enumeration.EResult;
@@ -20,8 +19,8 @@ import com.data.dto.user.UserDTO;
 import com.data.dto.user.UserProfileDTO;
 import com.data.entity.Player;
 import com.data.entity.Rank;
-import com.config.exception.InternalServerErrorException;
-import com.config.exception.ResourceNotFoundException;
+import com.config.exception.InternalServerErrorExceptionCustomize;
+import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.mapper.PlayerMapper;
 import com.data.repository.RankRepository;
 import com.data.repository.PlayerRepository;
@@ -60,7 +59,7 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.findByUser_Id(userId)
                 .map(p -> playerMapper.toDTO(p))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("user.id", userId)));
     }
 
@@ -69,21 +68,20 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.findById(id)
                 .map(p -> playerMapper.toProfileDTO(p))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
     }
 
     @Override
-    public PlayerDTO create(PlayerCreationDTO playerCreationDTO, MultipartFile fileAvatar) {
-        UserDTO createdUserDTO = userService.create(
-                playerCreationDTO.getUserCreationDTO(), fileAvatar, ERole.PLAYER);
+    public PlayerDTO create(PlayerCreationDTO playerCreationDTO) {
+        UserDTO createdUserDTO = userService.create(playerCreationDTO.getUserCreationDTO(), ERole.PLAYER);
 
         Player player = playerMapper.toEntity(playerCreationDTO);
         player.getUser().setId(createdUserDTO.getId());
 
         Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
                 .orElseThrow(
-                        () -> new InternalServerErrorException("No rank found"));
+                        () -> new InternalServerErrorExceptionCustomize("No rank found"));
         player.setRank(defaultRank);
 
         player.setElo(defaultRank.getEloMilestones());
@@ -94,10 +92,10 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO, MultipartFile fileAvatar) {
+    public PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO) {
         Player oldPlayer = playerRepository.findById(id)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
         if (!userService.isCurrentUser(oldPlayer.getUser().getId())) {
@@ -105,7 +103,7 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
         UserProfileDTO updatedUserProfileDTO = userService.update(
-                oldPlayer.getUser().getId(), playerProfileDTO.getUserProfileDTO(), fileAvatar);
+                oldPlayer.getUser().getId(), playerProfileDTO.getUserProfileDTO());
 
         Player updatePlayer = playerMapper.toEntity(playerProfileDTO);
         updatePlayer.setId(oldPlayer.getId());
@@ -125,7 +123,7 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerProfileDTO updateByEloBetAndResult(long id, int eloBet, EResult eResult) {
         Player updatePlayer = playerRepository.findById(id)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
         switch (eResult) {
@@ -145,7 +143,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         Rank rank = rankRepository.findFirstByEloMilestonesLessThanEqualOrderByEloMilestonesDesc(eloBet)
                 .orElseThrow(
-                        () -> new InternalServerErrorException("No rank found for updating for player by elo"));
+                        () -> new InternalServerErrorExceptionCustomize("No rank found for updating for player by elo"));
         updatePlayer.setRank(rank);
 
         return playerMapper.toProfileDTO(updatePlayer);

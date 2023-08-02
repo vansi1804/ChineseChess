@@ -12,22 +12,16 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MatchDTO extends AuditingDTO{
+public class MatchDTO extends AuditingDTO {
 
     private long id;
-
-    private Integer time;
-
-    private Integer movingTime;
-
-    private Integer cumulativeTime;
-
-    private Integer eloBet;
 
     private PlayerProfileDTO player1ProfileDTO;
 
     private PlayerProfileDTO player2ProfileDTO;
 
+    private MatchOthersInfoDTO matchOthersInfoDTO;
+
     private Integer result;
-    
+
 }

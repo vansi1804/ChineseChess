@@ -17,8 +17,9 @@ import com.data.entity.Training;
 import com.data.mapper.TrainingMapper;
 import com.data.repository.MoveHistoryRepository;
 import com.data.repository.TrainingRepository;
-import com.config.exception.ConflictException;
-import com.config.exception.ResourceNotFoundException;
+import com.config.exception.ConflictExceptionCustomize;
+import com.config.exception.InvalidExceptionCustomize;
+import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.service.MoveService;
 import com.service.TrainingService;
 
@@ -55,7 +56,7 @@ public class TrainingServiceImpl implements TrainingService {
         return trainingRepository.findById(id)
                 .map(t -> trainingMapper.toDTO(t))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
     }
 
@@ -64,7 +65,7 @@ public class TrainingServiceImpl implements TrainingService {
         if (trainingDTO.getParentTrainingId() != null
                 && !trainingRepository.existsById(trainingDTO.getParentTrainingId())) {
 
-            throw new ResourceNotFoundException(
+            throw new ResourceNotFoundExceptionCustomize(
                     Collections.singletonMap("parentTrainingId", trainingDTO.getParentTrainingId()));
         }
 
@@ -75,7 +76,7 @@ public class TrainingServiceImpl implements TrainingService {
             errors.put("parentTrainingId", trainingDTO.getParentTrainingId());
             errors.put("title", trainingDTO.getTitle());
 
-            throw new ConflictException(errors);
+            throw new ConflictExceptionCustomize(errors);
         }
 
         Training createdTraining = trainingRepository.save(trainingMapper.toEntity(trainingDTO));
@@ -87,13 +88,22 @@ public class TrainingServiceImpl implements TrainingService {
     public TrainingDTO update(long id, TrainingDTO trainingDTO) {
         Training oldTraining = trainingRepository.findById(id)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
         if (trainingDTO.getParentTrainingId() != null
                 && !trainingRepository.existsById(trainingDTO.getParentTrainingId())) {
-            throw new ResourceNotFoundException(
+
+            throw new ResourceNotFoundExceptionCustomize(
                     Collections.singletonMap("parentTrainingId", trainingDTO.getParentTrainingId()));
+        }
+
+        if (trainingDTO.getParentTrainingId() == oldTraining.getId()) {
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("id", oldTraining.getId());
+            errors.put("parentTrainingId", trainingDTO.getParentTrainingId());
+
+            throw new InvalidExceptionCustomize(errors);
         }
 
         if (trainingRepository.existByParentTrainingIdAndTitle(
@@ -103,7 +113,7 @@ public class TrainingServiceImpl implements TrainingService {
             errors.put("parentTrainingId", trainingDTO.getParentTrainingId());
             errors.put("title", trainingDTO.getTitle());
 
-            throw new ConflictException(errors);
+            throw new ConflictExceptionCustomize(errors);
         }
 
         Training updateTraining = trainingMapper.toEntity(trainingDTO);
@@ -115,7 +125,7 @@ public class TrainingServiceImpl implements TrainingService {
     @Override
     public boolean deleteById(long id) {
         if (!trainingRepository.existsById(id)) {
-            throw new ResourceNotFoundException(Collections.singletonMap("id", id));
+            throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id));
         }
 
         moveHistoryRepository.deleteAllByTraining_Id(id);
@@ -129,7 +139,7 @@ public class TrainingServiceImpl implements TrainingService {
         TrainingDetailDTO trainingDetailDTO = trainingRepository.findById(id)
                 .map(m -> trainingMapper.toDetailDTO(m))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByTraining_Id(id);

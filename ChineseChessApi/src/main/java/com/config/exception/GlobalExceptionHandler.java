@@ -1,6 +1,8 @@
 package com.config.exception;
 
 import java.util.Collections;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,37 +26,29 @@ import io.jsonwebtoken.ExpiredJwtException;
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(InternalServerErrorException.class)
+    @ExceptionHandler(InternalServerErrorExceptionCustomize.class)
     public ResponseEntity<ErrorMessageResponseDTO> handleInternalServerErrorException(
-            InternalServerErrorException ex, HttpServletRequest request) {
+            InternalServerErrorExceptionCustomize ex, HttpServletRequest request) {
 
         logger.error("Error occurred while retrieving ", ex);
-        
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorMessageResponseDTO(ErrorMessage.SERVER_ERROR, null, request.getServletPath()));
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundExceptionCustomize.class)
     public ResponseEntity<ErrorMessageResponseDTO> handleNotFoundException(
-            ResourceNotFoundException ex, HttpServletRequest request) {
-                
+            ResourceNotFoundExceptionCustomize ex, HttpServletRequest request) {
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
     }
 
-    @ExceptionHandler(ConflictException.class)
+    @ExceptionHandler(ConflictExceptionCustomize.class)
     public ResponseEntity<ErrorMessageResponseDTO> handleConflictException(
-            ConflictException ex, HttpServletRequest request) {
+            ConflictExceptionCustomize ex, HttpServletRequest request) {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
-    }
-
-    @ExceptionHandler(JsonProcessException.class)
-    public ResponseEntity<ErrorMessageResponseDTO> handleJsonProcessException(
-            JsonProcessException ex, HttpServletRequest request) {
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
     }
 
@@ -65,15 +60,15 @@ public class GlobalExceptionHandler {
         String field = fieldError.getField();
         String defaultMessage = fieldError.getDefaultMessage();
 
-        Object errors = Collections.singletonMap(field, defaultMessage);
+        Map<String, Object> errors = Collections.singletonMap(field, defaultMessage);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorMessageResponseDTO(ex.getMessage(), errors, request.getServletPath()));
+                .body(new ErrorMessageResponseDTO(ErrorMessage.INVALID_DATA, errors, request.getServletPath()));
     }
 
-    @ExceptionHandler(InvalidException.class)
+    @ExceptionHandler(InvalidExceptionCustomize.class)
     public ResponseEntity<ErrorMessageResponseDTO> handleInvalidException(
-            InvalidException ex, HttpServletRequest request) {
+            InvalidExceptionCustomize ex, HttpServletRequest request) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
@@ -90,12 +85,12 @@ public class GlobalExceptionHandler {
 
         String error;
 
-        if (ex instanceof DisabledException) {
+        if (ex instanceof ExpiredJwtException) {
+            error = ErrorMessage.EXPIRED_TOKEN;
+        } else if (ex instanceof DisabledException) {
             error = ErrorMessage.DISABLE_USER;
         } else if (ex instanceof LockedException) {
             error = ErrorMessage.LOCKED_USER;
-        } else if (ex instanceof ExpiredJwtException) {
-            error = ErrorMessage.EXPIRED_TOKEN;
         } else {
             error = ErrorMessage.NOT_ENOUGH_PERMISSION;
         }
@@ -104,10 +99,14 @@ public class GlobalExceptionHandler {
                 .body(new ErrorMessageResponseDTO(ErrorMessage.ACCESS_DENIED, error, request.getServletPath()));
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
+    @ExceptionHandler({
+            UnauthorizedExceptionCustomize.class,
+            UsernameNotFoundException.class
+    })
     public ResponseEntity<ErrorMessageResponseDTO> handleUnauthorizedException(
-            UnauthorizedException ex, HttpServletRequest request) {
+            Exception ex, HttpServletRequest request) {
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorMessageResponseDTO(ex.getMessage(), ex.getErrors(), request.getServletPath()));
+                .body(new ErrorMessageResponseDTO(ErrorMessage.UNAUTHORIZED, ErrorMessage.INCORRECT_DATA_LOGIN, request.getServletPath()));
     }
 }

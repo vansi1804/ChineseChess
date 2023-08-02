@@ -16,7 +16,7 @@ import com.common.enumeration.EPiece;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.data.entity.MoveHistory;
-import com.config.exception.ResourceNotFoundException;
+import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.mapper.PieceMapper;
 import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PieceRepository;
@@ -52,7 +52,7 @@ public class PieceServiceImpl implements PieceService {
         return pieceRepository.findById(id)
                 .map(p -> pieceMapper.toDTO(p))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
     }
 
@@ -61,9 +61,7 @@ public class PieceServiceImpl implements PieceService {
         return Arrays.stream(EPiece.values())
                 .filter(ePiece -> ePiece.name().equals(name))
                 .findFirst()
-                .orElseThrow(
-                        () -> new ResourceNotFoundException(
-                                Collections.singletonMap("piece.name", name)));
+                .orElse(null);
     }
 
     @Override

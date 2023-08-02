@@ -1,7 +1,9 @@
 package com.data.dto.player;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
+import com.common.ErrorMessage;
 import com.data.dto.user.UserProfileDTO;
 
 import lombok.AllArgsConstructor;
@@ -13,19 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayerProfileDTO { 
     
-    private long id;
-
+    @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
     private UserProfileDTO userProfileDTO;
 
-    private String rankName;
-
-    private int elo;
-
-    private int win;
-
-    private int draw;
-
-    private int lose;
+    private PlayerOthersInfoDTO playerOthersInfoDTO;
 
 }

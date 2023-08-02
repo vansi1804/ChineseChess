@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.enumeration.EPiece;
-import com.config.exception.InvalidException;
-import com.config.exception.ResourceNotFoundException;
+import com.config.exception.InvalidExceptionCustomize;
+import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.data.entity.MoveHistory;
@@ -97,7 +97,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
             errors.put("colLength", ErrorMessage.COL_LENGTH);
             errors.put("rowLength", ErrorMessage.ROW_LENGTH);
 
-            throw new InvalidException(ErrorMessage.PLAY_BOARD_SIZE, errors);
+            throw new InvalidExceptionCustomize(ErrorMessage.PLAY_BOARD_SIZE, errors);
         } else {
             boolean existsRedGeneral = false;
             boolean existsBlackGeneral = false;
@@ -108,7 +108,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
                     if (pieceDTO != null) {
                         // validate id
                         if (!pieceRepository.existsById(pieceDTO.getId())) {
-                            throw new ResourceNotFoundException(buildValidateErrors(pieceDTO, col, row));
+                            throw new ResourceNotFoundExceptionCustomize(buildValidateErrors(pieceDTO, col, row));
                         }
 
                         // validate name
@@ -127,18 +127,18 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
                         // validate index
                         if (col != pieceDTO.getCurrentCol() || row != pieceDTO.getCurrentRow()) {
-                            throw new InvalidException(buildValidateErrors(pieceDTO, col, row));
+                            throw new InvalidExceptionCustomize(buildValidateErrors(pieceDTO, col, row));
                         }
                     }
                 }
             }
 
             if (!existsRedGeneral) {
-                throw new InvalidException(Collections.singletonMap("message", "Red general is not found in board"));
+                throw new InvalidExceptionCustomize(Collections.singletonMap("message", "Red general is not found in board"));
             }
 
             if (!existsBlackGeneral) {
-                throw new InvalidException(Collections.singletonMap("message", "Black general is not found in board"));
+                throw new InvalidExceptionCustomize(Collections.singletonMap("message", "Black general is not found in board"));
             }
         }
     }
@@ -230,11 +230,11 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     }
 
     @Override
-    public boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPiece1, PieceDTO generalPiece2) {
-        if (generalPiece1.getCurrentCol() == generalPiece2.getCurrentCol()) {
-            int currentCol = generalPiece1.getCurrentCol();
-            int fromRow = generalPiece1.getCurrentRow();
-            int toRow = generalPiece2.getCurrentRow();
+    public boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO1, PieceDTO generalPieceDTO2) {
+        if (generalPieceDTO1.getCurrentCol() == generalPieceDTO2.getCurrentCol()) {
+            int currentCol = generalPieceDTO1.getCurrentCol();
+            int fromRow = generalPieceDTO1.getCurrentRow();
+            int toRow = generalPieceDTO2.getCurrentRow();
 
             if (!pieceService.existsBetweenInColPath(playBoardDTO, currentCol, fromRow, toRow)) {
                 return true;
@@ -256,11 +256,11 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
     @Override
     public boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, boolean isRed) {
-        PieceDTO sameColorGeneral = pieceService.findGeneralInBoard(playBoardDTO, isRed);
-        PieceDTO opponentGeneral = pieceService.findGeneralInBoard(playBoardDTO, !isRed);
+        PieceDTO sameColorGeneralDTO = pieceService.findGeneralInBoard(playBoardDTO, isRed);
+        PieceDTO opponentGeneralDTO = pieceService.findGeneralInBoard(playBoardDTO, !isRed);
 
-        return !areTwoGeneralsFacing(playBoardDTO, sameColorGeneral, opponentGeneral)
-                && !isGeneralBeingChecked(playBoardDTO, sameColorGeneral);
+        return !areTwoGeneralsFacing(playBoardDTO, sameColorGeneralDTO, opponentGeneralDTO)
+                && !isGeneralBeingChecked(playBoardDTO, sameColorGeneralDTO);
     }
 
 }

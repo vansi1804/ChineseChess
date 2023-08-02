@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class UserCreationDTO extends UserProfileDTO{
-    
+public class UserCreationDTO extends UserProfileDTO {
+
     @NotBlank(message = ErrorMessage.BLANK_DATA)
     @Size(min = Validation.PASSWORD_SIZE_MIN, message = ErrorMessage.INVALID_PASSWORD_SIZE)
     private String password;
