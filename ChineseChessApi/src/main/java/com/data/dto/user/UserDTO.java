@@ -1,6 +1,7 @@
 package com.data.dto.user;
 
 import com.data.dto.AuditingDTO;
+import com.data.dto.RoleDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class UserDTO extends AuditingDTO {
 
     private UserProfileDTO userProfileDTO;
 
-    private String roleName;
+    private RoleDTO roleDTO;
 
     private String status;
     

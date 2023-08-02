@@ -34,7 +34,7 @@ public class User extends Auditing {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "name", columnDefinition = "nvarchar(255)")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "avatar")

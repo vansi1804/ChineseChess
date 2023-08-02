@@ -37,14 +37,20 @@ public class VipController {
     }
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
+    @GetMapping(value = "/id={id}")
+    public ResponseEntity<?> findById(@PathVariable int id) {
+        return ResponseEntity.ok(vipService.findById(id));
+    }
+
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping(value = "")
-    public ResponseEntity<?> create(@Valid @RequestBody VipDTO vipDTO) {
+    public ResponseEntity<?> create(@RequestBody @Valid VipDTO vipDTO) {
         return ResponseEntity.ok(vipService.create(vipDTO));
     }
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PutMapping(value = "/id={id}")
-    public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody VipDTO vipDTO) {
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody @Valid VipDTO vipDTO) {
         return ResponseEntity.ok(vipService.update(id, vipDTO));
     }
 

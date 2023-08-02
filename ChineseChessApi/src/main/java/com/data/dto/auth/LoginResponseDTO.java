@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class LoginResponseDTO extends JwtResponseDTO{
-    
+public class LoginResponseDTO extends JwtResponseDTO {
+
     private long userId;
 
     private List<String> roleNames;

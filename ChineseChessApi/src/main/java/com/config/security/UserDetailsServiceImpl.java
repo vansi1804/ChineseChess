@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.config.exception.UnauthorizedException;
+import com.config.exception.UnauthorizedExceptionCustomize;
 import com.data.entity.User;
 import com.data.repository.UserRepository;
 
@@ -16,7 +16,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByPhoneNumber(username).orElseThrow(() -> new UnauthorizedException());
+        User user = userRepository.findByPhoneNumber(username)
+                .orElseThrow(() -> new UnauthorizedExceptionCustomize());
 
         return new UserDetailsImpl(user);
     }

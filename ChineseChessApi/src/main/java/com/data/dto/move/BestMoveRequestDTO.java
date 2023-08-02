@@ -19,8 +19,10 @@ public class BestMoveRequestDTO {
     @Valid
     private PlayBoardDTO playBoardDTO;
 
+    @NotNull(message = ErrorMessage.NULL_DATA)
     private Boolean isRed;
 
-    private int depth;
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer depth;
 
 }

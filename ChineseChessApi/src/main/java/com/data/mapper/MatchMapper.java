@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.data.dto.match.MatchDetailDTO;
+import com.data.dto.match.MatchOthersInfoDTO;
 import com.data.dto.match.MatchCreationDTO;
 import com.data.dto.match.MatchDTO;
 import com.data.entity.Match;
@@ -14,6 +15,10 @@ public interface MatchMapper {
     @Mapping(ignore = true, target = "id")
     @Mapping(source = "player1Id", target = "player1.id")
     @Mapping(source = "player2Id", target = "player2.id")
+    @Mapping(ignore = true, target = "time")
+    @Mapping(ignore = true, target = "movingTime")
+    @Mapping(ignore = true, target = "cumulativeTime")
+    @Mapping(ignore = true, target = "eloBet")
     @Mapping(ignore = true, target = "result")
     @Mapping(ignore = true, target = "createdDate")
     @Mapping(ignore = true, target = "createdBy")
@@ -23,6 +28,7 @@ public interface MatchMapper {
 
     @Mapping(source = "player1", target = "player1ProfileDTO")
     @Mapping(source = "player2", target = "player2ProfileDTO")
+    @Mapping(expression = "java(toOthersInfoDTO(match))", target = "matchOthersInfoDTO")
     @Mapping(source = "createdBy.id", target = "createdByUserId")
     @Mapping(source = "lastModifiedBy.id", target = "lastModifiedByUserId")
     MatchDTO toDTO(Match match);
@@ -31,5 +37,7 @@ public interface MatchMapper {
     @Mapping(ignore = true, target = "moveHistoryDTOs")
     @Mapping(ignore = true, target = "totalTurn")
     MatchDetailDTO toDetailDTO(Match match);
+
+    MatchOthersInfoDTO toOthersInfoDTO(Match match);
 
 }

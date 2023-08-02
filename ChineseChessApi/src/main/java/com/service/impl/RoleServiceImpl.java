@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.data.dto.RoleDTO;
-import com.config.exception.ResourceNotFoundException;
+import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.mapper.RoleMapper;
 import com.data.repository.RoleRepository;
 import com.service.RoleService;
@@ -38,7 +38,7 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findById(id)
                 .map(r -> roleMapper.toDTO(r))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
     }
 
@@ -47,7 +47,7 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findByName(name)
                 .map(r -> roleMapper.toDTO(r))
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("name", name)));
     }
 

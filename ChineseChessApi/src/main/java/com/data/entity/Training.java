@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,11 +32,11 @@ public class Training extends Auditing{
     @Column(name = "id", updatable = false)
     private long id;
 
-    @Column(name = "title", columnDefinition = "nvarchar(255)")
+    @Column(name = "title")
     private String title;
     
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "parent_training_id", referencedColumnName = "id")
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_training_id")
     private Training parentTraining;
 
     @OneToMany(mappedBy = "parentTraining")

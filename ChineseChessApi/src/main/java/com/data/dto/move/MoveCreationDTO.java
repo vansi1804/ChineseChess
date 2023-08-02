@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MoveCreationDTO extends MoveDetailDTO{
-    
+public class MoveCreationDTO extends MoveDetailCreationDTO {
+
     @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
     private PlayBoardDTO playBoardDTO;

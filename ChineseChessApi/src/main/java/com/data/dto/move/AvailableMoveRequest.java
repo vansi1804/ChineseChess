@@ -4,6 +4,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
+import com.config.validation.Validator;
 import com.data.dto.PlayBoardDTO;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class AvailableMoveRequest {
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
+    @Validator
     private PlayBoardDTO playBoardDTO;
     
 }

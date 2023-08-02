@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MoveDetailDTO implements Serializable {
+public class MoveDetailCreationDTO implements Serializable {
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     private Integer movingPieceId;

@@ -1,9 +1,8 @@
 package com.controller;
 
-import java.util.Map;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,20 +10,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.common.Default;
-import com.config.exception.InvalidException;
 import com.common.ApiUrl;
 import com.data.dto.player.PlayerCreationDTO;
 import com.data.dto.player.PlayerProfileDTO;
-import com.service.JsonProcessService;
 import com.service.PlayerService;
-import com.util.DataValidationUtil;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -32,12 +27,10 @@ import com.util.DataValidationUtil;
 public class PlayerController {
 
     private final PlayerService playerService;
-    private final JsonProcessService jsonProcessService;
 
     @Autowired
-    public PlayerController(PlayerService playerService, JsonProcessService jsonProcessService) {
+    public PlayerController(PlayerService playerService) {
         this.playerService = playerService;
-        this.jsonProcessService = jsonProcessService;
     }
 
     @PreAuthorize(value = "hasAuthority('ADMIN')")
@@ -62,63 +55,15 @@ public class PlayerController {
         return ResponseEntity.ok(playerService.findById(id));
     }
 
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> create(
-            @RequestPart(name = "playerCreationDTO") String playerCreationDTOJsonString,
-            @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar) {
-
-        PlayerCreationDTO playerCreationDTO = jsonProcessService.readValue(
-                playerCreationDTOJsonString, PlayerCreationDTO.class);
-
-        Map<String, Object> validationErrors = DataValidationUtil.validate(playerCreationDTO);
-        if (validationErrors != null) {
-            throw new InvalidException(validationErrors);
-        }
-
-        return ResponseEntity.ok(playerService.create(playerCreationDTO, fileAvatar));
+    @PostMapping(value = "")
+    public ResponseEntity<?> create(@RequestBody @Valid PlayerCreationDTO playerCreationDTO) {
+        return ResponseEntity.ok(playerService.create(playerCreationDTO));
     }
-
-    // @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-    // produces = MediaType.APPLICATION_JSON_VALUE)
-    // public ResponseEntity<?> create(
-    // @RequestPart(name = "playerCreationDTO") @Valid PlayerCreationDTO
-    // playerCreationDTO,
-    // @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar)
-    // {
-
-    // return ResponseEntity.ok(playerService.create(playerCreationDTO,
-    // fileAvatar));
-    // }
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping(value = "/id={id}")
-    public ResponseEntity<?> update(@PathVariable long id,
-            @RequestPart(name = "playerProfileDTO") String playerProfileDTOJsonString,
-            @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar) {
-
-        PlayerProfileDTO playerProfileDTO = jsonProcessService.readValue(
-                playerProfileDTOJsonString, PlayerProfileDTO.class);
-
-        Map<String, Object> validationErrors = DataValidationUtil.validate(playerProfileDTO);
-        if (validationErrors != null) {
-            throw new InvalidException(validationErrors);
-        }
-
-        return ResponseEntity.ok(playerService.update(id, playerProfileDTO, fileAvatar));
+    public ResponseEntity<?> update(@PathVariable long id, @RequestBody @Valid PlayerProfileDTO playerProfileDTO) {
+        return ResponseEntity.ok(playerService.update(id, playerProfileDTO));
     }
-
-    // @PreAuthorize("isAuthenticated()")
-    // @PutMapping(value = "/id={id}", consumes =
-    // MediaType.MULTIPART_FORM_DATA_VALUE, produces =
-    // MediaType.APPLICATION_JSON_VALUE)
-    // public ResponseEntity<?> update(@PathVariable long id,
-    // @RequestPart(name = "playerProfileDTO") @Valid PlayerProfileDTO
-    // playerProfileDTO,
-    // @RequestPart(name = "fileAvatar", required = false) MultipartFile fileAvatar)
-    // {
-
-    // return ResponseEntity.ok(playerService.update(id, playerProfileDTO,
-    // fileAvatar));
-    // }
 
 }

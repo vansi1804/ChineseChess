@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MoveHistoryDTO extends MoveDTO{
-    
+public class MoveHistoryDTO extends MoveDTO {
+
     private long turn;
 
     private String description;

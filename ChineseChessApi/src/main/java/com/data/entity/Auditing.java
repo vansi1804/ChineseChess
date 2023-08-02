@@ -9,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -33,7 +32,7 @@ public abstract class Auditing implements Serializable{
 	
 	@CreatedBy
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_user_id", referencedColumnName = "id", updatable = false)
+    @JoinColumn(name = "created_by_user_id", updatable = false)
 	protected User createdBy;
 
 	@LastModifiedDate
@@ -43,13 +42,7 @@ public abstract class Auditing implements Serializable{
 
 	@LastModifiedBy
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_modified_by_user_id", referencedColumnName = "id", insertable = false)
+    @JoinColumn(name = "last_modified_by_user_id", insertable = false)
 	protected User lastModifiedBy;
-
-    @PrePersist
-    protected void prePersist() {
-        lastModifiedDate = null;
-        lastModifiedBy = null;
-    }
   
 }

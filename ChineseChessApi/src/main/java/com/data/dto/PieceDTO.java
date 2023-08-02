@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class PieceDTO implements Serializable{
+public class PieceDTO implements Serializable {
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     private Integer id;

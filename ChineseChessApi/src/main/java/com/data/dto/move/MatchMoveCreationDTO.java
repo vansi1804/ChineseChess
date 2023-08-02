@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MatchMoveCreationDTO extends MoveDetailDTO{
-    
+public class MatchMoveCreationDTO extends MoveDetailCreationDTO {
+
     @NotNull(message = ErrorMessage.NULL_DATA)
     private Long matchId;
 

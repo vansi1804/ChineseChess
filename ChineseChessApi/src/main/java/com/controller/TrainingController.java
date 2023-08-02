@@ -48,13 +48,13 @@ public class TrainingController {
 
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping(value = "")
-    public ResponseEntity<?> create(@Valid @RequestBody TrainingDTO trainingDTO) {
+    public ResponseEntity<?> create(@RequestBody @Valid TrainingDTO trainingDTO) {
         return ResponseEntity.ok(trainingService.create(trainingDTO));
     }
 
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
     @PutMapping(value = "/id={id}")
-    public ResponseEntity<?> update(@PathVariable long id, @Valid @RequestBody TrainingDTO trainingDTO) {
+    public ResponseEntity<?> update(@PathVariable long id, @RequestBody @Valid TrainingDTO trainingDTO) {
         return ResponseEntity.ok(trainingService.update(id, trainingDTO));
     }
 
