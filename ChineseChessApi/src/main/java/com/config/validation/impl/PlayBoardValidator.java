@@ -34,7 +34,7 @@ public class PlayBoardValidator implements ConstraintValidator<Validator, PlayBo
         int colLength = playBoardDTO.getState().length;
         int rowLength = playBoardDTO.getState()[0].length;
 
-        if (Validation.COL_MAX != colLength || Validation.ROW_MAX != rowLength) {
+        if ((Validation.COL_MAX != colLength) || (Validation.ROW_MAX != rowLength)) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("colLength", ErrorMessage.COL_LENGTH);
             errors.put("rowLength", ErrorMessage.ROW_LENGTH);
@@ -86,7 +86,7 @@ public class PlayBoardValidator implements ConstraintValidator<Validator, PlayBo
                         }
 
                         // validate index
-                        if (col != pieceDTO.getCurrentCol() || row != pieceDTO.getCurrentRow()) {
+                        if ((col != pieceDTO.getCurrentCol()) || (row != pieceDTO.getCurrentRow())) {
                             throw new InvalidExceptionCustomize(
                                     buildValidateErrors(pieceDTO, col, row, "Error index"));
                         }

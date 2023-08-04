@@ -99,7 +99,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO create(UserCreationDTO userCreationDTO, ERole eRole) {
         if (userRepository.existsByPhoneNumber(userCreationDTO.getPhoneNumber())) {
-            throw new ConflictExceptionCustomize(Collections.singletonMap("phoneNumber", userCreationDTO.getPhoneNumber()));
+            throw new ConflictExceptionCustomize(
+                    Collections.singletonMap("phoneNumber", userCreationDTO.getPhoneNumber()));
         }
 
         User createUser = userMapper.toEntity(userCreationDTO);
@@ -170,8 +171,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isCurrentUser(long id) {
-        User currentUser = auditorAware.getCurrentAuditor().orElse(null);
-        return currentUser == null || currentUser.getId() == id;
+        User currentUser = auditorAware.getCurrentAuditor()
+                .orElse(null);
+
+        return (currentUser == null) || (currentUser.getId() == id);
     }
 
 }

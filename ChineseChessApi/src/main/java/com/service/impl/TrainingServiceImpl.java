@@ -62,7 +62,7 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public TrainingDTO create(TrainingDTO trainingDTO) {
-        if (trainingDTO.getParentTrainingId() != null
+        if ((trainingDTO.getParentTrainingId() != null)
                 && !trainingRepository.existsById(trainingDTO.getParentTrainingId())) {
 
             throw new ResourceNotFoundExceptionCustomize(
@@ -91,7 +91,7 @@ public class TrainingServiceImpl implements TrainingService {
                         () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
-        if (trainingDTO.getParentTrainingId() != null
+        if ((trainingDTO.getParentTrainingId() != null)
                 && !trainingRepository.existsById(trainingDTO.getParentTrainingId())) {
 
             throw new ResourceNotFoundExceptionCustomize(

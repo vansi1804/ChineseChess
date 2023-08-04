@@ -148,9 +148,22 @@ public class MoveServiceImpl implements MoveService {
                     Collections.singletonMap("movingPieceId", moveCreationDTO.getMovingPieceId()));
         }
 
-        return buildMoveCreationResponse(
-                moveCreationDTO.getPlayBoardDTO(), movingPieceDTO,
-                moveCreationDTO.getToCol(), moveCreationDTO.getToRow());
+        boolean isAvailableMove = isAvailableMove(
+                moveCreationDTO.getPlayBoardDTO(), movingPieceDTO, moveCreationDTO.getToCol(),
+                moveCreationDTO.getToRow());
+
+        if (isAvailableMove) {
+            return buildMoveCreationResponse(
+                    moveCreationDTO.getPlayBoardDTO(), movingPieceDTO,
+                    moveCreationDTO.getToCol(), moveCreationDTO.getToRow());
+        } else {
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("movingPieceDTO", movingPieceDTO);
+            errors.put("toCol", moveCreationDTO.getToCol());
+            errors.put("toRow", moveCreationDTO.getToRow());
+
+            throw new InvalidExceptionCustomize(ErrorMessage.INVALID_MOVE, errors);
+        }
     }
 
     @Override
@@ -176,8 +189,9 @@ public class MoveServiceImpl implements MoveService {
             throw new InvalidExceptionCustomize(ErrorMessage.DEAD_PIECE, errors);
         }
 
-        if (((newTurn % 2 != 0) && !movingPieceDTO.isRed()
-                || (newTurn % 2 == 0) && movingPieceDTO.isRed())) {
+        if (((newTurn % 2 != 0) && !movingPieceDTO.isRed())
+                || ((newTurn % 2 == 0) && movingPieceDTO.isRed())) {
+
             Map<String, Object> errors = new HashMap<>();
             errors.put("trainingId", training.getId());
             errors.put("turn", newTurn);
@@ -247,8 +261,9 @@ public class MoveServiceImpl implements MoveService {
         }
 
         // check color turn
-        if (((newTurn % 2 != 0) && !movingPieceDTO.isRed()
-                || (newTurn % 2 == 0) && movingPieceDTO.isRed())) {
+        if (((newTurn % 2 != 0) && !movingPieceDTO.isRed())
+                || ((newTurn % 2 == 0) && movingPieceDTO.isRed())) {
+
             Map<String, Object> errors = new HashMap<>();
             errors.put("matchId", match.getId());
             errors.put("turn", newTurn);
@@ -396,7 +411,7 @@ public class MoveServiceImpl implements MoveService {
 
     private int minimax(PlayBoardDTO playBoardDTO, boolean isRed, int depth) {
         // break when depth == 0 or board is in checkmate state
-        if (depth == 0 || isCheckMateState(playBoardDTO)) {
+        if ((depth == 0) || isCheckMateState(playBoardDTO)) {
             return evaluatePlayBoard(playBoardDTO);
         }
 
@@ -447,7 +462,7 @@ public class MoveServiceImpl implements MoveService {
                         .map(row -> {
                             PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
                             int piecePower = pieceService.convertByName(pieceDTO.getName()).getPower();
-                            
+
                             return pieceDTO.isRed() ? piecePower : -piecePower;
                         }))
                 .sum();

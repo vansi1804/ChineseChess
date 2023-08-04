@@ -25,7 +25,7 @@ public class AuditorAwareConfiguration {
     public AuditorAware<User> auditorAware() {
         return () -> {
             Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
-            if (currentAuth != null
+            if ((currentAuth != null)
                     && currentAuth.isAuthenticated()
                     && !(currentAuth instanceof AnonymousAuthenticationToken)) {
 

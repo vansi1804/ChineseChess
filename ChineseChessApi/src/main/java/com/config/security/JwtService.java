@@ -1,12 +1,12 @@
 package com.config.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +51,7 @@ public class JwtService {
     public Boolean isValidToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
 
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return StringUtils.equals(username, userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     public String generateToken(String userName) {

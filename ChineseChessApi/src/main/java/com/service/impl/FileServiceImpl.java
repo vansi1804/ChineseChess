@@ -25,7 +25,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String uploadFile(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
+        if ((file == null) || file.isEmpty()) {
             return null;
         }
 
@@ -51,7 +51,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Resource downloadFile(String fileName) {
-        if (fileName == null || fileName.isEmpty()) {
+        if ((fileName == null) || fileName.isEmpty()) {
             throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
         }
 
