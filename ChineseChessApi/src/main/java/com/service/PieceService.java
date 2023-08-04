@@ -22,8 +22,6 @@ public interface PieceService {
 
     PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id);
 
-    PieceDTO findLastAtPosition(long matchId, long turn, int toCol, int toRow);
-
     List<PieceDTO> findAllDeadInPlayBoard(PlayBoardDTO playBoardDTO);
 
     PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO);

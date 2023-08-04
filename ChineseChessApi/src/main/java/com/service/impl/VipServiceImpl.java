@@ -44,15 +44,6 @@ public class VipServiceImpl implements VipService {
     }
 
     @Override
-    public VipDTO findByName(String name) {
-        return vipRepository.findByName(name)
-                .map(r -> vipMapper.toDTO(r))
-                .orElseThrow(
-                        () -> new ResourceNotFoundExceptionCustomize(
-                                Collections.singletonMap("name", name)));
-    }
-
-    @Override
     public VipDTO create(VipDTO vipDTO) {
         if (vipRepository.existsByName(vipDTO.getName())) {
             throw new ConflictExceptionCustomize(Collections.singletonMap("name", vipDTO.getName()));

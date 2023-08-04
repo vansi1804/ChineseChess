@@ -48,7 +48,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         description.append(buildIndexDescription(playBoardDTO, pieceDTO));
         description.append(MAX_COL - pieceDTO.getCurrentCol());
 
-        if (moveTypeService.isHorizontalMoving(pieceDTO.getCurrentRow(), toRow)) {
+        if (moveTypeService.isHorizontallyMoving(pieceDTO.getCurrentRow(), toRow)) {
             description.append(EMoveType.ACROSS.getValue())
                     .append(MAX_COL - toCol);
         } else {
@@ -73,7 +73,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         description.append(buildIndexDescription(playBoardDTO, pieceDTO));
         description.append(pieceDTO.getCurrentCol() + 1);
 
-        if (moveTypeService.isHorizontalMoving(pieceDTO.getCurrentRow(), toRow)) {
+        if (moveTypeService.isHorizontallyMoving(pieceDTO.getCurrentRow(), toRow)) {
             description.append(EMoveType.ACROSS.getValue())
                     .append(toCol + 1);
         } else {

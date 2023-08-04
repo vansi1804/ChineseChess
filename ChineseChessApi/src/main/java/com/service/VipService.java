@@ -2,6 +2,8 @@ package com.service;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.data.dto.VipDTO;
 
 public interface VipService {
@@ -10,12 +12,11 @@ public interface VipService {
 
     VipDTO findById(int id);
 
-    VipDTO findByName(String name);
-
     VipDTO create(VipDTO vipDTO);
 
     VipDTO update(int id, VipDTO vipDTO);
     
+    @Transactional
     boolean delete(int id);
     
 }

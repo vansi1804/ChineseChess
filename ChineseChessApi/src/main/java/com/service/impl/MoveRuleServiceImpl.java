@@ -35,7 +35,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     }
 
     @Override
-    public boolean isValidMove(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
+    public boolean isValid(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
         int fromCol = pieceDTO.getCurrentCol();
         int fromRow = pieceDTO.getCurrentRow();
 
@@ -81,7 +81,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      */
     private boolean checkGeneralMoveRule(boolean isRed, int fromCol, int toCol, int fromRow, int toRow) {
         return isInAreaCenter(isRed, toCol, toRow)
-                && ((moveTypeService.isHorizontalMoving(fromRow, toRow) && Math.abs(toCol - fromCol) == 1)
+                && ((moveTypeService.isHorizontallyMoving(fromRow, toRow) && Math.abs(toCol - fromCol) == 1)
                         || (moveTypeService.isVerticallyMoving(fromCol, toCol) && Math.abs(toRow - fromRow) == 1));
     }
 
@@ -153,7 +153,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      */
     private boolean checkChariotMoveRule(PlayBoardDTO playBoardDTO, int fromCol, int toCol, int fromRow, int toRow) {
         return (moveTypeService.isVerticallyMoving(fromCol, toCol)
-                || moveTypeService.isHorizontalMoving(fromRow, toRow))
+                || moveTypeService.isHorizontallyMoving(fromRow, toRow))
                 && !pieceService.existsBetweenInRowPath(playBoardDTO, fromRow, fromCol, toCol);
     }
 
@@ -166,7 +166,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         PieceDTO targetPiece = playBoardDTO.getState()[toCol][toRow];
 
         boolean isVerticallyMoving = moveTypeService.isVerticallyMoving(fromCol, toCol);
-        boolean isHorizontalMoving = moveTypeService.isHorizontalMoving(fromRow, toRow);
+        boolean isHorizontalMoving = moveTypeService.isHorizontallyMoving(fromRow, toRow);
 
         // check move Vertically or Horizontal
         if (isVerticallyMoving || isHorizontalMoving) {
@@ -189,7 +189,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     private boolean checkSoldierMoveRule(boolean isRed, int fromCol, int toCol, int fromRow, int toRow) {
         return (moveTypeService.isVerticallyMoving(fromCol, toCol)
                 && (isRed ? (fromRow - toRow == 1) : (toRow - fromRow == 1)))
-                || (moveTypeService.isHorizontalMoving(fromRow, toRow)
+                || (moveTypeService.isHorizontallyMoving(fromRow, toRow)
                         && isOverTheRiver(isRed, fromRow) && (Math.abs(fromCol - toCol) == 1));
     }
 

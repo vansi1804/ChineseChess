@@ -21,6 +21,7 @@ import com.service.RankService;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.RANKS)
+@PreAuthorize(value = "hasAuthority('ADMIN')")
 public class RankController {
 
     private final RankService rankService;
@@ -30,25 +31,21 @@ public class RankController {
         this.rankService = rankService;
     }
 
-	@PreAuthorize(value = "hasAuthority('ADMIN')")
     @GetMapping(value = "")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(rankService.findAll());
     }
 
-    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @GetMapping(value = "/id={id}")
     public ResponseEntity<?> findById(@PathVariable int id) {
         return ResponseEntity.ok(rankService.findById(id));
     }
 
-    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping(value = "")
     public ResponseEntity<?> create(@RequestBody @Valid RankDTO rankDTO) {
         return ResponseEntity.ok(rankService.create(rankDTO));
     }
 
-    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PutMapping(value = "/id={id}")
     public ResponseEntity<?> update(@PathVariable int id, @RequestBody @Valid RankDTO rankDTO) {
         return ResponseEntity.ok(rankService.update(id, rankDTO));

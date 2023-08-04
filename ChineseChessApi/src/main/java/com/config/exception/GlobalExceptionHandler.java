@@ -107,6 +107,8 @@ public class GlobalExceptionHandler {
             Exception ex, HttpServletRequest request) {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorMessageResponseDTO(ErrorMessage.UNAUTHORIZED, ErrorMessage.INCORRECT_DATA_LOGIN, request.getServletPath()));
+                .body(new ErrorMessageResponseDTO(ErrorMessage.UNAUTHORIZED, ErrorMessage.INCORRECT_DATA_LOGIN,
+                        request.getServletPath()));
     }
+
 }
