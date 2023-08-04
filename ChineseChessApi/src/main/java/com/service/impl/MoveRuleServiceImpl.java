@@ -40,13 +40,13 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         int fromRow = pieceDTO.getCurrentRow();
 
         // check piece is not moving out current index
-        if(fromCol == toCol && fromRow == toRow){
+        if ((fromCol == toCol) && (fromRow == toRow)) {
             return false;
         }
 
         PieceDTO targetPiece = playBoardDTO.getState()[toCol][toRow];
         // check targetPiece is not the same color with pieceDTO
-        if (targetPiece != null && targetPiece.isRed() == pieceDTO.isRed()) {
+        if ((targetPiece != null) && (targetPiece.isRed() == pieceDTO.isRed())) {
             return false;
         }
 
@@ -70,7 +70,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             case CHARIOT:
                 return checkChariotMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
 
-            default:     //case GENERAL:
+            default: // case GENERAL:
                 return checkGeneralMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
         }
     }
@@ -81,8 +81,8 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      */
     private boolean checkGeneralMoveRule(boolean isRed, int fromCol, int toCol, int fromRow, int toRow) {
         return isInAreaCenter(isRed, toCol, toRow)
-                && ((moveTypeService.isHorizontallyMoving(fromRow, toRow) && Math.abs(toCol - fromCol) == 1)
-                        || (moveTypeService.isVerticallyMoving(fromCol, toCol) && Math.abs(toRow - fromRow) == 1));
+                && ((moveTypeService.isHorizontallyMoving(fromRow, toRow) && (Math.abs(toCol - fromCol) == 1))
+                        || (moveTypeService.isVerticallyMoving(fromCol, toCol) && (Math.abs(toRow - fromRow) == 1)));
     }
 
     /*
@@ -94,7 +94,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         int horizontalSpace = Math.abs(toCol - fromCol);
         boolean isDiagonalMove = ((verticalSpace == 1) && (horizontalSpace == 1));
 
-        return isInAreaCenter(isRed, toCol, toRow) && isDiagonalMove;
+        return isDiagonalMove && isInAreaCenter(isRed, toCol, toRow);
     }
 
     /*
@@ -132,12 +132,12 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         int horizontalSpace = Math.abs(toCol - fromCol);
 
         // check no obstacle
-        if (verticalSpace == 2 && horizontalSpace == 1) {
+        if ((verticalSpace == 2) && (horizontalSpace == 1)) {
             int obstacleCol = fromCol;
             int obstacleRow = (fromRow + toRow) / 2;
 
             return playBoardDTO.getState()[obstacleCol][obstacleRow] == null;
-        } else if (verticalSpace == 1 && horizontalSpace == 2) {
+        } else if ((verticalSpace == 1) && (horizontalSpace == 2)) {
             int obstacleCol = (fromCol + toCol) / 2;
             int obstacleRow = fromRow;
 
@@ -194,9 +194,9 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     }
 
     private boolean isInAreaCenter(boolean isRed, int col, int row) {
-        return (CENTER_COL_INDEX_MIN <= col && col <= CENTER_COL_INDEX_MAX)
-                && (isRed ? (RED_CENTER_ROW_INDEX_MIN <= row && row <= RED_CENTER_ROW_INDEX_MAX)
-                        : (BLACK_CENTER_ROW_INDEX_MIN <= row && row <= BLACK_CENTER_ROW_INDEX_MAX));
+        return ((CENTER_COL_INDEX_MIN <= col) && (col <= CENTER_COL_INDEX_MAX))
+                && (isRed ? ((RED_CENTER_ROW_INDEX_MIN <= row) && (row <= RED_CENTER_ROW_INDEX_MAX))
+                        : ((BLACK_CENTER_ROW_INDEX_MIN <= row) && (row <= BLACK_CENTER_ROW_INDEX_MAX)));
     }
 
     private boolean isOverTheRiver(boolean isRed, int row) {

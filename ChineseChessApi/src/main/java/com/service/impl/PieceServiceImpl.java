@@ -67,9 +67,10 @@ public class PieceServiceImpl implements PieceService {
                 .flatMap(col -> IntStream.rangeClosed(fromRow, toRow)
                         .filter(row -> {
                             PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
-                            return pieceDTO != null
+                            
+                            return (pieceDTO != null)
                                     && (StringUtils.isBlank(name) || pieceDTO.getName().equals(name))
-                                    && (isRed == null || pieceDTO.isRed() == isRed);
+                                    && ((isRed == null) || (pieceDTO.isRed() == isRed));
                         })
                         .mapToObj(row -> playBoardDTO.getState()[col][row]))
                 .toList();
@@ -107,8 +108,8 @@ public class PieceServiceImpl implements PieceService {
         return IntStream.rangeClosed(fromCol, toCol)
                 .boxed()
                 .flatMap(col -> IntStream.rangeClosed(fromRow, toRow)
-                        .filter(row -> playBoardDTO.getState()[col][row] != null
-                                && playBoardDTO.getState()[col][row].getId() == id)
+                        .filter(row -> (playBoardDTO.getState()[col][row] != null)
+                                && (playBoardDTO.getState()[col][row].getId() == id))
                         .mapToObj(row -> playBoardDTO.getState()[col][row]))
                 .findFirst()
                 .orElse(null);
@@ -123,9 +124,9 @@ public class PieceServiceImpl implements PieceService {
         return IntStream.rangeClosed(fromRow, toRow)
                 .filter(row -> {
                     PieceDTO currentPiece = playBoardDTO.getState()[col][row];
-                    return currentPiece != null
-                            && currentPiece.getId() != pieceDTO.getId()
-                            && currentPiece.isRed() == pieceDTO.isRed()
+                    return (currentPiece != null)
+                            && (currentPiece.getId() != pieceDTO.getId())
+                            && (currentPiece.isRed() == pieceDTO.isRed())
                             && currentPiece.getName().equals(pieceDTO.getName());
                 })
                 .mapToObj(row -> playBoardDTO.getState()[col][row])

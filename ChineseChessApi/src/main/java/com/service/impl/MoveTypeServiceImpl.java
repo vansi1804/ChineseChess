@@ -14,7 +14,7 @@ public class MoveTypeServiceImpl implements MoveTypeService {
 
     @Override
     public boolean isUpMoving(boolean isRed, int fromRow, int toRow) {
-        return (isRed && fromRow > toRow) || (!isRed && fromRow < toRow);
+        return (isRed && (fromRow > toRow)) || (!isRed && (fromRow < toRow));
     }
 
     @Override
