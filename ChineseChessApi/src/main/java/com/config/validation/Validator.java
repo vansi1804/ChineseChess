@@ -9,11 +9,11 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 import com.common.ErrorMessage;
-import com.config.validation.impl.PlayBoardValidatorImpl;
+import com.config.validation.impl.PlayBoardValidator;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PlayBoardValidatorImpl.class)
+@Constraint(validatedBy = PlayBoardValidator.class)
 public @interface Validator {
 
     String message() default ErrorMessage.INVALID_DATA;

@@ -18,7 +18,6 @@ public interface MatchService {
 
     MatchDetailDTO findDetailById(long id);
 
-    @Transactional
     MatchDTO create(MatchCreationDTO matchCreationDTO);
 
     @Transactional

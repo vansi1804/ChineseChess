@@ -17,22 +17,22 @@ import com.data.repository.UserRepository;
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class AuditorAwareConfiguration {
-    
+
     @Autowired
     private UserRepository userRepository;
 
     @Bean
     public AuditorAware<User> auditorAware() {
         return () -> {
-                Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
-                if (currentAuth != null
-                        && currentAuth.isAuthenticated()
-                        && !(currentAuth instanceof AnonymousAuthenticationToken)) {
+            Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+            if (currentAuth != null
+                    && currentAuth.isAuthenticated()
+                    && !(currentAuth instanceof AnonymousAuthenticationToken)) {
 
-                    String phoneNumber = currentAuth.getName();
-                    return userRepository.findByPhoneNumber(phoneNumber);
-                }
-                
+                String phoneNumber = currentAuth.getName();
+                return userRepository.findByPhoneNumber(phoneNumber);
+            }
+
             return Optional.empty();
         };
     }

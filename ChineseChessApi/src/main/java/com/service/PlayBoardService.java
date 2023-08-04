@@ -10,19 +10,17 @@ public interface PlayBoardService {
     
     PlayBoardDTO generate();
     
-    PlayBoardDTO buildPlayBoardByMoveHistories(List<MoveHistory> moveHistories);
+    PlayBoardDTO build(List<MoveHistory> moveHistories);
 
     PlayBoardDTO update(PlayBoardDTO playBoardDTO, PieceDTO movingPieceDTO, int toCol, int toRow);
    
-    void validatePlayBoard(PlayBoardDTO playBoardDTO);
-    
     void printTest(Object title, PlayBoardDTO playBoardDTO, PieceDTO pieceDTO);
 
     void printTest(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, List<int[]> availableMoveIndexes);
 
-    boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, boolean isRed);
+    boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO);
 
-    boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPiece1, PieceDTO generalPiece2);
+    boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO1, PieceDTO generalPieceDTO2);
 
     boolean isGeneralBeingChecked(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO);
 

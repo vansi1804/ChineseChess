@@ -36,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDTO.getPhoneNumber(), loginDTO.getPassword()));
+            
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
@@ -48,6 +49,7 @@ public class AuthServiceImpl implements AuthService {
             List<String> roleNames = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
+                    
             loginResponseDTO.setRoleNames(roleNames);
             loginResponseDTO.setAccessToken(jwtService.generateToken(userDetails.getUsername()));
 

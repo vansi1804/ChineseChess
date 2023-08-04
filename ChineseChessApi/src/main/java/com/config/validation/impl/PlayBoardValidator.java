@@ -19,12 +19,12 @@ import com.data.dto.PlayBoardDTO;
 import com.data.repository.PieceRepository;
 import com.service.PieceService;
 
-public class PlayBoardValidatorImpl implements ConstraintValidator<Validator, PlayBoardDTO> {
+public class PlayBoardValidator implements ConstraintValidator<Validator, PlayBoardDTO> {
 
     private final PieceRepository pieceRepository;
     private final PieceService pieceService;
 
-    public PlayBoardValidatorImpl(PieceRepository pieceRepository, PieceService pieceService) {
+    public PlayBoardValidator(PieceRepository pieceRepository, PieceService pieceService) {
         this.pieceRepository = pieceRepository;
         this.pieceService = pieceService;
     }
@@ -48,20 +48,20 @@ public class PlayBoardValidatorImpl implements ConstraintValidator<Validator, Pl
 
             for (int col = 0; col < playBoardDTO.getState().length; col++) {
                 for (int row = 0; row < playBoardDTO.getState()[0].length; row++) {
-                    
+
                     PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
                     if (pieceDTO != null) {
                         // validate id
                         if (!pieceRepository.existsById(pieceDTO.getId())) {
                             throw new InvalidExceptionCustomize(
-                                    buildValidateErrors(pieceDTO, col, row,
-                                            "Not found pieceDTO.id: " + pieceDTO.getId()));
+                                    buildValidateErrors(
+                                            pieceDTO, col, row, "Not found pieceDTO.id: " + pieceDTO.getId()));
                         }
 
                         if (pieceIds.contains(pieceDTO.getId())) {
                             throw new InvalidExceptionCustomize(
-                                    buildValidateErrors(pieceDTO, col, row,
-                                            "Existing pieceDTO.id: " + pieceDTO.getId()));
+                                    buildValidateErrors(
+                                            pieceDTO, col, row, "Existing pieceDTO.id: " + pieceDTO.getId()));
                         } else {
                             pieceIds.add(pieceDTO.getId());
                         }
@@ -70,8 +70,8 @@ public class PlayBoardValidatorImpl implements ConstraintValidator<Validator, Pl
                         EPiece ePiece = pieceService.convertByName(pieceDTO.getName());
                         if (ePiece == null) {
                             throw new InvalidExceptionCustomize(
-                                    buildValidateErrors(pieceDTO, col, row,
-                                            "Not found pieceDTO.name: " + pieceDTO.getId()));
+                                    buildValidateErrors(
+                                            pieceDTO, col, row, "Not found pieceDTO.name: " + pieceDTO.getId()));
                         }
 
                         // check exists generals

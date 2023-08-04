@@ -1,6 +1,7 @@
 package com.config.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -30,6 +31,7 @@ public class JwtService {
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
+
         return claimsResolver.apply(claims);
     }
 
@@ -48,23 +50,25 @@ public class JwtService {
 
     public Boolean isValidToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
+
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public String generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
+
         return createToken(claims, userName);
     }
 
     private String createToken(Map<String, Object> claims, String userName) {
         final Date createdDate = new Date();
-        final Date expirationDate = new Date(createdDate.getTime() + Default.JWT.ACCESS_TOKEN_EXPIRATION_TIME);
+        final Date expiredDate = new Date(createdDate.getTime() + Default.JWT.ACCESS_TOKEN_EXPIRATION_TIME);
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(createdDate)
-                .setExpiration(expirationDate)
+                .setExpiration(expiredDate)
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

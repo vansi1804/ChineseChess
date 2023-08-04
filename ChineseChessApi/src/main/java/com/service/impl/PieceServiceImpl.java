@@ -3,7 +3,6 @@ package com.service.impl;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -15,10 +14,8 @@ import com.common.Default;
 import com.common.enumeration.EPiece;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
-import com.data.entity.MoveHistory;
 import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.mapper.PieceMapper;
-import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PieceRepository;
 import com.service.PieceService;
 
@@ -27,17 +24,14 @@ public class PieceServiceImpl implements PieceService {
 
     private final PieceRepository pieceRepository;
     private final PieceMapper pieceMapper;
-    private final MoveHistoryRepository moveHistoryRepository;
 
     @Autowired
     public PieceServiceImpl(
             PieceRepository pieceRepository,
-            PieceMapper pieceMapper,
-            MoveHistoryRepository moveHistoryRepository) {
+            PieceMapper pieceMapper) {
 
         this.pieceRepository = pieceRepository;
         this.pieceMapper = pieceMapper;
-        this.moveHistoryRepository = moveHistoryRepository;
     }
 
     @Override
@@ -118,18 +112,6 @@ public class PieceServiceImpl implements PieceService {
                         .mapToObj(row -> playBoardDTO.getState()[col][row]))
                 .findFirst()
                 .orElse(null);
-    }
-
-    @Override
-    public PieceDTO findLastAtPosition(long matchId, long turn, int toCol, int toRow) {
-        Optional<MoveHistory> lastMoveToPosition = moveHistoryRepository
-                .findFirstByMatch_IdAndToColAndToRowAndTurnLessThanEqualOrderByTurnDesc(matchId, toCol, toRow, turn);
-
-        return lastMoveToPosition.isPresent()
-                ? pieceMapper.toDTO(lastMoveToPosition.get().getPiece())
-                : pieceRepository.findByCurrentColAndCurrentRow(toCol, toRow)
-                        .map(p -> pieceMapper.toDTO(p))
-                        .orElse(null);
     }
 
     @Override

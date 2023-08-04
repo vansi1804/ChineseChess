@@ -8,7 +8,7 @@ import com.service.MoveTypeService;
 public class MoveTypeServiceImpl implements MoveTypeService {
 
     @Override
-    public boolean isHorizontalMoving(int fromRow, int toRow) {
+    public boolean isHorizontallyMoving(int fromRow, int toRow) {
         return fromRow == toRow;
     }
 
