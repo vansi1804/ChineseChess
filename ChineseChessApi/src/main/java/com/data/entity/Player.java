@@ -28,7 +28,7 @@ public class Player {
     private long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", updatable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)

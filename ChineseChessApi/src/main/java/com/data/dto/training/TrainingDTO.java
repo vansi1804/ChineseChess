@@ -5,7 +5,7 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 
 import com.common.ErrorMessage;
-import com.data.dto.AuditingDTO;
+import com.data.dto.AuditorDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class TrainingDTO extends AuditingDTO {
+public class TrainingDTO extends AuditorDTO {
     
     private Long id;
 

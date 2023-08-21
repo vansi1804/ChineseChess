@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "vips")
-public class Vip extends Auditing {
+public class Vip extends Auditor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class VipDTO extends AuditingDTO {
+public class VipDTO extends AuditorDTO {
 
     private Integer id;
 

@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "matches")
-public class Match extends Auditing {
+public class Match extends Auditor {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,11 +41,11 @@ public class Match extends Auditing {
     private int eloBet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "player1_id", updatable = false)
+    @JoinColumn(name = "player1_id", referencedColumnName = "id", updatable = false)
     private Player player1;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "player2_id", updatable = false)
+    @JoinColumn(name = "player2_id", referencedColumnName = "id", updatable = false)
     private Player player2;
 
     @Column(name = "result")

@@ -12,16 +12,16 @@ import lombok.Data;
 
 @Data
 @MappedSuperclass
-public abstract class AuditingDTO implements Serializable {
+public class AuditorDTO implements Serializable {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
-    protected Date createdDate;
+    private Date createdDate;
 
-    protected Long createdByUserId;
+    private Long createdByUserId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
-    protected Date lastModifiedDate;
+    private Date lastModifiedDate;
 
-    protected Long lastModifiedByUserId;
+    private Long lastModifiedByUserId;
 
 }

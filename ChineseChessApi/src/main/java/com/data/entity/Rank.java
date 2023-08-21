@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "ranks")
-public class Rank extends Auditing {
+public class Rank extends Auditor {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

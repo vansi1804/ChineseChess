@@ -1,6 +1,6 @@
 package com.data.dto.user;
 
-import com.data.dto.AuditingDTO;
+import com.data.dto.AuditorDTO;
 import com.data.dto.RoleDTO;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class UserDTO extends AuditingDTO {    
+public class UserDTO extends AuditorDTO {    
     
     private long id;
 
