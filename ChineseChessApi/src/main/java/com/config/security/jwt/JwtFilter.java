@@ -1,4 +1,4 @@
-package com.config.security;
+package com.config.security.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

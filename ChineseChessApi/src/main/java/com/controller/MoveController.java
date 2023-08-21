@@ -15,7 +15,6 @@ import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.TrainingMoveCreationDTO;
 import com.data.dto.move.AvailableMoveRequestDTO;
 import com.service.MoveService;
-import com.service.PlayBoardService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,25 +27,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class MoveController {
 
     private final MoveService moveService;
-    private final PlayBoardService playBoardService;
 
     @Autowired
-    public MoveController(MoveService moveService, PlayBoardService playBoardService) {
+    public MoveController(MoveService moveService) {
         this.moveService = moveService;
-        this.playBoardService = playBoardService;
     }
 
     @GetMapping(value = "")
     public ResponseEntity<?> findMoveValid(@RequestBody @Valid AvailableMoveRequestDTO availableMoveRequest) {
-        // playBoardService.validatePlayBoard(availableMoveRequest.getPlayBoardDTO());
-        
+
         return ResponseEntity.ok(moveService.findAllAvailable(availableMoveRequest));
     }
 
     @PostMapping(value = "")
     public ResponseEntity<?> create(@RequestBody @Valid MoveCreationDTO moveCreationDTO) {
-        // playBoardService.validatePlayBoard(moveCreationDTO.getPlayBoardDTO());
-        
         return ResponseEntity.ok(moveService.create(moveCreationDTO));
     }
 
@@ -56,16 +50,15 @@ public class MoveController {
         return ResponseEntity.ok(moveService.create(moveHistoryCreationDTO));
     }
 
-	@PreAuthorize(value = "hasAuthority('ADMIN')")
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping(value = "/training")
     public ResponseEntity<?> create(@RequestBody @Valid TrainingMoveCreationDTO trainingMoveHistoryCreationDTO) {
         return ResponseEntity.ok(moveService.create(trainingMoveHistoryCreationDTO));
     }
 
-     @GetMapping(value = "/best-moves")
-    public ResponseEntity<?> findAllBestMoves(@RequestBody @Valid BestAvailableMoveRequestDTO bestAvailableMoveRequestDTO) {
-        // playBoardService.validatePlayBoard(bestAvailableMoveRequestDTO.getPlayBoardDTO());
-       
+    @GetMapping(value = "/best-moves")
+    public ResponseEntity<?> findAllBestMoves(
+            @RequestBody @Valid BestAvailableMoveRequestDTO bestAvailableMoveRequestDTO) {
         return ResponseEntity.ok(moveService.findAllBestAvailable(bestAvailableMoveRequestDTO));
     }
 

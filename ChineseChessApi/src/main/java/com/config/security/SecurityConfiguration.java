@@ -24,6 +24,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import com.config.security.jwt.JwtFilter;
+import com.config.security.jwt.JwtService;
+import com.config.security.userDetails.UserDetailsServiceImpl;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.config.exception.UnauthorizedExceptionCustomize;
-import com.config.security.JwtService;
-import com.config.security.UserDetailsImpl;
+import com.config.security.jwt.JwtService;
+import com.config.security.userDetails.UserDetailsImpl;
 import com.data.dto.auth.LoginDTO;
 import com.data.dto.auth.LoginResponseDTO;
 import com.service.AuthService;

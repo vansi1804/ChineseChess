@@ -1,4 +1,4 @@
-package com.config.security;
+package com.config.security.userDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
