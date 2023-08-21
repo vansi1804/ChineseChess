@@ -1,4 +1,4 @@
-package com.config.security;
+package com.config.security.userDetails;
 
 import java.util.Collection;
 import java.util.Collections;
