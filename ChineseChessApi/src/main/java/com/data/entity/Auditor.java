@@ -23,26 +23,26 @@ import lombok.Data;
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class Auditing implements Serializable{
+public class Auditor implements Serializable {
 
-	@CreatedDate
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_date", updatable = false)
-	protected Date createdDate;
-	
-	@CreatedBy
-	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_user_id", updatable = false)
-	protected User createdBy;
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_date", updatable = false)
+    private Date createdDate;
 
-	@LastModifiedDate
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "last_modified_date", insertable = false)
-	protected Date lastModifiedDate;
-
-	@LastModifiedBy
+    @CreatedBy
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_modified_by_user_id", insertable = false)
-	protected User lastModifiedBy;
-  
+    @JoinColumn(name = "created_by_user_id", referencedColumnName = "id", updatable = false)
+    private User createdBy;
+
+    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_modified_date", insertable = false)
+    private Date lastModifiedDate;
+
+    @LastModifiedBy
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "last_modified_by_user_id", referencedColumnName = "id", insertable = false)
+    private User lastModifiedBy;
+
 }

@@ -25,8 +25,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "trainings")
-public class Training extends Auditing{
-    
+public class Training extends Auditor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
@@ -34,9 +34,9 @@ public class Training extends Auditing{
 
     @Column(name = "title")
     private String title;
-    
+
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_training_id")
+    @JoinColumn(name = "parent_training_id", referencedColumnName = "id")
     private Training parentTraining;
 
     @OneToMany(mappedBy = "parentTraining")
