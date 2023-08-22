@@ -18,9 +18,13 @@ import com.common.ApiUrl;
 import com.data.dto.VipDTO;
 import com.service.VipService;
 
+import io.swagger.annotations.Api;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.VIPS)
+@PreAuthorize(value = "hasAuthority('ADMIN')")
+@Api(value = "Chinese Chess API", description = "Operations pertaining to user's vip.")
 public class VipController {
 
     private final VipService vipService;
@@ -30,25 +34,21 @@ public class VipController {
         this.vipService = vipService;
     }
 
-    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @GetMapping(value = "")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(vipService.findAll());
     }
 
-    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @GetMapping(value = "/id={id}")
     public ResponseEntity<?> findById(@PathVariable int id) {
         return ResponseEntity.ok(vipService.findById(id));
     }
 
-    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PostMapping(value = "")
     public ResponseEntity<?> create(@RequestBody @Valid VipDTO vipDTO) {
         return ResponseEntity.ok(vipService.create(vipDTO));
     }
 
-    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @PutMapping(value = "/id={id}")
     public ResponseEntity<?> update(@PathVariable int id, @RequestBody @Valid VipDTO vipDTO) {
         return ResponseEntity.ok(vipService.update(id, vipDTO));
