@@ -18,10 +18,13 @@ import com.common.ApiUrl;
 import com.data.dto.RankDTO;
 import com.service.RankService;
 
+import io.swagger.annotations.Api;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.RANKS)
 @PreAuthorize(value = "hasAuthority('ADMIN')")
+@Api(value = "Chinese Chess API", description = "Operations pertaining to player's rank in Chinese Chess")
 public class RankController {
 
     private final RankService rankService;

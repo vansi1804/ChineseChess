@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.common.ApiUrl;
 import com.service.RoleService;
 
+import io.swagger.annotations.Api;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.ROLES)
+@Api(value = "Chinese Chess API", description = "Operations pertaining to user's role.")
 public class RoleController {
 
     private final RoleService roleService;
