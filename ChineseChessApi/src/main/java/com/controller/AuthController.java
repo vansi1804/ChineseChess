@@ -14,12 +14,9 @@ import com.common.ApiUrl;
 import com.data.dto.auth.LoginDTO;
 import com.service.AuthService;
 
-import io.swagger.annotations.Api;
-
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.AUTH)
-@Api(value = "Chinese Chess API", description = "Operations pertaining to auth.")
 public class AuthController {
     
     private final AuthService loginService;

@@ -16,8 +16,6 @@ import com.data.dto.move.TrainingMoveCreationDTO;
 import com.data.dto.move.AvailableMoveRequestDTO;
 import com.service.MoveService;
 
-import io.swagger.annotations.Api;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.MOVE_HISTORIES)
-@Api(value = "Chinese Chess API", description = "Operations pertaining to game's moving.")
 public class MoveController {
 
     private final MoveService moveService;

@@ -7,8 +7,6 @@ import com.common.ApiUrl;
 import com.data.dto.match.MatchCreationDTO;
 import com.service.MatchService;
 
-import io.swagger.annotations.Api;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.MATCHES)
-@Api(value = "Chinese Chess API", description = "Operations pertaining to match(game is played by 2 player).")
 public class MatchController {
     
     private MatchService matchService;

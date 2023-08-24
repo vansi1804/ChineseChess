@@ -25,12 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.common.ApiUrl;
 import com.service.FileService;
 
-import io.swagger.annotations.Api;
-
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.FILES)
-@Api(value = "Chinese Chess API", description = "Operations pertaining to file.")
 public class FileController {
 
     private FileService fileService;
