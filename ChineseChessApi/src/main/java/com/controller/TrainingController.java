@@ -19,12 +19,9 @@ import com.common.ApiUrl;
 import com.data.dto.training.TrainingDTO;
 import com.service.TrainingService;
 
-import io.swagger.annotations.Api;
-
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.TRAININGS)
-@Api(value = "Chinese Chess API", description = "Operations pertaining to training.")
 public class TrainingController {
    
     private final TrainingService trainingService;

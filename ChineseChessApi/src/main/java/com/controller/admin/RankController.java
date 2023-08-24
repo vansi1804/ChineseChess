@@ -18,13 +18,14 @@ import com.common.ApiUrl;
 import com.data.dto.RankDTO;
 import com.service.RankService;
 
-import io.swagger.annotations.Api;
+// import io.swagger.annotations.Api;
+// import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.RANKS)
 @PreAuthorize(value = "hasAuthority('ADMIN')")
-@Api(value = "Chinese Chess API", description = "Operations pertaining to player's rank in Chinese Chess")
+// @Api(tags = "Operations pertaining to rank for player in Chinese Chess. Must login with admin role.")
 public class RankController {
 
     private final RankService rankService;
@@ -35,6 +36,7 @@ public class RankController {
     }
 
     @GetMapping(value = "")
+    // @ApiOperation(value = "Find all ranks", response = RankDTO.class)
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(rankService.findAll());
     }

@@ -18,13 +18,10 @@ import com.common.ApiUrl;
 import com.data.dto.VipDTO;
 import com.service.VipService;
 
-import io.swagger.annotations.Api;
-
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.VIPS)
 @PreAuthorize(value = "hasAuthority('ADMIN')")
-@Api(value = "Chinese Chess API", description = "Operations pertaining to user's vip.")
 public class VipController {
 
     private final VipService vipService;

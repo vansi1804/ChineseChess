@@ -21,12 +21,9 @@ import com.data.dto.player.PlayerCreationDTO;
 import com.data.dto.player.PlayerProfileDTO;
 import com.service.PlayerService;
 
-import io.swagger.annotations.Api;
-
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.PLAYERS)
-@Api(value = "Chinese Chess API", description = "Operations pertaining to player.")
 public class PlayerController {
 
     private final PlayerService playerService;
