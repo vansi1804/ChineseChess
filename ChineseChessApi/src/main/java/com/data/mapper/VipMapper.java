@@ -10,12 +10,14 @@ import com.data.entity.Vip;
 public interface VipMapper {
     
     @Mapping(ignore = true, target = "createdDate")
-    @Mapping(ignore = true, target = "createdBy")
+    @Mapping(ignore = true, target = "createdByUserId")
+    // @Mapping(ignore = true, target = "createdBy")
     @Mapping(ignore = true, target = "lastModifiedDate")
-    @Mapping(ignore = true, target = "lastModifiedBy")
+    @Mapping(ignore = true, target = "lastModifiedByUserId")
+    // @Mapping(ignore = true, target = "lastModifiedBy")
     Vip toEntity(VipDTO vipDTO);
     
-    @Mapping(source = "createdBy.id", target = "createdByUserId")
-    @Mapping(source = "lastModifiedBy.id", target = "lastModifiedByUserId")
+    // @Mapping(source = "createdBy.id", target = "createdByUserId")
+    // @Mapping(source = "lastModifiedBy.id", target = "lastModifiedByUserId")
     VipDTO toDTO(Vip vip);
 }

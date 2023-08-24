@@ -21,16 +21,18 @@ public interface MatchMapper {
     @Mapping(ignore = true, target = "eloBet")
     @Mapping(ignore = true, target = "result")
     @Mapping(ignore = true, target = "createdDate")
-    @Mapping(ignore = true, target = "createdBy")
+    @Mapping(ignore = true, target = "createdByUserId")
+    // @Mapping(ignore = true, target = "createdBy")
     @Mapping(ignore = true, target = "lastModifiedDate")
-    @Mapping(ignore = true, target = "lastModifiedBy")
+    @Mapping(ignore = true, target = "lastModifiedByUserId")
+    // @Mapping(ignore = true, target = "lastModifiedBy")
     Match toEntity(MatchCreationDTO matchCreationDTO);
 
     @Mapping(source = "player1", target = "player1ProfileDTO")
     @Mapping(source = "player2", target = "player2ProfileDTO")
     @Mapping(expression = "java(toOthersInfoDTO(match))", target = "matchOthersInfoDTO")
-    @Mapping(source = "createdBy.id", target = "createdByUserId")
-    @Mapping(source = "lastModifiedBy.id", target = "lastModifiedByUserId")
+    // @Mapping(source = "createdBy.id", target = "createdByUserId")
+    // @Mapping(source = "lastModifiedBy.id", target = "lastModifiedByUserId")
     MatchDTO toDTO(Match match);
 
     @Mapping(expression = "java(toDTO(match))", target = "matchDTO")

@@ -5,9 +5,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,9 +28,8 @@ public class Auditor implements Serializable {
     private Date createdDate;
 
     @CreatedBy
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_user_id", referencedColumnName = "id", updatable = false)
-    private User createdBy;
+	@Column(name = "created_by_user_id", updatable = false)
+	private Long createdByUserId;
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
@@ -41,8 +37,7 @@ public class Auditor implements Serializable {
     private Date lastModifiedDate;
 
     @LastModifiedBy
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_modified_by_user_id", referencedColumnName = "id", insertable = false)
-    private User lastModifiedBy;
+	@Column(name = "last_modified_by_user_id", insertable = false)
+	private Long lastModifiedByUserId;
 
 }
