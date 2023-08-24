@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private final VipRepository vipRepository;
     private final FileService fileService;
     private final PasswordEncoder passwordEncoder;
-    private final AuditorAware<User> auditorAware;
+    private final AuditorAware<Long> auditorAware;
 
     @Autowired
     public UserServiceImpl(
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
             VipRepository vipRepository,
             FileService fileService,
             PasswordEncoder passwordEncoder,
-            AuditorAware<User> auditorAware) {
+            AuditorAware<Long> auditorAware) {
 
         this.userRepository = userRepository;
         this.userMapper = userMapper;
@@ -171,10 +171,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isCurrentUser(long id) {
-        User currentUser = auditorAware.getCurrentAuditor()
-                .orElse(null);
-
-        return (currentUser == null) || (currentUser.getId() == id);
+        Long userId = auditorAware.getCurrentAuditor().orElse(null);
+        
+        return (userId == null) || (userId == id);
     }
 
 }
