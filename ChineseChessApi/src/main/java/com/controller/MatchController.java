@@ -47,9 +47,9 @@ public class MatchController {
         return ResponseEntity.ok(matchService.create(matchCreationDTO));
     }
 
-    @PutMapping(value = "/id={id}/{isRedWin}")
-    public ResponseEntity<?> updateResult(@PathVariable long id, @PathVariable Boolean isRedWin) {
-        return ResponseEntity.ok(matchService.updateResult(id, isRedWin));
+    @PutMapping(value = "/id={id}/result={result}")
+    public ResponseEntity<?> updateResult(@PathVariable long id, @PathVariable int result) {
+        return ResponseEntity.ok(matchService.updateResult(id, result));
     }
     
 }

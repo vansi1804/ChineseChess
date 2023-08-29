@@ -18,9 +18,10 @@ public interface MatchService {
 
     MatchDetailDTO findDetailById(long id);
 
+    @Transactional
     MatchDTO create(MatchCreationDTO matchCreationDTO);
 
     @Transactional
-    MatchDTO updateResult(long id, Boolean isRedWin);
+    MatchDTO updateResult(long id, int result);
 
 }

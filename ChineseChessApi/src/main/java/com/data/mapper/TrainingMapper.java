@@ -15,10 +15,9 @@ public interface TrainingMapper {
     @Mapping(ignore = true, target = "childTrainings")
     @Mapping(ignore = true, target = "createdDate")
     @Mapping(ignore = true, target = "createdByUserId")
-    // @Mapping(ignore = true, target = "createdBy")
+    
     @Mapping(ignore = true, target = "lastModifiedDate")
     @Mapping(ignore = true, target = "lastModifiedByUserId")
-    // @Mapping(ignore = true, target = "lastModifiedBy")
     Training toEntity(TrainingDTO trainingDTO);
 
     @Named("mapParentTrainingToEntity")

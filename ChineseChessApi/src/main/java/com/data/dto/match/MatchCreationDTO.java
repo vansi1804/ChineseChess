@@ -19,6 +19,7 @@ public class MatchCreationDTO {
     @NotNull(message = ErrorMessage.NULL_DATA)
     private Long player2Id;
 
+    @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
     private MatchOthersInfoDTO matchOthersInfoDTO;
 

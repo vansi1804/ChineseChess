@@ -15,8 +15,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     Optional<Player> findByUser_PhoneNumber(String phoneNumber);
 
-    List<Player> findAllByRankId(int rankId);
-
     List<Player> findAllByEloBetween(int fromElo, int toElo);
 
     Optional<Player> findByUser_Id(long userId);

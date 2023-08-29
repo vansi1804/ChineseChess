@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum EResult {
+public enum EMatchResult {
 
-    WIN(1),   
-    DRAW(0),   
+    WIN(1),
+    DRAW(0),
     LOSE(-1);
-    
+
     private final int value;
-    
+
 }

@@ -20,6 +20,3 @@ spring:
         jdbc:
           time_zone: ${spring.jackson.time-zone}
     show-sql: true
-#   mvc:
-#     pathmatch:
-#       matching-strategy: ANT_PATH_MATCHER

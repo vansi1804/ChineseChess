@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -31,20 +30,7 @@ public class Player {
     @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rank_id")
-    private Rank rank;
-
     @Column(name = "elo")
     private int elo;
-
-    @Column(name = "win")
-    private int win;
-
-    @Column(name = "draw")
-    private int draw;
-
-    @Column(name = "lose")
-    private int lose;
 
 }

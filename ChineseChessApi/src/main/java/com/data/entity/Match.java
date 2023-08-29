@@ -29,16 +29,16 @@ public class Match extends Auditor {
     private long id;
 
     @Column(name = "time", updatable = false)
-    private int time;
+    private Integer time;
 
     @Column(name = "moving_time", updatable = false)
-    private int movingTime;
+    private Integer movingTime;
 
     @Column(name = "cumulative_time", updatable = false)
-    private int cumulativeTime;
+    private Integer cumulativeTime;
 
     @Column(name = "bet", updatable = false)
-    private int eloBet;
+    private Integer eloBet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player1_id", referencedColumnName = "id", updatable = false)

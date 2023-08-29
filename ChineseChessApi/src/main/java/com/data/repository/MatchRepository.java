@@ -24,4 +24,22 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
             + "     AND m.result IS NULL")
     boolean existsPlayingByPlayerId(@Param("playerId") long playerId);
 
+    @Query("SELECT COUNT(m.id)"
+            + " FROM Match m"
+            + " WHERE (m.player1.id = :playerId AND m.result > 0)"
+            + "    OR (m.player2.id = :playerId AND m.result < 0)")
+    long countWinByPlayerId(@Param("playerId") long playerId);
+
+    @Query("SELECT COUNT(m.id)"
+            + " FROM Match m"
+            + " WHERE (m.player1.id = :playerId OR m.player2.id = :playerId)"
+            + "    AND m.result = 0")
+    long countDrawByPlayerId(@Param("playerId") long playerId);
+
+    @Query("SELECT COUNT(m.id)"
+            + " FROM Match m"
+            + " WHERE (m.player1.id = :playerId AND m.result < 0)"
+            + "    OR (m.player2.id = :playerId AND m.result > 0)")
+    long countLoseByPlayerId(@Param("playerId") long playerId);
+
 }
