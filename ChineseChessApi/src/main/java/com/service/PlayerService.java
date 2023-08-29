@@ -3,7 +3,6 @@ package com.service;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.common.enumeration.EResult;
 import com.data.dto.player.PlayerCreationDTO;
 import com.data.dto.player.PlayerDTO;
 import com.data.dto.player.PlayerProfileDTO;
@@ -22,6 +21,7 @@ public interface PlayerService {
     @Transactional
     PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO);
 
-    PlayerProfileDTO updateByEloBetAndResult(long id, int eloBet, EResult eResult);
+    @Transactional
+    PlayerProfileDTO update(long id, int elo);
 
 }

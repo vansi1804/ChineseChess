@@ -18,10 +18,9 @@ public interface UserMapper {
     @Mapping(ignore = true, target = "status")
     @Mapping(ignore = true, target = "createdDate")
     @Mapping(ignore = true, target = "createdByUserId")
-    // @Mapping(ignore = true, target = "createdBy")
+    
     @Mapping(ignore = true, target = "lastModifiedDate")
     @Mapping(ignore = true, target = "lastModifiedByUserId")
-    // @Mapping(ignore = true, target = "lastModifiedBy")
     User toEntity(UserCreationDTO userCreationDTO);
 
     @Mapping(ignore = true, target = "id")
@@ -31,10 +30,9 @@ public interface UserMapper {
     @Mapping(ignore = true, target = "status")
     @Mapping(ignore = true, target = "createdDate")
     @Mapping(ignore = true, target = "createdByUserId")
-    // @Mapping(ignore = true, target = "createdBy")
+    
     @Mapping(ignore = true, target = "lastModifiedDate")
     @Mapping(ignore = true, target = "lastModifiedByUserId")
-    // @Mapping(ignore = true, target = "lastModifiedBy")
     User toEntity(UserProfileDTO userProfileDTO);
 
     @Mapping(source = "vip", target = "vipDTO")

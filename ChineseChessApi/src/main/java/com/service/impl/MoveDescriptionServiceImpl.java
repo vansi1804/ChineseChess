@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.common.enumeration.EIndex;
-import com.common.enumeration.EMoveType;
+import com.common.enumeration.EIndexDescription;
+import com.common.enumeration.EMoveTypeDescription;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.service.MoveDescriptionService;
@@ -49,13 +49,13 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         description.append(MAX_COL - pieceDTO.getCurrentCol());
 
         if (moveTypeService.isHorizontallyMoving(pieceDTO.getCurrentRow(), toRow)) {
-            description.append(EMoveType.ACROSS.getValue())
+            description.append(EMoveTypeDescription.ACROSS.getValue())
                     .append(MAX_COL - toCol);
         } else {
             if (moveTypeService.isUpMoving(true, pieceDTO.getCurrentRow(), toRow)) {
-                description.append(EMoveType.UP.getValue());
+                description.append(EMoveTypeDescription.UP.getValue());
             } else {
-                description.append(EMoveType.DOWN.getValue());
+                description.append(EMoveTypeDescription.DOWN.getValue());
             }
 
             if (moveTypeService.isVerticallyMoving(pieceDTO.getCurrentCol(), toCol)) {
@@ -74,13 +74,13 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         description.append(pieceDTO.getCurrentCol() + 1);
 
         if (moveTypeService.isHorizontallyMoving(pieceDTO.getCurrentRow(), toRow)) {
-            description.append(EMoveType.ACROSS.getValue())
+            description.append(EMoveTypeDescription.ACROSS.getValue())
                     .append(toCol + 1);
         } else {
             if (moveTypeService.isUpMoving(false, pieceDTO.getCurrentRow(), toRow)) {
-                description.append(EMoveType.UP.getValue());
+                description.append(EMoveTypeDescription.UP.getValue());
             } else {
-                description.append(EMoveType.DOWN.getValue());
+                description.append(EMoveTypeDescription.DOWN.getValue());
             }
 
             if (moveTypeService.isVerticallyMoving(pieceDTO.getCurrentCol(), toCol)) {
@@ -99,8 +99,8 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
                 ? ""
                 : (pieceDTO.isRed() && (pieceDTO.getCurrentRow() < foundPiece.getCurrentRow()))
                         || (!pieceDTO.isRed() && (pieceDTO.getCurrentRow() > foundPiece.getCurrentRow()))
-                                ? EIndex.BEFORE.getValue()
-                                : EIndex.AFTER.getValue();
+                                ? EIndexDescription.BEFORE.getValue()
+                                : EIndexDescription.AFTER.getValue();
     }
 
 }

@@ -5,12 +5,11 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum EMoveType {
+public enum EIndexDescription {
 
-    UP(':'),
-    ACROSS('-'),
-    DOWN('/');
-
-    private final char value;
+    BEFORE("t"),   
+    AFTER("s");
+    
+    private final String value;
     
 }

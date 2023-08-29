@@ -9,8 +9,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.common.Default;
 import com.common.ErrorMessage;
-import com.common.enumeration.EResult;
+import com.common.enumeration.EMatchResult;
 import com.data.dto.match.MatchDetailDTO;
 import com.data.dto.match.MatchCreationDTO;
 import com.data.dto.match.MatchDTO;
@@ -120,61 +121,88 @@ public class MatchServiceImpl implements MatchService {
                     Collections.singletonMap("player2Id", player2.getId()));
         }
 
-        if (player1.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()) {
-            Map<String, Object> errors = new HashMap<>();
-            errors.put("player1Id", player1.getId());
-            errors.put("elo", player1.getElo());
-            errors.put("eloBet", player1.getElo());
+        if (matchCreationDTO.getMatchOthersInfoDTO().getEloBet() != null) {
+            if (player1.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()) {
+                Map<String, Object> errors = new HashMap<>();
+                errors.put("player1Id", player1.getId());
+                errors.put("elo", player1.getElo());
+                errors.put("eloBet", player1.getElo());
 
-            throw new InvalidExceptionCustomize(ErrorMessage.PLAYER_PLAYING, errors);
+                throw new InvalidExceptionCustomize(ErrorMessage.PLAYER_PLAYING, errors);
+            }
+
+            if (player2.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()) {
+                Map<String, Object> errors = new HashMap<>();
+                errors.put("player2Id", player2.getId());
+                errors.put("elo", player2.getElo());
+                errors.put("eloBet", player2.getElo());
+
+                throw new InvalidExceptionCustomize(ErrorMessage.PLAYER_PLAYING, errors);
+            }
         }
 
-        if (player2.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()) {
-            Map<String, Object> errors = new HashMap<>();
-            errors.put("player2Id", player2.getId());
-            errors.put("elo", player2.getElo());
-            errors.put("eloBet", player2.getElo());
-            
-            throw new InvalidExceptionCustomize(ErrorMessage.PLAYER_PLAYING, errors);
-        }
+        MatchDTO matchCreatedDTO = matchMapper.toDTO(matchRepository.save(matchMapper.toEntity(matchCreationDTO)));
+        matchCreatedDTO.setPlayer1ProfileDTO(playerService.findById(player1.getId()));
+        matchCreatedDTO.setPlayer2ProfileDTO(playerService.findById(player2.getId()));
 
-        return matchMapper.toDTO(matchRepository.save(matchMapper.toEntity(matchCreationDTO)));
+        return matchCreatedDTO;
     }
 
     @Override
-    public MatchDTO updateResult(long id, Boolean isRedWin) {
-        Match match = matchRepository.findById(id)
+    public MatchDTO updateResult(long id, int result) {
+        Match oldMatch = matchRepository.findById(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
-        if (match.getResult() != null) {
-            throw new InvalidExceptionCustomize(ErrorMessage.END_MATCH, Collections.singletonMap("id", match.getId()));
+        if (oldMatch.getResult() != null) {
+            throw new InvalidExceptionCustomize(ErrorMessage.END_MATCH,
+                    Collections.singletonMap("id", oldMatch.getId()));
         }
 
-        EResult eResult;
-        if (isRedWin == null) {
-            match.setResult(EResult.DRAW.getValue());
-            eResult = EResult.DRAW;
-        } else if (isRedWin) {
-            match.setResult(EResult.WIN.getValue());
-            eResult = EResult.WIN;
+        PlayerProfileDTO player1ProfileDTO;
+        PlayerProfileDTO player2ProfileDTO;
+
+        if (result == EMatchResult.DRAW.getValue()) {
+            oldMatch.setResult(EMatchResult.DRAW.getValue());
+        } else if (result == EMatchResult.WIN.getValue()) {
+            oldMatch.setResult(EMatchResult.WIN.getValue());
         } else {
-            match.setResult(EResult.LOSE.getValue());
-            eResult = EResult.LOSE;
+            oldMatch.setResult(EMatchResult.LOSE.getValue());
         }
 
-        MatchDTO matchDTO = matchMapper.toDTO(matchRepository.save(match));
+        if (oldMatch.getEloBet() != null) {
+            int eloWin = (int) (Default.Game.ELO_WIN_RECEIVE_PERCENT * oldMatch.getEloBet());
+            int eloLose = oldMatch.getEloBet();
 
-        PlayerProfileDTO player1ProfileDTO = playerService.updateByEloBetAndResult(
-                match.getPlayer1().getId(), match.getEloBet(), eResult);
-        matchDTO.setPlayer1ProfileDTO(player1ProfileDTO);
+            if (oldMatch.getResult() == EMatchResult.WIN.getValue()) {
+                player1ProfileDTO = playerService.update(
+                        oldMatch.getPlayer1().getId(), oldMatch.getPlayer1().getElo() + eloWin);
 
-        PlayerProfileDTO player2ProfileDTO = playerService.updateByEloBetAndResult(
-                match.getPlayer2().getId(), match.getEloBet(), eResult);
-        matchDTO.setPlayer2ProfileDTO(player2ProfileDTO);
+                player2ProfileDTO = playerService.update(
+                        oldMatch.getPlayer2().getId(), oldMatch.getPlayer2().getElo() - eloLose);
 
-        return matchDTO;
+            } else if (oldMatch.getResult() == EMatchResult.LOSE.getValue()) {
+                player1ProfileDTO = playerService.update(
+                        oldMatch.getPlayer1().getId(), oldMatch.getPlayer1().getElo() - eloLose);
+
+                player2ProfileDTO = playerService.update(
+                        oldMatch.getPlayer2().getId(), oldMatch.getPlayer2().getElo() + eloWin);
+            
+            } else {
+                player1ProfileDTO = playerService.findById(oldMatch.getPlayer1().getId());
+                player2ProfileDTO = playerService.findById(oldMatch.getPlayer2().getId());
+            }
+        } else {
+            player1ProfileDTO = playerService.findById(oldMatch.getPlayer1().getId());
+            player2ProfileDTO = playerService.findById(oldMatch.getPlayer2().getId());
+        }
+
+        MatchDTO updatedMatchDTO = matchMapper.toDTO(matchRepository.save(oldMatch));
+        updatedMatchDTO.setPlayer1ProfileDTO(player1ProfileDTO);
+        updatedMatchDTO.setPlayer2ProfileDTO(player2ProfileDTO);
+
+        return updatedMatchDTO;
     }
 
 }

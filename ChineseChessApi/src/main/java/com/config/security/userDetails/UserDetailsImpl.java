@@ -53,8 +53,8 @@ public class UserDetailsImpl implements UserDetails {
         return !EStatus.INACTIVE.name().equals(user.getStatus());
     }
 
-    public Long getUserId() {
-        return user.getId();
+    public User getUser() {
+        return user;
     }
 
 }

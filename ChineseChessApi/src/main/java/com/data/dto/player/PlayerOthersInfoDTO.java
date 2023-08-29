@@ -15,10 +15,10 @@ public class PlayerOthersInfoDTO {
 
     private int elo;
 
-    private int win;
+    private long win;
 
-    private int draw;
+    private long draw;
 
-    private int lose;
+    private long lose;
     
 }

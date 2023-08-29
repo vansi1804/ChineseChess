@@ -1,7 +1,6 @@
 package com.data.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import com.data.dto.RankDTO;
 import com.data.entity.Rank;

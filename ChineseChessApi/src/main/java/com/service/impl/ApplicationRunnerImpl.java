@@ -60,11 +60,11 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        // initRole();
-        // initVip();
-        // initRank();
-        // initAdminPlayer();
-        // innitPiece();
+        initRole();
+        initVip();
+        initRank();
+        initAdminPlayer();
+        innitPiece();
     }
 
     public void initRole() {
@@ -106,8 +106,6 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
         Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
                 .orElseThrow(() -> new InternalServerErrorExceptionCustomize("No rank found"));
-        adminPlayer.setRank(defaultRank);
-
         adminPlayer.setElo(defaultRank.getEloMilestones());
 
         playerRepository.save(adminPlayer);

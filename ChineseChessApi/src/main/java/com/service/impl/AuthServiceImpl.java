@@ -1,14 +1,10 @@
 package com.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +13,7 @@ import com.config.security.jwt.JwtService;
 import com.config.security.userDetails.UserDetailsImpl;
 import com.data.dto.auth.LoginDTO;
 import com.data.dto.auth.LoginResponseDTO;
+import com.data.mapper.RoleMapper;
 import com.service.AuthService;
 
 @Service
@@ -24,11 +21,17 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final RoleMapper roleMapper;
 
     @Autowired
-    public AuthServiceImpl(AuthenticationManager authenticationManager, JwtService jwtService) {
+    public AuthServiceImpl(
+        AuthenticationManager authenticationManager, 
+        JwtService jwtService,
+        RoleMapper roleMapper) {
+
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.roleMapper = roleMapper;
     }
 
     @Override
@@ -40,17 +43,11 @@ public class AuthServiceImpl implements AuthService {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
-
             if (userDetails instanceof UserDetailsImpl) {
                 UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetails;
-                loginResponseDTO.setUserId(userDetailsImpl.getUserId());
+                loginResponseDTO.setUserId(userDetailsImpl.getUser().getId());
+                loginResponseDTO.setRoleDTO(roleMapper.toDTO(userDetailsImpl.getUser().getRole()));
             }
-
-            List<String> roleNames = userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
-                    
-            loginResponseDTO.setRoleNames(roleNames);
             loginResponseDTO.setAccessToken(jwtService.generateToken(userDetails.getUsername()));
 
             return loginResponseDTO;

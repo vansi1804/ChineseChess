@@ -1,6 +1,6 @@
 package com.data.dto.auth;
 
-import java.util.List;
+import com.data.dto.RoleDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +15,6 @@ public class LoginResponseDTO extends JwtResponseDTO {
 
     private long userId;
 
-    private List<String> roleNames;
+    private RoleDTO roleDTO;
 
 }

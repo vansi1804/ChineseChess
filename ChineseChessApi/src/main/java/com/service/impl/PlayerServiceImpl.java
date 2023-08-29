@@ -9,11 +9,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import com.common.Default;
-import com.common.enumeration.EResult;
 import com.common.enumeration.ERole;
+import com.data.dto.RankDTO;
 import com.data.dto.player.PlayerCreationDTO;
 import com.data.dto.player.PlayerDTO;
+import com.data.dto.player.PlayerOthersInfoDTO;
 import com.data.dto.player.PlayerProfileDTO;
 import com.data.dto.user.UserDTO;
 import com.data.dto.user.UserProfileDTO;
@@ -22,6 +22,8 @@ import com.data.entity.Rank;
 import com.config.exception.InternalServerErrorExceptionCustomize;
 import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.mapper.PlayerMapper;
+import com.data.mapper.RankMapper;
+import com.data.repository.MatchRepository;
 import com.data.repository.RankRepository;
 import com.data.repository.PlayerRepository;
 import com.service.PlayerService;
@@ -34,30 +36,46 @@ public class PlayerServiceImpl implements PlayerService {
     private final PlayerMapper playerMapper;
     private final UserService userService;
     private final RankRepository rankRepository;
+    private final RankMapper rankMapper;
+    private final MatchRepository matchRepository;
 
     @Autowired
     public PlayerServiceImpl(
             PlayerRepository playerRepository,
             PlayerMapper playerMapper,
             UserService userService,
-            RankRepository rankRepository) {
+            RankRepository rankRepository,
+            RankMapper rankMapper,
+            MatchRepository matchRepository) {
 
         this.playerRepository = playerRepository;
         this.playerMapper = playerMapper;
         this.userService = userService;
         this.rankRepository = rankRepository;
+        this.rankMapper = rankMapper;
+        this.matchRepository = matchRepository;
     }
 
     @Override
     public Page<PlayerDTO> findAll(int no, int limit, String sortBy) {
         return playerRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
-                .map(p -> playerMapper.toDTO(p));
+                .map(p -> {
+                    PlayerDTO playerDTO = playerMapper.toDTO(p);
+                    playerDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(p));
+
+                    return playerDTO;
+                });
     }
 
     @Override
     public PlayerDTO findByUserId(long userId) {
         return playerRepository.findByUser_Id(userId)
-                .map(p -> playerMapper.toDTO(p))
+                .map(p -> {
+                    PlayerDTO playerDTO = playerMapper.toDTO(p);
+                    playerDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(p));
+
+                    return playerDTO;
+                })
                 .orElseThrow(
                         () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("user.id", userId)));
@@ -66,7 +84,12 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public PlayerProfileDTO findById(long id) {
         return playerRepository.findById(id)
-                .map(p -> playerMapper.toProfileDTO(p))
+                .map(p -> {
+                    PlayerProfileDTO playerProfileDTO = playerMapper.toProfileDTO(p);
+                    playerProfileDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(p));
+
+                    return playerProfileDTO;
+                })
                 .orElseThrow(
                         () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
@@ -82,12 +105,12 @@ public class PlayerServiceImpl implements PlayerService {
         Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
                 .orElseThrow(
                         () -> new InternalServerErrorExceptionCustomize("No rank found"));
-        player.setRank(defaultRank);
-
         player.setElo(defaultRank.getEloMilestones());
 
         PlayerDTO createdPlayerDTO = playerMapper.toDTO(playerRepository.save(player));
         createdPlayerDTO.setUserDTO(createdUserDTO);
+        createdPlayerDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(player));
+
         return createdPlayerDTO;
     }
 
@@ -108,45 +131,49 @@ public class PlayerServiceImpl implements PlayerService {
         Player updatePlayer = playerMapper.toEntity(playerProfileDTO);
         updatePlayer.setId(oldPlayer.getId());
         updatePlayer.getUser().setId(oldPlayer.getUser().getId());
-        updatePlayer.setRank(oldPlayer.getRank());
         updatePlayer.setElo(oldPlayer.getElo());
-        updatePlayer.setWin(oldPlayer.getWin());
-        updatePlayer.setDraw(oldPlayer.getDraw());
-        updatePlayer.setLose(oldPlayer.getLose());
 
         PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(updatePlayer);
         updatedPlayerProfileDTO.setUserProfileDTO(updatedUserProfileDTO);
+        updatedPlayerProfileDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(updatePlayer));
+
         return updatedPlayerProfileDTO;
     }
 
     @Override
-    public PlayerProfileDTO updateByEloBetAndResult(long id, int eloBet, EResult eResult) {
-        Player updatePlayer = playerRepository.findById(id)
+    public PlayerProfileDTO update(long id, int elo) {
+        Player oldPlayer = playerRepository.findById(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
-        switch (eResult) {
-            case WIN:
-                updatePlayer.setElo((int) (updatePlayer.getElo() + eloBet * Default.Game.ELO_WIN_RECEIVE_PERCENT));
-                updatePlayer.setWin(updatePlayer.getWin() + 1);
-                break;
+        oldPlayer.setElo(elo);
 
-            case LOSE:
-                updatePlayer.setElo((int) (updatePlayer.getElo() - eloBet));
-                updatePlayer.setLose(updatePlayer.getLose() + 1);
-                break;
+        PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(playerRepository.save(oldPlayer));
+        updatedPlayerProfileDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(oldPlayer));
+        
+        return updatedPlayerProfileDTO;
+    }
 
-            default:
-                updatePlayer.setDraw(updatePlayer.getDraw() + 1);
-        }
-
-        Rank rank = rankRepository.findFirstByEloMilestonesLessThanEqualOrderByEloMilestonesDesc(eloBet)
+    private PlayerOthersInfoDTO buildPlayerOthersInfoDTO(Player player) {
+        PlayerOthersInfoDTO playerOthersInfoDTO = playerMapper.toOthersInfoDTO(player);
+        
+        RankDTO rankDTO = rankRepository.findFirstByEloMilestonesLessThanEqualOrderByEloMilestonesDesc(player.getElo())
+                .map(r -> rankMapper.toDTO(r))
                 .orElseThrow(
-                        () -> new InternalServerErrorExceptionCustomize("No rank found for updating for player by elo"));
-        updatePlayer.setRank(rank);
+                        () -> new InternalServerErrorExceptionCustomize("No rank found for elo: " + player.getElo()));
+        playerOthersInfoDTO.setRankDTO(rankDTO);
 
-        return playerMapper.toProfileDTO(updatePlayer);
+        long win = matchRepository.countWinByPlayerId(player.getId());
+        playerOthersInfoDTO.setWin(win);
+
+        long draw = matchRepository.countDrawByPlayerId(player.getId());
+        playerOthersInfoDTO.setDraw(draw);
+
+        long lose = matchRepository.countLoseByPlayerId(player.getId());
+        playerOthersInfoDTO.setLose(lose);
+
+        return playerOthersInfoDTO;
     }
 
 }
