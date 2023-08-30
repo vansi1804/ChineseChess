@@ -4,6 +4,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
+import com.config.validation.Validator;
+import com.config.validation.impl.MatchOthersInfoCreationValidator;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +24,7 @@ public class MatchCreationDTO {
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
+    @Validator(MatchOthersInfoCreationValidator.class)
     private MatchOthersInfoDTO matchOthersInfoDTO;
 
 }
