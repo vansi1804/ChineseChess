@@ -110,34 +110,40 @@ public class MatchServiceImpl implements MatchService {
                                 Collections.singletonMap("player2Id", matchCreationDTO.getPlayer2Id())));
 
         if (matchRepository.existsPlayingByPlayerId(player1.getId())) {
-            throw new InvalidExceptionCustomize(
-                    ErrorMessage.PLAYER_PLAYING,
-                    Collections.singletonMap("player1Id", player1.getId()));
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.PLAYER_PLAYING);
+            errors.put("player1Id", player1.getId());
+
+            throw new InvalidExceptionCustomize(errors);
         }
 
         if (matchRepository.existsPlayingByPlayerId(player2.getId())) {
-            throw new InvalidExceptionCustomize(
-                    ErrorMessage.PLAYER_PLAYING,
-                    Collections.singletonMap("player2Id", player2.getId()));
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.PLAYER_PLAYING);
+            errors.put("player2Id", player2.getId());
+
+            throw new InvalidExceptionCustomize(errors);
         }
 
         if (matchCreationDTO.getMatchOthersInfoDTO().getEloBet() != null) {
             if (player1.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()) {
                 Map<String, Object> errors = new HashMap<>();
+                errors.put("message", ErrorMessage.NOT_ENOUGH_ELO);
                 errors.put("player1Id", player1.getId());
                 errors.put("elo", player1.getElo());
                 errors.put("eloBet", player1.getElo());
 
-                throw new InvalidExceptionCustomize(ErrorMessage.PLAYER_PLAYING, errors);
+                throw new InvalidExceptionCustomize(errors);
             }
 
             if (player2.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()) {
                 Map<String, Object> errors = new HashMap<>();
+                errors.put("message", ErrorMessage.NOT_ENOUGH_ELO);
                 errors.put("player2Id", player2.getId());
                 errors.put("elo", player2.getElo());
                 errors.put("eloBet", player2.getElo());
 
-                throw new InvalidExceptionCustomize(ErrorMessage.PLAYER_PLAYING, errors);
+                throw new InvalidExceptionCustomize(errors);
             }
         }
 
@@ -156,8 +162,11 @@ public class MatchServiceImpl implements MatchService {
                                 Collections.singletonMap("id", id)));
 
         if (oldMatch.getResult() != null) {
-            throw new InvalidExceptionCustomize(ErrorMessage.END_MATCH,
-                    Collections.singletonMap("id", oldMatch.getId()));
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.END_MATCH);
+            errors.put("id", oldMatch.getId());
+
+            throw new InvalidExceptionCustomize(errors);
         }
 
         PlayerProfileDTO player1ProfileDTO;
@@ -188,7 +197,7 @@ public class MatchServiceImpl implements MatchService {
 
                 player2ProfileDTO = playerService.update(
                         oldMatch.getPlayer2().getId(), oldMatch.getPlayer2().getElo() + eloWin);
-            
+
             } else {
                 player1ProfileDTO = playerService.findById(oldMatch.getPlayer1().getId());
                 player2ProfileDTO = playerService.findById(oldMatch.getPlayer2().getId());
