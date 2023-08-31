@@ -16,10 +16,11 @@ public class MatchOthersInfoCreationValidator implements ConstraintValidator<Val
 
     @Override
     public boolean isValid(MatchOthersInfoDTO matchOthersInfoDTO, ConstraintValidatorContext context) {
-        if ((matchOthersInfoDTO.getTime() == null
-                && matchOthersInfoDTO.getMovingTime() == null
-                && matchOthersInfoDTO.getCumulativeTime() == null
-                && matchOthersInfoDTO.getEloBet() == null)
+        if (matchOthersInfoDTO == null
+                || (matchOthersInfoDTO.getTime() == null
+                        && matchOthersInfoDTO.getMovingTime() == null
+                        && matchOthersInfoDTO.getCumulativeTime() == null
+                        && matchOthersInfoDTO.getEloBet() == null)
                 || (matchOthersInfoDTO.getTime() != null
                         && matchOthersInfoDTO.getMovingTime() != null
                         && matchOthersInfoDTO.getCumulativeTime() != null
@@ -27,8 +28,8 @@ public class MatchOthersInfoCreationValidator implements ConstraintValidator<Val
 
             return true;
         } else {
-                throw new InvalidExceptionCustomize(
-                Collections.singletonMap("message", "All matchOthersInfoDTO's fields are null or not null"));
+            throw new InvalidExceptionCustomize(
+                    Collections.singletonMap("message", "matchOthersInfoDTO is null or matchOthersInfoDTO's fields are null or not null all"));
         }
     }
 
