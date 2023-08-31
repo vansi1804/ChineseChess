@@ -11,11 +11,14 @@ import javax.validation.Payload;
 
 import com.common.ErrorMessage;
 import com.config.validation.impl.MatchOthersInfoCreationValidator;
-import com.config.validation.impl.PlayBoardValidator; 
+import com.config.validation.impl.PlayBoardValidator;
 
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = { PlayBoardValidator.class, MatchOthersInfoCreationValidator.class })
+@Constraint(validatedBy = {
+        PlayBoardValidator.class,
+        MatchOthersInfoCreationValidator.class
+})
 public @interface Validator {
 
     String message() default ErrorMessage.INVALID_DATA;
@@ -23,7 +26,7 @@ public @interface Validator {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-    
+
     Class<? extends ConstraintValidator<?, ?>>[] value();
 
 }

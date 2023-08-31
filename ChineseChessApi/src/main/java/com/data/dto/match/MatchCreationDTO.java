@@ -23,8 +23,8 @@ public class MatchCreationDTO {
     private Long player2Id;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
-    @Valid
     @Validator(MatchOthersInfoCreationValidator.class)
+    @Valid
     private MatchOthersInfoDTO matchOthersInfoDTO;
 
 }
