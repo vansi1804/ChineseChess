@@ -124,9 +124,11 @@ public class MoveServiceImpl implements MoveService {
                 availableMoveRequestDTO.getPlayBoardDTO(), availableMoveRequestDTO.getMovingPieceId());
 
         if (movingPieceDTO == null) {
-            throw new InvalidExceptionCustomize(
-                    ErrorMessage.DEAD_PIECE,
-                    Collections.singletonMap("movingPieceId", availableMoveRequestDTO.getMovingPieceId()));
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.DEAD_PIECE);
+            errors.put("movingPieceId", availableMoveRequestDTO.getMovingPieceId());
+
+            throw new InvalidExceptionCustomize(errors);
         }
 
         List<int[]> availableMoveIndexes = findAllAvailableMoveIndexes(
@@ -158,11 +160,12 @@ public class MoveServiceImpl implements MoveService {
                     moveCreationDTO.getToCol(), moveCreationDTO.getToRow());
         } else {
             Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.INVALID_MOVE);
             errors.put("movingPieceDTO", movingPieceDTO);
             errors.put("toCol", moveCreationDTO.getToCol());
             errors.put("toRow", moveCreationDTO.getToRow());
 
-            throw new InvalidExceptionCustomize(ErrorMessage.INVALID_MOVE, errors);
+            throw new InvalidExceptionCustomize(errors);
         }
     }
 
@@ -182,22 +185,24 @@ public class MoveServiceImpl implements MoveService {
         PieceDTO movingPieceDTO = pieceService.findOneInBoard(playBoardDTO, trainingMoveCreationDTO.getMovingPieceId());
         if (movingPieceDTO == null) {
             Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.DEAD_PIECE);
             errors.put("trainingId", training.getId());
             errors.put("turn", newTurn);
             errors.put("movingPieceId", trainingMoveCreationDTO.getMovingPieceId());
 
-            throw new InvalidExceptionCustomize(ErrorMessage.DEAD_PIECE, errors);
+            throw new InvalidExceptionCustomize(errors);
         }
 
         if (((newTurn % 2 != 0) && !movingPieceDTO.isRed())
                 || ((newTurn % 2 == 0) && movingPieceDTO.isRed())) {
 
             Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.OPPONENT_TURN);
             errors.put("trainingId", training.getId());
             errors.put("turn", newTurn);
             errors.put("movingPieceDTO", movingPieceDTO);
 
-            throw new InvalidExceptionCustomize(ErrorMessage.OPPONENT_TURN, errors);
+            throw new InvalidExceptionCustomize(errors);
         }
 
         boolean isAvailableMove = isAvailableMove(
@@ -213,13 +218,14 @@ public class MoveServiceImpl implements MoveService {
                     trainingMoveCreationDTO.getToCol(), trainingMoveCreationDTO.getToRow());
         } else {
             Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.INVALID_MOVE);
             errors.put("trainingId", training.getId());
             errors.put("turn", newTurn);
             errors.put("movingPieceDTO", movingPieceDTO);
             errors.put("toCol", trainingMoveCreationDTO.getToCol());
             errors.put("toRow", trainingMoveCreationDTO.getToRow());
 
-            throw new InvalidExceptionCustomize(ErrorMessage.INVALID_MOVE, errors);
+            throw new InvalidExceptionCustomize(errors);
         }
     }
 
@@ -231,17 +237,21 @@ public class MoveServiceImpl implements MoveService {
                                 Collections.singletonMap("matchId", matchMoveCreationDTO.getMatchId())));
 
         if (match.getResult() != null) {
-            throw new InvalidExceptionCustomize(
-                    ErrorMessage.END_MATCH,
-                    Collections.singletonMap("matchId", match.getId()));
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.END_MATCH);
+            errors.put("matchId", match.getId());
+
+            throw new InvalidExceptionCustomize(errors);
         }
 
         if ((match.getPlayer1().getId() != matchMoveCreationDTO.getPlayerId())
                 && (match.getPlayer2().getId() != matchMoveCreationDTO.getPlayerId())) {
 
-            throw new InvalidExceptionCustomize(
-                    ErrorMessage.INVALID_MOVING_PLAYER,
-                    Collections.singletonMap("playerId", matchMoveCreationDTO.getPlayerId()));
+            Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.INVALID_MOVING_PLAYER);
+            errors.put("playerId", matchMoveCreationDTO.getPlayerId());
+
+            throw new InvalidExceptionCustomize(errors);
         }
 
         long newTurn = moveHistoryRepository.countTurnByMatch_Id(match.getId()) + 1;
@@ -253,11 +263,12 @@ public class MoveServiceImpl implements MoveService {
         PieceDTO movingPieceDTO = pieceService.findOneInBoard(playBoardDTO, matchMoveCreationDTO.getMovingPieceId());
         if (movingPieceDTO == null) {
             Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.DEAD_PIECE);
             errors.put("matchId", match.getId());
             errors.put("turn", newTurn);
             errors.put("movingPieceId", matchMoveCreationDTO.getMovingPieceId());
 
-            throw new InvalidExceptionCustomize(ErrorMessage.DEAD_PIECE, errors);
+            throw new InvalidExceptionCustomize(errors);
         }
 
         // check color turn
@@ -265,22 +276,24 @@ public class MoveServiceImpl implements MoveService {
                 || ((newTurn % 2 == 0) && movingPieceDTO.isRed())) {
 
             Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.OPPONENT_TURN);
             errors.put("matchId", match.getId());
             errors.put("turn", newTurn);
             errors.put("movingPieceDTO", movingPieceDTO);
 
-            throw new InvalidExceptionCustomize(ErrorMessage.OPPONENT_TURN, errors);
+            throw new InvalidExceptionCustomize(errors);
         }
 
         // check player move valid piece
         if (movingPieceDTO.isRed() && (match.getPlayer1().getId() != matchMoveCreationDTO.getPlayerId())) {
             Map<String, Object> errors = new HashMap<>();
+            errors.put("message", ErrorMessage.INVALID_PLAYER_MOVE_PIECE);
             errors.put("matchId", match.getId());
             errors.put("playerId", matchMoveCreationDTO.getMovingPieceId());
             errors.put("turn", newTurn);
             errors.put("movingPieceDTO", movingPieceDTO);
 
-            throw new InvalidExceptionCustomize(ErrorMessage.INVALID_PLAYER_MOVE_PIECE, errors);
+            throw new InvalidExceptionCustomize(errors);
         }
 
         boolean isAvailableMove = isAvailableMove(
@@ -296,12 +309,13 @@ public class MoveServiceImpl implements MoveService {
         } else {
             Map<String, Object> errors = new HashMap<>();
             errors.put("matchId", match.getId());
+            errors.put("message", ErrorMessage.INVALID_MOVE);
             errors.put("turn", newTurn);
             errors.put("movingPieceDTO", movingPieceDTO);
             errors.put("toCol", matchMoveCreationDTO.getToCol());
             errors.put("toRow", matchMoveCreationDTO.getToRow());
 
-            throw new InvalidExceptionCustomize(ErrorMessage.INVALID_MOVE, errors);
+            throw new InvalidExceptionCustomize(errors);
         }
     }
 
