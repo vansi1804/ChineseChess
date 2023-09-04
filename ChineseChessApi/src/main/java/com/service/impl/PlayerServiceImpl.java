@@ -61,7 +61,7 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
                 .map(p -> {
                     PlayerDTO playerDTO = playerMapper.toDTO(p);
-                    playerDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(p));
+                    playerDTO.setPlayerOthersInfoDTO(this.buildPlayerOthersInfoDTO(p));
 
                     return playerDTO;
                 });
@@ -72,7 +72,7 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.findByUser_Id(userId)
                 .map(p -> {
                     PlayerDTO playerDTO = playerMapper.toDTO(p);
-                    playerDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(p));
+                    playerDTO.setPlayerOthersInfoDTO(this.buildPlayerOthersInfoDTO(p));
 
                     return playerDTO;
                 })
@@ -86,7 +86,7 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.findById(id)
                 .map(p -> {
                     PlayerProfileDTO playerProfileDTO = playerMapper.toProfileDTO(p);
-                    playerProfileDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(p));
+                    playerProfileDTO.setPlayerOthersInfoDTO(this.buildPlayerOthersInfoDTO(p));
 
                     return playerProfileDTO;
                 })
@@ -109,7 +109,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         PlayerDTO createdPlayerDTO = playerMapper.toDTO(playerRepository.save(player));
         createdPlayerDTO.setUserDTO(createdUserDTO);
-        createdPlayerDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(player));
+        createdPlayerDTO.setPlayerOthersInfoDTO(this.buildPlayerOthersInfoDTO(player));
 
         return createdPlayerDTO;
     }
@@ -135,7 +135,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(updatePlayer);
         updatedPlayerProfileDTO.setUserProfileDTO(updatedUserProfileDTO);
-        updatedPlayerProfileDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(updatePlayer));
+        updatedPlayerProfileDTO.setPlayerOthersInfoDTO(this.buildPlayerOthersInfoDTO(updatePlayer));
 
         return updatedPlayerProfileDTO;
     }
@@ -150,7 +150,7 @@ public class PlayerServiceImpl implements PlayerService {
         oldPlayer.setElo(elo);
 
         PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(playerRepository.save(oldPlayer));
-        updatedPlayerProfileDTO.setPlayerOthersInfoDTO(buildPlayerOthersInfoDTO(oldPlayer));
+        updatedPlayerProfileDTO.setPlayerOthersInfoDTO(this.buildPlayerOthersInfoDTO(oldPlayer));
         
         return updatedPlayerProfileDTO;
     }

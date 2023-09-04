@@ -20,8 +20,8 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
             + " WHEN COUNT(m) > 0 THEN TRUE"
             + " ELSE FALSE END"
             + " FROM Match m"
-            + " WHERE (m.player1.id = :playerId OR m.player2.id = :playerId)"
-            + "     AND m.result IS NULL")
+            + " WHERE m.result IS NULL"
+            + "  AND (m.player1.id = :playerId OR m.player2.id = :playerId)")
     boolean existsPlayingByPlayerId(@Param("playerId") long playerId);
 
     @Query("SELECT COUNT(m.id)"

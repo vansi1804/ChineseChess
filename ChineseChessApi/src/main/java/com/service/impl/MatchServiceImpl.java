@@ -60,33 +60,55 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public List<MatchDTO> findAll() {
         return matchRepository.findAll().stream()
-                .map(m -> matchMapper.toDTO(m))
+                .map(m -> {
+                    MatchDTO matchDTO = matchMapper.toDTO(m);
+                    matchDTO.setPlayer1ProfileDTO(playerService.findById(m.getPlayer1().getId()));
+                    matchDTO.setPlayer2ProfileDTO(playerService.findById(m.getPlayer2().getId()));
+
+                    return matchDTO;
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
     public MatchDTO findById(long id) {
         return matchRepository.findById(id)
-                .map(m -> matchMapper.toDTO(m))
+                .map(m -> {
+                    MatchDTO matchDTO = matchMapper.toDTO(m);
+                    matchDTO.setPlayer1ProfileDTO(playerService.findById(m.getPlayer1().getId()));
+                    matchDTO.setPlayer2ProfileDTO(playerService.findById(m.getPlayer2().getId()));
+
+                    return matchDTO;
+                })
                 .orElseThrow(
-                        () -> new ResourceNotFoundExceptionCustomize(
-                                Collections.singletonMap("id", id)));
+                        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
     }
 
     @Override
     public List<MatchDTO> findAllByPlayerId(long playerId) {
         return matchRepository.findAllByPlayerId(playerId).stream()
-                .map(m -> matchMapper.toDTO(m))
+                .map(m -> {
+                    MatchDTO matchDTO = matchMapper.toDTO(m);
+                    matchDTO.setPlayer1ProfileDTO(playerService.findById(m.getPlayer1().getId()));
+                    matchDTO.setPlayer2ProfileDTO(playerService.findById(m.getPlayer2().getId()));
+
+                    return matchDTO;
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
     public MatchDetailDTO findDetailById(long id) {
         MatchDetailDTO matchDetailDTO = matchRepository.findById(id)
-                .map(m -> matchMapper.toDetailDTO(m))
+                .map(m -> {
+                    MatchDetailDTO mDetailDTO = matchMapper.toDetailDTO(m);
+                    mDetailDTO.getMatchDTO().setPlayer1ProfileDTO(playerService.findById(m.getPlayer1().getId()));
+                    mDetailDTO.getMatchDTO().setPlayer2ProfileDTO(playerService.findById(m.getPlayer2().getId()));
+
+                    return mDetailDTO;
+                })
                 .orElseThrow(
-                        () -> new ResourceNotFoundExceptionCustomize(
-                                Collections.singletonMap("id", id)));
+                        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(id);
         Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.build(moveHistories);

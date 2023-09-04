@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.data.dto.VipDTO;
-import com.data.entity.Vip;
 import com.config.exception.ConflictExceptionCustomize;
 import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.mapper.VipMapper;
@@ -53,9 +52,7 @@ public class VipServiceImpl implements VipService {
             throw new ConflictExceptionCustomize(Collections.singletonMap("depositMilestones", vipDTO.getDepositMilestones()));
         }
 
-        Vip createdVip = vipRepository.save(vipMapper.toEntity(vipDTO));
-
-        return vipMapper.toDTO(createdVip);
+        return vipMapper.toDTO(vipRepository.save(vipMapper.toEntity(vipDTO)));
     }
 
     @Override

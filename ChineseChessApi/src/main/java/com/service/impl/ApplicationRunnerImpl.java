@@ -101,7 +101,6 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         }
 
         Player adminPlayer = new Player();
-
         adminPlayer.setUser(adminUser);
 
         Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
@@ -115,7 +114,6 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         if (!userRepository.existsByPhoneNumber(Default.User.Admin.PHONE_NUMBER)) {
 
             User adminUser = new User();
-
             adminUser.setPhoneNumber(Default.User.Admin.PHONE_NUMBER);
             adminUser.setPassword(passwordEncoder.encode(Default.User.Admin.PASSWORD));
             adminUser.setName(Default.User.Admin.NAME);

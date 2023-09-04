@@ -73,7 +73,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(
                         () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
-
     }
 
     @Override
@@ -83,7 +82,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(
                         () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("phoneNumber", phoneNumber)));
-
     }
 
     @Override
@@ -93,7 +91,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(
                         () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("name", name)));
-
     }
 
     @Override
@@ -172,7 +169,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isCurrentUser(long id) {
         Long userId = auditorAware.getCurrentAuditor().orElse(null);
-        
         return (userId == null) || (userId == id);
     }
 

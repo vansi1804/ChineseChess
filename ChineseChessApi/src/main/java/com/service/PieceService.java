@@ -22,7 +22,7 @@ public interface PieceService {
 
     PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id);
 
-    List<PieceDTO> findAllDeadInPlayBoard(PlayBoardDTO playBoardDTO);
+    List<PieceDTO> findAllNotInPlayBoard(PlayBoardDTO playBoardDTO);
 
     PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO);
 

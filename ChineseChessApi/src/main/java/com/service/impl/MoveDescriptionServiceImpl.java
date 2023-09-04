@@ -22,7 +22,10 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     private final MoveTypeService moveTypeService;
 
     @Autowired
-    public MoveDescriptionServiceImpl(PieceService pieceService, MoveTypeService moveTypeService) {
+    public MoveDescriptionServiceImpl(
+        PieceService pieceService, 
+        MoveTypeService moveTypeService) {
+
         this.pieceService = pieceService;
         this.moveTypeService = moveTypeService;
     }
@@ -51,6 +54,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         if (moveTypeService.isHorizontallyMoving(pieceDTO.getCurrentRow(), toRow)) {
             description.append(EMoveTypeDescription.ACROSS.getValue())
                     .append(MAX_COL - toCol);
+
         } else {
             if (moveTypeService.isUpMoving(true, pieceDTO.getCurrentRow(), toRow)) {
                 description.append(EMoveTypeDescription.UP.getValue());
@@ -76,6 +80,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         if (moveTypeService.isHorizontallyMoving(pieceDTO.getCurrentRow(), toRow)) {
             description.append(EMoveTypeDescription.ACROSS.getValue())
                     .append(toCol + 1);
+                    
         } else {
             if (moveTypeService.isUpMoving(false, pieceDTO.getCurrentRow(), toRow)) {
                 description.append(EMoveTypeDescription.UP.getValue());

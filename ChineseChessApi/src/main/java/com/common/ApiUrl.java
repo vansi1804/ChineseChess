@@ -12,7 +12,7 @@ public class ApiUrl {
     
     public static final String MATCHES = Constant.API + Constant.MATCH;
     
-    public static final String MOVE_HISTORIES = Constant.API + Constant.MOVE_HISTORY;
+    public static final String MOVES = Constant.API + Constant.MOVE;
     
     public static final String PLAYERS = Constant.API + Constant.PLAYER;
     

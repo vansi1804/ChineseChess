@@ -46,8 +46,8 @@ public class PlayBoardValidator implements ConstraintValidator<Validator, PlayBo
             boolean existsRedGeneral = false;
             boolean existsBlackGeneral = false;
 
-            for (int col = 0; col < playBoardDTO.getState().length; col++) {
-                for (int row = 0; row < playBoardDTO.getState()[0].length; row++) {
+            for (int col = 0; col < colLength; col++) {
+                for (int row = 0; row < rowLength; row++) {
 
                     PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
                     if (pieceDTO != null) {
