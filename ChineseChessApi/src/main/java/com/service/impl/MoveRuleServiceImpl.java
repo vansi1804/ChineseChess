@@ -29,7 +29,10 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     private final MoveTypeService moveTypeService;
 
     @Autowired
-    public MoveRuleServiceImpl(PieceService pieceService, MoveTypeService moveTypeService) {
+    public MoveRuleServiceImpl(
+        PieceService pieceService, 
+        MoveTypeService moveTypeService) {
+            
         this.pieceService = pieceService;
         this.moveTypeService = moveTypeService;
     }

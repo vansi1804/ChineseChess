@@ -79,9 +79,7 @@ public class TrainingServiceImpl implements TrainingService {
             throw new ConflictExceptionCustomize(errors);
         }
 
-        Training createdTraining = trainingRepository.save(trainingMapper.toEntity(trainingDTO));
-
-        return trainingMapper.toDTO(createdTraining);
+        return trainingMapper.toDTO(trainingRepository.save(trainingMapper.toEntity(trainingDTO)));
     }
 
     @Override
@@ -144,7 +142,6 @@ public class TrainingServiceImpl implements TrainingService {
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByTraining_Id(id);
         Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.build(moveHistories);
-
         trainingDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
         trainingDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
 

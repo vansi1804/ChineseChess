@@ -87,10 +87,11 @@ public class PieceServiceImpl implements PieceService {
     }
 
     @Override
-    public List<PieceDTO> findAllDeadInPlayBoard(PlayBoardDTO playBoardDTO) {
+    public List<PieceDTO> findAllNotInPlayBoard(PlayBoardDTO playBoardDTO) {
         List<PieceDTO> piecesInBoard = findAllInBoard(playBoardDTO, null, null);
         List<PieceDTO> deadPieces = findAll();
-        // remove all alive pieces in board
+
+        // remove all existing pieces in board
         deadPieces.removeIf(
                 deadPiece -> piecesInBoard.stream().map(alivePiece -> alivePiece.getId()).toList()
                         .contains(deadPiece.getId()));
@@ -124,6 +125,7 @@ public class PieceServiceImpl implements PieceService {
         return IntStream.rangeClosed(fromRow, toRow)
                 .filter(row -> {
                     PieceDTO currentPiece = playBoardDTO.getState()[col][row];
+                    
                     return (currentPiece != null)
                             && (currentPiece.getId() != pieceDTO.getId())
                             && (currentPiece.isRed() == pieceDTO.isRed())

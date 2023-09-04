@@ -18,7 +18,7 @@ public class Constant {
 
     public static final String MATCH = "/matches";
 
-    public static final String MOVE_HISTORY = "/move-histories";
+    public static final String MOVE = "/moves";
 
     public static final String PLAYER = "/players";
 

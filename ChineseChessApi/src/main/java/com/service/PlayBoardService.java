@@ -24,4 +24,6 @@ public interface PlayBoardService {
 
     boolean isGeneralBeingChecked(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO);
 
+    int evaluate(PlayBoardDTO playBoardDTO);
+
 }

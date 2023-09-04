@@ -2,6 +2,8 @@ package com.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -157,9 +159,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
             int fromRow = generalPieceDTO1.getCurrentRow();
             int toRow = generalPieceDTO2.getCurrentRow();
 
-            if (!pieceService.existsBetweenInColPath(playBoardDTO, currentCol, fromRow, toRow)) {
-                return true;
-            }
+            return !pieceService.existsBetweenInColPath(playBoardDTO, currentCol, fromRow, toRow);
         }
 
         return false;
@@ -181,6 +181,25 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
         return !areTwoGeneralsFacing(playBoardDTO, generalPieceDTO, opponentGeneralDTO)
                 && !isGeneralBeingChecked(playBoardDTO, generalPieceDTO);
+    }
+
+    @Override
+    public int evaluate(PlayBoardDTO playBoardDTO) {
+        int fromCol = 0;
+        int fromRow = 0;
+        int toCol = playBoardDTO.getState().length - 1;
+        int toRow = playBoardDTO.getState()[0].length - 1;
+
+        return IntStream.rangeClosed(fromCol, toCol)
+                .flatMap(col -> IntStream.rangeClosed(fromRow, toRow)
+                        .filter(row -> playBoardDTO.getState()[col][row] != null)
+                        .map(row -> {
+                            PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
+                            int piecePower = pieceService.convertByName(pieceDTO.getName()).getPower();
+
+                            return pieceDTO.isRed() ? piecePower : -piecePower;
+                        }))
+                .sum();
     }
  
     private PieceDTO[][] cloneStateArray(PieceDTO[][] state) {

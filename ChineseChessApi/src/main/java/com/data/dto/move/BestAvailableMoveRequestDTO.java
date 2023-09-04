@@ -19,7 +19,6 @@ public class BestAvailableMoveRequestDTO {
     @Valid
     private PlayBoardDTO playBoardDTO;
 
-    @NotNull(message = ErrorMessage.NULL_DATA)
     private Boolean isRed;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
