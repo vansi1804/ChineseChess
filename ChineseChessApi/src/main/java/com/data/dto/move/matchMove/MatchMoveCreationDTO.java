@@ -1,8 +1,9 @@
-package com.data.dto.move;
+package com.data.dto.move.matchMove;
 
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
+import com.data.dto.move.MoveDetailCreationDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,9 +14,12 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class TrainingMoveCreationDTO extends MoveDetailCreationDTO {
+public class MatchMoveCreationDTO extends MoveDetailCreationDTO {
 
     @NotNull(message = ErrorMessage.NULL_DATA)
-    private Long trainingId;
+    private Long matchId;
+
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Long playerId;
 
 }

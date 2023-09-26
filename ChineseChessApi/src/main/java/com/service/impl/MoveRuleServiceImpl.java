@@ -30,9 +30,9 @@ public class MoveRuleServiceImpl implements MoveRuleService {
 
     @Autowired
     public MoveRuleServiceImpl(
-        PieceService pieceService, 
-        MoveTypeService moveTypeService) {
-            
+            PieceService pieceService,
+            MoveTypeService moveTypeService) {
+
         this.pieceService = pieceService;
         this.moveTypeService = moveTypeService;
     }
@@ -156,8 +156,9 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      */
     private boolean checkChariotMoveRule(PlayBoardDTO playBoardDTO, int fromCol, int toCol, int fromRow, int toRow) {
         return (moveTypeService.isVerticallyMoving(fromCol, toCol)
-                || moveTypeService.isHorizontallyMoving(fromRow, toRow))
-                && !pieceService.existsBetweenInRowPath(playBoardDTO, fromRow, fromCol, toCol);
+                && !pieceService.existsBetweenInColPath(playBoardDTO, fromCol, fromRow, toRow))
+                || (moveTypeService.isHorizontallyMoving(fromRow, toRow)
+                        && !pieceService.existsBetweenInRowPath(playBoardDTO, fromRow, fromCol, toCol));
     }
 
     /*

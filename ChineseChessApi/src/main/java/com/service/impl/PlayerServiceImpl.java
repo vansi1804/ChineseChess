@@ -151,13 +151,13 @@ public class PlayerServiceImpl implements PlayerService {
 
         PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(playerRepository.save(oldPlayer));
         updatedPlayerProfileDTO.setPlayerOthersInfoDTO(this.buildPlayerOthersInfoDTO(oldPlayer));
-        
+
         return updatedPlayerProfileDTO;
     }
 
     private PlayerOthersInfoDTO buildPlayerOthersInfoDTO(Player player) {
         PlayerOthersInfoDTO playerOthersInfoDTO = playerMapper.toOthersInfoDTO(player);
-        
+
         RankDTO rankDTO = rankRepository.findFirstByEloMilestonesLessThanEqualOrderByEloMilestonesDesc(player.getElo())
                 .map(r -> rankMapper.toDTO(r))
                 .orElseThrow(

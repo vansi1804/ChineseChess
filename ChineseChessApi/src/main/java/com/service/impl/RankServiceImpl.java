@@ -22,7 +22,10 @@ public class RankServiceImpl implements RankService {
     private final RankMapper rankMapper;
 
     @Autowired
-    public RankServiceImpl(RankRepository rankRepository, RankMapper rankMapper) {
+    public RankServiceImpl(
+            RankRepository rankRepository,
+            RankMapper rankMapper) {
+
         this.rankRepository = rankRepository;
         this.rankMapper = rankMapper;
     }
@@ -55,11 +58,13 @@ public class RankServiceImpl implements RankService {
     @Override
     public RankDTO create(RankDTO rankDTO) {
         if (rankRepository.existsByName(rankDTO.getName())) {
-            throw new ConflictExceptionCustomize(Collections.singletonMap("name", rankDTO.getName()));
+            throw new ConflictExceptionCustomize(
+                    Collections.singletonMap("name", rankDTO.getName()));
         }
 
         if (rankRepository.existsByEloMilestones(rankDTO.getEloMilestones())) {
-            throw new ConflictExceptionCustomize(Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones()));
+            throw new ConflictExceptionCustomize(
+                    Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones()));
         }
 
         return rankMapper.toDTO(rankRepository.save(rankMapper.toEntity(rankDTO)));
@@ -73,11 +78,13 @@ public class RankServiceImpl implements RankService {
                                 Collections.singletonMap("id", id)));
 
         if (rankRepository.existsByIdNotAndName(id, rankDTO.getName())) {
-            throw new ConflictExceptionCustomize(Collections.singletonMap("name", rankDTO.getName()));
+            throw new ConflictExceptionCustomize(
+                    Collections.singletonMap("name", rankDTO.getName()));
         }
 
         if (rankRepository.existsByIdNotAndEloMilestones(id, rankDTO.getEloMilestones())) {
-            throw new ConflictExceptionCustomize(Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones()));
+            throw new ConflictExceptionCustomize(
+                    Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones()));
         }
 
         Rank updateRank = rankMapper.toEntity(rankDTO);

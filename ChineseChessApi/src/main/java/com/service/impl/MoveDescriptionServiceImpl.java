@@ -38,9 +38,9 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         description.append(shortNameOfPiece);
 
         if (pieceDTO.isRed()) {
-            description.append(buildRedPieceDescription(playBoardDTO, pieceDTO, toCol, toRow));
+            description.append(this.buildRedPieceDescription(playBoardDTO, pieceDTO, toCol, toRow));
         } else {
-            description.append(buildBlackPieceDescription(playBoardDTO, pieceDTO, toCol, toRow));
+            description.append(this.buildBlackPieceDescription(playBoardDTO, pieceDTO, toCol, toRow));
         }
 
         return description.toString();

@@ -5,12 +5,12 @@ import java.util.Map;
 
 import com.data.dto.move.MoveCreationDTO;
 import com.data.dto.move.MoveDTO;
-import com.data.dto.move.BestAvailableMoveRequestDTO;
-import com.data.dto.move.BestMoveResponseDTO;
-import com.data.dto.move.MatchMoveCreationDTO;
 import com.data.dto.move.MoveHistoryDTO;
-import com.data.dto.move.TrainingMoveCreationDTO;
-import com.data.dto.move.AvailableMoveRequestDTO;
+import com.data.dto.move.availableMove.AvailableMoveRequestDTO;
+import com.data.dto.move.availableMove.bestAvailableMove.BestAvailableMoveRequestDTO;
+import com.data.dto.move.availableMove.bestAvailableMove.BestAvailableMoveResponseDTO;
+import com.data.dto.move.matchMove.MatchMoveCreationDTO;
+import com.data.dto.move.trainingMove.TrainingMoveCreationDTO;
 import com.data.entity.MoveHistory;
 
 public interface MoveService {
@@ -25,6 +25,7 @@ public interface MoveService {
 
     MoveDTO create(MatchMoveCreationDTO moveHistoryCreationDTO);
 
-    List<BestMoveResponseDTO> findAllBestAvailable(BestAvailableMoveRequestDTO bestAvailableMoveRequestDTO);
+    Map<Boolean, BestAvailableMoveResponseDTO> findAllBestAvailable(
+            BestAvailableMoveRequestDTO bestAvailableMoveRequestDTO);
 
 }

@@ -1,4 +1,4 @@
-package com.data.dto.move;
+package com.data.dto.move.availableMove.bestAvailableMove;
 
 import java.util.List;
 
@@ -17,6 +17,4 @@ public class BestMoveResponseDTO {
 
     private List<int[]> bestAvailableMoveIndexes;
 
-    private int score;
-    
 }

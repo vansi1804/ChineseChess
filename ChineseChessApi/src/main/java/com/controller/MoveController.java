@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.common.ApiUrl;
 import com.data.dto.move.MoveCreationDTO;
-import com.data.dto.move.BestAvailableMoveRequestDTO;
-import com.data.dto.move.MatchMoveCreationDTO;
-import com.data.dto.move.TrainingMoveCreationDTO;
-import com.data.dto.move.AvailableMoveRequestDTO;
+import com.data.dto.move.availableMove.AvailableMoveRequestDTO;
+import com.data.dto.move.availableMove.bestAvailableMove.BestAvailableMoveRequestDTO;
+import com.data.dto.move.matchMove.MatchMoveCreationDTO;
+import com.data.dto.move.trainingMove.TrainingMoveCreationDTO;
 import com.service.MoveService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
