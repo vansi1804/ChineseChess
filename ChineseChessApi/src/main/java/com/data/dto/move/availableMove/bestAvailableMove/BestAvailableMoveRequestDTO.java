@@ -1,11 +1,9 @@
-package com.data.dto.move;
+package com.data.dto.move.availableMove.bestAvailableMove;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
-import com.config.validation.Validator;
-import com.config.validation.impl.PlayBoardValidator;
 import com.data.dto.PlayBoardDTO;
 
 import lombok.AllArgsConstructor;
@@ -15,14 +13,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class AvailableMoveRequestDTO {
-    
-    @NotNull(message = ErrorMessage.BLANK_DATA)
-    private Integer movingPieceId;
+public class BestAvailableMoveRequestDTO {
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
-    @Validator(PlayBoardValidator.class)
     private PlayBoardDTO playBoardDTO;
-    
+
+    private Boolean isRed;
+
+    @NotNull(message = ErrorMessage.NULL_DATA)
+    private Integer depth;
+
 }

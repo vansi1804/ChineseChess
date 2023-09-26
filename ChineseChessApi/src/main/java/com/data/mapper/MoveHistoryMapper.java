@@ -3,8 +3,8 @@ package com.data.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.data.dto.move.MatchMoveCreationDTO;
-import com.data.dto.move.TrainingMoveCreationDTO;
+import com.data.dto.move.matchMove.MatchMoveCreationDTO;
+import com.data.dto.move.trainingMove.TrainingMoveCreationDTO;
 import com.data.entity.MoveHistory;
 
 @Mapper(componentModel = "spring")

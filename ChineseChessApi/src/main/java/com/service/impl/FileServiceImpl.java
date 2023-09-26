@@ -38,7 +38,6 @@ public class FileServiceImpl implements FileService {
             uploadDir.mkdirs();
         }
 
-        // Copy the uploaded file to the upload directory
         Path targetPath = Paths.get(UPLOAD_DIR, fileName);
         try {
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
@@ -52,7 +51,8 @@ public class FileServiceImpl implements FileService {
     @Override
     public Resource downloadFile(String fileName) {
         if ((fileName == null) || fileName.isEmpty()) {
-            throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
+            throw new ResourceNotFoundExceptionCustomize(
+                    Collections.singletonMap("fileName", fileName));
         }
 
         Path filePath = Paths.get(UPLOAD_DIR, fileName);
@@ -60,10 +60,12 @@ public class FileServiceImpl implements FileService {
         try {
             resource = new UrlResource(filePath.toUri());
             if (!resource.exists() || !resource.isReadable()) {
-                throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
+                throw new ResourceNotFoundExceptionCustomize(
+                        Collections.singletonMap("fileName", fileName));
             }
         } catch (MalformedURLException e) {
-            throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
+            throw new ResourceNotFoundExceptionCustomize(
+                    Collections.singletonMap("fileName", fileName));
         }
 
         return resource;

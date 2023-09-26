@@ -123,7 +123,8 @@ public class TrainingServiceImpl implements TrainingService {
     @Override
     public boolean deleteById(long id) {
         if (!trainingRepository.existsById(id)) {
-            throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id));
+            throw new ResourceNotFoundExceptionCustomize(
+                    Collections.singletonMap("id", id));
         }
 
         moveHistoryRepository.deleteAllByTraining_Id(id);

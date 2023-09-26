@@ -44,8 +44,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
     @Override
     public PlayBoardDTO generate() {
-        PieceDTO[][] state = new PieceDTO[MAX_COL][MAX_ROW];
-        PlayBoardDTO playBoardDTO = new PlayBoardDTO(state);
+        PlayBoardDTO playBoardDTO = new PlayBoardDTO(new PieceDTO[MAX_COL][MAX_ROW]);
         List<Piece> pieces = pieceRepository.findAll();
 
         pieces.stream()
@@ -61,8 +60,10 @@ public class PlayBoardServiceImpl implements PlayBoardService {
                 .reduce(
                         generate(),
                         (playBoardDTO, mh) -> update(
-                                playBoardDTO, pieceService.findOneInBoard(playBoardDTO, mh.getPiece().getId()),
-                                mh.getToCol(), mh.getToRow()),
+                                playBoardDTO,
+                                pieceService.findOneInBoard(playBoardDTO, mh.getPiece().getId()),
+                                mh.getToCol(),
+                                mh.getToRow()),
                         (playBoardDTO, updatedBoardDTO) -> updatedBoardDTO);
     }
 

@@ -81,7 +81,8 @@ public class MatchServiceImpl implements MatchService {
                     return matchDTO;
                 })
                 .orElseThrow(
-                        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+                        () -> new ResourceNotFoundExceptionCustomize(
+                                Collections.singletonMap("id", id)));
     }
 
     @Override
@@ -108,7 +109,8 @@ public class MatchServiceImpl implements MatchService {
                     return mDetailDTO;
                 })
                 .orElseThrow(
-                        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+                        () -> new ResourceNotFoundExceptionCustomize(
+                                Collections.singletonMap("id", id)));
 
         List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(id);
         Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.build(moveHistories);
