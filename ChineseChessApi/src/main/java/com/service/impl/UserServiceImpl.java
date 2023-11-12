@@ -3,7 +3,6 @@ package com.service.impl;
 import java.util.Collections;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +40,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuditorAware<Long> auditorAware;
 
-    @Autowired
     public UserServiceImpl(
             UserRepository userRepository,
             UserMapper userMapper,

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.data.dto.move.MoveHistoryDTO;
@@ -31,7 +30,6 @@ public class TrainingServiceImpl implements TrainingService {
     private final MoveHistoryRepository moveHistoryRepository;
     private final MoveService moveService;
 
-    @Autowired
     public TrainingServiceImpl(
             TrainingMapper trainingMapper,
             TrainingRepository trainingRepository,

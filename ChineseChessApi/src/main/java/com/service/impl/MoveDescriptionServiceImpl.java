@@ -2,7 +2,6 @@ package com.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.common.enumeration.EIndexDescription;
 import com.common.enumeration.EMoveTypeDescription;
@@ -21,7 +20,6 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     private final PieceService pieceService;
     private final MoveTypeService moveTypeService;
 
-    @Autowired
     public MoveDescriptionServiceImpl(
         PieceService pieceService, 
         MoveTypeService moveTypeService) {

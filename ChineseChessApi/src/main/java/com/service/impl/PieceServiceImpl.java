@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.Default;
@@ -25,7 +24,6 @@ public class PieceServiceImpl implements PieceService {
     private final PieceRepository pieceRepository;
     private final PieceMapper pieceMapper;
 
-    @Autowired
     public PieceServiceImpl(
             PieceRepository pieceRepository,
             PieceMapper pieceMapper) {

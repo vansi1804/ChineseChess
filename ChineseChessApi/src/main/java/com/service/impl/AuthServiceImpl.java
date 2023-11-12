@@ -1,6 +1,5 @@
 package com.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +22,6 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final RoleMapper roleMapper;
 
-    @Autowired
     public AuthServiceImpl(
         AuthenticationManager authenticationManager, 
         JwtService jwtService,

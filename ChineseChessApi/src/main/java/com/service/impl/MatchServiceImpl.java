@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.Default;
@@ -40,7 +39,6 @@ public class MatchServiceImpl implements MatchService {
     private final MoveHistoryRepository moveHistoryRepository;
     private final MoveService moveService;
 
-    @Autowired
     public MatchServiceImpl(
             MatchRepository matchRepository,
             MatchMapper matchMapper,

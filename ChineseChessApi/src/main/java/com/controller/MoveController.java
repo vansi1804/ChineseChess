@@ -2,7 +2,6 @@ package com.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +27,6 @@ public class MoveController {
 
     private final MoveService moveService;
 
-    @Autowired
     public MoveController(MoveService moveService) {
         this.moveService = moveService;
     }

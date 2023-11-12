@@ -1,6 +1,5 @@
 package com.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.Default;
@@ -28,7 +27,6 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     private final PieceService pieceService;
     private final MoveTypeService moveTypeService;
 
-    @Autowired
     public MoveRuleServiceImpl(
             PieceService pieceService,
             MoveTypeService moveTypeService) {

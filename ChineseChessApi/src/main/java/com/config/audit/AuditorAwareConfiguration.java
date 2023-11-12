@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -20,12 +19,15 @@ import com.data.repository.UserRepository;
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class AuditorAwareConfiguration {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     
     // Maintain a cache for email-to-ID mapping (to avoid loop between AuditorAware and repository)
     private static Map<String, Long> phoneNumberToIdCache = new ConcurrentHashMap<>();
 
+    public AuditorAwareConfiguration(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+    
     @Bean
     public AuditorAware<Long> auditorAware() {// auto set createdBy and lastModifiedBy base on current Authentication
         return () -> {

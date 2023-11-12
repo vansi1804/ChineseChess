@@ -1,6 +1,5 @@
 package com.controller.admin;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +17,6 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    @Autowired
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }

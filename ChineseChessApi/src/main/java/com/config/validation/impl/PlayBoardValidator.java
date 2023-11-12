@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.springframework.stereotype.Component;
+
 import com.common.ErrorMessage;
 import com.common.Validation;
 import com.common.enumeration.EPiece;
@@ -19,6 +21,7 @@ import com.data.dto.PlayBoardDTO;
 import com.data.repository.PieceRepository;
 import com.service.PieceService;
 
+@Component
 public class PlayBoardValidator implements ConstraintValidator<Validator, PlayBoardDTO> {
 
     private final PieceRepository pieceRepository;

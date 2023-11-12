@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +38,6 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     private final PlayerRepository playerRepository;
     private final PieceRepository pieceRepository;
 
-    @Autowired
     public ApplicationRunnerImpl(
             PasswordEncoder passwordEncoder,
             UserRepository userRepository,

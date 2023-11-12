@@ -10,7 +10,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.ErrorMessage;
@@ -52,7 +51,6 @@ public class MoveServiceImpl implements MoveService {
     private final PieceService pieceService;
     private final MoveRuleService moveRuleService;
 
-    @Autowired
     public MoveServiceImpl(
             MoveHistoryRepository moveHistoryRepository,
             MoveHistoryMapper moveHistoryMapper,
