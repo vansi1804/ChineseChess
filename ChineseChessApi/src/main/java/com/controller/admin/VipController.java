@@ -2,7 +2,6 @@ package com.controller.admin;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,7 +25,6 @@ public class VipController {
 
     private final VipService vipService;
 
-    @Autowired
     public VipController(VipService vipService) {
         this.vipService = vipService;
     }

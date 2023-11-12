@@ -2,7 +2,6 @@ package com.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,7 +27,6 @@ public class PlayerController {
 
     private final PlayerService playerService;
 
-    @Autowired
     public PlayerController(PlayerService playerService) {
         this.playerService = playerService;
     }

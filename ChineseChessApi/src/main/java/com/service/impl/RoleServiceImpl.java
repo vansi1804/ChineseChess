@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.data.dto.RoleDTO;
@@ -19,7 +18,6 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
 
-    @Autowired
     public RoleServiceImpl(
             RoleRepository roleRepository,
             RoleMapper roleMapper) {

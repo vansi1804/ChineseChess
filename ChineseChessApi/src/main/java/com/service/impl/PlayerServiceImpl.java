@@ -2,7 +2,6 @@ package com.service.impl;
 
 import java.util.Collections;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -39,7 +38,6 @@ public class PlayerServiceImpl implements PlayerService {
     private final RankMapper rankMapper;
     private final MatchRepository matchRepository;
 
-    @Autowired
     public PlayerServiceImpl(
             PlayerRepository playerRepository,
             PlayerMapper playerMapper,

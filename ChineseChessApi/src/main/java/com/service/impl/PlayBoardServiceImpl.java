@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.data.dto.PieceDTO;
@@ -29,7 +28,6 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     private final PieceService pieceService;
     private final MoveRuleService moveRuleService;
 
-    @Autowired
     public PlayBoardServiceImpl(
             PieceRepository pieceRepository,
             PieceMapper pieceMapper,

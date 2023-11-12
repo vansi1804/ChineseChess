@@ -6,7 +6,6 @@ import java.nio.file.Files;
 
 import org.apache.tika.Tika;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +31,6 @@ public class FileController {
 
     private FileService fileService;
 
-    @Autowired
     public FileController(FileService fileService) {
         this.fileService = fileService;
     }

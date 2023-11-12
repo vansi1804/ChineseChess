@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.data.dto.VipDTO;
@@ -20,7 +19,6 @@ public class VipServiceImpl implements VipService {
     private final VipRepository vipRepository;
     private final VipMapper vipMapper;
 
-    @Autowired
     public VipServiceImpl(
             VipRepository vipRepository,
             VipMapper vipMapper) {

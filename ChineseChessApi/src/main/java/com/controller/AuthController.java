@@ -2,7 +2,6 @@ package com.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +20,6 @@ public class AuthController {
     
     private final AuthService loginService;
 
-    @Autowired
     public AuthController(AuthService loginService) {
         this.loginService = loginService;
     }
