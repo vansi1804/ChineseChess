@@ -60,52 +60,72 @@ public class Default {
 
         public static class PlayBoardSize {
 
-            // 1__2__3__4__5__6__7__8__9
-            // +--+--+--+--+--+--+--+--+ 1
+            // 0_1__2__3__4__5__6__7__8
+            // +--+--+--+--+--+--+--+--+ 0
             // |::|::|::|\ | /|::|::|::|
-            // +--+--+--+--+--+--+--+--+ 2
+            // +--+--+--+--+--+--+--+--+ 1
             // |::|::|::|/ | \|::|::|::|
+            // +--+--+--+--+--+--+--+--+ 2
+            // |::|::|::|::|::|::|::|::|
             // +--+--+--+--+--+--+--+--+ 3
             // |::|::|::|::|::|::|::|::|
             // +--+--+--+--+--+--+--+--+ 4
-            // |::|::|::|::|::|::|::|::|
-            // +--+--+--+--+--+--+--+--+ 5
             // |~~|~~|~~|~~|~~|~~|~~|~~|
+            // +--+--+--+--+--+--+--+--+ 5
+            // |::|::|::|::|::|::|::|::|
             // +--+--+--+--+--+--+--+--+ 6
             // |::|::|::|::|::|::|::|::|
             // +--+--+--+--+--+--+--+--+ 7
-            // |::|::|::|::|::|::|::|::|
-            // +--+--+--+--+--+--+--+--+ 8
             // |::|::|::|\ | /|::|::|::|
-            // +--+--+--+--+--+--+--+--+ 9
+            // +--+--+--+--+--+--+--+--+ 8
             // |::|::|::|/ | \|::|::|::|
-            // +--+--+--+--+--+--+--+--+ 10
+            // +--+--+--+--+--+--+--+--+ 9
 
-            public static final int CENTER_COL_MIN = 4;
+            public static final int COL_MIN = 0;
 
-            public static final int CENTER_COL_MAX = 6;
+            public static final int ROW_MIN = 0;
+
+            public static final int COL_MAX = 8;
+
+            public static final int ROW_MAX = 9;
+
+            public static final int CENTER_COL_MIN = 3;
+
+            public static final int CENTER_COL_MAX = 5;
 
             public static class BlackArea {
 
-                public static final int ROW_MAX = 5;
+                public static final int ROW_MAX = 4;
 
-                public static final int CENTER_ROW_MIN = 1;
+                public static final int CENTER_ROW_MIN = 0;
 
-                public static final int CENTER_ROW_MAX = 3;
+                public static final int CENTER_ROW_MAX = 2;
 
             }
 
             public static class RedArea {
 
-                public static final int ROW_MIN = 6;
+                public static final int ROW_MIN = 5;
 
-                public static final int CENTER_ROW_MIN = 8;
+                public static final int CENTER_ROW_MIN = 7;
 
-                public static final int CENTER_ROW_MAX = 10;
+                public static final int CENTER_ROW_MAX = 9;
 
             }
 
         }
+
+        public static final int MATCH_TIME = 5; // in minutes
+
+        public static final int MOVING_TIME = 30; // in seconds
+
+        public static final int CUMULATIVE_TIME = 3; // in seconds
+
+        public static final int BET_ELO = 0;
+
+        public static final int ELO_MILESTONES = 0;
+
+        public static final int DEPOSIT_MILESTONES = 0;
 
         public static final float ELO_WIN_RECEIVE_PERCENT = 0.95F;
 

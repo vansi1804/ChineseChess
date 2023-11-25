@@ -11,8 +11,8 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.stereotype.Component;
 
+import com.common.Default;
 import com.common.ErrorMessage;
-import com.common.Validation;
 import com.common.enumeration.EPiece;
 import com.config.exception.InvalidExceptionCustomize;
 import com.config.validation.Validator;
@@ -34,10 +34,10 @@ public class PlayBoardValidator implements ConstraintValidator<Validator, PlayBo
 
     @Override
     public boolean isValid(PlayBoardDTO playBoardDTO, ConstraintValidatorContext context) {
-        int colLength = playBoardDTO.getState().length;
-        int rowLength = playBoardDTO.getState()[0].length;
+        int colLength = playBoardDTO.getState().length - 1;
+        int rowLength = playBoardDTO.getState()[0].length - 1;
 
-        if ((Validation.COL_MAX != colLength) || (Validation.ROW_MAX != rowLength)) {
+        if ((Default.Game.PlayBoardSize.COL_MAX != colLength) || (Default.Game.PlayBoardSize.ROW_MAX != rowLength)) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("colLength", ErrorMessage.COL_LENGTH);
             errors.put("rowLength", ErrorMessage.ROW_LENGTH);

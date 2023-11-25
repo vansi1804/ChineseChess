@@ -4,8 +4,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.common.Default;
 import com.common.ErrorMessage;
-import com.common.Validation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +24,7 @@ public class VipDTO extends AuditorDTO {
     private String name;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
-    @Min(value = Validation.DEPOSIT_MILESTONES, message = ErrorMessage.DEPOSIT_MILESTONES)
+    @Min(value = Default.Game.DEPOSIT_MILESTONES, message = ErrorMessage.DEPOSIT_MILESTONES)
     private Integer depositMilestones;
     
 }

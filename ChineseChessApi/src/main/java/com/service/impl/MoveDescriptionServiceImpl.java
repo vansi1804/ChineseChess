@@ -10,12 +10,12 @@ import com.data.dto.PlayBoardDTO;
 import com.service.MoveDescriptionService;
 import com.service.MoveTypeService;
 import com.service.PieceService;
-import com.common.Validation;
+import com.common.Default;
 
 @Service
 public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     
-    private final int MAX_COL = Validation.COL_MAX;
+    private final int MAX_COL = Default.Game.PlayBoardSize.COL_MAX;
 
     private final PieceService pieceService;
     private final MoveTypeService moveTypeService;
@@ -36,9 +36,9 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
         description.append(shortNameOfPiece);
 
         if (pieceDTO.isRed()) {
-            description.append(this.buildRedPieceDescription(playBoardDTO, pieceDTO, toCol, toRow));
+            description.append(this.buildRedPieceDescription(playBoardDTO, pieceDTO, toCol + 1, toRow + 1));
         } else {
-            description.append(this.buildBlackPieceDescription(playBoardDTO, pieceDTO, toCol, toRow));
+            description.append(this.buildBlackPieceDescription(playBoardDTO, pieceDTO, toCol + 1, toRow + 1));
         }
 
         return description.toString();
@@ -73,11 +73,11 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
     private String buildBlackPieceDescription(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
         StringBuilder description = new StringBuilder();
         description.append(buildIndexDescription(playBoardDTO, pieceDTO));
-        description.append(pieceDTO.getCurrentCol() + 1);
+        description.append(pieceDTO.getCurrentCol());
 
         if (moveTypeService.isHorizontallyMoving(pieceDTO.getCurrentRow(), toRow)) {
             description.append(EMoveTypeDescription.ACROSS.getValue())
-                    .append(toCol + 1);
+                    .append(toCol);
                     
         } else {
             if (moveTypeService.isUpMoving(false, pieceDTO.getCurrentRow(), toRow)) {
@@ -89,7 +89,7 @@ public class MoveDescriptionServiceImpl implements MoveDescriptionService {
             if (moveTypeService.isVerticallyMoving(pieceDTO.getCurrentCol(), toCol)) {
                 description.append(Math.abs(pieceDTO.getCurrentRow() - toRow));
             } else {
-                description.append(toCol + 1);
+                description.append(toCol);
             }
         }
 

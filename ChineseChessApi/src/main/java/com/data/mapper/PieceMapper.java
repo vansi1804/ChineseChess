@@ -22,4 +22,8 @@ public interface PieceMapper {
 
     PieceDTO copy(PieceDTO pieceDTO);
 
+    PieceDTO[] copy(PieceDTO[] pieceDTO);
+
+    PieceDTO[][] copy(PieceDTO[][] pieceDTO);
+
 }
