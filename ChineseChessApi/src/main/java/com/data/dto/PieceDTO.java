@@ -6,8 +6,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.common.Default;
 import com.common.ErrorMessage;
-import com.common.Validation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,13 +29,13 @@ public class PieceDTO implements Serializable {
     private String image;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
-    @Min(value = Validation.AREA_MIN - 1, message = ErrorMessage.COL)
-    @Max(value = Validation.COL_MAX - 1, message = ErrorMessage.COL)
+    @Min(value = Default.Game.PlayBoardSize.COL_MIN, message = ErrorMessage.COL)
+    @Max(value = Default.Game.PlayBoardSize.COL_MAX, message = ErrorMessage.COL)
     private Integer currentCol;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
-    @Min(value = Validation.AREA_MIN - 1, message = ErrorMessage.ROW)
-    @Max(value = Validation.ROW_MAX - 1, message = ErrorMessage.ROW)
+    @Min(value = Default.Game.PlayBoardSize.ROW_MIN, message = ErrorMessage.ROW)
+    @Max(value = Default.Game.PlayBoardSize.ROW_MAX, message = ErrorMessage.ROW)
     private Integer currentRow;
 
 }
