@@ -15,12 +15,10 @@ import com.data.dto.move.matchMove.MatchMoveCreationDTO;
 import com.data.dto.move.trainingMove.TrainingMoveCreationDTO;
 import com.service.MoveService;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(ApiUrl.MOVES)
 public class MoveController {
