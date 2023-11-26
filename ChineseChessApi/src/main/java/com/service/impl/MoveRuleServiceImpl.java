@@ -13,16 +13,16 @@ import com.service.PieceService;
 @Service
 public class MoveRuleServiceImpl implements MoveRuleService {
 
-    private static final int CENTER_COL_INDEX_MIN = Default.Game.PlayBoardSize.CENTER_COL_MIN - 1;
-    private static final int CENTER_COL_INDEX_MAX = Default.Game.PlayBoardSize.CENTER_COL_MAX - 1;
+    private static final int CENTER_COL_MIN = Default.Game.PlayBoardSize.CENTER_COL_MIN;
+    private static final int CENTER_COL_MAX = Default.Game.PlayBoardSize.CENTER_COL_MAX;
 
-    private static final int BLACK_ROW_INDEX_MAX = Default.Game.PlayBoardSize.BlackArea.ROW_MAX - 1;
-    private static final int BLACK_CENTER_ROW_INDEX_MIN = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MIN - 1;
-    private static final int BLACK_CENTER_ROW_INDEX_MAX = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MAX - 1;
+    private static final int BLACK_ROW_MAX = Default.Game.PlayBoardSize.BlackArea.ROW_MAX;
+    private static final int BLACK_CENTER_ROW_MIN = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MIN;
+    private static final int BLACK_CENTER_ROW_MAX = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MAX;
 
-    private static final int RED_ROW_INDEX_MIN = Default.Game.PlayBoardSize.RedArea.ROW_MIN - 1;
-    private static final int RED_CENTER_ROW_INDEX_MIN = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MIN - 1;
-    private static final int RED_CENTER_ROW_INDEX_MAX = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX - 1;
+    private static final int RED_ROW_MIN = Default.Game.PlayBoardSize.RedArea.ROW_MIN;
+    private static final int RED_CENTER_ROW_MIN = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MIN;
+    private static final int RED_CENTER_ROW_MAX = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX;
 
     private final PieceService pieceService;
     private final MoveTypeService moveTypeService;
@@ -71,7 +71,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
             case CHARIOT:
                 return checkChariotMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
 
-            default: // case GENERAL:
+            default:
                 return checkGeneralMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
         }
     }
@@ -136,12 +136,10 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         if ((verticalSpace == 2) && (horizontalSpace == 1)) {
             int obstacleCol = fromCol;
             int obstacleRow = (fromRow + toRow) / 2;
-
             return playBoardDTO.getState()[obstacleCol][obstacleRow] == null;
         } else if ((verticalSpace == 1) && (horizontalSpace == 2)) {
             int obstacleCol = (fromCol + toCol) / 2;
             int obstacleRow = fromRow;
-
             return playBoardDTO.getState()[obstacleCol][obstacleRow] == null;
         } else {
             return false;
@@ -166,7 +164,6 @@ public class MoveRuleServiceImpl implements MoveRuleService {
      */
     private boolean checkCannonMoveRule(PlayBoardDTO playBoardDTO, int fromCol, int toCol, int fromRow, int toRow) {
         PieceDTO targetPiece = playBoardDTO.getState()[toCol][toRow];
-
         boolean isVerticallyMoving = moveTypeService.isVerticallyMoving(fromCol, toCol);
         boolean isHorizontalMoving = moveTypeService.isHorizontallyMoving(fromRow, toRow);
 
@@ -196,13 +193,13 @@ public class MoveRuleServiceImpl implements MoveRuleService {
     }
 
     private boolean isInAreaCenter(boolean isRed, int col, int row) {
-        return ((CENTER_COL_INDEX_MIN <= col) && (col <= CENTER_COL_INDEX_MAX))
-                && (isRed ? ((RED_CENTER_ROW_INDEX_MIN <= row) && (row <= RED_CENTER_ROW_INDEX_MAX))
-                        : ((BLACK_CENTER_ROW_INDEX_MIN <= row) && (row <= BLACK_CENTER_ROW_INDEX_MAX)));
+        return ((CENTER_COL_MIN <= col) && (col <= CENTER_COL_MAX))
+                && (isRed ? ((RED_CENTER_ROW_MIN <= row) && (row <= RED_CENTER_ROW_MAX))
+                        : ((BLACK_CENTER_ROW_MIN <= row) && (row <= BLACK_CENTER_ROW_MAX)));
     }
 
     private boolean isOverTheRiver(boolean isRed, int row) {
-        return isRed ? (row < RED_ROW_INDEX_MIN) : (row > BLACK_ROW_INDEX_MAX);
+        return isRed ? (row < RED_ROW_MIN) : (row > BLACK_ROW_MAX);
     }
 
 }

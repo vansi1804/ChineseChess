@@ -174,17 +174,17 @@ public class PieceServiceImpl implements PieceService {
 
     @Override
     public PieceDTO findGeneralInBoard(PlayBoardDTO playBoardDTO, boolean isRed) {
-        int fromCol = Default.Game.PlayBoardSize.CENTER_COL_MIN - 1;
-        int toCol = Default.Game.PlayBoardSize.CENTER_COL_MAX - 1;
+        int fromCol = Default.Game.PlayBoardSize.CENTER_COL_MIN;
+        int toCol = Default.Game.PlayBoardSize.CENTER_COL_MAX;
         int fromRow;
         int toRow;
 
         if (isRed) {
-            fromRow = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MIN - 1;
-            toRow = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX - 1;
+            fromRow = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MIN;
+            toRow = Default.Game.PlayBoardSize.RedArea.CENTER_ROW_MAX;
         } else {
-            fromRow = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MIN - 1;
-            toRow = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MAX - 1;
+            fromRow = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MIN;
+            toRow = Default.Game.PlayBoardSize.BlackArea.CENTER_ROW_MAX;
         }
 
         return findAllInBoard(playBoardDTO, EPiece.GENERAL.name(), null, fromCol, fromRow, toCol, toRow).stream()

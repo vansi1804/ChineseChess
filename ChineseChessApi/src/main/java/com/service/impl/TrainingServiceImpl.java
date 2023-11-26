@@ -3,9 +3,11 @@ package com.service.impl;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.data.dto.move.MoveHistoryDTO;
@@ -21,6 +23,7 @@ import com.config.exception.InvalidExceptionCustomize;
 import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.service.MoveService;
 import com.service.TrainingService;
+import com.service.UserService;
 
 @Service
 public class TrainingServiceImpl implements TrainingService {
@@ -29,17 +32,20 @@ public class TrainingServiceImpl implements TrainingService {
     private final TrainingRepository trainingRepository;
     private final MoveHistoryRepository moveHistoryRepository;
     private final MoveService moveService;
+    private final UserService userService;
 
     public TrainingServiceImpl(
             TrainingMapper trainingMapper,
             TrainingRepository trainingRepository,
             MoveService moveService,
-            MoveHistoryRepository moveHistoryRepository) {
+            MoveHistoryRepository moveHistoryRepository,
+            UserService userService) {
 
         this.trainingMapper = trainingMapper;
         this.trainingRepository = trainingRepository;
         this.moveHistoryRepository = moveHistoryRepository;
         this.moveService = moveService;
+        this.userService = userService;
     }
 
     @Override
@@ -87,6 +93,10 @@ public class TrainingServiceImpl implements TrainingService {
                         () -> new ResourceNotFoundExceptionCustomize(
                                 Collections.singletonMap("id", id)));
 
+        if (!userService.isCurrentUser(oldTraining.getCreatedByUserId())) {
+            throw new AccessDeniedException(null);
+        }
+
         if ((trainingDTO.getParentTrainingId() != null)
                 && !trainingRepository.existsById(trainingDTO.getParentTrainingId())) {
 
@@ -94,7 +104,7 @@ public class TrainingServiceImpl implements TrainingService {
                     Collections.singletonMap("parentTrainingId", trainingDTO.getParentTrainingId()));
         }
 
-        if (trainingDTO.getParentTrainingId() == oldTraining.getId()) {
+        if (Objects.equals(trainingDTO.getParentTrainingId(), oldTraining.getId())) {
             Map<String, Object> errors = new HashMap<>();
             errors.put("id", oldTraining.getId());
             errors.put("parentTrainingId", trainingDTO.getParentTrainingId());
@@ -120,13 +130,16 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public boolean deleteById(long id) {
-        if (!trainingRepository.existsById(id)) {
-            throw new ResourceNotFoundExceptionCustomize(
-                    Collections.singletonMap("id", id));
+        Training oldTraining = trainingRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundExceptionCustomize(
+                                Collections.singletonMap("id", id)));
+
+        if (!userService.isCurrentUser(oldTraining.getCreatedByUserId())) {
+            throw new AccessDeniedException(null);
         }
 
-        moveHistoryRepository.deleteAllByTraining_Id(id);
-        trainingRepository.deleteById(id);
+        trainingRepository.delete(oldTraining);
 
         return true;
     }
