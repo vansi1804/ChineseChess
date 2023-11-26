@@ -19,7 +19,7 @@ import lombok.Data;
 
 @Data
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+// @EntityListeners(AuditingEntityListener.class)
 public class Auditor implements Serializable {
 
     @CreatedDate
@@ -33,11 +33,11 @@ public class Auditor implements Serializable {
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "last_modified_date", insertable = false)
+    @Column(name = "last_modified_date")
     private Date lastModifiedDate;
 
     @LastModifiedBy
-	@Column(name = "last_modified_by_user_id", insertable = false)
+	@Column(name = "last_modified_by_user_id")
 	private Long lastModifiedByUserId;
 
 }

@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import java.util.Collections;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.AuditorAware;
@@ -166,8 +167,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isCurrentUser(long id) {
-        Long userId = auditorAware.getCurrentAuditor().orElse(null);
-        return (userId == null) || (userId == id);
+        Long currentAuthId = auditorAware.getCurrentAuditor().orElse(null);
+        return Objects.equals(id, currentAuthId);
     }
 
 }

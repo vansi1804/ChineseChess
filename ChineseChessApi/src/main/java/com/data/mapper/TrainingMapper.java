@@ -15,7 +15,6 @@ public interface TrainingMapper {
     @Mapping(ignore = true, target = "childTrainings")
     @Mapping(ignore = true, target = "createdDate")
     @Mapping(ignore = true, target = "createdByUserId")
-    
     @Mapping(ignore = true, target = "lastModifiedDate")
     @Mapping(ignore = true, target = "lastModifiedByUserId")
     Training toEntity(TrainingDTO trainingDTO);
@@ -33,8 +32,6 @@ public interface TrainingMapper {
 
     @Mapping(source = "parentTraining.id", target = "parentTrainingId")
     @Mapping(source = "childTrainings", target = "childTrainingDTOs")
-    // @Mapping(source = "createdBy.id", target = "createdByUserId")
-    // @Mapping(source = "lastModifiedBy.id", target = "lastModifiedByUserId")
     TrainingDTO toDTO(Training training);
 
     @Mapping(expression = "java(toDTO(training))", target = "trainingDTO")

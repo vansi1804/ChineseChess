@@ -1,6 +1,7 @@
 package com.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.common.enumeration.ERole;
 import com.data.dto.user.UserCreationDTO;
@@ -21,8 +22,10 @@ public interface UserService {
 
     UserProfileDTO update(long id, UserProfileDTO userProfileDTO);
 
+    @Transactional
     boolean lockById(long id);
-
+    
+    @Transactional
     boolean unlockById(long id);
 
     boolean isCurrentUser(long id);
