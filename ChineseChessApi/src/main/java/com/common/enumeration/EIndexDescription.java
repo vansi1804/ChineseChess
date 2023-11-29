@@ -7,9 +7,9 @@ import lombok.Getter;
 @Getter
 public enum EIndexDescription {
 
-    BEFORE("t"),   
-    AFTER("s");
+    BEFORE('t'),   
+    AFTER('s');
     
-    private final String value;
+    private final char value;
     
 }

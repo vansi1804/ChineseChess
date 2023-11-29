@@ -54,25 +54,25 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         EPiece ePiece = pieceService.convertByName(pieceDTO.getName());
         switch (ePiece) {
             case SOLDIER:
-                return checkSoldierMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
+                return this.checkSoldierMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
 
             case CANNON:
-                return checkCannonMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
+                return this.checkCannonMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
 
             case GUARD:
-                return checkGuardMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
+                return this.checkGuardMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
 
             case ELEPHANT:
-                return checkElephantMoveRule(playBoardDTO, pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
+                return this.checkElephantMoveRule(playBoardDTO, pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
 
             case HORSE:
-                return checkHorseMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
+                return this.checkHorseMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
 
             case CHARIOT:
-                return checkChariotMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
+                return this.checkChariotMoveRule(playBoardDTO, fromCol, toCol, fromRow, toRow);
 
             default:
-                return checkGeneralMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
+                return this.checkGeneralMoveRule(pieceDTO.isRed(), fromCol, toCol, fromRow, toRow);
         }
     }
 
@@ -95,7 +95,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         int horizontalSpace = Math.abs(toCol - fromCol);
         boolean isDiagonalMove = ((verticalSpace == 1) && (horizontalSpace == 1));
 
-        return isDiagonalMove && isInAreaCenter(isRed, toCol, toRow);
+        return isDiagonalMove && this.isInAreaCenter(isRed, toCol, toRow);
     }
 
     /*
@@ -110,10 +110,9 @@ public class MoveRuleServiceImpl implements MoveRuleService {
 
         int verticalSpace = Math.abs(toRow - fromRow);
         int horizontalSpace = Math.abs(toCol - fromCol);
-
         boolean isDiagonalMove = ((verticalSpace == 2) && (horizontalSpace == 2));
 
-        boolean isWithinOwnHalf = !isOverTheRiver(isRed, toRow);
+        boolean isWithinOwnHalf = !this.isOverTheRiver(isRed, toRow);
 
         int middleCol = (fromCol + toCol) / 2;
         int middleRow = (fromRow + toRow) / 2;
@@ -136,10 +135,12 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         if ((verticalSpace == 2) && (horizontalSpace == 1)) {
             int obstacleCol = fromCol;
             int obstacleRow = (fromRow + toRow) / 2;
+
             return playBoardDTO.getState()[obstacleCol][obstacleRow] == null;
         } else if ((verticalSpace == 1) && (horizontalSpace == 2)) {
             int obstacleCol = (fromCol + toCol) / 2;
             int obstacleRow = fromRow;
+
             return playBoardDTO.getState()[obstacleCol][obstacleRow] == null;
         } else {
             return false;
@@ -189,7 +190,7 @@ public class MoveRuleServiceImpl implements MoveRuleService {
         return (moveTypeService.isVerticallyMoving(fromCol, toCol)
                 && (isRed ? (fromRow - toRow == 1) : (toRow - fromRow == 1)))
                 || (moveTypeService.isHorizontallyMoving(fromRow, toRow)
-                        && isOverTheRiver(isRed, fromRow) && (Math.abs(fromCol - toCol) == 1));
+                        && this.isOverTheRiver(isRed, fromRow) && (Math.abs(fromCol - toCol) == 1));
     }
 
     private boolean isInAreaCenter(boolean isRed, int col, int row) {

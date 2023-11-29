@@ -145,12 +145,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean lockById(long id) {
-        return updateStatusById(id, EStatus.LOCK);
+        return this.updateStatusById(id, EStatus.LOCK);
     }
 
     @Override
     public boolean unlockById(long id) {
-        return updateStatusById(id, EStatus.ACTIVE);
+        return this.updateStatusById(id, EStatus.ACTIVE);
     }
 
     public boolean updateStatusById(long id, EStatus eStatus) {

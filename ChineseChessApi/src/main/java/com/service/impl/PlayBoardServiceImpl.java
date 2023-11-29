@@ -85,94 +85,9 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     }
 
     @Override
-    public void printTest(Object title, PlayBoardDTO playBoardDTO, PieceDTO pieceDTO) {
-        System.out.println("\n===========================================");
-        System.out.println(String.valueOf(title));
-        System.out.println("===========================================");
+    public boolean areTwoGeneralsFacing(
+            PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO1, PieceDTO generalPieceDTO2) {
 
-        for (int row = ROW_MIN; row <= ROW_MAX; row++) {
-            for (int col = COL_MIN; col <= COL_MAX; col++) {
-                PieceDTO targetPieceDTO = playBoardDTO.getState()[col][row];
-                System.out.print(getSymbolOutput(pieceDTO, col, row, targetPieceDTO, false));
-            }
-            System.out.println("\n\n");
-        }
-
-        System.out.println("===========================================");
-    }
-
-    @Override
-    public void printTest(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, List<int[]> availableMoveIndexes) {
-        System.out.println("\n===========================================");
-        System.out.println("Available move: ");
-        System.out.println("===========================================");
-
-        for (int row = ROW_MIN; row <= ROW_MAX; row++) {
-            for (int col = COL_MIN; col <= COL_MAX; col++) {
-                PieceDTO targetPieceDTO = playBoardDTO.getState()[col][row];
-                int[] index = new int[] { col, row };
-                boolean containsIndex = availableMoveIndexes.stream()
-                        .anyMatch(arr -> Arrays.equals(arr, index));
-                if (containsIndex) {
-                    System.out.print(getSymbolOutput(null, col, row, targetPieceDTO, true));
-                } else {
-                    System.out.print(getSymbolOutput(pieceDTO, col, row, targetPieceDTO, false));
-                }
-            }
-            System.out.println("\n\n\n");
-        }
-
-        System.out.println("===========================================");
-    }
-
-    private String getSymbolOutput(
-            PieceDTO movingPieceDTO, int col, int row, PieceDTO targetPieceDTO, boolean isValidMoveFinding) {
-
-        if (targetPieceDTO == null) {
-            if ((movingPieceDTO != null)
-                    && ((col == movingPieceDTO.getCurrentCol()) && (row == movingPieceDTO.getCurrentRow()))) {
-
-                return "   [ ]   ";
-            } else if (isValidMoveFinding) {
-                return "    O    ";
-            } else {
-                return "    +    ";
-            }
-        } else {
-            String symbol = formatNameSymbol(
-                    pieceService.convertByName(targetPieceDTO.getName()).getShortName(),
-                    targetPieceDTO.isRed(),
-                    targetPieceDTO.getId());
-
-            if ((movingPieceDTO != null) && (targetPieceDTO.getId() == movingPieceDTO.getId())) {
-                return "[" + symbol + "]";
-            } else if (isValidMoveFinding) {
-                return "(" + symbol + ")";
-            } else {
-                return " " + symbol + " ";
-            }
-        }
-    }
-
-    private String formatNameSymbol(String shortName, boolean isRed, int id) {
-        return (shortName.length() == 1 ? " " + shortName : shortName)
-                + formatColorSymbol(isRed)
-                + "_"
-                + (shortName.length() == 1 ? formatIdSymbol(id) + " " : formatIdSymbol(id));
-    }
-
-    private String formatColorSymbol(boolean isRed) {
-        return isRed ? "1" : "0";
-    }
-
-    private String formatIdSymbol(int id) {
-        String idSymbol = String.valueOf(id);
-        return idSymbol.length() == 1 ? "0" + idSymbol : idSymbol; // custom symbolID: id = {1 -> 01; 10 -> 10}
-    }
-
-    @Override
-    public boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO1,
-            PieceDTO generalPieceDTO2) {
         if (generalPieceDTO1.getCurrentCol() == generalPieceDTO2.getCurrentCol()) {
             int currentCol = generalPieceDTO1.getCurrentCol();
             int fromRow = generalPieceDTO1.getCurrentRow();
@@ -215,10 +130,91 @@ public class PlayBoardServiceImpl implements PlayBoardService {
                         }))
                 .sum();
     }
+    
+    @Override
+    public void printTest(Object title, PlayBoardDTO playBoardDTO, PieceDTO pieceDTO) {
+        System.out.println("\n===========================================");
+        System.out.println(String.valueOf(title));
+        System.out.println("===========================================");
 
-    // private PieceDTO[][] cloneStateArray(PieceDTO[][] state) {
-    // return
-    // Arrays.stream(state).map(PieceDTO[]::clone).toArray(PieceDTO[][]::new);
-    // }
+        for (int row = ROW_MIN; row <= ROW_MAX; row++) {
+            for (int col = COL_MIN; col <= COL_MAX; col++) {
+                PieceDTO targetPieceDTO = playBoardDTO.getState()[col][row];
+                System.out.print(this.getSymbolOutput(pieceDTO, col, row, targetPieceDTO, false));
+            }
+            System.out.println("\n\n");
+        }
+
+        System.out.println("===========================================");
+    }
+
+    @Override
+    public void printTest(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, List<int[]> availableMoveIndexes) {
+        System.out.println("\n===========================================");
+        System.out.println("Available move: ");
+        System.out.println("===========================================");
+
+        for (int row = ROW_MIN; row <= ROW_MAX; row++) {
+            for (int col = COL_MIN; col <= COL_MAX; col++) {
+                PieceDTO targetPieceDTO = playBoardDTO.getState()[col][row];
+                int[] index = new int[] { col, row };
+                boolean containsIndex = availableMoveIndexes.stream()
+                        .anyMatch(arr -> Arrays.equals(arr, index));
+                if (containsIndex) {
+                    System.out.print(this.getSymbolOutput(null, col, row, targetPieceDTO, true));
+                } else {
+                    System.out.print(this.getSymbolOutput(pieceDTO, col, row, targetPieceDTO, false));
+                }
+            }
+            System.out.println("\n\n\n");
+        }
+
+        System.out.println("===========================================");
+    }
+
+    private String getSymbolOutput(
+            PieceDTO movingPieceDTO, int col, int row, PieceDTO targetPieceDTO, boolean isValidMoveFinding) {
+
+        if (targetPieceDTO == null) {
+            if ((movingPieceDTO != null)
+                    && ((col == movingPieceDTO.getCurrentCol()) && (row == movingPieceDTO.getCurrentRow()))) {
+
+                return "   [ ]   ";
+            } else if (isValidMoveFinding) {
+                return "    O    ";
+            } else {
+                return "    +    ";
+            }
+        } else {
+            String symbol = this.formatNameSymbol(
+                    pieceService.convertByName(targetPieceDTO.getName()).getShortName(),
+                    targetPieceDTO.isRed(),
+                    targetPieceDTO.getId());
+
+            if ((movingPieceDTO != null) && (targetPieceDTO.getId() == movingPieceDTO.getId())) {
+                return "[" + symbol + "]";
+            } else if (isValidMoveFinding) {
+                return "(" + symbol + ")";
+            } else {
+                return " " + symbol + " ";
+            }
+        }
+    }
+
+    private String formatNameSymbol(String shortName, boolean isRed, int id) {
+        return (shortName.length() == 1 ? " " + shortName : shortName)
+                + this.formatColorSymbol(isRed)
+                + "_"
+                + (shortName.length() == 1 ? this.formatIdSymbol(id) + " " : this.formatIdSymbol(id));
+    }
+
+    private String formatColorSymbol(boolean isRed) {
+        return isRed ? "1" : "0";
+    }
+
+    private String formatIdSymbol(int id) {
+        String idSymbol = String.valueOf(id);
+        return idSymbol.length() == 1 ? "0" + idSymbol : idSymbol; // custom symbolID: id = {1 -> 01; 10 -> 10}
+    }
 
 }

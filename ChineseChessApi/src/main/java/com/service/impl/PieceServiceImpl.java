@@ -1,6 +1,5 @@
 package com.service.impl;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,10 +49,11 @@ public class PieceServiceImpl implements PieceService {
 
     @Override
     public EPiece convertByName(String name) {
-        return Arrays.stream(EPiece.values())
-                .filter(ePiece -> ePiece.name().equals(name))
-                .findFirst()
-                .orElse(null);
+        try {
+            return EPiece.valueOf(name);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return null;
+        }
     }
 
     @Override

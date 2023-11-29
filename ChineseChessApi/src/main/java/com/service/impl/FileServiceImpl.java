@@ -74,9 +74,9 @@ public class FileServiceImpl implements FileService {
     @Override
     public void deleteFile(String fileName) {
         try {
-            Files.deleteIfExists(Paths.get(UPLOAD_DIR, fileName));
+            Files.delete(Paths.get(UPLOAD_DIR, fileName));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
         }
     }
 
