@@ -24,6 +24,6 @@ public class MoveDTO {
 
     private PieceDTO checkedGeneralPieceDTO;
 
-    private boolean isCheckmate;
+    private boolean isCheckmateState;
 
 }

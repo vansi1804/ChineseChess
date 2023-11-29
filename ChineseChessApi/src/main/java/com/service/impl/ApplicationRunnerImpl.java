@@ -58,14 +58,14 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        initRole();
-        initVip();
-        initRank();
-        initAdminPlayer();
-        innitPiece();
+        this.initRole();
+        this.initVip();
+        this.initRank();
+        this.initAdminPlayer();
+        this.innitPiece();
     }
 
-    public void initRole() {
+    private void initRole() {
         List<Role> roles = Arrays.stream(ERole.values())
                 .filter(eRole -> !roleRepository.existsByName(eRole.name()))
                 .map(eRole -> {
@@ -80,13 +80,13 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         }
     }
 
-    public void initVip() {
+    private void initVip() {
         if (vipRepository.count() == 0) {
             vipRepository.save(new Vip(1, "Vip0", 0));
         }
     }
 
-    public void initRank() {
+    private void initRank() {
         if (rankRepository.count() == 0) {
             rankRepository.save(new Rank(1, "Novice", 2000));
         }
