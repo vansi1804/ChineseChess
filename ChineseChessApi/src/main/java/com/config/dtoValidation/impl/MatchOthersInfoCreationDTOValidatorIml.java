@@ -1,4 +1,4 @@
-package com.config.validation.impl;
+package com.config.dtoValidation.impl;
 
 import java.util.Collections;
 
@@ -7,12 +7,12 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.stereotype.Component;
 
+import com.config.dtoValidation.Validator;
 import com.config.exception.InvalidExceptionCustomize;
-import com.config.validation.Validator;
 import com.data.dto.match.MatchOthersInfoDTO;
 
 @Component
-public class MatchOthersInfoCreationValidator implements ConstraintValidator<Validator, MatchOthersInfoDTO> {
+public class MatchOthersInfoCreationDTOValidatorIml implements ConstraintValidator<Validator, MatchOthersInfoDTO> {
 
     @Override
     public boolean isValid(MatchOthersInfoDTO matchOthersInfoDTO, ConstraintValidatorContext context) {
