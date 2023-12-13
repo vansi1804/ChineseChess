@@ -4,8 +4,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
-import com.config.validation.Validator;
-import com.config.validation.impl.MatchOthersInfoCreationValidator;
+import com.config.dtoValidation.Validator;
+import com.config.dtoValidation.impl.MatchOthersInfoCreationDTOValidatorIml;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +23,7 @@ public class MatchCreationDTO {
     private Long player2Id;
 
     @NotNull(message = ErrorMessage.NULL_DATA)
-    @Validator(MatchOthersInfoCreationValidator.class)
+    @Validator(MatchOthersInfoCreationDTOValidatorIml.class)
     @Valid
     private MatchOthersInfoDTO matchOthersInfoDTO;
 

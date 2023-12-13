@@ -1,4 +1,4 @@
-package com.config.validation;
+package com.config.dtoValidation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,14 +10,14 @@ import javax.validation.ConstraintValidator;
 import javax.validation.Payload;
 
 import com.common.ErrorMessage;
-import com.config.validation.impl.MatchOthersInfoCreationValidator;
-import com.config.validation.impl.PlayBoardValidator;
+import com.config.dtoValidation.impl.MatchOthersInfoCreationDTOValidatorIml;
+import com.config.dtoValidation.impl.PlayBoardDTOValidatorIml;
 
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {
-        PlayBoardValidator.class,
-        MatchOthersInfoCreationValidator.class
+        PlayBoardDTOValidatorIml.class,
+        MatchOthersInfoCreationDTOValidatorIml.class
 })
 public @interface Validator {
 

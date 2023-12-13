@@ -4,8 +4,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.common.ErrorMessage;
-import com.config.validation.Validator;
-import com.config.validation.impl.PlayBoardValidator;
+import com.config.dtoValidation.Validator;
+import com.config.dtoValidation.impl.PlayBoardDTOValidatorIml;
 import com.data.dto.PlayBoardDTO;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class AvailableMoveRequestDTO {
 
     @NotNull(message = ErrorMessage.NULL_DATA)
     @Valid
-    @Validator(PlayBoardValidator.class)
+    @Validator(PlayBoardDTOValidatorIml.class)
     private PlayBoardDTO playBoardDTO;
     
 }

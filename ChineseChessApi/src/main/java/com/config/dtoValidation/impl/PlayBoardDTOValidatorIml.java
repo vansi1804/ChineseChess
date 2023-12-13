@@ -1,4 +1,4 @@
-package com.config.validation.impl;
+package com.config.dtoValidation.impl;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,20 +14,20 @@ import org.springframework.stereotype.Component;
 import com.common.Default;
 import com.common.ErrorMessage;
 import com.common.enumeration.EPiece;
+import com.config.dtoValidation.Validator;
 import com.config.exception.InvalidExceptionCustomize;
-import com.config.validation.Validator;
 import com.data.dto.PieceDTO;
 import com.data.dto.PlayBoardDTO;
 import com.data.repository.PieceRepository;
 import com.service.PieceService;
 
 @Component
-public class PlayBoardValidator implements ConstraintValidator<Validator, PlayBoardDTO> {
+public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, PlayBoardDTO> {
 
     private final PieceRepository pieceRepository;
     private final PieceService pieceService;
 
-    public PlayBoardValidator(PieceRepository pieceRepository, PieceService pieceService) {
+    public PlayBoardDTOValidatorIml(PieceRepository pieceRepository, PieceService pieceService) {
         this.pieceRepository = pieceRepository;
         this.pieceService = pieceService;
     }
