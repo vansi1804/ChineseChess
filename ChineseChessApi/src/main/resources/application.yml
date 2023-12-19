@@ -20,3 +20,6 @@ spring:
         jdbc:
           time_zone: ${spring.jackson.time-zone}
     show-sql: true
+#   springdoc:
+#     swagger-ui:
+#       path: /api/open-api-docs
