@@ -6,12 +6,6 @@ db:
   endpoint: localhost
   username: root
   password: rootroot
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${db.endpoint}:${db.port}/${db.name}
-    username: ${db.username}
-    password: ${db.password}
 domain:
   path: http://${db.endpoint}:${db.port}
 url:

@@ -7,6 +7,8 @@ db:
   username: root
   password: rootroot
 spring:
+  profiles:
+    active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${db.endpoint}:${db.port}/${db.name}
