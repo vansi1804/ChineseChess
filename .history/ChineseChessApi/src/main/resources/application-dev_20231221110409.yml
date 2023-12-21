@@ -1,0 +1,13 @@
+server:
+  port: 8088
+db:
+  port: 3306
+  name: chinese_chess
+  endpoint: localhost
+  username: root
+  password: rootroot
+domain:
+  path: http://${db.endpoint}:${db.port}
+url:
+  redirect:
+    path: ${domain.path}

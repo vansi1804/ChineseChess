@@ -1,8 +1,8 @@
 spring:
+  profiles:
+    active: pro
   main:
     allow-circular-references: true
-  profiles:
-    active: dev
   jackson:
     time-zone: Asia/Ho_Chi_Minh
     serialization:
