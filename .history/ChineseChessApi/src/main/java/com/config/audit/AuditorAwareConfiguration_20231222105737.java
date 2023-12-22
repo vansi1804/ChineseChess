@@ -5,6 +5,7 @@ import com.data.repository.UserRepository;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
-public class AuditorAwareConfiguration {
+public class AuditConfig {
 
   @Autowired
   private UserRepository userRepository;
@@ -25,7 +26,7 @@ public class AuditorAwareConfiguration {
   private static Map<String, Long> phoneNumberToIdCache = new ConcurrentHashMap<>();
 
   @Bean
-  public AuditorAware<Long> auditorAware() {
+  public AuditorAware<Long> auditorAware() { //auto set createdBy and lastModifiedBy base on current Authentication
     return () -> {
       try {
         Authentication currentAuth = SecurityContextHolder

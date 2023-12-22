@@ -2,11 +2,8 @@ package com.config.audit;
 
 import com.data.entity.User;
 import com.data.repository.UserRepository;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -16,16 +13,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
-public class AuditorAwareConfiguration {
+public class AuditConfig {
 
   @Autowired
   private UserRepository userRepository;
 
   // Maintain a cache for email-to-ID mapping (to avoid loop between AuditorAware and repository)
-  private static Map<String, Long> phoneNumberToIdCache = new ConcurrentHashMap<>();
+  private static Map<String, Long> emailToIdCache = new ConcurrentHashMap<>();
 
   @Bean
-  public AuditorAware<Long> auditorAware() {
+  public AuditorAware<Long> auditorAware() { //auto set createdBy and lastModifiedBy base on current Authentication
     return () -> {
       try {
         Authentication currentAuth = SecurityContextHolder
@@ -36,16 +33,16 @@ public class AuditorAwareConfiguration {
           currentAuth.isAuthenticated() &&
           !(currentAuth instanceof AnonymousAuthenticationToken)
         ) {
-          String phoneNumber = currentAuth.getName();
-          Long userId = phoneNumberToIdCache.get(phoneNumber);
+          String email = currentAuth.getName();
+          Long userId = emailToIdCache.get(email);
           if (userId != null) {
             return Optional.ofNullable(userId);
           } else {
             return userRepository
-              .findByPhoneNumber(phoneNumber)
+              .findByEmail(email)
               .map(User::getId)
               .map(id -> {
-                phoneNumberToIdCache.put(phoneNumber, id);
+                emailToIdCache.put(email, id);
                 return id;
               });
           }
