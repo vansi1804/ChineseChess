@@ -1,0 +1,25 @@
+spring:
+  main:
+    allow-circular-references: true
+  profiles:
+    active: dev
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
+    serialization:
+      fail-on-empty-beans: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        format_sql: true
+        jdbc:
+          time_zone: ${spring.jackson.time-zone}
+    show-sql: true
+  springdoc:
+  api-docs:
+  path=/api-docs
