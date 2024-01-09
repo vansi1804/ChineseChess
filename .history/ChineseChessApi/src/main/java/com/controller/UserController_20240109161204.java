@@ -150,7 +150,7 @@ public class UserController {
     }
   )
   @PreAuthorize("isAuthenticated()")
-  @PutMapping(value = "/{id}/change-password")
+  @PutMapping(value = "/{id}/lock")
   public ResponseEntity<UserProfileDTO> changePassword(
     @Parameter(
       name = "id",
@@ -168,7 +168,7 @@ public class UserController {
     ) @RequestBody @Valid UserChangePasswordRequestDTO userChangePasswordRequestDTO
   ) {
     return ResponseEntity.ok(
-      userService.changePassword(id, userChangePasswordRequestDTO)
+      userService.changePassword(userChangePasswordRequestDTO)
     );
   }
 

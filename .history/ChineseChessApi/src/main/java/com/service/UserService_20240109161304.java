@@ -5,6 +5,7 @@ import com.data.dto.user.UserChangePasswordRequestDTO;
 import com.data.dto.user.UserCreationDTO;
 import com.data.dto.user.UserDTO;
 import com.data.dto.user.UserProfileDTO;
+import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
