@@ -206,12 +206,14 @@ public class UserServiceImpl implements UserService {
         )
       );
 
-    if (
-      !passwordEncoder.matches(
-        userChangePasswordRequestDTO.getOldPassword(),
-        user.getPassword()
-      )
-    ) {
+    String OP = passwordEncoder.encode(
+      userChangePasswordRequestDTO.getOldPassword()
+    );
+
+    System.out.println("OP: " + OP);
+    System.out.println("password: " + user.getPassword());
+
+    if (!OP.equals(user.getPassword())) {
       Map<String, Object> errors = new HashMap<>();
       errors.put("id", id);
       errors.put("message", ErrorMessage.ERROR_OLD_PASSWORD);

@@ -168,7 +168,7 @@ public class UserController {
     ) @RequestBody @Valid UserChangePasswordRequestDTO userChangePasswordRequestDTO
   ) {
     return ResponseEntity.ok(
-      userService.changePassword(id, userChangePasswordRequestDTO)
+      userService.changePassword(userChangePasswordRequestDTO)
     );
   }
 

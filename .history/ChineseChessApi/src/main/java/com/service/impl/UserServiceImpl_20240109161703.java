@@ -1,12 +1,10 @@
 package com.service.impl;
 
 import com.common.Default;
-import com.common.ErrorMessage;
 import com.common.enumeration.ERole;
 import com.common.enumeration.EStatus;
 import com.config.exception.ConflictExceptionCustomize;
 import com.config.exception.InternalServerErrorExceptionCustomize;
-import com.config.exception.InvalidExceptionCustomize;
 import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.dto.user.UserChangePasswordRequestDTO;
 import com.data.dto.user.UserCreationDTO;
@@ -22,8 +20,6 @@ import com.data.repository.VipRepository;
 import com.service.FileService;
 import com.service.UserService;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +27,6 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -194,10 +189,6 @@ public class UserServiceImpl implements UserService {
     long id,
     UserChangePasswordRequestDTO userChangePasswordRequestDTO
   ) {
-    if (!this.isCurrentUser(id)) {
-      throw new AccessDeniedException(null);
-    }
-
     User user = userRepository
       .findById(id)
       .orElseThrow(() ->
@@ -207,35 +198,10 @@ public class UserServiceImpl implements UserService {
       );
 
     if (
-      !passwordEncoder.matches(
-        userChangePasswordRequestDTO.getOldPassword(),
-        user.getPassword()
-      )
-    ) {
-      Map<String, Object> errors = new HashMap<>();
-      errors.put("id", id);
-      errors.put("message", ErrorMessage.ERROR_OLD_PASSWORD);
-
-      throw new InvalidExceptionCustomize(errors);
-    }
-
-    if (
-      !userChangePasswordRequestDTO
-        .getNewPassword()
-        .equals(userChangePasswordRequestDTO.getNewPasswordConfirm())
-    ) {
-      Map<String, Object> errors = new HashMap<>();
-      errors.put("id", id);
-      errors.put("message", ErrorMessage.ERROR_NEW_PASSWORD_CONFIRM);
-
-      throw new InvalidExceptionCustomize(errors);
-    }
-
-    user.setPassword(
-      passwordEncoder.encode(
-        userChangePasswordRequestDTO.getNewPasswordConfirm()
-      )
-    );
+      passwordEncoder
+        .encode(userChangePasswordRequestDTO.getOldPassword())
+        .equals(user.getPassword())
+    ) { }
 
     return userMapper.toProfileDTO(userRepository.save(user));
   }

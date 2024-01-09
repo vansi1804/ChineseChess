@@ -14,8 +14,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -73,7 +75,7 @@ public class UserController {
       ),
     }
   )
-  @PreAuthorize(value = "hasAuthority('ADMIN')")
+@PreAuthorize(value = "hasAuthority('ADMIN')")
   @GetMapping(value = "")
   public ResponseEntity<Page<UserDTO>> findAll(
     @RequestParam(
@@ -94,10 +96,10 @@ public class UserController {
   ) {
     return ResponseEntity.ok(userService.findAll(no, limit, sortBy));
   }
-
+  
   @Operation(
-    summary = "User change password",
-    description = "Endpoint to change password by id",
+    summary = "Lock",
+    description = "Endpoint to lock an existing user by id",
     responses = {
       @ApiResponse(
         responseCode = "200",
@@ -149,16 +151,8 @@ public class UserController {
       ),
     }
   )
-  @PreAuthorize("isAuthenticated()")
-  @PutMapping(value = "/{id}/change-password")
+  @PutMapping(value = "/{id}/lock")
   public ResponseEntity<UserProfileDTO> changePassword(
-    @Parameter(
-      name = "id",
-      description = "Id of user",
-      required = true,
-      in = ParameterIn.PATH,
-      schema = @Schema(type = "integer", format = "int64")
-    ) @PathVariable long id,
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
       description = "User data to change password",
       required = true,
@@ -167,9 +161,7 @@ public class UserController {
       )
     ) @RequestBody @Valid UserChangePasswordRequestDTO userChangePasswordRequestDTO
   ) {
-    return ResponseEntity.ok(
-      userService.changePassword(id, userChangePasswordRequestDTO)
-    );
+    return ResponseEntity.ok(userService.changePassword(userChangePasswordRequestDTO));
   }
 
   @Operation(
@@ -226,7 +218,6 @@ public class UserController {
       ),
     }
   )
-  @PreAuthorize(value = "hasAuthority('ADMIN')")
   @PutMapping(value = "/{id}/lock")
   public ResponseEntity<UserDTO> lockById(
     @Parameter(
@@ -294,7 +285,6 @@ public class UserController {
       ),
     }
   )
-  @PreAuthorize(value = "hasAuthority('ADMIN')")
   @PutMapping(value = "/{id}/active")
   public ResponseEntity<UserDTO> unlockById(
     @Parameter(

@@ -207,10 +207,9 @@ public class UserServiceImpl implements UserService {
       );
 
     if (
-      !passwordEncoder.matches(
-        userChangePasswordRequestDTO.getOldPassword(),
-        user.getPassword()
-      )
+      !passwordEncoder
+        .encode(userChangePasswordRequestDTO.getOldPassword())
+        .equals(user.getPassword())
     ) {
       Map<String, Object> errors = new HashMap<>();
       errors.put("id", id);
@@ -226,16 +225,10 @@ public class UserServiceImpl implements UserService {
     ) {
       Map<String, Object> errors = new HashMap<>();
       errors.put("id", id);
-      errors.put("message", ErrorMessage.ERROR_NEW_PASSWORD_CONFIRM);
+      errors.put("message", ErrorMessage.ERROR_OLD_PASSWORD);
 
       throw new InvalidExceptionCustomize(errors);
     }
-
-    user.setPassword(
-      passwordEncoder.encode(
-        userChangePasswordRequestDTO.getNewPasswordConfirm()
-      )
-    );
 
     return userMapper.toProfileDTO(userRepository.save(user));
   }

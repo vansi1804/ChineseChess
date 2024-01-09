@@ -97,7 +97,7 @@ public class UserController {
 
   @Operation(
     summary = "User change password",
-    description = "Endpoint to change password by id",
+    description = "Endpoint to change password",
     responses = {
       @ApiResponse(
         responseCode = "200",
@@ -149,8 +149,7 @@ public class UserController {
       ),
     }
   )
-  @PreAuthorize("isAuthenticated()")
-  @PutMapping(value = "/{id}/change-password")
+  @PutMapping(value = "/{id}/lock")
   public ResponseEntity<UserProfileDTO> changePassword(
     @Parameter(
       name = "id",
@@ -168,7 +167,7 @@ public class UserController {
     ) @RequestBody @Valid UserChangePasswordRequestDTO userChangePasswordRequestDTO
   ) {
     return ResponseEntity.ok(
-      userService.changePassword(id, userChangePasswordRequestDTO)
+      userService.changePassword(userChangePasswordRequestDTO)
     );
   }
 
@@ -226,7 +225,6 @@ public class UserController {
       ),
     }
   )
-  @PreAuthorize(value = "hasAuthority('ADMIN')")
   @PutMapping(value = "/{id}/lock")
   public ResponseEntity<UserDTO> lockById(
     @Parameter(
@@ -294,7 +292,6 @@ public class UserController {
       ),
     }
   )
-  @PreAuthorize(value = "hasAuthority('ADMIN')")
   @PutMapping(value = "/{id}/active")
   public ResponseEntity<UserDTO> unlockById(
     @Parameter(

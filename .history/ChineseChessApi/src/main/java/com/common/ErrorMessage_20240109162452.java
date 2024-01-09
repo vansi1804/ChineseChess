@@ -92,6 +92,5 @@ public class ErrorMessage {
 
   public static final Object ERROR_OLD_PASSWORD = "Old password is incorrect";
 
-  public static final Object ERROR_NEW_PASSWORD_CONFIRM =
-    "New password confirm is incorrect";
+public static final Object ERROR_NEW_PASSWORD_CONFIRM = null;
 }
