@@ -28,8 +28,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity
       .status(HttpStatus.INTERNAL_SERVER_ERROR)
       .body(
-        new ErrorMessageResponseDTO(
-          HttpStatus.INTERNAL_SERVER_ERROR.value(),
+        new ErrorMessageResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR,
           ErrorMessage.INTERNAL_SERVER_ERROR,
           null,
           request.getServletPath()
@@ -45,8 +44,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity
       .status(HttpStatus.NOT_FOUND)
       .body(
-        new ErrorMessageResponseDTO(
-          HttpStatus.NOT_FOUND.value(),
+        new ErrorMessageResponseDTO(HttpStatus.NOT_FOUND,
           ex.getMessage(),
           ex.getErrors(),
           request.getServletPath()
@@ -62,8 +60,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity
       .status(HttpStatus.CONFLICT)
       .body(
-        new ErrorMessageResponseDTO(
-          HttpStatus.CONFLICT.value(),
+        new ErrorMessageResponseDTO(HttpStatus.CONFLICT,
           ex.getMessage(),
           ex.getErrors(),
           request.getServletPath()
@@ -89,7 +86,6 @@ public class GlobalExceptionHandler {
       .status(HttpStatus.BAD_REQUEST)
       .body(
         new ErrorMessageResponseDTO(
-          HttpStatus.BAD_REQUEST.value(),
           ErrorMessage.INVALID_DATA,
           errors,
           request.getServletPath()
@@ -106,7 +102,6 @@ public class GlobalExceptionHandler {
       .status(HttpStatus.BAD_REQUEST)
       .body(
         new ErrorMessageResponseDTO(
-          HttpStatus.BAD_REQUEST.value(),
           ex.getMessage(),
           ex.getErrors(),
           request.getServletPath()
@@ -142,7 +137,6 @@ public class GlobalExceptionHandler {
       .status(HttpStatus.FORBIDDEN)
       .body(
         new ErrorMessageResponseDTO(
-          HttpStatus.FORBIDDEN.value(),
           ErrorMessage.ACCESS_DENIED,
           error,
           request.getServletPath()
@@ -161,7 +155,6 @@ public class GlobalExceptionHandler {
       .status(HttpStatus.UNAUTHORIZED)
       .body(
         new ErrorMessageResponseDTO(
-          HttpStatus.UNAUTHORIZED.value(),
           ErrorMessage.UNAUTHORIZED,
           ErrorMessage.INCORRECT_DATA_LOGIN,
           request.getServletPath()
