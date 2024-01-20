@@ -89,7 +89,6 @@ public class GlobalExceptionHandler {
       .status(HttpStatus.BAD_REQUEST)
       .body(
         new ErrorMessageResponseDTO(
-          HttpStatus.BAD_REQUEST.value(),
           ErrorMessage.INVALID_DATA,
           errors,
           request.getServletPath()
@@ -106,7 +105,7 @@ public class GlobalExceptionHandler {
       .status(HttpStatus.BAD_REQUEST)
       .body(
         new ErrorMessageResponseDTO(
-          HttpStatus.BAD_REQUEST.value(),
+          HttpStatus.FORBIDDEN.value(),
           ex.getMessage(),
           ex.getErrors(),
           request.getServletPath()

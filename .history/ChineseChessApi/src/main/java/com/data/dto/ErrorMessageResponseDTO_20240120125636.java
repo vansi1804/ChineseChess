@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ErrorMessageResponseDTO implements Serializable {
-  private int code;
+  private 
 
   private String message;
 

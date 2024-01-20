@@ -89,7 +89,6 @@ public class GlobalExceptionHandler {
       .status(HttpStatus.BAD_REQUEST)
       .body(
         new ErrorMessageResponseDTO(
-          HttpStatus.BAD_REQUEST.value(),
           ErrorMessage.INVALID_DATA,
           errors,
           request.getServletPath()
@@ -106,7 +105,6 @@ public class GlobalExceptionHandler {
       .status(HttpStatus.BAD_REQUEST)
       .body(
         new ErrorMessageResponseDTO(
-          HttpStatus.BAD_REQUEST.value(),
           ex.getMessage(),
           ex.getErrors(),
           request.getServletPath()
@@ -161,7 +159,6 @@ public class GlobalExceptionHandler {
       .status(HttpStatus.UNAUTHORIZED)
       .body(
         new ErrorMessageResponseDTO(
-          HttpStatus.UNAUTHORIZED.value(),
           ErrorMessage.UNAUTHORIZED,
           ErrorMessage.INCORRECT_DATA_LOGIN,
           request.getServletPath()
