@@ -19,5 +19,5 @@ public interface MatchService {
   MatchDTO create(MatchCreationDTO matchCreationDTO);
 
   @Transactional
-  MatchDTO updateResult(long id, Boolean result);
+  MatchDTO updateResult(long id, boolean result);
 }

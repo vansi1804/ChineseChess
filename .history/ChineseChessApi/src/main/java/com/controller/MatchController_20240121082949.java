@@ -285,7 +285,7 @@ public class MatchController {
     ) @PathVariable long id,
     @Parameter(
       name = "result",
-      description = "Result of match ([win = true; draw = null; lost = false] matching for player 1)",
+      description = "Result of match ([win = true; draw = null; lost = false] match for player 1)",
       required = true,
       in = ParameterIn.PATH,
       schema = @Schema(type = "integer", format = "int32")

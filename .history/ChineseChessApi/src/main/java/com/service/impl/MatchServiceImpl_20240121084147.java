@@ -163,6 +163,32 @@ public class MatchServiceImpl implements MatchService {
       throw new InvalidExceptionCustomize(errors);
     }
 
+    if (matchCreationDTO.getMatchOthersInfoDTO().getEloBet() != null) {
+      if (
+        player1.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()
+      ) {
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("message", ErrorMessage.NOT_ENOUGH_ELO);
+        errors.put("player1Id", player1.getId());
+        errors.put("elo", player1.getElo());
+        errors.put("eloBet", player1.getElo());
+
+        throw new InvalidExceptionCustomize(errors);
+      }
+
+      if (
+        player2.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()
+      ) {
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("message", ErrorMessage.NOT_ENOUGH_ELO);
+        errors.put("player2Id", player2.getId());
+        errors.put("elo", player2.getElo());
+        errors.put("eloBet", player2.getElo());
+
+        throw new InvalidExceptionCustomize(errors);
+      }
+    }
+
     MatchDTO matchCreatedDTO = matchMapper.toDTO(
       matchRepository.save(matchMapper.toEntity(matchCreationDTO))
     );

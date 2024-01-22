@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -274,7 +273,7 @@ public class MatchController {
       ),
     }
   )
-  @PutMapping(value = "/{id}")
+  @PutMapping(value = "/{id}/{result}")
   public ResponseEntity<MatchDTO> updateResult(
     @Parameter(
       name = "id",
@@ -284,12 +283,12 @@ public class MatchController {
       schema = @Schema(type = "integer", format = "int64")
     ) @PathVariable long id,
     @Parameter(
-      name = "result",
-      description = "Result of match ([win = true; draw = null; lost = false] matching for player 1)",
+      name = "result (win = 0)",
+      description = "Id of match to retrieve update result",
       required = true,
       in = ParameterIn.PATH,
       schema = @Schema(type = "integer", format = "int32")
-    ) @RequestParam(name = "result", required = false) Boolean result
+    ) @PathVariable int result
   ) {
     return ResponseEntity.ok(matchService.updateResult(id, result));
   }

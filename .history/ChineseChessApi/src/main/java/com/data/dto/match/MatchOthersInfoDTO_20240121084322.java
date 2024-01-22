@@ -4,8 +4,6 @@ import com.common.Default;
 import com.common.ErrorMessage;
 import java.io.Serializable;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +28,6 @@ public class MatchOthersInfoDTO implements Serializable {
   )
   private Integer cumulativeTime;
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
   @Min(value = Default.Game.BET_ELO, message = ErrorMessage.BET_ELO)
   private Integer eloBet;
 }

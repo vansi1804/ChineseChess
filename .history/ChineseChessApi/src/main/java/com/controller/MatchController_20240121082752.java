@@ -285,11 +285,11 @@ public class MatchController {
     ) @PathVariable long id,
     @Parameter(
       name = "result",
-      description = "Result of match ([win = true; draw = null; lost = false] matching for player 1)",
+      description = "Result of match ([win = 1; draw = 0; lost = -1] match for player 1)",
       required = true,
       in = ParameterIn.PATH,
       schema = @Schema(type = "integer", format = "int32")
-    ) @RequestParam(name = "result", required = false) Boolean result
+    ) @RequestParam("result") int result
   ) {
     return ResponseEntity.ok(matchService.updateResult(id, result));
   }

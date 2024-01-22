@@ -12,7 +12,12 @@ import javax.validation.Payload;
 
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = { PlayBoardDTOValidatorIml.class })
+@Constraint(
+  validatedBy = {
+    PlayBoardDTOValidatorIml.class,
+    MatchOthersInfoCreationDTOValidatorIml.class,
+  }
+)
 public @interface Validator {
   String message() default ErrorMessage.INVALID_DATA;
 
