@@ -4,8 +4,6 @@ import com.common.Default;
 import com.common.ErrorMessage;
 import java.io.Serializable;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,14 +21,12 @@ public class MatchOthersInfoDTO implements Serializable {
   @Min(value = Default.Game.MOVING_TIME, message = ErrorMessage.MOVING_TIME)
   private Integer movingTime;
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
   @Min(
     value = Default.Game.CUMULATIVE_TIME,
     message = ErrorMessage.CUMULATIVE_TIME
   )
   private Integer cumulativeTime;
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
   @Min(value = Default.Game.BET_ELO, message = ErrorMessage.BET_ELO)
   private Integer eloBet;
 }

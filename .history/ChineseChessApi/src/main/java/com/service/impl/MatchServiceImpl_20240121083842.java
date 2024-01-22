@@ -163,6 +163,32 @@ public class MatchServiceImpl implements MatchService {
       throw new InvalidExceptionCustomize(errors);
     }
 
+    if (matchCreationDTO.getMatchOthersInfoDTO().getEloBet() != null) {
+      if (
+        player1.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()
+      ) {
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("message", ErrorMessage.NOT_ENOUGH_ELO);
+        errors.put("player1Id", player1.getId());
+        errors.put("elo", player1.getElo());
+        errors.put("eloBet", player1.getElo());
+
+        throw new InvalidExceptionCustomize(errors);
+      }
+
+      if (
+        player2.getElo() < matchCreationDTO.getMatchOthersInfoDTO().getEloBet()
+      ) {
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("message", ErrorMessage.NOT_ENOUGH_ELO);
+        errors.put("player2Id", player2.getId());
+        errors.put("elo", player2.getElo());
+        errors.put("eloBet", player2.getElo());
+
+        throw new InvalidExceptionCustomize(errors);
+      }
+    }
+
     MatchDTO matchCreatedDTO = matchMapper.toDTO(
       matchRepository.save(matchMapper.toEntity(matchCreationDTO))
     );
@@ -196,44 +222,56 @@ public class MatchServiceImpl implements MatchService {
 
     PlayerProfileDTO player1ProfileDTO;
     PlayerProfileDTO player2ProfileDTO;
-
-    if (result == null) {
+    
+    if(result == null){
       oldMatch.setResult(EMatchResult.DRAW.getValue());
-      player1ProfileDTO = playerService.findById(oldMatch.getPlayer1().getId());
-      player2ProfileDTO = playerService.findById(oldMatch.getPlayer2().getId());
-    } else {
-      int eloWin = (int) (
-        Default.Game.ELO_WIN_RECEIVE_PERCENT * oldMatch.getEloBet()
-      );
-      int eloLose = oldMatch.getEloBet();
-
-      if (result) {
-        oldMatch.setResult(EMatchResult.WIN.getValue());
-        player1ProfileDTO =
-          playerService.update(
-            oldMatch.getPlayer1().getId(),
-            oldMatch.getPlayer1().getElo() + eloWin
-          );
-
-        player2ProfileDTO =
-          playerService.update(
-            oldMatch.getPlayer2().getId(),
-            oldMatch.getPlayer2().getElo() - eloLose
-          );
-      } else {
-        player1ProfileDTO =
-          playerService.update(
-            oldMatch.getPlayer1().getId(),
-            oldMatch.getPlayer1().getElo() - eloLose
-          );
-
-        player2ProfileDTO =
-          playerService.update(
-            oldMatch.getPlayer2().getId(),
-            oldMatch.getPlayer2().getElo() + eloWin
-          );
-      }
+      
     }
+
+    // oldMatch.setResult(
+    //   result == null
+    //     ? EMatchResult.DRAW.getValue()
+    //     : (result ? EMatchResult.WIN.getValue() : EMatchResult.LOSE.getValue())
+    // );
+
+    //   int eloWin = (int) (
+    //     Default.Game.ELO_WIN_RECEIVE_PERCENT * oldMatch.getEloBet()
+    //   );
+    //   int eloLose = oldMatch.getEloBet();
+
+    //   if (result == null) {
+    //     oldMatch.setResult(EMatchResult.WIN.getValue());
+        
+    //     player1ProfileDTO =
+    //       playerService.update(
+    //         oldMatch.getPlayer1().getId(),
+    //         oldMatch.getPlayer1().getElo() + eloWin
+    //       );
+
+    //     player2ProfileDTO =
+    //       playerService.update(
+    //         oldMatch.getPlayer2().getId(),
+    //         oldMatch.getPlayer2().getElo() - eloLose
+    //       );
+    //   } else if (result) {
+    //     oldMatch.setResult(EMatchResult.LOST.getValue());
+    //     player1ProfileDTO =
+    //       playerService.update(
+    //         oldMatch.getPlayer1().getId(),
+    //         oldMatch.getPlayer1().getElo() - eloLose
+    //       );
+
+    //     player2ProfileDTO =
+    //       playerService.update(
+    //         oldMatch.getPlayer2().getId(),
+    //         oldMatch.getPlayer2().getElo() + eloWin
+    //       );
+    //   } else {
+        
+    // } else {
+    //   player1ProfileDTO = playerService.findById(oldMatch.getPlayer1().getId());
+    //   player2ProfileDTO = playerService.findById(oldMatch.getPlayer2().getId());
+    // }
 
     MatchDTO updatedMatchDTO = matchMapper.toDTO(
       matchRepository.save(oldMatch)

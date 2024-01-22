@@ -1,6 +1,7 @@
 package com.config.dtoValidation;
 
 import com.common.ErrorMessage;
+import com.config.dtoValidation.impl.MatchOthersInfoCreationDTOValidatorIml;
 import com.config.dtoValidation.impl.PlayBoardDTOValidatorIml;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,7 +13,12 @@ import javax.validation.Payload;
 
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = { PlayBoardDTOValidatorIml.class })
+@Constraint(
+  validatedBy = {
+    PlayBoardDTOValidatorIml.class,
+    MatchOthersInfoCreationDTOValidatorIml.class,
+  }
+)
 public @interface Validator {
   String message() default ErrorMessage.INVALID_DATA;
 
