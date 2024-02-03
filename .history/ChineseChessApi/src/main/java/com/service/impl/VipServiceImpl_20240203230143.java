@@ -4,6 +4,7 @@ import com.config.exception.ConflictExceptionCustomize;
 import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.dto.VipDTO;
 import com.data.entity.Vip;
+import com.data.entity.Vip;
 import com.data.mapper.VipMapper;
 import com.data.repository.VipRepository;
 import com.service.VipService;
@@ -93,15 +94,15 @@ public class VipServiceImpl implements VipService {
       );
     }
 
-    Vip updateVip = vipMapper.toEntity(vipDTO);
-    updateVip.setId(existingVip.getId());
+    Vip updateVip = rankMapper.toEntity(rankDTO);
+    updateVip.setId(id);
     updateVip.setCreatedByUserId(existingVip.getCreatedByUserId());
     updateVip.setCreatedDate(existingVip.getCreatedDate());
 
-    Vip updatedVip = vipRepository.save(updateVip);
-    vipRepository.flush();
+    Vip updatedVip = rankRepository.save(updateVip);
+    rankRepository.flush();
 
-    return vipMapper.toDTO(updatedVip);
+    return rankMapper.toDTO(updatedVip);
   }
 
   @Override

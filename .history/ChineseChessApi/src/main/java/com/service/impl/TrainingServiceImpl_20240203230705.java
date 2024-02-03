@@ -114,10 +114,7 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     if (
-      Objects.equals(
-        trainingDTO.getParentTrainingId(),
-        existingTraining.getId()
-      )
+      Objects.equals(trainingDTO.getParentTrainingId(), existingTraining.getId())
     ) {
       Map<String, Object> errors = new HashMap<>();
       errors.put("id", existingTraining.getId());
@@ -141,13 +138,8 @@ public class TrainingServiceImpl implements TrainingService {
 
     Training updateTraining = trainingMapper.toEntity(trainingDTO);
     updateTraining.setId(existingTraining.getId());
-    updateTraining.setCreatedByUserId(existingTraining.getCreatedByUserId());
-    updateTraining.setCreatedDate(existingTraining.getCreatedDate());
 
-    Training updatedTraining = trainingRepository.save(updateTraining);
-    trainingRepository.flush();
-
-    return trainingMapper.toDTO(updatedTraining);
+    return trainingMapper.toDTO(trainingRepository.save(updateTraining));
   }
 
   @Override

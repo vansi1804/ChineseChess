@@ -72,7 +72,7 @@ public class RankServiceImpl implements RankService {
 
   @Override
   public RankDTO update(int id, RankDTO rankDTO) {
-    Rank existingRank = rankRepository
+    Rank oldRank = rankRepository
       .findById(id)
       .orElseThrow(() ->
         new ResourceNotFoundExceptionCustomize(
@@ -80,22 +80,27 @@ public class RankServiceImpl implements RankService {
         )
       );
 
+    if (rankRepository.existsByIdNotAndName(id, rankDTO.getName())) {
+      throw new ConflictExceptionCustomize(
+        Collections.singletonMap("name", rankDTO.getName())
+      );
+    }
+
     if (
-      rankRepository.existsByIdNotAndName(id, rankDTO.getName()) ||
       rankRepository.existsByIdNotAndEloMilestones(
         id,
         rankDTO.getEloMilestones()
       )
     ) {
       throw new ConflictExceptionCustomize(
-        Collections.singletonMap("conflict", "Name or eloMilestones conflict")
+        Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones())
       );
     }
 
     Rank updateRank = rankMapper.toEntity(rankDTO);
-    updateRank.setId(id);
-    updateRank.setCreatedByUserId(existingRank.getCreatedByUserId());
-    updateRank.setCreatedDate(existingRank.getCreatedDate());
+    updateRank.setId(oldRank.getId());
+    updateRank.setCreatedByUserId(oldRank.getCreatedByUserId());
+    updateRank.setCreatedDate(oldRank.getCreatedByUserId());
 
     Rank updatedRank = rankRepository.save(updateRank);
     rankRepository.flush();

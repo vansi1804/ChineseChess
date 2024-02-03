@@ -147,7 +147,7 @@ public class TrainingServiceImpl implements TrainingService {
     Training updatedTraining = trainingRepository.save(updateTraining);
     trainingRepository.flush();
 
-    return trainingMapper.toDTO(updatedTraining);
+    return trainingMapper.toDTO(trainingRepository.save(updateTraining));
   }
 
   @Override

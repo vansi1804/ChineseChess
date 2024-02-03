@@ -89,7 +89,7 @@ public class TrainingServiceImpl implements TrainingService {
 
   @Override
   public TrainingDTO update(long id, TrainingDTO trainingDTO) {
-    Training existingTraining = trainingRepository
+    Training oldTraining = trainingRepository
       .findById(id)
       .orElseThrow(() ->
         new ResourceNotFoundExceptionCustomize(
@@ -97,7 +97,7 @@ public class TrainingServiceImpl implements TrainingService {
         )
       );
 
-    if (!userService.isCurrentUser(existingTraining.getCreatedByUserId())) {
+    if (!userService.isCurrentUser(oldTraining.getCreatedByUserId())) {
       throw new AccessDeniedException(null);
     }
 
@@ -114,13 +114,10 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     if (
-      Objects.equals(
-        trainingDTO.getParentTrainingId(),
-        existingTraining.getId()
-      )
+      Objects.equals(trainingDTO.getParentTrainingId(), oldTraining.getId())
     ) {
       Map<String, Object> errors = new HashMap<>();
-      errors.put("id", existingTraining.getId());
+      errors.put("id", oldTraining.getId());
       errors.put("parentTrainingId", trainingDTO.getParentTrainingId());
 
       throw new InvalidExceptionCustomize(errors);
@@ -140,14 +137,9 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     Training updateTraining = trainingMapper.toEntity(trainingDTO);
-    updateTraining.setId(existingTraining.getId());
-    updateTraining.setCreatedByUserId(existingTraining.getCreatedByUserId());
-    updateTraining.setCreatedDate(existingTraining.getCreatedDate());
+    updateTraining.setId(oldTraining.getId());
 
-    Training updatedTraining = trainingRepository.save(updateTraining);
-    trainingRepository.flush();
-
-    return trainingMapper.toDTO(updatedTraining);
+    return trainingMapper.toDTO(trainingRepository.save(updateTraining));
   }
 
   @Override
