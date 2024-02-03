@@ -157,11 +157,11 @@ public class UserServiceImpl implements UserService {
     updateUser.setStatus(existingUser.getStatus());
     updateUser.setCreatedByUserId(existingUser.getCreatedByUserId());
     updateUser.setCreatedDate(existingUser.getCreatedDate());
-
+    
     User updatedUser = userRepository.save(updateUser);
-    userRepository.flush();
+    
 
-    return userMapper.toProfileDTO(updatedUser);
+    return userMapper.toProfileDTO();
   }
 
   @Override

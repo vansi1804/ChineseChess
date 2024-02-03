@@ -2,11 +2,10 @@ package com.service.impl;
 
 import com.config.exception.ConflictExceptionCustomize;
 import com.config.exception.ResourceNotFoundExceptionCustomize;
-import com.data.dto.RankDTO;
-import com.data.entity.Rank;
-import com.data.mapper.RankMapper;
-import com.data.repository.RankRepository;
-import com.service.RankService;
+import com.data.dto.VipDTO;
+import com.data.mapper.VipMapper;
+import com.data.repository.VipRepository;
+import com.service.VipService;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,25 +14,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RankServiceImpl implements RankService {
+public class VipServiceImpl implements VipService {
 
-  private final RankRepository rankRepository;
-  private final RankMapper rankMapper;
+  private final VipRepository vipRepository;
+  private final VipMapper vipMapper;
 
   @Override
-  public List<RankDTO> findAll() {
-    return rankRepository
+  public List<VipDTO> findAll() {
+    return vipRepository
       .findAll()
       .stream()
-      .map(r -> rankMapper.toDTO(r))
+      .map(r -> vipMapper.toDTO(r))
       .collect(Collectors.toList());
   }
 
   @Override
-  public RankDTO findById(int id) {
-    return rankRepository
+  public VipDTO findById(int id) {
+    return vipRepository
       .findById(id)
-      .map(r -> rankMapper.toDTO(r))
+      .map(r -> vipMapper.toDTO(r))
       .orElseThrow(() ->
         new ResourceNotFoundExceptionCustomize(
           Collections.singletonMap("id", id)
@@ -42,53 +41,54 @@ public class RankServiceImpl implements RankService {
   }
 
   @Override
-  public RankDTO findByName(String name) {
-    return rankRepository
-      .findByName(name)
-      .map(r -> rankMapper.toDTO(r))
-      .orElseThrow(() ->
-        new ResourceNotFoundExceptionCustomize(
-          Collections.singletonMap("name", name)
-        )
-      );
-  }
-
-  @Override
-  public RankDTO create(RankDTO rankDTO) {
-    if (rankRepository.existsByName(rankDTO.getName())) {
+  public VipDTO create(VipDTO vipDTO) {
+    if (vipRepository.existsByName(vipDTO.getName())) {
       throw new ConflictExceptionCustomize(
-        Collections.singletonMap("name", rankDTO.getName())
+        Collections.singletonMap("name", vipDTO.getName())
       );
     }
-
-    if (rankRepository.existsByEloMilestones(rankDTO.getEloMilestones())) {
-      throw new ConflictExceptionCustomize(
-        Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones())
-      );
-    }
-
-    return rankMapper.toDTO(rankRepository.save(rankMapper.toEntity(rankDTO)));
-  }
-
-  @Override
-  public RankDTO update(int id, RankDTO rankDTO) {
-    Rank existingRank = rankRepository
-      .findById(id)
-      .orElseThrow(() ->
-        new ResourceNotFoundExceptionCustomize(
-          Collections.singletonMap("id", id)
-        )
-      );
 
     if (
-      rankRepository.existsByIdNotAndName(id, rankDTO.getName()) ||
-      rankRepository.existsByIdNotAndEloMilestones(
+      vipRepository.existsByDepositMilestones(vipDTO.getDepositMilestones())
+    ) {
+      throw new ConflictExceptionCustomize(
+        Collections.singletonMap(
+          "depositMilestones",
+          vipDTO.getDepositMilestones()
+        )
+      );
+    }
+
+    return vipMapper.toDTO(vipRepository.save(vipMapper.toEntity(vipDTO)));
+  }
+
+  @Override
+  public VipDTO update(int id, VipDTO vipDTO) {
+    Vip existingVip = vipRepository
+      .findById(id)
+      .orElseThrow(() ->
+        new ResourceNotFoundExceptionCustomize(
+          Collections.singletonMap("id", id)
+        )
+      );
+
+    if (vipRepository.existsByIdNotAndName(id, vipDTO.getName())) {
+      throw new ConflictExceptionCustomize(
+        Collections.singletonMap("name", vipDTO.getName())
+      );
+    }
+
+    if (
+      vipRepository.existsByIdNotAndDepositMilestones(
         id,
-        rankDTO.getEloMilestones()
+        vipDTO.getDepositMilestones()
       )
     ) {
       throw new ConflictExceptionCustomize(
-        Collections.singletonMap("conflict", "Name or eloMilestones conflict")
+        Collections.singletonMap(
+          "depositMilestones",
+          vipDTO.getDepositMilestones()
+        )
       );
     }
 
@@ -105,8 +105,8 @@ public class RankServiceImpl implements RankService {
 
   @Override
   public boolean delete(int id) {
-    rankRepository.delete(
-      rankRepository
+    vipRepository.delete(
+      vipRepository
         .findById(id)
         .orElseThrow(() ->
           new ResourceNotFoundExceptionCustomize(
