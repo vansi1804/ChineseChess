@@ -64,12 +64,12 @@ public class MoveServiceImpl implements MoveService {
 
   @Override
   public Map<Long, MoveHistoryDTO> findAllByTrainingId(long trainingId) {
-    if (!trainingRepository.existsById(trainingId)) {
+    if (!matchRepository.existsById(trainingId)) {
       throw new ResourceNotFoundExceptionCustomize(
         Collections.singletonMap("trainingId", trainingId)
       );
     }
-    return build(moveHistoryRepository.findAllByTraining_Id(trainingId));
+    return build(moveHistoryRepository.findAllByMatch_Id(trainingId));
   }
 
   private Map<Long, MoveHistoryDTO> build(List<MoveHistory> moveHistories) {

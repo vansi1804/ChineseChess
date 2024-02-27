@@ -52,26 +52,6 @@ public class MoveServiceImpl implements MoveService {
   private final PieceService pieceService;
   private final MoveRuleService moveRuleService;
 
-  @Override
-  public Map<Long, MoveHistoryDTO> findAllByMatchId(long matchId) {
-    if (!matchRepository.existsById(matchId)) {
-      throw new ResourceNotFoundExceptionCustomize(
-        Collections.singletonMap("matchId", matchId)
-      );
-    }
-    return build(moveHistoryRepository.findAllByMatch_Id(matchId));
-  }
-
-  @Override
-  public Map<Long, MoveHistoryDTO> findAllByTrainingId(long trainingId) {
-    if (!trainingRepository.existsById(trainingId)) {
-      throw new ResourceNotFoundExceptionCustomize(
-        Collections.singletonMap("trainingId", trainingId)
-      );
-    }
-    return build(moveHistoryRepository.findAllByTraining_Id(trainingId));
-  }
-
   private Map<Long, MoveHistoryDTO> build(List<MoveHistory> moveHistories) {
     AtomicReference<PlayBoardDTO> playBoardDTO = new AtomicReference<>(
       playBoardService.generate()
@@ -742,4 +722,5 @@ public class MoveServiceImpl implements MoveService {
       return beta;
     }
   }
+
 }

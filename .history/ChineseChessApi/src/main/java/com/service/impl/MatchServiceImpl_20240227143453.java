@@ -14,6 +14,7 @@ import com.data.entity.Match;
 import com.data.entity.Player;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
+import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PlayerRepository;
 import com.service.MatchService;
 import com.service.MoveService;
@@ -34,6 +35,7 @@ public class MatchServiceImpl implements MatchService {
   private final MatchMapper matchMapper;
   private final PlayerRepository playerRepository;
   private final PlayerService playerService;
+  private final MoveHistoryRepository moveHistoryRepository;
   private final MoveService moveService;
 
   @Override
@@ -117,7 +119,7 @@ public class MatchServiceImpl implements MatchService {
         )
       );
 
-    Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.findAllByMatchId(id);
+    Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.findAllByMatchId(id)
 
     matchDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
     matchDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
