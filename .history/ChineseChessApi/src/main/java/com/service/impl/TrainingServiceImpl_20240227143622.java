@@ -6,6 +6,7 @@ import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.dto.move.MoveHistoryDTO;
 import com.data.dto.training.TrainingDTO;
 import com.data.dto.training.TrainingDetailDTO;
+import com.data.entity.MoveHistory;
 import com.data.entity.Training;
 import com.data.mapper.TrainingMapper;
 import com.data.repository.MoveHistoryRepository;
@@ -29,6 +30,7 @@ public class TrainingServiceImpl implements TrainingService {
 
   private final TrainingMapper trainingMapper;
   private final TrainingRepository trainingRepository;
+  private final MoveHistoryRepository moveHistoryRepository;
   private final MoveService moveService;
   private final UserService userService;
 
@@ -178,10 +180,8 @@ public class TrainingServiceImpl implements TrainingService {
         )
       );
 
-    Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.findAllByTrainingId(
-      id
-    );
-
+    Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.findAllByTrainingId(id);
+    
     trainingDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
     trainingDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
 

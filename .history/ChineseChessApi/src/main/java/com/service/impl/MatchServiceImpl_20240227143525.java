@@ -14,6 +14,7 @@ import com.data.entity.Match;
 import com.data.entity.Player;
 import com.data.mapper.MatchMapper;
 import com.data.repository.MatchRepository;
+import com.data.repository.MoveHistoryRepository;
 import com.data.repository.PlayerRepository;
 import com.service.MatchService;
 import com.service.MoveService;

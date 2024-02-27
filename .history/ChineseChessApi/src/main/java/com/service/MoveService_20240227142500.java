@@ -8,12 +8,13 @@ import com.data.dto.move.availableMove.bestAvailableMove.BestAvailableMoveReques
 import com.data.dto.move.availableMove.bestAvailableMove.BestAvailableMoveResponseDTO;
 import com.data.dto.move.matchMove.MatchMoveCreationDTO;
 import com.data.dto.move.trainingMove.TrainingMoveCreationDTO;
+import com.data.entity.MoveHistory;
 import java.util.List;
 import java.util.Map;
 
 public interface MoveService {
+  Map<Long, MoveHistoryDTO> build(List<MoveHistory> moveHistories);
   Map<Long, MoveHistoryDTO> findAllByMatchId(long matchId);
-  
   Map<Long, MoveHistoryDTO> findAllByTrainingId(long trainingId);
 
   List<int[]> findAllAvailable(AvailableMoveRequestDTO availableMoveRequestDTO);

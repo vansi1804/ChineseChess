@@ -178,10 +178,8 @@ public class TrainingServiceImpl implements TrainingService {
         )
       );
 
-    Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.findAllByTrainingId(
-      id
-    );
-
+    Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.findAllByTrainingId(id);
+    
     trainingDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
     trainingDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
 

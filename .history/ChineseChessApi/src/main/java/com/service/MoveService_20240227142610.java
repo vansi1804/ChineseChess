@@ -13,7 +13,6 @@ import java.util.Map;
 
 public interface MoveService {
   Map<Long, MoveHistoryDTO> findAllByMatchId(long matchId);
-  
   Map<Long, MoveHistoryDTO> findAllByTrainingId(long trainingId);
 
   List<int[]> findAllAvailable(AvailableMoveRequestDTO availableMoveRequestDTO);
