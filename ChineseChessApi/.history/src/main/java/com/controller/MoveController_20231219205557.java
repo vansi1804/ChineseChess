@@ -62,7 +62,7 @@ public class MoveController {
 
   @Operation(
     summary = "Create a new move",
-    description = "Creates a new move based on the provided details",
+    description = "Create a new move based on the provided details",
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
       description = "Request body for creating a new move",
       required = true,
@@ -87,7 +87,7 @@ public class MoveController {
 
   @Operation(
     summary = "Create a move for a match",
-    description = "Creates a move for a match based on the provided details",
+    description = "Create a move for a match based on the provided details",
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
       description = "Request body for creating a move for a match",
       required = true,
@@ -113,7 +113,7 @@ public class MoveController {
 
   @Operation(
     summary = "Create a move for training",
-    description = "Creates a move for training based on the provided details",
+    description = "Create a move for training based on the provided details",
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
       description = "Request body for creating a move for training",
       required = true,

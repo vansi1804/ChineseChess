@@ -63,7 +63,7 @@ public class MatchController {
 
   @Operation(
     summary = "Create a new match",
-    description = "Creates a new match",
+    description = "Create a new match",
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
       description = "Match data for creating a new match",
       required = true,

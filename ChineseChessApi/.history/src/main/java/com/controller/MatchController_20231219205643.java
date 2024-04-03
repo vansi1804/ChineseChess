@@ -9,10 +9,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +61,7 @@ public class MatchController {
 
   @Operation(
     summary = "Create a new match",
-    description = "Creates a new match",
+    description = "Create a new match",
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
       description = "Match data for creating a new match",
       required = true,
