@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MatchController {
 
-  private MatchService matchService;
+  private final MatchService matchService;
 
   @Operation(
     summary = "Get all by player's id",
@@ -69,7 +69,7 @@ public class MatchController {
   @PutMapping(value = "/{id}")
   public ResponseEntity<MatchDTO> updateResult(
     @PathVariable long id,
-    @RequestParam Boolean result
+    @RequestParam(required = false) Boolean result
   ) {
     return ResponseEntity.ok(matchService.updateResult(id, result));
   }

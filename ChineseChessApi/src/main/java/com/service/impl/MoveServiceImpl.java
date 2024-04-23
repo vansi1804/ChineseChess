@@ -21,6 +21,7 @@ import com.data.mapper.MoveHistoryMapper;
 import com.data.repository.MatchRepository;
 import com.data.repository.MoveHistoryRepository;
 import com.data.repository.TrainingRepository;
+import com.service.MatchService;
 import com.service.MoveDescriptionService;
 import com.service.MoveRuleService;
 import com.service.MoveService;
@@ -47,6 +48,7 @@ public class MoveServiceImpl implements MoveService {
   private final MoveHistoryMapper moveHistoryMapper;
   private final TrainingRepository trainingRepository;
   private final MatchRepository matchRepository;
+  private final MatchService matchService;
   private final PlayBoardService playBoardService;
   private final MoveDescriptionService moveDescriptionService;
   private final PieceService pieceService;
@@ -130,7 +132,7 @@ public class MoveServiceImpl implements MoveService {
         );
 
     if (isAvailableMove) {
-      return this.buildMoveCreationResponse(
+      return this.makeMove(
           moveCreationDTO.getPlayBoardDTO(),
           movingPieceDTO,
           moveCreationDTO.getToCol(),
@@ -211,7 +213,7 @@ public class MoveServiceImpl implements MoveService {
       moveHistory.setTurn(newTurn);
       moveHistoryRepository.save(moveHistory);
 
-      return this.buildMoveCreationResponse(
+      return this.makeMove(
           playBoardDTO,
           movingPieceDTO,
           trainingMoveCreationDTO.getToCol(),
@@ -329,12 +331,26 @@ public class MoveServiceImpl implements MoveService {
 
       moveHistoryRepository.save(moveHistory);
 
-      return this.buildMoveCreationResponse(
-          playBoardDTO,
-          movingPieceDTO,
-          matchMoveCreationDTO.getToCol(),
-          matchMoveCreationDTO.getToRow()
+      MoveDTO moveResponseDTO =
+        this.makeMove(
+            playBoardDTO,
+            movingPieceDTO,
+            matchMoveCreationDTO.getToCol(),
+            matchMoveCreationDTO.getToRow()
+          );
+
+      /*
+       * Update result for the match when end game
+       * Set result = true (win) if the player1 is moving else set result = false (lose)
+       */
+      if (moveResponseDTO.isCheckmateState()) {
+        matchService.updateResult(
+          match.getId(),
+          match.getPlayer1().getId() == matchMoveCreationDTO.getPlayerId()
         );
+      }
+
+      return moveResponseDTO;
     } else {
       Map<String, Object> errors = new HashMap<>();
       errors.put("matchId", match.getId());
@@ -358,7 +374,7 @@ public class MoveServiceImpl implements MoveService {
     );
   }
 
-  private MoveDTO buildMoveCreationResponse(
+  private MoveDTO makeMove(
     PlayBoardDTO playBoardDTO,
     PieceDTO movingPieceDTO,
     int toCol,
@@ -385,13 +401,14 @@ public class MoveServiceImpl implements MoveService {
       playBoardDTO,
       !movingPieceDTO.isRed()
     );
-    PieceDTO checkedGeneralPieceDTO = playBoardService.isGeneralBeingChecked(
-        playBoardDTO,
-        opponentGeneralPieceDTO
-      )
-      ? opponentGeneralPieceDTO
-      : null;
-    moveDTO.setCheckedGeneralPieceDTO(checkedGeneralPieceDTO);
+    moveDTO.setCheckedGeneralPieceDTO(
+      playBoardService.isGeneralBeingChecked(
+          playBoardDTO,
+          opponentGeneralPieceDTO
+        )
+        ? opponentGeneralPieceDTO
+        : null
+    );
 
     moveDTO.setCheckmateState(
       this.isCheckmateState(updatedPlayBoardDTO, movingPieceDTO.isRed())
@@ -444,7 +461,7 @@ public class MoveServiceImpl implements MoveService {
         );
 
         MoveDTO moveDTO =
-          this.buildMoveCreationResponse(
+          this.makeMove(
               playBoardDTO.get(),
               movingPieceDTO,
               mh.getToCol(),
@@ -483,13 +500,15 @@ public class MoveServiceImpl implements MoveService {
     int toRow = playBoardDTO.getState()[0].length - 1;
 
     return IntStream
-        .rangeClosed(fromCol, toCol)
-        .boxed()
-        .flatMap(col -> IntStream
-            .rangeClosed(fromRow, toRow)
-            .filter(row -> this.isAvailableMove(playBoardDTO, pieceDTO, col, row))
-            .mapToObj(row -> new int[] { col, row }))
-        .collect(Collectors.toList());
+      .rangeClosed(fromCol, toCol)
+      .boxed()
+      .flatMap(col ->
+        IntStream
+          .rangeClosed(fromRow, toRow)
+          .filter(row -> this.isAvailableMove(playBoardDTO, pieceDTO, col, row))
+          .mapToObj(row -> new int[] { col, row })
+      )
+      .collect(Collectors.toList());
   }
 
   // Checkmate state is the state that no any available moves found

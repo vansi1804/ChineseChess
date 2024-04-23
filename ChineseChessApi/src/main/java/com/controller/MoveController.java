@@ -1,7 +1,6 @@
 package com.controller;
 
 import com.common.ApiUrl;
-import com.data.dto.ErrorMessageResponseDTO;
 import com.data.dto.move.MoveCreationDTO;
 import com.data.dto.move.MoveDTO;
 import com.data.dto.move.availableMove.AvailableMoveRequestDTO;
@@ -11,9 +10,6 @@ import com.data.dto.move.matchMove.MatchMoveCreationDTO;
 import com.data.dto.move.trainingMove.TrainingMoveCreationDTO;
 import com.service.MoveService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Map;

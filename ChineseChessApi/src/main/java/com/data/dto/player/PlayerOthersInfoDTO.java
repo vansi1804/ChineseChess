@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayerOthersInfoDTO {
 
-  private RankDTO rankDTO;
-
   private int elo;
 
-  private long win;
+  private RankDTO rankDTO;
 
-  private long draw;
+  private int win;
 
-  private long lose;
+  private int draw;
+
+  private int lose;
 }

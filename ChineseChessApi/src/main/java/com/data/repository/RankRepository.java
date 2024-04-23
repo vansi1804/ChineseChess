@@ -31,13 +31,4 @@ public interface RankRepository extends JpaRepository<Rank, Integer> {
   )
   Optional<Rank> findByElo(@Param("elo") int elo);
 
-  @Query(
-    "SELECT r" +
-    " FROM Rank r" +
-    " WHERE r.eloMilestones <= :elo" +
-    " ORDER BY r.eloMilestones DESC"
-  )
-  Optional<Rank> findFirstByEloMilestonesLessThanEqualOrderByEloMilestonesDesc(
-    @Param("elo") int elo
-  );
 }
