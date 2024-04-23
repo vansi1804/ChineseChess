@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import com.config.exception.ConflictExceptionCustomize;
+import com.config.exception.InternalServerErrorExceptionCustomize;
 import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.dto.RankDTO;
 import com.data.entity.Rank;
@@ -51,6 +52,30 @@ public class RankServiceImpl implements RankService {
           Collections.singletonMap("name", name)
         )
       );
+  }
+
+  @Override
+  public RankDTO findByPlayerElo(int elo) {
+    return rankMapper.toDTO(
+      rankRepository
+        .findFirstByOrderByEloMilestonesAsc()
+        .orElseThrow(() ->
+          new ResourceNotFoundExceptionCustomize(
+            Collections.singletonMap("elo", elo)
+          )
+        )
+    );
+  }
+
+  @Override
+  public RankDTO findDefault() {
+    return rankMapper.toDTO(
+      rankRepository
+        .findFirstByOrderByEloMilestonesAsc()
+        .orElseThrow(() ->
+          new InternalServerErrorExceptionCustomize("No rank found")
+        )
+    );
   }
 
   @Override

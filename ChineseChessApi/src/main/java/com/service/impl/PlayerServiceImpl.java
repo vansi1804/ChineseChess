@@ -1,23 +1,21 @@
 package com.service.impl;
 
+import com.common.Default;
+import com.common.enumeration.EMatchResult;
 import com.common.enumeration.ERole;
-import com.config.exception.InternalServerErrorExceptionCustomize;
 import com.config.exception.ResourceNotFoundExceptionCustomize;
 import com.data.dto.RankDTO;
 import com.data.dto.player.PlayerCreationDTO;
 import com.data.dto.player.PlayerDTO;
-import com.data.dto.player.PlayerOthersInfoDTO;
 import com.data.dto.player.PlayerProfileDTO;
 import com.data.dto.user.UserDTO;
 import com.data.dto.user.UserProfileDTO;
 import com.data.entity.Player;
 import com.data.entity.Rank;
 import com.data.mapper.PlayerMapper;
-import com.data.mapper.RankMapper;
-import com.data.repository.MatchRepository;
 import com.data.repository.PlayerRepository;
-import com.data.repository.RankRepository;
 import com.service.PlayerService;
+import com.service.RankService;
 import com.service.UserService;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
@@ -34,35 +32,23 @@ public class PlayerServiceImpl implements PlayerService {
   private final PlayerRepository playerRepository;
   private final PlayerMapper playerMapper;
   private final UserService userService;
-  private final RankRepository rankRepository;
-  private final RankMapper rankMapper;
-  private final MatchRepository matchRepository;
+  private final RankService rankService;
 
   @Override
   public Page<PlayerDTO> findAll(int no, int limit, String sortBy) {
     return playerRepository
       .findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
-      .map(p -> {
-        PlayerDTO playerDTO = playerMapper.toDTO(p);
-        playerDTO.setPlayerOthersInfoDTO(this.buildPlayerOthersInfoDTO(p));
-
-        return playerDTO;
-      });
+      .map(p -> playerMapper.toDTO(p));
   }
 
   @Override
   public PlayerDTO findByUserId(long userId) {
     return playerRepository
       .findByUser_Id(userId)
-      .map(p -> {
-        PlayerDTO playerDTO = playerMapper.toDTO(p);
-        playerDTO.setPlayerOthersInfoDTO(this.buildPlayerOthersInfoDTO(p));
-
-        return playerDTO;
-      })
+      .map(p -> playerMapper.toDTO(p))
       .orElseThrow(() ->
         new ResourceNotFoundExceptionCustomize(
-          Collections.singletonMap("user.id", userId)
+          Collections.singletonMap("userId", userId)
         )
       );
   }
@@ -71,14 +57,7 @@ public class PlayerServiceImpl implements PlayerService {
   public PlayerProfileDTO findById(long id) {
     return playerRepository
       .findById(id)
-      .map(p -> {
-        PlayerProfileDTO playerProfileDTO = playerMapper.toProfileDTO(p);
-        playerProfileDTO.setPlayerOthersInfoDTO(
-          this.buildPlayerOthersInfoDTO(p)
-        );
-
-        return playerProfileDTO;
-      })
+      .map(p -> playerMapper.toProfileDTO(p))
       .orElseThrow(() ->
         new ResourceNotFoundExceptionCustomize(
           Collections.singletonMap("id", id)
@@ -96,20 +75,17 @@ public class PlayerServiceImpl implements PlayerService {
     Player player = playerMapper.toEntity(playerCreationDTO);
     player.getUser().setId(createdUserDTO.getId());
 
-    Rank defaultRank = rankRepository
-      .findFirstByOrderByEloMilestonesAsc()
-      .orElseThrow(() ->
-        new InternalServerErrorExceptionCustomize("No rank found")
-      );
+    RankDTO defaultRank = rankService.findDefault();
+    player.setRank(new Rank());
+    player.getRank().setId(defaultRank.getId());
+
     player.setElo(defaultRank.getEloMilestones());
 
     PlayerDTO createdPlayerDTO = playerMapper.toDTO(
       playerRepository.save(player)
     );
     createdPlayerDTO.setUserDTO(createdUserDTO);
-    createdPlayerDTO.setPlayerOthersInfoDTO(
-      this.buildPlayerOthersInfoDTO(player)
-    );
+    createdPlayerDTO.getPlayerOthersInfoDTO().setRankDTO(defaultRank);
 
     return createdPlayerDTO;
   }
@@ -142,15 +118,12 @@ public class PlayerServiceImpl implements PlayerService {
       updatePlayer
     );
     updatedPlayerProfileDTO.setUserProfileDTO(updatedUserProfileDTO);
-    updatedPlayerProfileDTO.setPlayerOthersInfoDTO(
-      this.buildPlayerOthersInfoDTO(updatePlayer)
-    );
 
     return updatedPlayerProfileDTO;
   }
 
   @Override
-  public PlayerProfileDTO update(long id, int elo) {
+  public PlayerProfileDTO updateByMatchResult(long id, int result, int eloBet) {
     Player existingPlayer = playerRepository
       .findById(id)
       .orElseThrow(() ->
@@ -159,44 +132,27 @@ public class PlayerServiceImpl implements PlayerService {
         )
       );
 
-    existingPlayer.setElo(elo);
+    if (EMatchResult.WIN.getValue() == result) {
+      existingPlayer.setWin(existingPlayer.getWin() + 1);
+      existingPlayer.setElo(
+        existingPlayer.getElo() +
+        (int) (eloBet * Default.Game.ELO_WIN_RECEIVE_PERCENT)
+      );
+    } else if (EMatchResult.LOSE.getValue() == result) {
+      existingPlayer.setLose(existingPlayer.getLose() + 1);
+      existingPlayer.setElo(existingPlayer.getElo() - eloBet);
+    } else {
+      existingPlayer.setDraw(existingPlayer.getDraw() + 1);
+    }
+
+    RankDTO rankDTO = rankService.findByPlayerElo(existingPlayer.getElo());
+    existingPlayer.getRank().setId(rankDTO.getId());
 
     PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(
       playerRepository.save(existingPlayer)
     );
-    updatedPlayerProfileDTO.setPlayerOthersInfoDTO(
-      this.buildPlayerOthersInfoDTO(existingPlayer)
-    );
+    updatedPlayerProfileDTO.getPlayerOthersInfoDTO().setRankDTO(rankDTO);
 
     return updatedPlayerProfileDTO;
-  }
-
-  private PlayerOthersInfoDTO buildPlayerOthersInfoDTO(Player player) {
-    PlayerOthersInfoDTO playerOthersInfoDTO = playerMapper.toOthersInfoDTO(
-      player
-    );
-
-    RankDTO rankDTO = rankRepository
-      .findFirstByEloMilestonesLessThanEqualOrderByEloMilestonesDesc(
-        player.getElo()
-      )
-      .map(r -> rankMapper.toDTO(r))
-      .orElseThrow(() ->
-        new InternalServerErrorExceptionCustomize(
-          "No rank found for elo: " + player.getElo()
-        )
-      );
-    playerOthersInfoDTO.setRankDTO(rankDTO);
-
-    long win = matchRepository.countWinByPlayerId(player.getId());
-    playerOthersInfoDTO.setWin(win);
-
-    long draw = matchRepository.countDrawByPlayerId(player.getId());
-    playerOthersInfoDTO.setDraw(draw);
-
-    long lose = matchRepository.countLoseByPlayerId(player.getId());
-    playerOthersInfoDTO.setLose(lose);
-
-    return playerOthersInfoDTO;
   }
 }

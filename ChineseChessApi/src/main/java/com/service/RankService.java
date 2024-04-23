@@ -11,6 +11,9 @@ public interface RankService {
 
   RankDTO findByName(String name);
 
+  RankDTO findDefault();
+  RankDTO findByPlayerElo(int elo);
+
   @Transactional
   RankDTO create(RankDTO rankDTO);
 

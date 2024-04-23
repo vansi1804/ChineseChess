@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,17 @@ public class Player {
 
   @Column(name = "elo")
   private int elo;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "rank_id", referencedColumnName = "id")
+  private Rank rank;
+
+  @Column(name = "win")
+  private int win;
+
+  @Column(name = "draw")
+  private int draw;
+
+  @Column(name = "lose")
+  private int lose;
 }

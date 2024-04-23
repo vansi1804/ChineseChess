@@ -20,5 +20,5 @@ public interface PlayerService {
   PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO);
 
   @Transactional
-  PlayerProfileDTO update(long id, int elo);
+  PlayerProfileDTO updateByMatchResult(long id, int result, int eloBet);
 }

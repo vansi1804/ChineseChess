@@ -8,16 +8,27 @@ import com.data.entity.Player;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = UserMapper.class)
+@Mapper(
+  componentModel = "spring",
+  uses = { UserMapper.class, RankMapper.class }
+)
 public interface PlayerMapper {
   @Mapping(ignore = true, target = "id")
   @Mapping(source = "userCreationDTO", target = "user")
+  @Mapping(ignore = true, target = "rank")
   @Mapping(ignore = true, target = "elo")
+  @Mapping(ignore = true, target = "win")
+  @Mapping(ignore = true, target = "draw")
+  @Mapping(ignore = true, target = "lose")
   Player toEntity(PlayerCreationDTO playerCreationDTO);
 
   @Mapping(ignore = true, target = "id")
   @Mapping(source = "userProfileDTO", target = "user")
+  @Mapping(ignore = true, target = "rank")
   @Mapping(ignore = true, target = "elo")
+  @Mapping(ignore = true, target = "win")
+  @Mapping(ignore = true, target = "draw")
+  @Mapping(ignore = true, target = "lose")
   Player toEntity(PlayerProfileDTO playerProfileDTO);
 
   @Mapping(source = "player.user", target = "userProfileDTO")
@@ -34,9 +45,6 @@ public interface PlayerMapper {
   )
   PlayerDTO toDTO(Player player);
 
-  @Mapping(ignore = true, target = "rankDTO")
-  @Mapping(ignore = true, target = "win")
-  @Mapping(ignore = true, target = "draw")
-  @Mapping(ignore = true, target = "lose")
+  @Mapping(source = "rank", target = "rankDTO")
   PlayerOthersInfoDTO toOthersInfoDTO(Player player);
 }
