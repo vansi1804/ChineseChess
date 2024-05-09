@@ -5,7 +5,7 @@ db:
   name: chinese_chess
   endpoint: localhost
   username: root
-  password: rootroot
+  password:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -13,7 +13,7 @@ spring:
     username: ${db.username}
     password: ${db.password}
 domain:
-  path: http://${db.endpoint}:${db.port}
+  path: https://${db.endpoint}:${db.port}
 url:
   redirect:
     path: ${domain.path}
