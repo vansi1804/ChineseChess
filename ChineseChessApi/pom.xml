@@ -14,7 +14,7 @@
 
     <groupId>com</groupId>
     <artifactId>chinese-chess-api</artifactId>
-    <version>1.2</version>
+    <version>27.05</version>
     <name>Chinese Chess API</name>
     <description>Chinese Chess API</description>
 
@@ -146,6 +146,13 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.nvs.ChineseChessApiApplication</mainClass>
+                </configuration>
+            </plugin>
             <!-- Configuration for spring-boot-maven-plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>

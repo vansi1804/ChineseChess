@@ -27,4 +27,6 @@ public class ApiUrl {
   public static final String USER = API + "/users";
 
   public static final String PLAY_BOARD = API + "/play-board";
+
+  public static final String PIECE = API + "/pieces";
 }
