@@ -1,0 +1,366 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Generation Time: May 30, 2024 at 05:51 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Database: `Chinese_chess`
+--
+CREATE DATABASE IF NOT EXISTS `Chinese_chess` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `Chinese_chess`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `matches`
+--
+
+DROP TABLE IF EXISTS `matches`;
+CREATE TABLE IF NOT EXISTS `matches` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_by_user_id` bigint(20) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `last_modified_by_user_id` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime(6) DEFAULT NULL,
+  `cumulative_time` int(11) DEFAULT NULL,
+  `bet` int(11) DEFAULT NULL,
+  `moving_time` int(11) DEFAULT NULL,
+  `result` int(11) DEFAULT NULL,
+  `time` int(11) DEFAULT NULL,
+  `player1_id` bigint(20) DEFAULT NULL,
+  `player2_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKlm05xqay0xbc9pd5s1vn7ln64` (`player1_id`),
+  KEY `FK1edbfkf47etefpx5artnf2c3j` (`player2_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Truncate table before insert `matches`
+--
+
+TRUNCATE TABLE `matches`;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `move_histories`
+--
+
+DROP TABLE IF EXISTS `move_histories`;
+CREATE TABLE IF NOT EXISTS `move_histories` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `to_col` int(11) DEFAULT NULL,
+  `to_row` int(11) DEFAULT NULL,
+  `turn` bigint(20) DEFAULT NULL,
+  `match_id` bigint(20) DEFAULT NULL,
+  `piece_id` int(11) DEFAULT NULL,
+  `training_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK9wbeg7efn2fc5dj96xkgers1g` (`match_id`),
+  KEY `FK1h89tk1dmu4cka24v539vuodi` (`piece_id`),
+  KEY `FK6rprvjkwy6detimhxj1d29ome` (`training_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Truncate table before insert `move_histories`
+--
+
+TRUNCATE TABLE `move_histories`;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pieces`
+--
+
+DROP TABLE IF EXISTS `pieces`;
+CREATE TABLE IF NOT EXISTS `pieces` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `start_col` int(11) DEFAULT NULL,
+  `start_row` int(11) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `is_red` bit(1) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Truncate table before insert `pieces`
+--
+
+TRUNCATE TABLE `pieces`;
+--
+-- Dumping data for table `pieces`
+--
+
+INSERT DELAYED IGNORE INTO `pieces` (`id`, `start_col`, `start_row`, `image`, `is_red`, `name`) VALUES
+(1, 0, 6, 'red_soldier.png', b'1', 'SOLDIER'),
+(2, 2, 6, 'red_soldier.png', b'1', 'SOLDIER'),
+(3, 4, 6, 'red_soldier.png', b'1', 'SOLDIER'),
+(4, 6, 6, 'red_soldier.png', b'1', 'SOLDIER'),
+(5, 8, 6, 'red_soldier.png', b'1', 'SOLDIER'),
+(6, 1, 7, 'red_cannon.png', b'1', 'CANNON'),
+(7, 7, 7, 'red_cannon.png', b'1', 'CANNON'),
+(8, 0, 9, 'red_chariot.png', b'1', 'CHARIOT'),
+(9, 8, 9, 'red_chariot.png', b'1', 'CHARIOT'),
+(10, 1, 9, 'red_horse.png', b'1', 'HORSE'),
+(11, 7, 9, 'red_horse.png', b'1', 'HORSE'),
+(12, 2, 9, 'red_elephant.png', b'1', 'ELEPHANT'),
+(13, 6, 9, 'red_elephant.png', b'1', 'ELEPHANT'),
+(14, 3, 9, 'red_guard.png', b'1', 'GUARD'),
+(15, 5, 9, 'red_guard.png', b'1', 'GUARD'),
+(16, 4, 9, 'red_general.png', b'1', 'GENERAL'),
+(17, 0, 3, 'black_soldier.png', b'0', 'SOLDIER'),
+(18, 2, 3, 'black_soldier.png', b'0', 'SOLDIER'),
+(19, 4, 3, 'black_soldier.png', b'0', 'SOLDIER'),
+(20, 6, 3, 'black_soldier.png', b'0', 'SOLDIER'),
+(21, 8, 3, 'black_soldier.png', b'0', 'SOLDIER'),
+(22, 1, 2, 'black_cannon.png', b'0', 'CANNON'),
+(23, 7, 2, 'black_cannon.png', b'0', 'CANNON'),
+(24, 0, 0, 'black_chariot.png', b'0', 'CHARIOT'),
+(25, 8, 0, 'black_chariot.png', b'0', 'CHARIOT'),
+(26, 1, 0, 'black_horse.png', b'0', 'HORSE'),
+(27, 7, 0, 'black_horse.png', b'0', 'HORSE'),
+(28, 2, 0, 'black_elephant.png', b'0', 'ELEPHANT'),
+(29, 6, 0, 'black_elephant.png', b'0', 'ELEPHANT'),
+(30, 3, 0, 'black_guard.png', b'0', 'GUARD'),
+(31, 5, 0, 'black_guard.png', b'0', 'GUARD'),
+(32, 4, 0, 'black_general.png', b'0', 'GENERAL');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `players`
+--
+
+DROP TABLE IF EXISTS `players`;
+CREATE TABLE IF NOT EXISTS `players` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `draw` int(11) DEFAULT NULL,
+  `elo` int(11) DEFAULT NULL,
+  `lose` int(11) DEFAULT NULL,
+  `win` int(11) DEFAULT NULL,
+  `rank_id` int(11) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_r2bdiqerficgwok3omt8rwlxb` (`user_id`),
+  KEY `FKdd8qslf7ue2b3neu4bojbosix` (`rank_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Truncate table before insert `players`
+--
+
+TRUNCATE TABLE `players`;
+--
+-- Dumping data for table `players`
+--
+
+INSERT DELAYED IGNORE INTO `players` (`id`, `draw`, `elo`, `lose`, `win`, `rank_id`, `user_id`) VALUES
+(1, 0, 2000, 0, 0, NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ranks`
+--
+
+DROP TABLE IF EXISTS `ranks`;
+CREATE TABLE IF NOT EXISTS `ranks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_by_user_id` bigint(20) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `last_modified_by_user_id` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime(6) DEFAULT NULL,
+  `elo_milestones` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Truncate table before insert `ranks`
+--
+
+TRUNCATE TABLE `ranks`;
+--
+-- Dumping data for table `ranks`
+--
+
+INSERT DELAYED IGNORE INTO `ranks` (`id`, `created_by_user_id`, `created_date`, `last_modified_by_user_id`, `last_modified_date`, `elo_milestones`, `name`) VALUES
+(1, NULL, '2024-05-10 10:18:56.000000', NULL, '2024-05-10 10:18:56.000000', 2000, 'Novice');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Truncate table before insert `roles`
+--
+
+TRUNCATE TABLE `roles`;
+--
+-- Dumping data for table `roles`
+--
+
+INSERT DELAYED IGNORE INTO `roles` (`id`, `name`) VALUES
+(1, 'ADMIN'),
+(2, 'PLAYER');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `trainings`
+--
+
+DROP TABLE IF EXISTS `trainings`;
+CREATE TABLE IF NOT EXISTS `trainings` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_by_user_id` bigint(20) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `last_modified_by_user_id` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime(6) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `parent_training_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKme8btv11oi5xgiyfqxy5erfks` (`parent_training_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Truncate table before insert `trainings`
+--
+
+TRUNCATE TABLE `trainings`;
+--
+-- Dumping data for table `trainings`
+--
+
+INSERT DELAYED IGNORE INTO `trainings` (`id`, `created_by_user_id`, `created_date`, `last_modified_by_user_id`, `last_modified_date`, `title`, `parent_training_id`) VALUES
+(1, 1, '2024-05-10 14:46:49.000000', 1, '2024-05-10 14:46:49.000000', 'Tuyển tập pháo đầu', NULL),
+(2, 1, '2024-05-10 14:47:07.000000', 1, '2024-05-10 14:47:07.000000', 'Tuyển tập bình phong mã', NULL),
+(3, 1, '2024-05-10 14:47:18.000000', 1, '2024-05-10 14:47:18.000000', 'Tuyển tập Phi tượng', NULL),
+(4, 1, '2024-05-10 14:47:52.000000', 1, '2024-05-10 14:47:52.000000', 'Thuận pháo', 1),
+(5, 1, '2024-05-10 14:47:56.000000', 1, '2024-05-10 14:47:56.000000', 'Nghịch pháo', 1),
+(6, 1, '2024-05-10 14:48:13.000000', 1, '2024-05-10 14:48:13.000000', 'Bình phong mã', 2),
+(7, 1, '2024-05-10 14:49:01.000000', 1, '2024-05-10 14:49:01.000000', 'Bài 1', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_by_user_id` bigint(20) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `last_modified_by_user_id` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime(6) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `phone_number` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `vip_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKp56c1712k691lhsyewcssf40f` (`role_id`),
+  KEY `FKklrmlmbnq4of02g5ntf6geq6i` (`vip_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Truncate table before insert `users`
+--
+
+TRUNCATE TABLE `users`;
+--
+-- Dumping data for table `users`
+--
+
+INSERT DELAYED IGNORE INTO `users` (`id`, `created_by_user_id`, `created_date`, `last_modified_by_user_id`, `last_modified_date`, `avatar`, `name`, `password`, `phone_number`, `status`, `role_id`, `vip_id`) VALUES
+(1, NULL, '2024-05-10 10:18:57.000000', NULL, '2024-05-10 10:18:57.000000', NULL, 'Nguyễn Văn Sĩ', '$2a$10$.Dtmc/132v.1hLEAO5IsCOu9qJCRJZJN9M31SsPphJUi2RWfrcIZu', '0589176839', 'ACTIVE', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vips`
+--
+
+DROP TABLE IF EXISTS `vips`;
+CREATE TABLE IF NOT EXISTS `vips` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_by_user_id` bigint(20) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `last_modified_by_user_id` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime(6) DEFAULT NULL,
+  `deposit_milestones` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Truncate table before insert `vips`
+--
+
+TRUNCATE TABLE `vips`;
+--
+-- Dumping data for table `vips`
+--
+
+INSERT DELAYED IGNORE INTO `vips` (`id`, `created_by_user_id`, `created_date`, `last_modified_by_user_id`, `last_modified_date`, `deposit_milestones`, `name`) VALUES
+(1, NULL, '2024-05-10 10:18:56.000000', NULL, '2024-05-10 10:18:56.000000', 0, 'Vip0');
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `matches`
+--
+ALTER TABLE `matches`
+  ADD CONSTRAINT `FK1edbfkf47etefpx5artnf2c3j` FOREIGN KEY (`player2_id`) REFERENCES `players` (`id`),
+  ADD CONSTRAINT `FKlm05xqay0xbc9pd5s1vn7ln64` FOREIGN KEY (`player1_id`) REFERENCES `players` (`id`);
+
+--
+-- Constraints for table `move_histories`
+--
+ALTER TABLE `move_histories`
+  ADD CONSTRAINT `FK1h89tk1dmu4cka24v539vuodi` FOREIGN KEY (`piece_id`) REFERENCES `pieces` (`id`),
+  ADD CONSTRAINT `FK6rprvjkwy6detimhxj1d29ome` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`id`),
+  ADD CONSTRAINT `FK9wbeg7efn2fc5dj96xkgers1g` FOREIGN KEY (`match_id`) REFERENCES `matches` (`id`);
+
+--
+-- Constraints for table `players`
+--
+ALTER TABLE `players`
+  ADD CONSTRAINT `FK3rfv9832bif6rea5edetib8it` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `FKdd8qslf7ue2b3neu4bojbosix` FOREIGN KEY (`rank_id`) REFERENCES `ranks` (`id`);
+
+--
+-- Constraints for table `trainings`
+--
+ALTER TABLE `trainings`
+  ADD CONSTRAINT `FKme8btv11oi5xgiyfqxy5erfks` FOREIGN KEY (`parent_training_id`) REFERENCES `trainings` (`id`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `FKklrmlmbnq4of02g5ntf6geq6i` FOREIGN KEY (`vip_id`) REFERENCES `vips` (`id`),
+  ADD CONSTRAINT `FKp56c1712k691lhsyewcssf40f` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
+COMMIT;
