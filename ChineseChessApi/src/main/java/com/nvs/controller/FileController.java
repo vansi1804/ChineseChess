@@ -77,8 +77,8 @@ public class FileController {
 
   private String obtainOriginalFileName(Resource resource) {
     String originalFilename = resource.getFilename();
-    if (originalFilename != null && originalFilename.contains("_")) {
-      originalFilename = originalFilename.split("_", 2)[1];
+    if (originalFilename != null && originalFilename.contains("__")) {
+      originalFilename = originalFilename.split("__", 2)[1];
     }
     return originalFilename;
   }
@@ -86,4 +86,5 @@ public class FileController {
   private String detectMediaType(String filename) {
     return new Tika().detect(filename);
   }
+
 }

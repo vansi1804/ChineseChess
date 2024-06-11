@@ -282,8 +282,7 @@ public class MoveServiceImpl implements MoveService {
                 matchMoveCreationDTO.getToRow());
 
         if (isAvailableMove) {
-            MoveHistory moveHistory = moveHistoryMapper.toEntity(
-                    matchMoveCreationDTO);
+            MoveHistory moveHistory = moveHistoryMapper.toEntity(matchMoveCreationDTO);
             moveHistory.setTurn(newTurn);
 
             moveHistoryRepository.save(moveHistory);
@@ -334,16 +333,7 @@ public class MoveServiceImpl implements MoveService {
                 toRow);
         moveDTO.setPlayBoardDTO(updatedPlayBoardDTO);
 
-        // find opponent general being checked
-        PieceDTO opponentGeneralPieceDTO = pieceService.findGeneralInBoard(
-                playBoardDTO,
-                !movingPieceDTO.isRed());
-        moveDTO.setCheckedGeneralPieceDTO(
-                playBoardService.isGeneralBeingChecked(
-                        playBoardDTO,
-                        opponentGeneralPieceDTO)
-                        ? opponentGeneralPieceDTO
-                        : null);
+        moveDTO.setCheckedGeneralPieceDTO(this.findGeneralBeingChecked(moveDTO.getPlayBoardDTO(), movingPieceDTO.isRed()));
 
         moveDTO.setCheckmateState(
                 this.isCheckmateState(updatedPlayBoardDTO, movingPieceDTO.isRed()));
@@ -354,65 +344,57 @@ public class MoveServiceImpl implements MoveService {
     }
 
     private Map<Long, MoveHistoryDTO> build(List<MoveHistory> moveHistories) {
-        AtomicReference<PlayBoardDTO> playBoardDTO = new AtomicReference<>(
-                playBoardService.generate());
-
+        AtomicReference<PlayBoardDTO> playBoardDTO = new AtomicReference<>(playBoardService.generate());
         playBoardService.printTest("start: ", playBoardDTO.get(), null);
+        AtomicReference<List<PieceDTO>> lastDeadPieceDTOs = new AtomicReference<>(new ArrayList<>());
 
-        AtomicReference<List<PieceDTO>> lastDeadPieceDTOs = new AtomicReference<>(
-                new ArrayList<>());
+        Map<Long, MoveHistoryDTO> moveHistoryDTOMap = new HashMap<>();
 
-        return moveHistories
-                .stream()
-                .map(mh -> {
-                    MoveHistoryDTO moveHistoryDTO = new MoveHistoryDTO();
-                    moveHistoryDTO.setLastDeadPieceDTOs(lastDeadPieceDTOs.get());
+        // Create initial MoveHistoryDTO for turn 0
+        MoveHistoryDTO initialMoveHistoryDTO = new MoveHistoryDTO();
+        initialMoveHistoryDTO.setTurn(0L);
+        initialMoveHistoryDTO.setPlayBoardDTO(playBoardDTO.get());
+        moveHistoryDTOMap.put(0L, initialMoveHistoryDTO);
 
-                    long turn = mh.getTurn();
-                    moveHistoryDTO.setTurn(turn);
+        // Process the rest of the move histories
+        moveHistories.forEach(mh -> {
+            MoveHistoryDTO moveHistoryDTO = new MoveHistoryDTO();
+            moveHistoryDTO.setLastDeadPieceDTOs(lastDeadPieceDTOs.get());
 
-                    PieceDTO movingPieceDTO = pieceService.findOneInBoard(
-                            playBoardDTO.get(),
-                            mh.getPiece().getId());
-                    moveHistoryDTO.setMovingPieceDTO(movingPieceDTO);
+            long turn = mh.getTurn();
+            moveHistoryDTO.setTurn(turn);
 
-                    moveHistoryDTO.setToCol(mh.getToCol());
-                    moveHistoryDTO.setToRow(mh.getToRow());
+            PieceDTO movingPieceDTO = pieceService.findOneInBoard(playBoardDTO.get(), mh.getPiece().getId());
+            moveHistoryDTO.setMovingPieceDTO(movingPieceDTO);
 
-                    String description = moveDescriptionService.build(
-                            playBoardDTO.get(),
-                            movingPieceDTO,
-                            mh.getToCol(),
-                            mh.getToRow());
-                    moveHistoryDTO.setDescription(description);
+            moveHistoryDTO.setToCol(mh.getToCol());
+            moveHistoryDTO.setToRow(mh.getToRow());
 
-                    System.out.println(
-                            "\nTurn " + String.valueOf(turn) + ": \t\t" + description);
+            String description = moveDescriptionService.build(playBoardDTO.get(), movingPieceDTO, mh.getToCol(), mh.getToRow());
+            moveHistoryDTO.setDescription(description);
 
-                    MoveDTO moveDTO = this.makeMove(
-                            playBoardDTO.get(),
-                            movingPieceDTO,
-                            mh.getToCol(),
-                            mh.getToRow());
-                    moveHistoryDTO.setDeadPieceDTO(moveDTO.getDeadPieceDTO());
-                    moveHistoryDTO.setPlayBoardDTO(moveDTO.getPlayBoardDTO());
-                    moveHistoryDTO.setCheckedGeneralPieceDTO(
-                            moveDTO.getCheckedGeneralPieceDTO());
-                    moveHistoryDTO.setCheckmateState(moveDTO.isCheckmateState());
+            System.out.println("\nTurn " + turn + ": \t\t" + description);
 
-                    // update board after moved for reusing in next turn
-                    playBoardDTO.set(moveDTO.getPlayBoardDTO());
-                    // add deadPiece in this turn to list for reusing in next turn
-                    List<PieceDTO> tempLastDeadPieceDTOs = new ArrayList<>(
-                            lastDeadPieceDTOs.get());
-                    if (moveDTO.getDeadPieceDTO() != null) {
-                        tempLastDeadPieceDTOs.add(moveDTO.getDeadPieceDTO());
-                    }
-                    lastDeadPieceDTOs.set(tempLastDeadPieceDTOs);
+            MoveDTO moveDTO = this.makeMove(playBoardDTO.get(), movingPieceDTO, mh.getToCol(), mh.getToRow());
+            moveHistoryDTO.setDeadPieceDTO(moveDTO.getDeadPieceDTO());
+            moveHistoryDTO.setPlayBoardDTO(moveDTO.getPlayBoardDTO());
+            moveHistoryDTO.setCheckedGeneralPieceDTO(moveDTO.getCheckedGeneralPieceDTO());
+            moveHistoryDTO.setCheckmateState(moveDTO.isCheckmateState());
 
-                    return moveHistoryDTO;
-                })
-                .collect(Collectors.toMap(MoveHistoryDTO::getTurn, Function.identity()));
+            // Update board after moved for reusing in next turn
+            playBoardDTO.set(moveDTO.getPlayBoardDTO());
+
+            // Add deadPiece in this turn to list for reusing in next turn
+            List<PieceDTO> tempLastDeadPieceDTOs = new ArrayList<>(lastDeadPieceDTOs.get());
+            if (moveDTO.getDeadPieceDTO() != null) {
+                tempLastDeadPieceDTOs.add(moveDTO.getDeadPieceDTO());
+            }
+            lastDeadPieceDTOs.set(tempLastDeadPieceDTOs);
+
+            moveHistoryDTOMap.put(turn, moveHistoryDTO);
+        });
+
+        return moveHistoryDTOMap;
     }
 
     private List<int[]> findAllAvailableMoveIndexes(
@@ -480,6 +462,8 @@ public class MoveServiceImpl implements MoveService {
                     pieceDTO,
                     toCol,
                     toRow);
+
+
             PieceDTO generalPieceDTO = pieceService.findGeneralInBoard(
                     updatedPlayBoardDTO,
                     pieceDTO.isRed());
@@ -491,4 +475,10 @@ public class MoveServiceImpl implements MoveService {
             return false;
         }
     }
+
+    private PieceDTO findGeneralBeingChecked(PlayBoardDTO playBoardDTO, boolean isRed) {
+        PieceDTO opponentGeneralPieceDTO = pieceService.findGeneralInBoard(playBoardDTO, !isRed);
+        return playBoardService.isGeneralBeingChecked(playBoardDTO, opponentGeneralPieceDTO) ? opponentGeneralPieceDTO : null;
+    }
+
 }
