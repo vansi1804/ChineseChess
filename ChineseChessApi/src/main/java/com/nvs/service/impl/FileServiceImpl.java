@@ -27,7 +27,7 @@ public class FileServiceImpl implements FileService {
     }
 
     // Generate a unique file name to avoid overwriting existing files
-    String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+    String fileName = System.currentTimeMillis() + "__" + file.getOriginalFilename();
 
     // Create the directory for storing uploaded files if it doesn't exist
     File uploadDir = new File(UPLOAD_DIR);
