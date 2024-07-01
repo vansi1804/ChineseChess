@@ -11,13 +11,14 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class UserDTO extends AuditorDTO {
+public class UserDTO extends AuditorDTO{
 
-  private long id;
+   private long id;
 
-  private UserProfileDTO userProfileDTO;
+   private UserProfileDTO userProfileDTO;
 
-  private RoleDTO roleDTO;
+   private RoleDTO roleDTO;
 
-  private String status;
+   private String status;
+
 }

@@ -10,24 +10,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class OpenAPI3Configuration {
+public class OpenAPI3Configuration{
 
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .servers(
-                        Lists.newArrayList(
-                                new Server().url("http://localhost:8088/api/open-api-docs")))
-                .info(
-                        new Info()
-                                .title("Chinese Chess Application API")
-                                .description("OpenAPI 3.0")
-                                .contact(
-                                        new Contact().email("vansi18042001@gmail.com").name("nvsi01"))
-                                .license(
-                                        new License()
-                                                .name("Apache 2.0")
-                                                .url("http://www.apache.org/licenses/LICENSE-2.0.html"))
-                                .version("1.0.0"));
-    }
+   @Bean
+   public OpenAPI customOpenAPI(){
+      return new OpenAPI().servers(Lists.newArrayList(new Server().url("http://localhost:8088/api/open-api-docs")))
+                          .info(new Info().title("Chinese Chess Application API")
+                                          .description("OpenAPI 3.0")
+                                          .contact(new Contact().email("vansi18042001@gmail.com")
+                                                                .name("nvsi01"))
+                                          .license(new License().name("Apache 2.0")
+                                                                .url("http://www.apache.org/licenses/LICENSE-2.0.html"))
+                                          .version("1.0.0"));
+   }
+
 }

@@ -2,24 +2,31 @@ package com.nvs.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nvs.common.Default;
-import lombok.Data;
-
 import jakarta.persistence.MappedSuperclass;
-
 import java.io.Serializable;
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 @MappedSuperclass
-public class AuditorDTO implements Serializable {
+@NoArgsConstructor
+public class AuditorDTO implements Serializable{
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
-    private Date createdDate;
+   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
+   private Date createdDate;
 
-    private Long createdByUserId;
+   private Long createdByUserId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
-    private Date lastModifiedDate;
+   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
+   private Date lastModifiedDate;
 
-    private Long lastModifiedByUserId;
+   private Long lastModifiedByUserId;
+
 }

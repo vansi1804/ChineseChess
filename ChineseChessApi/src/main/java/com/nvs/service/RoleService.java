@@ -3,10 +3,12 @@ package com.nvs.service;
 import com.nvs.data.dto.RoleDTO;
 import java.util.List;
 
-public interface RoleService {
-  List<RoleDTO> findAll();
+public interface RoleService{
 
-  RoleDTO findById(int id);
+   List<RoleDTO> findAll();
 
-  RoleDTO findByName(String name);
+   RoleDTO findById(int id);
+
+   RoleDTO findByName(String name);
+
 }

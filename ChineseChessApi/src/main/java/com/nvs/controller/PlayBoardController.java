@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ApiUrl.PLAY_BOARD)
 @Tag(name = "Play board", description = "Endpoints for managing play board")
 @RequiredArgsConstructor
-public class PlayBoardController {
+public class PlayBoardController{
 
-  private final PlayBoardService playBoardService;
+   private final PlayBoardService playBoardService;
 
-  @Operation(summary = "Generate", description = "Endpoint to generate a new play board")
-  @GetMapping(value = "/generate")
-  public ResponseEntity<PlayBoardDTO> generate() {
-    return ResponseEntity.ok(playBoardService.generate());
-  }
+   @Operation(summary = "Generate", description = "Endpoint to generate a new play board")
+   @GetMapping(value = "/generate")
+   public ResponseEntity<PlayBoardDTO> generate(){
+      return ResponseEntity.ok(playBoardService.generate());
+   }
+
 }

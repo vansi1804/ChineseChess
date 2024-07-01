@@ -4,15 +4,17 @@ import com.nvs.data.dto.VipDTO;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface VipService {
-  List<VipDTO> findAll();
+public interface VipService{
 
-  VipDTO findById(int id);
+   List<VipDTO> findAll();
 
-  VipDTO create(VipDTO vipDTO);
+   VipDTO findById(int id);
 
-  VipDTO update(int id, VipDTO vipDTO);
+   VipDTO create(VipDTO vipDTO);
 
-  @Transactional
-  boolean delete(int id);
+   VipDTO update(int id, VipDTO vipDTO);
+
+   @Transactional
+   boolean delete(int id);
+
 }

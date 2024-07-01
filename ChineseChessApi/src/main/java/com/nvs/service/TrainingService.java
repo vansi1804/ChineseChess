@@ -5,17 +5,19 @@ import com.nvs.data.dto.training.TrainingDetailDTO;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface TrainingService {
-  List<TrainingDTO> findAllBase();
+public interface TrainingService{
 
-  TrainingDTO findById(long id);
+   List<TrainingDTO> findAllBase();
 
-  TrainingDetailDTO findDetailById(long id);
+   TrainingDTO findById(long id);
 
-  TrainingDTO create(TrainingDTO trainingDTO);
+   TrainingDetailDTO findDetailById(long id);
 
-  TrainingDTO update(long id, TrainingDTO trainingDTO);
+   TrainingDTO create(TrainingDTO trainingDTO);
 
-  @Transactional
-  boolean deleteById(long id);
+   TrainingDTO update(long id, TrainingDTO trainingDTO);
+
+   @Transactional
+   boolean deleteById(long id);
+
 }

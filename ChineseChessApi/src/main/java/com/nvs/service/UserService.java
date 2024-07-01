@@ -8,28 +8,28 @@ import com.nvs.data.dto.user.UserProfileDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface UserService {
-  Page<UserDTO> findAll(int no, int limit, String sortBy);
+public interface UserService{
 
-  UserDTO findById(long id);
+   Page<UserDTO> findAll(int no, int limit, String sortBy);
 
-  UserDTO findByPhoneNumber(String phoneNumber);
+   UserDTO findById(long id);
 
-  UserDTO findByName(String name);
+   UserDTO findByPhoneNumber(String phoneNumber);
 
-  UserDTO create(UserCreationDTO userCreationDTO, ERole eRole);
+   UserDTO findByName(String name);
 
-  UserProfileDTO update(long id, UserProfileDTO userProfileDTO);
+   UserDTO create(UserCreationDTO userCreationDTO, ERole eRole);
 
-  @Transactional
-  UserDTO lockById(long id);
+   UserProfileDTO update(long id, UserProfileDTO userProfileDTO);
 
-  @Transactional
-  UserDTO unlockById(long id);
+   @Transactional
+   UserDTO lockById(long id);
 
-  boolean isCurrentUser(long id);
+   @Transactional
+   UserDTO unlockById(long id);
 
-  UserProfileDTO changePassword(
-      long id,
-      UserChangePasswordRequestDTO userChangePasswordRequestDTO);
+   boolean isCurrentUser(long id);
+
+   UserProfileDTO changePassword(long id, UserChangePasswordRequestDTO userChangePasswordRequestDTO);
+
 }
