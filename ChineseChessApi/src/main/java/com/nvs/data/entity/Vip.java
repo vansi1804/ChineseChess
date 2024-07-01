@@ -7,26 +7,29 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @Entity
 @Table(name = "vips")
-public class Vip extends Auditor {
+public class Vip extends Auditor{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
-    private int id;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @Column(name = "id", updatable = false)
+   private int id;
 
-    @Column(name = "name")
-    private String name;
+   @Column(name = "name")
+   private String name;
 
-    @Column(name = "deposit_milestones")
-    private int depositMilestones;
+   @Column(name = "deposit_milestones")
+   private int depositMilestones;
+
 }

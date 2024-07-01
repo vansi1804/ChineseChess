@@ -1,9 +1,5 @@
 package com.nvs.data.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,36 +10,46 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @Entity
 @Table(name = "players")
-public class Player {
+public class Player{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
-    private long id;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @Column(name = "id", updatable = false)
+   private long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false)
-    private User user;
+   @OneToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false)
+   @ToString.Exclude
+   private User user;
 
-    @Column(name = "elo")
-    private int elo;
+   @Column(name = "elo")
+   private int elo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rank_id", referencedColumnName = "id")
-    private com.nvs.data.entity.Rank rank;
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "rank_id", referencedColumnName = "id")
+   @ToString.Exclude
+   private Rank rank;
 
-    @Column(name = "win")
-    private int win;
+   @Column(name = "win")
+   private int win;
 
-    @Column(name = "draw")
-    private int draw;
+   @Column(name = "draw")
+   private int draw;
 
-    @Column(name = "lose")
-    private int lose;
+   @Column(name = "lose")
+   private int lose;
+
 }

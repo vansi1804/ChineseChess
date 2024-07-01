@@ -4,23 +4,25 @@ import com.nvs.data.dto.RankDTO;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface RankService {
-  List<RankDTO> findAll();
+public interface RankService{
 
-  RankDTO findById(int id);
+   List<RankDTO> findAll();
 
-  RankDTO findByName(String name);
+   RankDTO findById(int id);
 
-  RankDTO findDefault();
+   RankDTO findByName(String name);
 
-  RankDTO findByPlayerElo(int elo);
+   RankDTO findDefault();
 
-  @Transactional
-  RankDTO create(RankDTO rankDTO);
+   RankDTO findByPlayerElo(int elo);
 
-  @Transactional
-  RankDTO update(int id, RankDTO rankDTO);
+   @Transactional
+   RankDTO create(RankDTO rankDTO);
 
-  @Transactional
-  boolean delete(int id);
+   @Transactional
+   RankDTO update(int id, RankDTO rankDTO);
+
+   @Transactional
+   boolean delete(int id);
+
 }

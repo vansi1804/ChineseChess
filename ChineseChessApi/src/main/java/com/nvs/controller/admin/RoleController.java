@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ApiUrl.ROLES)
 @RequiredArgsConstructor
 @Tag(name = "Role", description = "Endpoints for managing Roles - requires 'ADMIN' role")
-class RoleController {
+class RoleController{
 
-  private final RoleService roleService;
+   private final RoleService roleService;
 
-  @Operation(summary = "Get all roles", description = "Endpoint to retrieve all roles")
-  @PreAuthorize(value = "hasAuthority('ADMIN')")
-  @GetMapping(value = "")
-  public ResponseEntity<?> findAll() {
-    return ResponseEntity.ok(roleService.findAll());
-  }
+   @Operation(summary = "Get all roles", description = "Endpoint to retrieve all roles")
+   @PreAuthorize(value = "hasAuthority('ADMIN')")
+   @GetMapping(value = "")
+   public ResponseEntity<?> findAll(){
+      return ResponseEntity.ok(roleService.findAll());
+   }
+
 }

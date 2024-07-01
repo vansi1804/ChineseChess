@@ -1,9 +1,11 @@
 package com.nvs.service;
 
-public interface MoveTypeService {
-  boolean isHorizontallyMoving(int fromRow, int toRow);
+public interface MoveTypeService{
 
-  boolean isUpMoving(boolean isRed, int fromRow, int toRow);
+   boolean isHorizontallyMoving(int fromRow, int toRow);
 
-  boolean isVerticallyMoving(int fromCol, int toCol);
+   boolean isUpMoving(boolean isRed, int fromRow, int toRow);
+
+   boolean isVerticallyMoving(int fromCol, int toCol);
+
 }

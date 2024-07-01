@@ -1,20 +1,20 @@
 package com.nvs.data.dto.training;
 
 import com.nvs.data.dto.move.MoveHistoryDTO;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Map;
-
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class TrainingDetailDTO {
+public class TrainingDetailDTO{
 
-    private TrainingDTO trainingDTO;
+   private TrainingDTO trainingDTO;
 
-    private long totalTurn;
+   private long totalTurn;
 
-    private Map<Long, MoveHistoryDTO> moveHistoryDTOs;
+   private Map<Long, MoveHistoryDTO> moveHistoryDTOs;
+
 }

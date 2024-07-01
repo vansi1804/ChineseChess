@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 30, 2024 at 05:51 PM
+-- Generation Time: Jun 12, 2024 at 04:09 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -25,16 +25,16 @@ USE `Chinese_chess`;
 
 DROP TABLE IF EXISTS `matches`;
 CREATE TABLE IF NOT EXISTS `matches` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_by_user_id` bigint(20) DEFAULT NULL,
-  `created_date` datetime(6) DEFAULT NULL,
-  `last_modified_by_user_id` bigint(20) DEFAULT NULL,
-  `last_modified_date` datetime(6) DEFAULT NULL,
-  `cumulative_time` int(11) DEFAULT NULL,
   `bet` int(11) DEFAULT NULL,
+  `cumulative_time` int(11) DEFAULT NULL,
   `moving_time` int(11) DEFAULT NULL,
   `result` int(11) DEFAULT NULL,
   `time` int(11) DEFAULT NULL,
+  `created_by_user_id` bigint(20) DEFAULT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `last_modified_by_user_id` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime(6) DEFAULT NULL,
   `player1_id` bigint(20) DEFAULT NULL,
   `player2_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -55,24 +55,61 @@ TRUNCATE TABLE `matches`;
 
 DROP TABLE IF EXISTS `move_histories`;
 CREATE TABLE IF NOT EXISTS `move_histories` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `piece_id` int(11) DEFAULT NULL,
   `to_col` int(11) DEFAULT NULL,
   `to_row` int(11) DEFAULT NULL,
-  `turn` bigint(20) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `match_id` bigint(20) DEFAULT NULL,
-  `piece_id` int(11) DEFAULT NULL,
   `training_id` bigint(20) DEFAULT NULL,
+  `turn` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK9wbeg7efn2fc5dj96xkgers1g` (`match_id`),
   KEY `FK1h89tk1dmu4cka24v539vuodi` (`piece_id`),
   KEY `FK6rprvjkwy6detimhxj1d29ome` (`training_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Truncate table before insert `move_histories`
 --
 
 TRUNCATE TABLE `move_histories`;
+--
+-- Dumping data for table `move_histories`
+--
+
+INSERT DELAYED IGNORE INTO `move_histories` (`piece_id`, `to_col`, `to_row`, `id`, `match_id`, `training_id`, `turn`) VALUES
+(7, 4, 7, 1, NULL, 11, 1),
+(23, 4, 2, 2, NULL, 11, 2),
+(11, 6, 7, 3, NULL, 11, 3),
+(27, 6, 2, 4, NULL, 11, 4),
+(9, 8, 8, 5, NULL, 11, 5),
+(25, 7, 0, 6, NULL, 11, 6),
+(9, 3, 8, 7, NULL, 11, 7),
+(25, 7, 6, 8, NULL, 11, 8),
+(9, 3, 1, 9, NULL, 11, 9),
+(26, 0, 2, 10, NULL, 11, 10),
+(8, 0, 8, 11, NULL, 11, 11),
+(22, 1, 9, 12, NULL, 11, 12),
+(6, 1, 2, 13, NULL, 11, 13),
+(25, 7, 2, 14, NULL, 11, 14),
+(9, 6, 1, 15, NULL, 11, 15),
+(24, 1, 0, 16, NULL, 11, 16),
+(6, 6, 2, 17, NULL, 11, 17),
+(29, 8, 2, 18, NULL, 11, 18),
+(7, 4, 3, 19, NULL, 11, 19),
+(31, 4, 1, 20, NULL, 11, 20),
+(6, 8, 2, 21, NULL, 11, 21),
+(25, 7, 0, 22, NULL, 11, 22),
+(8, 7, 8, 23, NULL, 11, 23),
+(25, 5, 0, 24, NULL, 11, 24),
+(9, 7, 1, 25, NULL, 11, 25),
+(24, 1, 4, 26, NULL, 11, 26),
+(6, 8, 0, 27, NULL, 11, 27),
+(25, 8, 0, 28, NULL, 11, 28),
+(9, 7, 0, 29, NULL, 11, 29),
+(25, 7, 0, 30, NULL, 11, 30),
+(8, 7, 0, 31, NULL, 11, 31);
+
 -- --------------------------------------------------------
 
 --
@@ -82,10 +119,10 @@ TRUNCATE TABLE `move_histories`;
 DROP TABLE IF EXISTS `pieces`;
 CREATE TABLE IF NOT EXISTS `pieces` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `is_red` bit(1) DEFAULT NULL,
   `start_col` int(11) DEFAULT NULL,
   `start_row` int(11) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `is_red` bit(1) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -99,39 +136,39 @@ TRUNCATE TABLE `pieces`;
 -- Dumping data for table `pieces`
 --
 
-INSERT DELAYED IGNORE INTO `pieces` (`id`, `start_col`, `start_row`, `image`, `is_red`, `name`) VALUES
-(1, 0, 6, 'red_soldier.png', b'1', 'SOLDIER'),
-(2, 2, 6, 'red_soldier.png', b'1', 'SOLDIER'),
-(3, 4, 6, 'red_soldier.png', b'1', 'SOLDIER'),
-(4, 6, 6, 'red_soldier.png', b'1', 'SOLDIER'),
-(5, 8, 6, 'red_soldier.png', b'1', 'SOLDIER'),
-(6, 1, 7, 'red_cannon.png', b'1', 'CANNON'),
-(7, 7, 7, 'red_cannon.png', b'1', 'CANNON'),
-(8, 0, 9, 'red_chariot.png', b'1', 'CHARIOT'),
-(9, 8, 9, 'red_chariot.png', b'1', 'CHARIOT'),
-(10, 1, 9, 'red_horse.png', b'1', 'HORSE'),
-(11, 7, 9, 'red_horse.png', b'1', 'HORSE'),
-(12, 2, 9, 'red_elephant.png', b'1', 'ELEPHANT'),
-(13, 6, 9, 'red_elephant.png', b'1', 'ELEPHANT'),
-(14, 3, 9, 'red_guard.png', b'1', 'GUARD'),
-(15, 5, 9, 'red_guard.png', b'1', 'GUARD'),
-(16, 4, 9, 'red_general.png', b'1', 'GENERAL'),
-(17, 0, 3, 'black_soldier.png', b'0', 'SOLDIER'),
-(18, 2, 3, 'black_soldier.png', b'0', 'SOLDIER'),
-(19, 4, 3, 'black_soldier.png', b'0', 'SOLDIER'),
-(20, 6, 3, 'black_soldier.png', b'0', 'SOLDIER'),
-(21, 8, 3, 'black_soldier.png', b'0', 'SOLDIER'),
-(22, 1, 2, 'black_cannon.png', b'0', 'CANNON'),
-(23, 7, 2, 'black_cannon.png', b'0', 'CANNON'),
-(24, 0, 0, 'black_chariot.png', b'0', 'CHARIOT'),
-(25, 8, 0, 'black_chariot.png', b'0', 'CHARIOT'),
-(26, 1, 0, 'black_horse.png', b'0', 'HORSE'),
-(27, 7, 0, 'black_horse.png', b'0', 'HORSE'),
-(28, 2, 0, 'black_elephant.png', b'0', 'ELEPHANT'),
-(29, 6, 0, 'black_elephant.png', b'0', 'ELEPHANT'),
-(30, 3, 0, 'black_guard.png', b'0', 'GUARD'),
-(31, 5, 0, 'black_guard.png', b'0', 'GUARD'),
-(32, 4, 0, 'black_general.png', b'0', 'GENERAL');
+INSERT DELAYED IGNORE INTO `pieces` (`id`, `is_red`, `start_col`, `start_row`, `image`, `name`) VALUES
+(1, b'1', 0, 6, 'red_soldier.png', 'SOLDIER'),
+(2, b'1', 2, 6, 'red_soldier.png', 'SOLDIER'),
+(3, b'1', 4, 6, 'red_soldier.png', 'SOLDIER'),
+(4, b'1', 6, 6, 'red_soldier.png', 'SOLDIER'),
+(5, b'1', 8, 6, 'red_soldier.png', 'SOLDIER'),
+(6, b'1', 1, 7, 'red_cannon.png', 'CANNON'),
+(7, b'1', 7, 7, 'red_cannon.png', 'CANNON'),
+(8, b'1', 0, 9, 'red_chariot.png', 'CHARIOT'),
+(9, b'1', 8, 9, 'red_chariot.png', 'CHARIOT'),
+(10, b'1', 1, 9, 'red_horse.png', 'HORSE'),
+(11, b'1', 7, 9, 'red_horse.png', 'HORSE'),
+(12, b'1', 2, 9, 'red_elephant.png', 'ELEPHANT'),
+(13, b'1', 6, 9, 'red_elephant.png', 'ELEPHANT'),
+(14, b'1', 3, 9, 'red_guard.png', 'GUARD'),
+(15, b'1', 5, 9, 'red_guard.png', 'GUARD'),
+(16, b'1', 4, 9, 'red_general.png', 'GENERAL'),
+(17, b'0', 0, 3, 'black_soldier.png', 'SOLDIER'),
+(18, b'0', 2, 3, 'black_soldier.png', 'SOLDIER'),
+(19, b'0', 4, 3, 'black_soldier.png', 'SOLDIER'),
+(20, b'0', 6, 3, 'black_soldier.png', 'SOLDIER'),
+(21, b'0', 8, 3, 'black_soldier.png', 'SOLDIER'),
+(22, b'0', 1, 2, 'black_cannon.png', 'CANNON'),
+(23, b'0', 7, 2, 'black_cannon.png', 'CANNON'),
+(24, b'0', 0, 0, 'black_chariot.png', 'CHARIOT'),
+(25, b'0', 8, 0, 'black_chariot.png', 'CHARIOT'),
+(26, b'0', 1, 0, 'black_horse.png', 'HORSE'),
+(27, b'0', 7, 0, 'black_horse.png', 'HORSE'),
+(28, b'0', 2, 0, 'black_elephant.png', 'ELEPHANT'),
+(29, b'0', 6, 0, 'black_elephant.png', 'ELEPHANT'),
+(30, b'0', 3, 0, 'black_guard.png', 'GUARD'),
+(31, b'0', 5, 0, 'black_guard.png', 'GUARD'),
+(32, b'0', 4, 0, 'black_general.png', 'GENERAL');
 
 -- --------------------------------------------------------
 
@@ -141,12 +178,12 @@ INSERT DELAYED IGNORE INTO `pieces` (`id`, `start_col`, `start_row`, `image`, `i
 
 DROP TABLE IF EXISTS `players`;
 CREATE TABLE IF NOT EXISTS `players` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `draw` int(11) DEFAULT NULL,
   `elo` int(11) DEFAULT NULL,
   `lose` int(11) DEFAULT NULL,
-  `win` int(11) DEFAULT NULL,
   `rank_id` int(11) DEFAULT NULL,
+  `win` int(11) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_r2bdiqerficgwok3omt8rwlxb` (`user_id`),
@@ -162,8 +199,8 @@ TRUNCATE TABLE `players`;
 -- Dumping data for table `players`
 --
 
-INSERT DELAYED IGNORE INTO `players` (`id`, `draw`, `elo`, `lose`, `win`, `rank_id`, `user_id`) VALUES
-(1, 0, 2000, 0, 0, NULL, 1);
+INSERT DELAYED IGNORE INTO `players` (`draw`, `elo`, `lose`, `rank_id`, `win`, `id`, `user_id`) VALUES
+(0, 2000, 0, NULL, 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -173,12 +210,12 @@ INSERT DELAYED IGNORE INTO `players` (`id`, `draw`, `elo`, `lose`, `win`, `rank_
 
 DROP TABLE IF EXISTS `ranks`;
 CREATE TABLE IF NOT EXISTS `ranks` (
+  `elo_milestones` int(11) DEFAULT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `created_by_user_id` bigint(20) DEFAULT NULL,
   `created_date` datetime(6) DEFAULT NULL,
   `last_modified_by_user_id` bigint(20) DEFAULT NULL,
   `last_modified_date` datetime(6) DEFAULT NULL,
-  `elo_milestones` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -192,8 +229,8 @@ TRUNCATE TABLE `ranks`;
 -- Dumping data for table `ranks`
 --
 
-INSERT DELAYED IGNORE INTO `ranks` (`id`, `created_by_user_id`, `created_date`, `last_modified_by_user_id`, `last_modified_date`, `elo_milestones`, `name`) VALUES
-(1, NULL, '2024-05-10 10:18:56.000000', NULL, '2024-05-10 10:18:56.000000', 2000, 'Novice');
+INSERT DELAYED IGNORE INTO `ranks` (`elo_milestones`, `id`, `created_by_user_id`, `created_date`, `last_modified_by_user_id`, `last_modified_date`, `name`) VALUES
+(2000, 1, NULL, '2024-06-10 14:35:10.000000', NULL, '2024-06-10 14:35:10.000000', 'Novice');
 
 -- --------------------------------------------------------
 
@@ -229,16 +266,16 @@ INSERT DELAYED IGNORE INTO `roles` (`id`, `name`) VALUES
 
 DROP TABLE IF EXISTS `trainings`;
 CREATE TABLE IF NOT EXISTS `trainings` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `created_by_user_id` bigint(20) DEFAULT NULL,
   `created_date` datetime(6) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `last_modified_by_user_id` bigint(20) DEFAULT NULL,
   `last_modified_date` datetime(6) DEFAULT NULL,
-  `title` varchar(255) DEFAULT NULL,
   `parent_training_id` bigint(20) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKme8btv11oi5xgiyfqxy5erfks` (`parent_training_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Truncate table before insert `trainings`
@@ -249,14 +286,21 @@ TRUNCATE TABLE `trainings`;
 -- Dumping data for table `trainings`
 --
 
-INSERT DELAYED IGNORE INTO `trainings` (`id`, `created_by_user_id`, `created_date`, `last_modified_by_user_id`, `last_modified_date`, `title`, `parent_training_id`) VALUES
-(1, 1, '2024-05-10 14:46:49.000000', 1, '2024-05-10 14:46:49.000000', 'Tuyển tập pháo đầu', NULL),
-(2, 1, '2024-05-10 14:47:07.000000', 1, '2024-05-10 14:47:07.000000', 'Tuyển tập bình phong mã', NULL),
-(3, 1, '2024-05-10 14:47:18.000000', 1, '2024-05-10 14:47:18.000000', 'Tuyển tập Phi tượng', NULL),
-(4, 1, '2024-05-10 14:47:52.000000', 1, '2024-05-10 14:47:52.000000', 'Thuận pháo', 1),
-(5, 1, '2024-05-10 14:47:56.000000', 1, '2024-05-10 14:47:56.000000', 'Nghịch pháo', 1),
-(6, 1, '2024-05-10 14:48:13.000000', 1, '2024-05-10 14:48:13.000000', 'Bình phong mã', 2),
-(7, 1, '2024-05-10 14:49:01.000000', 1, '2024-05-10 14:49:01.000000', 'Bài 1', 4);
+INSERT DELAYED IGNORE INTO `trainings` (`created_by_user_id`, `created_date`, `id`, `last_modified_by_user_id`, `last_modified_date`, `parent_training_id`, `title`) VALUES
+(1, '2024-06-10 14:36:53.000000', 1, 1, '2024-06-10 14:36:53.000000', NULL, 'Cạm bẫy khai cuộc'),
+(1, '2024-06-10 14:43:18.000000', 2, 1, '2024-06-10 14:43:18.000000', NULL, 'Cạm bẫy trung cuộc'),
+(1, '2024-06-10 14:43:22.000000', 3, 1, '2024-06-10 14:43:22.000000', NULL, 'Cạm bẫy tàn cuộc'),
+(1, '2024-06-10 14:43:57.000000', 4, 1, '2024-06-10 14:43:57.000000', 1, 'Tuyển tập pháo đầu'),
+(1, '2024-06-10 14:44:07.000000', 5, 1, '2024-06-10 14:44:07.000000', 1, 'Tuyển tập bình phong mã'),
+(1, '2024-06-10 14:44:25.000000', 6, 1, '2024-06-10 14:44:25.000000', 1, 'Tuyển tập bình phi tượng cục'),
+(1, '2024-06-10 14:44:58.000000', 7, 1, '2024-06-10 14:44:58.000000', 4, 'Thuận pháo'),
+(1, '2024-06-10 14:45:02.000000', 8, 1, '2024-06-10 14:45:02.000000', 4, 'Nghịch pháo'),
+(1, '2024-06-10 14:45:10.000000', 9, 1, '2024-06-10 14:45:10.000000', 4, 'Uyên ương pháo'),
+(1, '2024-06-10 14:45:19.000000', 10, 1, '2024-06-10 14:45:19.000000', 4, 'Tuần hà pháo'),
+(1, '2024-06-10 14:45:54.000000', 11, 1, '2024-06-10 14:45:54.000000', 7, 'Bài 1'),
+(1, '2024-06-10 14:45:57.000000', 12, 1, '2024-06-10 14:45:57.000000', 7, 'Bài 2'),
+(1, '2024-06-10 14:46:00.000000', 13, 1, '2024-06-10 14:46:00.000000', 7, 'Bài 3'),
+(1, '2024-06-10 21:32:42.000000', 14, 1, '2024-06-10 21:32:42.000000', 7, 'Bài 4');
 
 -- --------------------------------------------------------
 
@@ -266,9 +310,11 @@ INSERT DELAYED IGNORE INTO `trainings` (`id`, `created_by_user_id`, `created_dat
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) DEFAULT NULL,
+  `vip_id` int(11) DEFAULT NULL,
   `created_by_user_id` bigint(20) DEFAULT NULL,
   `created_date` datetime(6) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `last_modified_by_user_id` bigint(20) DEFAULT NULL,
   `last_modified_date` datetime(6) DEFAULT NULL,
   `avatar` varchar(255) DEFAULT NULL,
@@ -276,8 +322,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(255) DEFAULT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
-  `role_id` int(11) DEFAULT NULL,
-  `vip_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKp56c1712k691lhsyewcssf40f` (`role_id`),
   KEY `FKklrmlmbnq4of02g5ntf6geq6i` (`vip_id`)
@@ -292,8 +336,8 @@ TRUNCATE TABLE `users`;
 -- Dumping data for table `users`
 --
 
-INSERT DELAYED IGNORE INTO `users` (`id`, `created_by_user_id`, `created_date`, `last_modified_by_user_id`, `last_modified_date`, `avatar`, `name`, `password`, `phone_number`, `status`, `role_id`, `vip_id`) VALUES
-(1, NULL, '2024-05-10 10:18:57.000000', NULL, '2024-05-10 10:18:57.000000', NULL, 'Nguyễn Văn Sĩ', '$2a$10$.Dtmc/132v.1hLEAO5IsCOu9qJCRJZJN9M31SsPphJUi2RWfrcIZu', '0589176839', 'ACTIVE', 1, 1);
+INSERT DELAYED IGNORE INTO `users` (`role_id`, `vip_id`, `created_by_user_id`, `created_date`, `id`, `last_modified_by_user_id`, `last_modified_date`, `avatar`, `name`, `password`, `phone_number`, `status`) VALUES
+(1, 1, NULL, '2024-06-10 14:35:11.000000', 1, NULL, '2024-06-10 14:35:11.000000', NULL, 'Nguyễn Văn Sĩ', '$2a$10$Zb2yk3IO3hyNoGfj54Wwye0eg.F8L7p2UdIuuUPiD/qZOvtfhcDQe', '0589176839', 'ACTIVE');
 
 -- --------------------------------------------------------
 
@@ -303,12 +347,12 @@ INSERT DELAYED IGNORE INTO `users` (`id`, `created_by_user_id`, `created_date`, 
 
 DROP TABLE IF EXISTS `vips`;
 CREATE TABLE IF NOT EXISTS `vips` (
+  `deposit_milestones` int(11) DEFAULT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `created_by_user_id` bigint(20) DEFAULT NULL,
   `created_date` datetime(6) DEFAULT NULL,
   `last_modified_by_user_id` bigint(20) DEFAULT NULL,
   `last_modified_date` datetime(6) DEFAULT NULL,
-  `deposit_milestones` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -322,8 +366,8 @@ TRUNCATE TABLE `vips`;
 -- Dumping data for table `vips`
 --
 
-INSERT DELAYED IGNORE INTO `vips` (`id`, `created_by_user_id`, `created_date`, `last_modified_by_user_id`, `last_modified_date`, `deposit_milestones`, `name`) VALUES
-(1, NULL, '2024-05-10 10:18:56.000000', NULL, '2024-05-10 10:18:56.000000', 0, 'Vip0');
+INSERT DELAYED IGNORE INTO `vips` (`deposit_milestones`, `id`, `created_by_user_id`, `created_date`, `last_modified_by_user_id`, `last_modified_date`, `name`) VALUES
+(0, 1, NULL, '2024-06-10 14:35:10.000000', NULL, '2024-06-10 14:35:10.000000', 'Vip0');
 
 --
 -- Constraints for dumped tables

@@ -1,16 +1,14 @@
 package com.nvs.common.enumeration;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public enum EMoveTypeDescription {
-    UP(':'),
-    ACROSS('-'),
-    DOWN('/');
+@AllArgsConstructor
+public enum EMoveTypeDescription{
 
-    private final char value;
+   UP(':'), ACROSS('-'), DOWN('/');
 
-    EMoveTypeDescription(char value) {
-        this.value = value;
-    }
+   private final char value;
+
 }
