@@ -12,4 +12,5 @@ public class InvalidExceptionCustomize extends ExceptionCustomize {
   public InvalidExceptionCustomize(Map<String, Object> errors) {
     super(ErrorMessage.INVALID_DATA, errors);
   }
+
 }

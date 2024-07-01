@@ -23,53 +23,37 @@ public class RankServiceImpl implements RankService {
 
   @Override
   public List<RankDTO> findAll() {
-    return rankRepository
-        .findAll()
-        .stream()
-        .map(r -> rankMapper.toDTO(r))
-        .collect(Collectors.toList());
+    return rankRepository.findAll().stream().map(rankMapper::toDTO).collect(Collectors.toList());
   }
 
   @Override
   public RankDTO findById(int id) {
-    return rankRepository
-        .findById(id)
-        .map(r -> rankMapper.toDTO(r))
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("id", id)));
+    return rankRepository.findById(id).map(rankMapper::toDTO).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
   }
 
   @Override
   public RankDTO findByName(String name) {
-    return rankRepository
-        .findByName(name)
-        .map(r -> rankMapper.toDTO(r))
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("name", name)));
+    return rankRepository.findByName(name).map(rankMapper::toDTO).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("name", name)));
   }
 
   @Override
   public RankDTO findByPlayerElo(int elo) {
-    return rankMapper.toDTO(
-        rankRepository
-            .findFirstByOrderByEloMilestonesAsc()
-            .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-                Collections.singletonMap("elo", elo))));
+    return rankMapper.toDTO(rankRepository.findFirstByOrderByEloMilestonesAsc().orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("elo", elo))));
   }
 
   @Override
   public RankDTO findDefault() {
-    return rankMapper.toDTO(
-        rankRepository
-            .findFirstByOrderByEloMilestonesAsc()
-            .orElseThrow(() -> new InternalServerErrorExceptionCustomize("No rank found")));
+    return rankMapper.toDTO(rankRepository.findFirstByOrderByEloMilestonesAsc()
+        .orElseThrow(() -> new InternalServerErrorExceptionCustomize("No rank found")));
   }
 
   @Override
   public RankDTO create(RankDTO rankDTO) {
     if (rankRepository.existsByName(rankDTO.getName())) {
-      throw new ConflictExceptionCustomize(
-          Collections.singletonMap("name", rankDTO.getName()));
+      throw new ConflictExceptionCustomize(Collections.singletonMap("name", rankDTO.getName()));
     }
 
     if (rankRepository.existsByEloMilestones(rankDTO.getEloMilestones())) {
@@ -82,15 +66,11 @@ public class RankServiceImpl implements RankService {
 
   @Override
   public RankDTO update(int id, RankDTO rankDTO) {
-    Rank existingRank = rankRepository
-        .findById(id)
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("id", id)));
+    Rank existingRank = rankRepository.findById(id).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
-    if (rankRepository.existsByIdNotAndName(id, rankDTO.getName()) ||
-        rankRepository.existsByIdNotAndEloMilestones(
-            id,
-            rankDTO.getEloMilestones())) {
+    if (rankRepository.existsByIdNotAndName(id, rankDTO.getName())
+        || rankRepository.existsByIdNotAndEloMilestones(id, rankDTO.getEloMilestones())) {
       throw new ConflictExceptionCustomize(
           Collections.singletonMap("conflict", "Name or eloMilestones conflict"));
     }
@@ -108,12 +88,9 @@ public class RankServiceImpl implements RankService {
 
   @Override
   public boolean delete(int id) {
-    rankRepository.delete(
-        rankRepository
-            .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-                Collections.singletonMap("id", id))));
-
+    rankRepository.delete(rankRepository.findById(id).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id))));
     return true;
   }
+
 }

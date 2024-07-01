@@ -20,4 +20,5 @@ public class MoveTypeServiceImpl implements MoveTypeService {
   public boolean isVerticallyMoving(int fromCol, int toCol) {
     return fromCol == toCol;
   }
+
 }

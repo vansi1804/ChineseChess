@@ -19,11 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+  private final AuthService authService;
 
-    @Operation(summary = "Login", description = "Endpoint to login")
-    @PostMapping(value = "/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginDTO loginDTO) {
-        return ResponseEntity.ok(authService.login(loginDTO));
-    }
+  @Operation(summary = "Login", description = "Endpoint to login")
+  @PostMapping(value = "/login")
+  public ResponseEntity<?> login(@RequestBody @Valid LoginDTO loginDTO) {
+    return ResponseEntity.ok(authService.login(loginDTO));
+  }
+
 }

@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,18 +31,14 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 public class SecurityConfiguration {
 
   @Bean
-  public DefaultSecurityFilterChain securityFilterChain(
-      HttpSecurity httpSecurity,
+  public DefaultSecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
       JwtFilter jwtFilter) throws Exception {
-    return httpSecurity
-        .csrf(csrf -> csrf.disable())
-        .cors(corsConfigurationSource())
-        .authorizeHttpRequests(requests -> requests.anyRequest().permitAll())
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    return httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(corsConfigurationSource())
+        .authorizeHttpRequests(requests -> requests.anyRequest().permitAll()).sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(characterEncodingFilter(), CsrfFilter.class)
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-        .authenticationProvider(authenticationProvider())
-        .build();
+        .authenticationProvider(authenticationProvider()).build();
   }
 
   @Bean
@@ -59,15 +56,13 @@ public class SecurityConfiguration {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(
-      AuthenticationConfiguration authConfiguration) throws Exception {
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration)
+      throws Exception {
     return authConfiguration.getAuthenticationManager();
   }
 
   @Bean
-  public JwtFilter customJwtFilter(
-      JwtService jwtService,
-      UserDetailsService userDetailsService) {
+  public JwtFilter customJwtFilter(JwtService jwtService, UserDetailsService userDetailsService) {
     return new JwtFilter(jwtService, userDetailsService);
   }
 
@@ -87,14 +82,14 @@ public class SecurityConfiguration {
 
   @Bean
   public Customizer<CorsConfigurer<HttpSecurity>> corsConfigurationSource() {
-    return (Customizer<CorsConfigurer<HttpSecurity>>) cors -> {
+    return cors -> {
       CorsConfiguration configuration = new CorsConfiguration();
       configuration.setAllowedOrigins(List.of("*"));
       configuration.setAllowedHeaders(List.of("*"));
-      configuration.setAllowedMethods(
-          Arrays.asList("GET", "POST", "PUT", "DELETE"));
+      configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 
       cors.configurationSource(request -> configuration);
     };
   }
+
 }

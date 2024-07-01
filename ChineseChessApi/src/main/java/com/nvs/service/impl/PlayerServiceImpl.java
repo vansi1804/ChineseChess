@@ -36,33 +36,25 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public Page<PlayerDTO> findAll(int no, int limit, String sortBy) {
-    return playerRepository
-        .findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
-        .map(p -> playerMapper.toDTO(p));
+    return playerRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
+        .map(playerMapper::toDTO);
   }
 
   @Override
   public PlayerDTO findByUserId(long userId) {
-    return playerRepository
-        .findByUser_Id(userId)
-        .map(p -> playerMapper.toDTO(p))
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("userId", userId)));
+    return playerRepository.findByUser_Id(userId).map(playerMapper::toDTO).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("userId", userId)));
   }
 
   @Override
   public PlayerProfileDTO findById(long id) {
-    return playerRepository
-        .findById(id)
-        .map(p -> playerMapper.toProfileDTO(p))
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("id", id)));
+    return playerRepository.findById(id).map(playerMapper::toProfileDTO).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
   }
 
   @Override
   public PlayerDTO create(PlayerCreationDTO playerCreationDTO) {
-    UserDTO createdUserDTO = userService.create(
-        playerCreationDTO.getUserCreationDTO(),
+    UserDTO createdUserDTO = userService.create(playerCreationDTO.getUserCreationDTO(),
         ERole.PLAYER);
 
     Player player = playerMapper.toEntity(playerCreationDTO);
@@ -74,8 +66,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     player.setElo(defaultRank.getEloMilestones());
 
-    PlayerDTO createdPlayerDTO = playerMapper.toDTO(
-        playerRepository.save(player));
+    PlayerDTO createdPlayerDTO = playerMapper.toDTO(playerRepository.save(player));
     createdPlayerDTO.setUserDTO(createdUserDTO);
     createdPlayerDTO.getPlayerOthersInfoDTO().setRankDTO(defaultRank);
 
@@ -84,17 +75,14 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO) {
-    Player existingPlayer = playerRepository
-        .findById(id)
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("id", id)));
+    Player existingPlayer = playerRepository.findById(id).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
-    if (!userService.isCurrentUser(existingPlayer.getUser().getId())) {
+    if (userService.isCurrentUser(existingPlayer.getUser().getId())) {
       throw new AccessDeniedException(null);
     }
 
-    UserProfileDTO updatedUserProfileDTO = userService.update(
-        existingPlayer.getUser().getId(),
+    UserProfileDTO updatedUserProfileDTO = userService.update(existingPlayer.getUser().getId(),
         playerProfileDTO.getUserProfileDTO());
 
     Player updatePlayer = playerMapper.toEntity(playerProfileDTO);
@@ -102,8 +90,7 @@ public class PlayerServiceImpl implements PlayerService {
     updatePlayer.getUser().setId(existingPlayer.getUser().getId());
     updatePlayer.setElo(existingPlayer.getElo());
 
-    PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(
-        updatePlayer);
+    PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(updatePlayer);
     updatedPlayerProfileDTO.setUserProfileDTO(updatedUserProfileDTO);
 
     return updatedPlayerProfileDTO;
@@ -111,16 +98,13 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public PlayerProfileDTO updateByMatchResult(long id, int result, int eloBet) {
-    Player existingPlayer = playerRepository
-        .findById(id)
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("id", id)));
+    Player existingPlayer = playerRepository.findById(id).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
     if (EMatchResult.WIN.getValue() == result) {
       existingPlayer.setWin(existingPlayer.getWin() + 1);
       existingPlayer.setElo(
-          existingPlayer.getElo() +
-              (int) (eloBet * Default.Game.ELO_WIN_RECEIVE_PERCENT));
+          existingPlayer.getElo() + (int) (eloBet * Default.Game.ELO_WIN_RECEIVE_PERCENT));
     } else if (EMatchResult.LOSE.getValue() == result) {
       existingPlayer.setLose(existingPlayer.getLose() + 1);
       existingPlayer.setElo(existingPlayer.getElo() - eloBet);
@@ -137,4 +121,5 @@ public class PlayerServiceImpl implements PlayerService {
 
     return updatedPlayerProfileDTO;
   }
+
 }

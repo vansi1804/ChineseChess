@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayerDTO {
 
-    private long id;
+  private long id;
 
-    private UserDTO userDTO;
+  private UserDTO userDTO;
 
-    private PlayerOthersInfoDTO playerOthersInfoDTO;
+  private PlayerOthersInfoDTO playerOthersInfoDTO;
+
 }

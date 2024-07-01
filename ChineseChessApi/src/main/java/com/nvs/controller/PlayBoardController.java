@@ -24,4 +24,5 @@ public class PlayBoardController {
   public ResponseEntity<PlayBoardDTO> generate() {
     return ResponseEntity.ok(playBoardService.generate());
   }
+
 }

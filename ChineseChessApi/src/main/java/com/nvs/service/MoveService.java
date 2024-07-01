@@ -11,19 +11,20 @@ import com.nvs.data.dto.move.trainingMove.TrainingMoveCreationDTO;
 import java.util.List;
 import java.util.Map;
 
-public interface MoveService {
-  Map<Long, MoveHistoryDTO> findAllByMatchId(long matchId);
+public interface MoveService{
 
-  Map<Long, MoveHistoryDTO> findAllByTrainingId(long trainingId);
+   Map<Long, MoveHistoryDTO> findAllByMatchId(long matchId);
 
-  List<int[]> findAllAvailable(AvailableMoveRequestDTO availableMoveRequestDTO);
+   Map<Long, MoveHistoryDTO> findAllByTrainingId(long trainingId);
 
-  MoveDTO create(MoveCreationDTO moveCreationDTO);
+   List<int[]> findAllAvailable(AvailableMoveRequestDTO availableMoveRequestDTO);
 
-  MoveDTO create(TrainingMoveCreationDTO trainingMoveHistoryCreationDTO);
+   MoveDTO create(MoveCreationDTO moveCreationDTO);
 
-  MoveDTO create(MatchMoveCreationDTO moveHistoryCreationDTO);
+   MoveDTO create(TrainingMoveCreationDTO trainingMoveHistoryCreationDTO);
 
-  Map<Boolean, BestAvailableMoveResponseDTO> findAllBestAvailable(
-      BestAvailableMoveRequestDTO bestAvailableMoveRequestDTO);
+   MoveDTO create(MatchMoveCreationDTO moveHistoryCreationDTO);
+
+   Map<Boolean, BestAvailableMoveResponseDTO> findAllBestAvailable(BestAvailableMoveRequestDTO bestAvailableMoveRequestDTO);
+
 }

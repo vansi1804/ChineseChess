@@ -19,7 +19,7 @@
     <description>Chinese Chess API</description>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>19</java.version>
     </properties>
 
     <dependencies>
@@ -72,11 +72,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -146,18 +141,12 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>com.nvs.ChineseChessApiApplication</mainClass>
-                </configuration>
-            </plugin>
             <!-- Configuration for spring-boot-maven-plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <mainClass>com.nvs.ChineseChessApiApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
@@ -166,12 +155,10 @@
                         <exclude>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct</artifactId>
-                            <!-- <version>1.5.5.Final</version> -->
                         </exclude>
                         <exclude>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <!-- <version>1.5.5.Final</version> -->
                         </exclude>
                     </excludes>
                     <classifier>exec</classifier>
@@ -185,28 +172,6 @@
                     <jvmArguments>-Dfile.encoding=UTF8</jvmArguments>
                 </configuration>
             </plugin>
-
-            <!-- Configuration for spring-aot-maven-plugin -->
-            <!--            <plugin>-->
-            <!--                <groupId>org.springframework.experimental</groupId>-->
-            <!--                <artifactId>spring-aot-maven-plugin</artifactId>-->
-            <!--                <version>0.12.1</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <?m2e ignore?>-->
-            <!--                        <id>test-generate</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>test-generate</goal>-->
-            <!--                        </goals>-->
-            <!--                    </execution>-->
-            <!--                    <execution>-->
-            <!--                        <id>generate</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>generate</goal>-->
-            <!--                        </goals>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
 
             <!-- Configuration for hibernate-enhance-maven-plugin -->
             <plugin>
