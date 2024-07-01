@@ -1,17 +1,17 @@
 package com.nvs.data.dto.move.availableMove.bestAvailableMove;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class BestAvailableMoveResponseDTO {
+public class BestAvailableMoveResponseDTO{
 
-  private int evalScore;
+   private int evalScore;
 
-  private List<BestMoveResponseDTO> bestMovesResponseDTOs;
+   private List<BestMoveResponseDTO> bestMovesResponseDTOs;
+
 }

@@ -13,35 +13,24 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl implements RoleService{
 
-  private final RoleRepository roleRepository;
-  private final RoleMapper roleMapper;
+   private final RoleRepository roleRepository;
+   private final RoleMapper roleMapper;
 
-  @Override
-  public List<RoleDTO> findAll() {
-    return roleRepository
-        .findAll()
-        .stream()
-        .map(r -> roleMapper.toDTO(r))
-        .collect(Collectors.toList());
-  }
+   @Override
+   public List<RoleDTO> findAll(){
+      return roleRepository.findAll().stream().map(roleMapper::toDTO).collect(Collectors.toList());
+   }
 
-  @Override
-  public RoleDTO findById(int id) {
-    return roleRepository
-        .findById(id)
-        .map(r -> roleMapper.toDTO(r))
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("id", id)));
-  }
+   @Override
+   public RoleDTO findById(int id){
+      return roleRepository.findById(id).map(roleMapper::toDTO).orElseThrow(()->new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+   }
 
-  @Override
-  public RoleDTO findByName(String name) {
-    return roleRepository
-        .findByName(name)
-        .map(r -> roleMapper.toDTO(r))
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("name", name)));
-  }
+   @Override
+   public RoleDTO findByName(String name){
+      return roleRepository.findByName(name).map(roleMapper::toDTO).orElseThrow(()->new ResourceNotFoundExceptionCustomize(Collections.singletonMap("name", name)));
+   }
+
 }

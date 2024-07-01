@@ -5,34 +5,26 @@ import com.nvs.data.dto.PlayBoardDTO;
 import com.nvs.data.entity.MoveHistory;
 import java.util.List;
 
-public interface PlayBoardService {
-  PlayBoardDTO generate();
+public interface PlayBoardService{
 
-  PlayBoardDTO build(List<MoveHistory> moveHistories);
+   PlayBoardDTO generate();
 
-  PlayBoardDTO update(
-      PlayBoardDTO playBoardDTO,
-      PieceDTO movingPieceDTO,
-      int toCol,
-      int toRow);
+   PlayBoardDTO build(List<MoveHistory> moveHistories);
 
-  void printTest(Object title, PlayBoardDTO playBoardDTO, PieceDTO pieceDTO);
+   PlayBoardDTO update(PlayBoardDTO playBoardDTO, PieceDTO movingPieceDTO, int toCol, int toRow);
 
-  void printTest(
-      PlayBoardDTO playBoardDTO,
-      PieceDTO pieceDTO,
-      List<int[]> availableMoveIndexes);
+   PlayBoardDTO restore(PlayBoardDTO playBoardDTO, PieceDTO movedPieceDTO, int fromCol, int fromRow, PieceDTO deadPieceDTO);
 
-  boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO);
+   void printTest(Object title, PlayBoardDTO playBoardDTO, PieceDTO pieceDTO);
 
-  boolean areTwoGeneralsFacing(
-      PlayBoardDTO playBoardDTO,
-      PieceDTO generalPieceDTO1,
-      PieceDTO generalPieceDTO2);
+   void printTest(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, List<int[]> availableMoveIndexes);
 
-  boolean isGeneralBeingChecked(
-      PlayBoardDTO playBoardDTO,
-      PieceDTO generalPieceDTO);
+   boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO);
 
-  int evaluate(PlayBoardDTO playBoardDTO);
+   boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO1, PieceDTO generalPieceDTO2);
+
+   boolean isGeneralBeingChecked(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO);
+
+   int evaluate(PlayBoardDTO playBoardDTO);
+
 }

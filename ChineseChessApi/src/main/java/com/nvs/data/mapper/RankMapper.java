@@ -5,8 +5,10 @@ import com.nvs.data.entity.Rank;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface RankMapper {
-    Rank toEntity(RankDTO rankDTO);
+public interface RankMapper{
 
-    RankDTO toDTO(Rank rank);
+   Rank toEntity(RankDTO rankDTO);
+
+   RankDTO toDTO(Rank rank);
+   
 }

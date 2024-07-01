@@ -18,43 +18,34 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthServiceImpl implements AuthService{
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
-    private final RoleMapper roleMapper;
+   private final AuthenticationManager authenticationManager;
+   private final JwtService jwtService;
+   private final RoleMapper roleMapper;
 
-    @Override
-    public LoginResponseDTO login(LoginDTO loginDTO) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginDTO.getPhoneNumber(),
-                            loginDTO.getPassword()));
+   @Override
+   public LoginResponseDTO login(LoginDTO loginDTO){
+      try{
+         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getPhoneNumber(), loginDTO.getPassword()));
 
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-            LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
+         LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
 
-            if (userDetails instanceof UserDetailsImpl userDetailsImpl) {
-                loginResponseDTO.setUserId(userDetailsImpl.getUser().getId());
-                loginResponseDTO.setRoleDTO(
-                        roleMapper.toDTO(userDetailsImpl.getUser().getRole()));
-            }
+         if(userDetails instanceof UserDetailsImpl userDetailsImpl){
+            loginResponseDTO.setUserId(userDetailsImpl.getUser().getId());
+            loginResponseDTO.setRoleDTO(roleMapper.toDTO(userDetailsImpl.getUser().getRole()));
+         }
 
-            loginResponseDTO.setAccessToken(
-                    jwtService.generateToken(
-                            userDetails.getUsername(),
-                            Default.JWT.ACCESS_TOKEN_EXPIRATION_TIME));
+         loginResponseDTO.setAccessToken(jwtService.generateToken(userDetails.getUsername(), Default.JWT.ACCESS_TOKEN_EXPIRATION_TIME));
 
-            loginResponseDTO.setRefreshToken(
-                    jwtService.generateToken(
-                            userDetails.getUsername(),
-                            Default.JWT.REFRESH_EXPIRATION_TIME));
+         loginResponseDTO.setRefreshToken(jwtService.generateToken(userDetails.getUsername(), Default.JWT.REFRESH_EXPIRATION_TIME));
 
-            return loginResponseDTO;
-        } catch (BadCredentialsException ex) {
-            throw new UnauthorizedExceptionCustomize();
-        }
-    }
+         return loginResponseDTO;
+      } catch(BadCredentialsException ex){
+         throw new UnauthorizedExceptionCustomize();
+      }
+   }
+
 }

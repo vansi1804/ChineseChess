@@ -8,10 +8,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @SpringBootApplication
 @EnableWebMvc
 @EnableJpaRepositories
-class ChineseChessApiApplication {
+class ChineseChessApiApplication{
 
-    public static void main(String[] args) {
-        SpringApplication.run(ChineseChessApiApplication.class, args);
-    }
+   public static void main(String[] args){
+      SpringApplication.run(ChineseChessApiApplication.class, args);
+   }
 
 }
