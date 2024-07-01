@@ -1,15 +1,15 @@
 package com.nvs.data.dto;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 public class ErrorMessageResponseDTO implements Serializable {
+
   private int code;
 
   private String message;
@@ -17,4 +17,5 @@ public class ErrorMessageResponseDTO implements Serializable {
   private Object errors;
 
   private String path;
+
 }

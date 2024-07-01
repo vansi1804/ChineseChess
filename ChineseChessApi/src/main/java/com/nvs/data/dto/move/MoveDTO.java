@@ -11,17 +11,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MoveDTO {
 
-    private PieceDTO movingPieceDTO;
+  private PieceDTO movingPieceDTO;
 
-    private int toCol;
+  private int toCol;
 
-    private int toRow;
+  private int toRow;
 
-    private PieceDTO deadPieceDTO;
+  private PieceDTO deadPieceDTO;
 
-    private PlayBoardDTO playBoardDTO;
+  private PlayBoardDTO playBoardDTO;
 
-    private PieceDTO checkedGeneralPieceDTO;
+  private PieceDTO checkedGeneralPieceDTO;
 
-    private boolean isCheckmateState;
+  private boolean isCheckmateState;
+
 }

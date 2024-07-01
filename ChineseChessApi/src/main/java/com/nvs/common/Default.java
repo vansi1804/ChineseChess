@@ -54,6 +54,14 @@ public class Default {
 
   public static class Game {
 
+    public static final int MATCH_TIME = 5; // in minutes
+    public static final int MOVING_TIME = 30; // in seconds
+    public static final int CUMULATIVE_TIME = 3; // in seconds
+    public static final int BET_ELO = 0;
+    public static final int ELO_MILESTONES = 0;
+    public static final int DEPOSIT_MILESTONES = 0;
+    public static final float ELO_WIN_RECEIVE_PERCENT = 0.95F;
+
     public static class PlayBoardSize {
 
       // 0_1__2__3__4__5__6__7__8
@@ -107,19 +115,6 @@ public class Default {
         public static final int CENTER_ROW_MAX = 9;
       }
     }
-
-    public static final int MATCH_TIME = 5; // in minutes
-
-    public static final int MOVING_TIME = 30; // in seconds
-
-    public static final int CUMULATIVE_TIME = 3; // in seconds
-
-    public static final int BET_ELO = 0;
-
-    public static final int ELO_MILESTONES = 0;
-
-    public static final int DEPOSIT_MILESTONES = 0;
-
-    public static final float ELO_WIN_RECEIVE_PERCENT = 0.95F;
   }
+
 }

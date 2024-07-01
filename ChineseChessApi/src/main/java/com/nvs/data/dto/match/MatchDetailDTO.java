@@ -1,12 +1,10 @@
 package com.nvs.data.dto.match;
 
-import com.nvs.data.dto.match.MatchDTO;
 import com.nvs.data.dto.move.MoveHistoryDTO;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
 
 @AllArgsConstructor
 @Data
@@ -18,4 +16,5 @@ public class MatchDetailDTO {
   private Long totalTurn;
 
   private Map<Long, MoveHistoryDTO> moveHistoryDTOs;
+
 }

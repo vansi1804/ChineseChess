@@ -39,33 +39,26 @@ public class FileController {
 
   @Operation(summary = "Download file", description = "Endpoint to download a file")
   @GetMapping(value = "/download/{fileName}")
-  public ResponseEntity<Resource> downloadFile(@PathVariable String fileName)
-      throws IOException {
+  public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws IOException {
     Resource resource = fileService.downloadFile(fileName);
     String originalFilename = obtainOriginalFileName(resource);
     String mediaType = Files.probeContentType(resource.getFile().toPath());
 
-    return ResponseEntity
-        .ok()
-        .contentType(MediaType.parseMediaType(mediaType))
-        .header(
-            HttpHeaders.CONTENT_DISPOSITION,
-            "attachment; filename=\"" + originalFilename + "\"")
-        .body(resource);
+    return ResponseEntity.ok().contentType(MediaType.parseMediaType(mediaType))
+        .header(HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=\"" + originalFilename + "\"").body(resource);
   }
 
   @Operation(summary = "Display file", description = "Endpoint to display a file on the web")
   @GetMapping(value = "/display/{fileName}") // view on web
-  public ResponseEntity<byte[]> displayFile(@PathVariable String fileName)
-      throws IOException {
+  public ResponseEntity<byte[]> displayFile(@PathVariable String fileName) throws IOException {
     Resource resource = fileService.downloadFile(fileName);
     String originalFilename = obtainOriginalFileName(resource);
     String mediaType = detectMediaType(originalFilename);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.parseMediaType(mediaType));
-    headers.setContentDisposition(
-        ContentDisposition.inline().filename(originalFilename).build());
+    headers.setContentDisposition(ContentDisposition.inline().filename(originalFilename).build());
 
     byte[] fileBytes;
     try (InputStream inputStream = resource.getInputStream()) {

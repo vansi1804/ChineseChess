@@ -1,24 +1,25 @@
 package com.nvs.data.repository;
 
 import com.nvs.data.entity.Vip;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 public interface VipRepository extends JpaRepository<Vip, Integer> {
-    boolean existsByName(String name);
 
-    Optional<Vip> findByName(String name);
+  boolean existsByName(String name);
 
-    boolean existsByIdNotAndName(int id, String name);
+  Optional<Vip> findByName(String name);
 
-    Optional<Vip> findFirstByOrderByDepositMilestonesAsc();
+  boolean existsByIdNotAndName(int id, String name);
 
-    Optional<Vip> findFirstByOrderByDepositMilestonesDesc();
+  Optional<Vip> findFirstByOrderByDepositMilestonesAsc();
 
-    boolean existsByDepositMilestones(int depositMilestones);
+  Optional<Vip> findFirstByOrderByDepositMilestonesDesc();
 
-    boolean existsByIdNotAndDepositMilestones(int id, int depositMilestones);
+  boolean existsByDepositMilestones(int depositMilestones);
+
+  boolean existsByIdNotAndDepositMilestones(int id, int depositMilestones);
+
 }

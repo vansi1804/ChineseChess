@@ -5,58 +5,32 @@ import com.nvs.data.dto.PieceDTO;
 import com.nvs.data.dto.PlayBoardDTO;
 import java.util.List;
 
-public interface PieceService {
-  List<PieceDTO> findAll();
+public interface PieceService{
 
-  PieceDTO findById(int id);
+   List<PieceDTO> findAll();
 
-  EPiece convertByName(String name);
+   PieceDTO findById(int id);
 
-  List<PieceDTO> findAllInBoard(
-      PlayBoardDTO playBoardDTO,
-      String name,
-      Boolean isRed);
+   EPiece convertByName(String name);
 
-  List<PieceDTO> findAllInBoard(
-      PlayBoardDTO playBoardDTO,
-      String name,
-      Boolean isRed,
-      int fromCol,
-      int fromRow,
-      int toCol,
-      int toRow);
+   List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed);
 
-  PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id);
+   List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed, int fromCol, int fromRow, int toCol, int toRow);
 
-  List<PieceDTO> findAllNotInPlayBoard(PlayBoardDTO playBoardDTO);
+   PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id);
 
-  PieceDTO findExistingTheSameInColPath(
-      PlayBoardDTO playBoardDTO,
-      PieceDTO pieceDTO);
+   List<PieceDTO> findAllNotInPlayBoard(PlayBoardDTO playBoardDTO);
 
-  boolean existsBetweenInRowPath(
-      PlayBoardDTO playBoardDTO,
-      int row,
-      int fromCol,
-      int toCol);
+   PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO);
 
-  boolean existsBetweenInColPath(
-      PlayBoardDTO playBoardDTO,
-      int col,
-      int fromRow,
-      int toRow);
+   boolean existsBetweenInRowPath(PlayBoardDTO playBoardDTO, int row, int fromCol, int toCol);
 
-  int countBetweenInRowPath(
-      PlayBoardDTO playBoardDTO,
-      int row,
-      int fromCol,
-      int toCol);
+   boolean existsBetweenInColPath(PlayBoardDTO playBoardDTO, int col, int fromRow, int toRow);
 
-  int countBetweenInColPath(
-      PlayBoardDTO playBoardDTO,
-      int col,
-      int fromRow,
-      int toRow);
+   int countBetweenInRowPath(PlayBoardDTO playBoardDTO, int row, int fromCol, int toCol);
 
-  PieceDTO findGeneralInBoard(PlayBoardDTO playBoardDTO, boolean isRed);
+   int countBetweenInColPath(PlayBoardDTO playBoardDTO, int col, int fromRow, int toRow);
+
+   PieceDTO findGeneralInBoard(PlayBoardDTO playBoardDTO, boolean isRed);
+
 }

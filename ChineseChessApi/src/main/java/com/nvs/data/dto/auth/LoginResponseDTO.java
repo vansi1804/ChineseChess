@@ -15,4 +15,5 @@ public class LoginResponseDTO extends JwtResponseDTO {
   private long userId;
 
   private RoleDTO roleDTO;
+
 }

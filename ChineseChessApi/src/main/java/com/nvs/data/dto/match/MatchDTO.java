@@ -1,7 +1,7 @@
 package com.nvs.data.dto.match;
 
-import com.nvs.data.dto.player.PlayerProfileDTO;
 import com.nvs.data.dto.AuditorDTO;
+import com.nvs.data.dto.player.PlayerProfileDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,4 +22,5 @@ public class MatchDTO extends AuditorDTO {
   private MatchOthersInfoDTO matchOthersInfoDTO;
 
   private Integer result;
+
 }

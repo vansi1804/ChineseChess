@@ -6,18 +6,20 @@ import com.nvs.data.dto.match.MatchDetailDTO;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface MatchService {
-  List<MatchDTO> findAll();
+public interface MatchService{
 
-  MatchDTO findById(long id);
+   List<MatchDTO> findAll();
 
-  List<MatchDTO> findAllByPlayerId(long playerId);
+   MatchDTO findById(long id);
 
-  MatchDetailDTO findDetailById(long id);
+   List<MatchDTO> findAllByPlayerId(long playerId);
 
-  @Transactional
-  MatchDTO create(MatchCreationDTO matchCreationDTO);
+   MatchDetailDTO findDetailById(long id);
 
-  @Transactional
-  MatchDTO updateResult(long id, Boolean result);
+   @Transactional
+   MatchDTO create(MatchCreationDTO matchCreationDTO);
+
+   @Transactional
+   MatchDTO updateResult(long id, Boolean result);
+
 }

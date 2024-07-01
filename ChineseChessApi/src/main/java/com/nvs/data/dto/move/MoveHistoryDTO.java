@@ -1,13 +1,11 @@
 package com.nvs.data.dto.move;
 
-import com.nvs.data.dto.move.MoveDTO;
 import com.nvs.data.dto.PieceDTO;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Data
@@ -20,4 +18,5 @@ public class MoveHistoryDTO extends MoveDTO {
   private String description;
 
   private List<PieceDTO> lastDeadPieceDTOs;
+
 }

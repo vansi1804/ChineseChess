@@ -49,58 +49,49 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Page<UserDTO> findAll(int no, int limit, String sortBy) {
-    return userRepository
-        .findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
-        .map(u -> userMapper.toDTO(u));
+    return userRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
+        .map(userMapper::toDTO);
   }
 
   @Override
   public UserDTO findById(long id) {
-    return userRepository
-        .findById(id)
-        .map(u -> userMapper.toDTO(u))
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("id", id)));
+    return userRepository.findById(id)
+        .map(userMapper::toDTO)
+        .orElseThrow(
+            () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
   }
 
   @Override
   public UserDTO findByPhoneNumber(String phoneNumber) {
-    return userRepository
-        .findByPhoneNumber(phoneNumber)
-        .map(u -> userMapper.toDTO(u))
+    return userRepository.findByPhoneNumber(phoneNumber)
+        .map(userMapper::toDTO)
         .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
             Collections.singletonMap("phoneNumber", phoneNumber)));
   }
 
   @Override
   public UserDTO findByName(String name) {
-    return userRepository
-        .findByName(name)
-        .map(u -> userMapper.toDTO(u))
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("name", name)));
+    return userRepository.findByName(name)
+        .map(userMapper::toDTO)
+        .orElseThrow(
+            () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("name", name)));
   }
 
   @Override
   public UserDTO create(UserCreationDTO userCreationDTO, ERole eRole) {
     if (userRepository.existsByPhoneNumber(userCreationDTO.getPhoneNumber())) {
       throw new ConflictExceptionCustomize(
-          Collections.singletonMap(
-              "phoneNumber",
-              userCreationDTO.getPhoneNumber()));
+          Collections.singletonMap("phoneNumber", userCreationDTO.getPhoneNumber()));
     }
 
     User createUser = userMapper.toEntity(userCreationDTO);
-    createUser.setPassword(
-        passwordEncoder.encode(userCreationDTO.getPassword()));
+    createUser.setPassword(passwordEncoder.encode(userCreationDTO.getPassword()));
 
-    Role role = roleRepository
-        .findByName(eRole.name())
+    Role role = roleRepository.findByName(eRole.name())
         .orElseThrow(() -> new InternalServerErrorExceptionCustomize(eRole.name()));
     createUser.setRole(role);
 
-    Vip defaultVip = vipRepository
-        .findFirstByOrderByDepositMilestonesAsc()
+    Vip defaultVip = vipRepository.findFirstByOrderByDepositMilestonesAsc()
         .orElseThrow(() -> new InternalServerErrorExceptionCustomize("default vip"));
     createUser.setVip(defaultVip);
 
@@ -111,14 +102,10 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserProfileDTO update(long id, UserProfileDTO userProfileDTO) {
-    User existingUser = userRepository
-        .findById(id)
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("id", id)));
+    User existingUser = userRepository.findById(id).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
-    if (userRepository.existsByIdNotAndPhoneNumber(
-        id,
-        userProfileDTO.getPhoneNumber())) {
+    if (userRepository.existsByIdNotAndPhoneNumber(id, userProfileDTO.getPhoneNumber())) {
       throw new ResourceNotFoundExceptionCustomize(
           Collections.singletonMap("phoneNumber", userProfileDTO.getPhoneNumber()));
     }
@@ -152,38 +139,22 @@ public class UserServiceImpl implements UserService {
     return this.updateStatusById(id, EStatus.ACTIVE);
   }
 
-  public UserDTO updateStatusById(long id, EStatus eStatus) {
-    User user = userRepository
-        .findById(id)
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("id", id)));
-
-    user.setStatus(eStatus.name());
-
-    return userMapper.toDTO(userRepository.save(user));
-  }
-
   @Override
   public boolean isCurrentUser(long id) {
-    Long currentAuthId = auditorAware.getCurrentAuditor().orElse(null);
-    return Objects.equals(id, currentAuthId);
+    return !Objects.equals(id, auditorAware.getCurrentAuditor().orElse(null));
   }
 
   @Override
-  public UserProfileDTO changePassword(
-      long id,
+  public UserProfileDTO changePassword(long id,
       UserChangePasswordRequestDTO userChangePasswordRequestDTO) {
-    if (!this.isCurrentUser(id)) {
+    if (this.isCurrentUser(id)) {
       throw new AccessDeniedException(null);
     }
 
-    User user = userRepository
-        .findById(id)
-        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("id", id)));
+    User user = userRepository.findById(id).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
-    if (!passwordEncoder.matches(
-        userChangePasswordRequestDTO.getOldPassword(),
+    if (!passwordEncoder.matches(userChangePasswordRequestDTO.getOldPassword(),
         user.getPassword())) {
       Map<String, Object> errors = new HashMap<>();
       errors.put("id", id);
@@ -192,8 +163,7 @@ public class UserServiceImpl implements UserService {
       throw new InvalidExceptionCustomize(errors);
     }
 
-    if (!userChangePasswordRequestDTO
-        .getNewPassword()
+    if (!userChangePasswordRequestDTO.getNewPassword()
         .equals(userChangePasswordRequestDTO.getNewPasswordConfirm())) {
       Map<String, Object> errors = new HashMap<>();
       errors.put("id", id);
@@ -202,10 +172,18 @@ public class UserServiceImpl implements UserService {
       throw new InvalidExceptionCustomize(errors);
     }
 
-    user.setPassword(
-        passwordEncoder.encode(
-            userChangePasswordRequestDTO.getNewPasswordConfirm()));
+    user.setPassword(passwordEncoder.encode(userChangePasswordRequestDTO.getNewPasswordConfirm()));
 
     return userMapper.toProfileDTO(userRepository.save(user));
   }
+
+  public UserDTO updateStatusById(long id, EStatus eStatus) {
+    User user = userRepository.findById(id).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+
+    user.setStatus(eStatus.name());
+
+    return userMapper.toDTO(userRepository.save(user));
+  }
+
 }

@@ -10,16 +10,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String phoneNumber)
-            throws UsernameNotFoundException {
-        User user = userRepository
-                .findByPhoneNumber(phoneNumber)
-                .orElseThrow(UnauthorizedExceptionCustomize::new);
+  @Override
+  public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+    User user = userRepository.findByPhoneNumber(phoneNumber)
+        .orElseThrow(UnauthorizedExceptionCustomize::new);
 
-        return new UserDetailsImpl(user);
-    }
+    return new UserDetailsImpl(user);
+  }
 }

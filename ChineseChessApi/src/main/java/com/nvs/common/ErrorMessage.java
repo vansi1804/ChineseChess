@@ -1,5 +1,10 @@
 package com.nvs.common;
 
+import static com.nvs.common.Default.Game.PlayBoardSize.COL_MAX;
+import static com.nvs.common.Default.Game.PlayBoardSize.COL_MIN;
+import static com.nvs.common.Default.Game.PlayBoardSize.ROW_MAX;
+import static com.nvs.common.Default.Game.PlayBoardSize.ROW_MIN;
+
 public class ErrorMessage {
 
   public static final String ACCESS_DENIED = "Access denied";
@@ -8,11 +13,10 @@ public class ErrorMessage {
 
   public static final String BET_ELO = ">= " + Default.Game.BET_ELO + "(elo)";
 
-  public static final String COL = Default.Game.PlayBoardSize.COL_MIN +
-      " <= col <= " +
-      Default.Game.PlayBoardSize.COL_MAX;
+  public static final String COL =
+      COL_MIN + " <= col <= " + COL_MAX;
 
-  public static final String COL_LENGTH = "= " + Default.Game.PlayBoardSize.COL_MAX;
+  public static final String COL_LENGTH = "= " + COL_MAX;
 
   public static final String CUMULATIVE_TIME = ">= " + Default.Game.CUMULATIVE_TIME + "(seconds)";
 
@@ -42,7 +46,8 @@ public class ErrorMessage {
 
   public static final String INVALID_MOVING_PLAYER = "Invalid moving player";
 
-  public static final String INVALID_PASSWORD_SIZE = "Password should have at least" + Validation.PASSWORD_SIZE_MIN;
+  public static final String INVALID_PASSWORD_SIZE =
+      "Password should have at least" + Validation.PASSWORD_SIZE_MIN;
 
   public static final String INVALID_PLAYER_MOVE_PIECE = "Player is moving invalid piece";
 
@@ -64,11 +69,10 @@ public class ErrorMessage {
 
   public static final String PLAY_BOARD_SIZE = "Invalid play board size";
 
-  public static final String ROW = Default.Game.PlayBoardSize.ROW_MIN +
-      " <= col <= " +
-      Default.Game.PlayBoardSize.ROW_MAX;
+  public static final String ROW =
+      ROW_MIN + " <= col <= " + ROW_MAX;
 
-  public static final String ROW_LENGTH = " = " + Default.Game.PlayBoardSize.ROW_MAX;
+  public static final String ROW_LENGTH = " = " + ROW_MAX;
 
   public static final String INTERNAL_SERVER_ERROR = "An unexpected error occurred on the server";
 
@@ -79,4 +83,5 @@ public class ErrorMessage {
   public static final Object ERROR_OLD_PASSWORD = "Old password is incorrect";
 
   public static final Object ERROR_NEW_PASSWORD_CONFIRM = "New password confirm is incorrect";
+
 }

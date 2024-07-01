@@ -1,10 +1,5 @@
 package com.nvs.data.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,30 +11,38 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @Entity
 @Table(name = "trainings")
-public class Training extends Auditor {
+public class Training extends Auditor{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
-    private long id;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @Column(name = "id", updatable = false)
+   private long id;
 
-    @Column(name = "title")
-    private String title;
+   @Column(name = "title")
+   private String title;
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_training_id", referencedColumnName = "id")
-    private Training parentTraining;
+   @ManyToOne(optional = true, fetch = FetchType.LAZY)
+   @JoinColumn(name = "parent_training_id", referencedColumnName = "id")
+   @ToString.Exclude
+   private Training parentTraining;
 
-    @OneToMany(mappedBy = "parentTraining", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Training> childTrainings = new ArrayList<>();
+   @OneToMany(mappedBy = "parentTraining", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+   @ToString.Exclude
+   private List<Training> childTrainings = new ArrayList<>();
+
 }

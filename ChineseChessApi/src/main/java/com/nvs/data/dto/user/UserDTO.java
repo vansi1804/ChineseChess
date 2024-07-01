@@ -20,4 +20,5 @@ public class UserDTO extends AuditorDTO {
   private RoleDTO roleDTO;
 
   private String status;
+
 }
