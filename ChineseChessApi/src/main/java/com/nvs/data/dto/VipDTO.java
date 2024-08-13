@@ -14,15 +14,15 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class VipDTO extends AuditorDTO{
+public class VipDTO extends AuditorDTO {
 
-   private Integer id;
+  private Integer id;
 
-   @NotBlank(message = ErrorMessage.BLANK_DATA)
-   private String name;
+  @NotBlank(message = ErrorMessage.BLANK_DATA)
+  private String name;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Min(value = Default.Game.DEPOSIT_MILESTONES, message = ErrorMessage.DEPOSIT_MILESTONES)
-   private Integer depositMilestones;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Min(value = Default.Game.DEPOSIT_MILESTONES, message = ErrorMessage.DEPOSIT_MILESTONES)
+  private Integer depositMilestones;
 
 }

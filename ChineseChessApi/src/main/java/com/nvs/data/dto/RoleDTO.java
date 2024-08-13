@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class RoleDTO implements Serializable{
+public class RoleDTO implements Serializable {
 
-   private int id;
+  private int id;
 
-   private String name;
+  private String name;
 
 }

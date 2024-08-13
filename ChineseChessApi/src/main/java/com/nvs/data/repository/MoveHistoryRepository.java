@@ -6,14 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MoveHistoryRepository extends JpaRepository<MoveHistory, Long>{
+public interface MoveHistoryRepository extends JpaRepository<MoveHistory, Long> {
 
-   List<MoveHistory> findAllByMatch_Id(long matchId);
+  List<MoveHistory> findAllByMatch_Id(long matchId);
 
-   long countTurnByMatch_Id(long matchId);
+  long countTurnByMatch_Id(long matchId);
 
-   List<MoveHistory> findAllByTraining_Id(long trainingId);
+  List<MoveHistory> findAllByTraining_Id(long trainingId);
 
-   long countTurnByTraining_Id(long trainingId);
+  long countTurnByTraining_Id(long trainingId);
 
 }

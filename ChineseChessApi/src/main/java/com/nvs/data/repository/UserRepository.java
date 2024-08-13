@@ -6,14 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Long> {
 
-   boolean existsByPhoneNumber(String phoneNumber);
+  boolean existsByPhoneNumber(String phoneNumber);
 
-   Optional<User> findByPhoneNumber(String phoneNumber);
+  Optional<User> findByPhoneNumber(String phoneNumber);
 
-   Optional<User> findByName(String name);
+  Optional<User> findByName(String name);
 
-   boolean existsByIdNotAndPhoneNumber(long id, String phoneNumber);
+  boolean existsByIdNotAndPhoneNumber(long id, String phoneNumber);
 
 }

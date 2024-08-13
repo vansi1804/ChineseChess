@@ -12,22 +12,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MatchOthersInfoDTO implements Serializable{
+public class MatchOthersInfoDTO implements Serializable {
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Min(value = Default.Game.MATCH_TIME, message = ErrorMessage.MATCH_TIME)
-   private Integer time;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Min(value = Default.Game.MATCH_TIME, message = ErrorMessage.MATCH_TIME)
+  private Integer time;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Min(value = Default.Game.MOVING_TIME, message = ErrorMessage.MOVING_TIME)
-   private Integer movingTime;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Min(value = Default.Game.MOVING_TIME, message = ErrorMessage.MOVING_TIME)
+  private Integer movingTime;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Min(value = Default.Game.CUMULATIVE_TIME, message = ErrorMessage.CUMULATIVE_TIME)
-   private Integer cumulativeTime;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Min(value = Default.Game.CUMULATIVE_TIME, message = ErrorMessage.CUMULATIVE_TIME)
+  private Integer cumulativeTime;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Min(value = Default.Game.BET_ELO, message = ErrorMessage.BET_ELO)
-   private Integer eloBet;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Min(value = Default.Game.BET_ELO, message = ErrorMessage.BET_ELO)
+  private Integer eloBet;
 
 }

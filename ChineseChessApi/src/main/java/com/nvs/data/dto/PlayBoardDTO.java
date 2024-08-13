@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class PlayBoardDTO{
+public class PlayBoardDTO {
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Valid
-   private PieceDTO[][] state;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Valid
+  private PieceDTO[][] state;
 
 }

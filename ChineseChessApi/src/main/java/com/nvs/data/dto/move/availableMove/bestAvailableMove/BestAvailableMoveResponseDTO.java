@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class BestAvailableMoveResponseDTO{
+public class BestAvailableMoveResponseDTO {
 
-   private int evalScore;
+  private int evalScore;
 
-   private List<BestMoveResponseDTO> bestMovesResponseDTOs;
+  private List<BestMoveResponseDTO> bestMovesResponseDTOs;
 
 }

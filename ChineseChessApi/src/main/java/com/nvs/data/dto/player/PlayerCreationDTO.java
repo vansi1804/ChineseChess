@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class PlayerCreationDTO{
+public class PlayerCreationDTO {
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Valid
-   private UserCreationDTO userCreationDTO;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Valid
+  private UserCreationDTO userCreationDTO;
 
 }

@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class LoginDTO implements Serializable{
+public class LoginDTO implements Serializable {
 
-   @NotBlank(message = ErrorMessage.BLANK_DATA)
-   private String phoneNumber;
+  @NotBlank(message = ErrorMessage.BLANK_DATA)
+  private String phoneNumber;
 
-   @NotBlank(message = ErrorMessage.BLANK_DATA)
-   private String password;
+  @NotBlank(message = ErrorMessage.BLANK_DATA)
+  private String password;
 
 }

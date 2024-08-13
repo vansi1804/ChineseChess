@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 
-public class TrainingMoveCreationDTO extends MoveDetailCreationDTO{
+public class TrainingMoveCreationDTO extends MoveDetailCreationDTO {
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   private Long trainingId;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  private Long trainingId;
 
 }

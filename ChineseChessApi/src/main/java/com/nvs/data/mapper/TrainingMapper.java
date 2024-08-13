@@ -8,27 +8,27 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
-public interface TrainingMapper{
-   
-   @Mapping(source = "parentTrainingId", target = "parentTraining", qualifiedByName = "mapParentTrainingToEntity")
-   Training toEntity(TrainingDTO trainingDTO);
+public interface TrainingMapper {
 
-   @Named("mapParentTrainingToEntity")
-   default Training mapParentTrainingToEntity(Long parentTrainingId){
-      if(parentTrainingId == null){
-         return null;
-      } else {
-         Training parentTraining = new Training();
-         parentTraining.setId(parentTrainingId);
-         return parentTraining;
-      }
-   }
+  @Mapping(source = "parentTrainingId", target = "parentTraining", qualifiedByName = "mapParentTrainingToEntity")
+  Training toEntity(TrainingDTO trainingDTO);
 
-   @Mapping(source = "parentTraining.id", target = "parentTrainingId")
-   @Mapping(source = "childTrainings", target = "childTrainingDTOs")
-   TrainingDTO toDTO(Training training);
+  @Named("mapParentTrainingToEntity")
+  default Training mapParentTrainingToEntity(Long parentTrainingId) {
+    if (parentTrainingId == null) {
+      return null;
+    } else {
+      Training parentTraining = new Training();
+      parentTraining.setId(parentTrainingId);
+      return parentTraining;
+    }
+  }
 
-   @Mapping(expression = "java(toDTO(training))", target = "trainingDTO")
-   TrainingDetailDTO toDetailDTO(Training training);
+  @Mapping(source = "parentTraining.id", target = "parentTrainingId")
+  @Mapping(source = "childTrainings", target = "childTrainingDTOs")
+  TrainingDTO toDTO(Training training);
+
+  @Mapping(expression = "java(toDTO(training))", target = "trainingDTO")
+  TrainingDetailDTO toDetailDTO(Training training);
 
 }

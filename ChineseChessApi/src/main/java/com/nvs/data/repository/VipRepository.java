@@ -6,20 +6,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VipRepository extends JpaRepository<Vip, Integer>{
+public interface VipRepository extends JpaRepository<Vip, Integer> {
 
-   boolean existsByName(String name);
+  boolean existsByName(String name);
 
-   Optional<Vip> findByName(String name);
+  Optional<Vip> findByName(String name);
 
-   boolean existsByIdNotAndName(int id, String name);
+  boolean existsByIdNotAndName(int id, String name);
 
-   Optional<Vip> findFirstByOrderByDepositMilestonesAsc();
+  Optional<Vip> findFirstByOrderByDepositMilestonesAsc();
 
-   Optional<Vip> findFirstByOrderByDepositMilestonesDesc();
+  Optional<Vip> findFirstByOrderByDepositMilestonesDesc();
 
-   boolean existsByDepositMilestones(int depositMilestones);
+  boolean existsByDepositMilestones(int depositMilestones);
 
-   boolean existsByIdNotAndDepositMilestones(int id, int depositMilestones);
+  boolean existsByIdNotAndDepositMilestones(int id, int depositMilestones);
 
 }

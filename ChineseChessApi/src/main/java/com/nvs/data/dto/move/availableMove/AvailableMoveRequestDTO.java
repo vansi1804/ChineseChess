@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class AvailableMoveRequestDTO{
+public class AvailableMoveRequestDTO {
 
-   @NotNull(message = ErrorMessage.BLANK_DATA)
-   private Integer movingPieceId;
+  @NotNull(message = ErrorMessage.BLANK_DATA)
+  private Integer movingPieceId;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Valid
-   @Validator(PlayBoardDTOValidatorIml.class)
-   private PlayBoardDTO playBoardDTO;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Valid
+  @Validator(PlayBoardDTOValidatorIml.class)
+  private PlayBoardDTO playBoardDTO;
 
 }

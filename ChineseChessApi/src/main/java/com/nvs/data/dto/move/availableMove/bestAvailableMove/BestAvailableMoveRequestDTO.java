@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class BestAvailableMoveRequestDTO{
+public class BestAvailableMoveRequestDTO {
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Valid
-   private PlayBoardDTO playBoardDTO;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Valid
+  private PlayBoardDTO playBoardDTO;
 
-   private Boolean isRed;
+  private Boolean isRed;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   private Integer depth;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  private Integer depth;
 
 }

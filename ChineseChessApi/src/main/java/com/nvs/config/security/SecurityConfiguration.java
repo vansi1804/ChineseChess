@@ -28,69 +28,68 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfiguration{
+public class SecurityConfiguration {
 
-   @Bean
-   public DefaultSecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtFilter jwtFilter) throws Exception{
-      return httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                         .cors(corsConfigurationSource())
-                         .authorizeHttpRequests(requests->requests.anyRequest()
-                                                                  .permitAll())
-                         .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                         .addFilterBefore(characterEncodingFilter(), CsrfFilter.class)
-                         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                         .authenticationProvider(authenticationProvider())
-                         .build();
-   }
+  @Bean
+  public DefaultSecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+      JwtFilter jwtFilter) throws Exception {
+    return httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(corsConfigurationSource())
+        .authorizeHttpRequests(requests -> requests.anyRequest().permitAll()).sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(characterEncodingFilter(), CsrfFilter.class)
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .authenticationProvider(authenticationProvider()).build();
+  }
 
-   @Bean
-   public CharacterEncodingFilter characterEncodingFilter(){
-      CharacterEncodingFilter filter = new CharacterEncodingFilter();
-      filter.setEncoding("UTF-8");
-      filter.setForceEncoding(true);
+  @Bean
+  public CharacterEncodingFilter characterEncodingFilter() {
+    CharacterEncodingFilter filter = new CharacterEncodingFilter();
+    filter.setEncoding("UTF-8");
+    filter.setForceEncoding(true);
 
-      return filter;
-   }
+    return filter;
+  }
 
-   @Bean
-   public BCryptPasswordEncoder passwordEncoder(){
-      return new BCryptPasswordEncoder();
-   }
+  @Bean
+  public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-   @Bean
-   public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception{
-      return authConfiguration.getAuthenticationManager();
-   }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration)
+      throws Exception {
+    return authConfiguration.getAuthenticationManager();
+  }
 
-   @Bean
-   public JwtFilter customJwtFilter(JwtService jwtService, UserDetailsService userDetailsService){
-      return new JwtFilter(jwtService, userDetailsService);
-   }
+  @Bean
+  public JwtFilter customJwtFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+    return new JwtFilter(jwtService, userDetailsService);
+  }
 
-   @Bean
-   public UserDetailsServiceImpl userDetailsService(){
-      return new UserDetailsServiceImpl();
-   }
+  @Bean
+  public UserDetailsServiceImpl userDetailsService() {
+    return new UserDetailsServiceImpl();
+  }
 
-   @Bean
-   public DaoAuthenticationProvider authenticationProvider(){
-      DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-      authenticationProvider.setUserDetailsService(userDetailsService());
-      authenticationProvider.setPasswordEncoder(passwordEncoder());
+  @Bean
+  public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+    authenticationProvider.setUserDetailsService(userDetailsService());
+    authenticationProvider.setPasswordEncoder(passwordEncoder());
 
-      return authenticationProvider;
-   }
+    return authenticationProvider;
+  }
 
-   @Bean
-   public Customizer<CorsConfigurer<HttpSecurity>> corsConfigurationSource(){
-      return (Customizer<CorsConfigurer<HttpSecurity>>) cors->{
-         CorsConfiguration configuration = new CorsConfiguration();
-         configuration.setAllowedOrigins(List.of("*"));
-         configuration.setAllowedHeaders(List.of("*"));
-         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+  @Bean
+  public Customizer<CorsConfigurer<HttpSecurity>> corsConfigurationSource() {
+    return cors -> {
+      CorsConfiguration configuration = new CorsConfiguration();
+      configuration.setAllowedOrigins(List.of("*"));
+      configuration.setAllowedHeaders(List.of("*"));
+      configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 
-         cors.configurationSource(request->configuration);
-      };
-   }
+      cors.configurationSource(request -> configuration);
+    };
+  }
 
 }

@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class TrainingDetailDTO{
+public class TrainingDetailDTO {
 
-   private TrainingDTO trainingDTO;
+  private TrainingDTO trainingDTO;
 
-   private long totalTurn;
+  private long totalTurn;
 
-   private Map<Long, MoveHistoryDTO> moveHistoryDTOs;
+  private Map<Long, MoveHistoryDTO> moveHistoryDTOs;
 
 }

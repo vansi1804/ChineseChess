@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MoveHistoryDTO extends MoveDTO{
+public class MoveHistoryDTO extends MoveDTO {
 
-   private long turn;
+  private long turn;
 
-   private String description;
+  private String description;
 
-   private List<PieceDTO> lastDeadPieceDTOs;
+  private List<PieceDTO> lastDeadPieceDTOs;
 
 }

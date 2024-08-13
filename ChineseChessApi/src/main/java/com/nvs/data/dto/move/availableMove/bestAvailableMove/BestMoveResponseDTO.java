@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class BestMoveResponseDTO{
+public class BestMoveResponseDTO {
 
-   private PieceDTO pieceDTO;
+  private PieceDTO pieceDTO;
 
-   private List<int[]> bestAvailableMoveIndexes;
+  private List<int[]> bestAvailableMoveIndexes;
 
 }
