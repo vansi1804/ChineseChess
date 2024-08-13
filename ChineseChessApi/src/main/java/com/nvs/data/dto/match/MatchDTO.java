@@ -11,16 +11,16 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MatchDTO extends AuditorDTO{
+public class MatchDTO extends AuditorDTO {
 
-   private long id;
+  private long id;
 
-   private PlayerProfileDTO player1ProfileDTO;
+  private PlayerProfileDTO player1ProfileDTO;
 
-   private PlayerProfileDTO player2ProfileDTO;
+  private PlayerProfileDTO player2ProfileDTO;
 
-   private MatchOthersInfoDTO matchOthersInfoDTO;
+  private MatchOthersInfoDTO matchOthersInfoDTO;
 
-   private Integer result;
+  private Integer result;
 
 }

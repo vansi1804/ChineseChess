@@ -14,15 +14,15 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class RankDTO extends AuditorDTO{
+public class RankDTO extends AuditorDTO {
 
-   private Integer id;
+  private Integer id;
 
-   @NotBlank(message = ErrorMessage.BLANK_DATA)
-   private String name;
+  @NotBlank(message = ErrorMessage.BLANK_DATA)
+  private String name;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Min(value = Default.Game.ELO_MILESTONES, message = ErrorMessage.ELO_MILESTONES)
-   private Integer eloMilestones;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Min(value = Default.Game.ELO_MILESTONES, message = ErrorMessage.ELO_MILESTONES)
+  private Integer eloMilestones;
 
 }

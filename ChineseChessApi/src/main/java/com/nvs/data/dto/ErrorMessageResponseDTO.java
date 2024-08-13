@@ -8,13 +8,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class ErrorMessageResponseDTO implements Serializable{
-   private int code;
+public class ErrorMessageResponseDTO implements Serializable {
 
-   private String message;
+  private int code;
 
-   private Object errors;
+  private String message;
 
-   private String path;
+  private Object errors;
+
+  private String path;
 
 }

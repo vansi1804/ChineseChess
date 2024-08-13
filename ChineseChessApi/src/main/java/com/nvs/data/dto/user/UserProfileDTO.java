@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class UserProfileDTO{
+public class UserProfileDTO {
 
-   @NotBlank(message = ErrorMessage.BLANK_DATA)
-   private String phoneNumber;
+  @NotBlank(message = ErrorMessage.BLANK_DATA)
+  private String phoneNumber;
 
-   @NotBlank(message = ErrorMessage.BLANK_DATA)
-   private String name;
+  @NotBlank(message = ErrorMessage.BLANK_DATA)
+  private String name;
 
-   private String avatar;
+  private String avatar;
 
-   private VipDTO vipDTO;
+  private VipDTO vipDTO;
 
 }

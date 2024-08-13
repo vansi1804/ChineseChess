@@ -26,9 +26,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class ApplicationRunnerImpl implements ApplicationRunner{
+@Service @RequiredArgsConstructor public class ApplicationRunnerImpl implements ApplicationRunner{
 
    private final PasswordEncoder passwordEncoder;
    private final UserRepository userRepository;
@@ -80,31 +78,11 @@ public class ApplicationRunnerImpl implements ApplicationRunner{
       Player adminPlayer = new Player();
       adminPlayer.setUser(adminUser);
 
-      Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc().orElseThrow(()->new InternalServerErrorExceptionCustomize("No rank found"));
+      Rank defaultRank = rankRepository.findFirstByOrderByEloMilestonesAsc()
+                                       .orElseThrow(()->new InternalServerErrorExceptionCustomize("No rank found"));
       adminPlayer.setElo(defaultRank.getEloMilestones());
 
       playerRepository.save(adminPlayer);
-   }
-
-   private User initAdminUser(){
-      if(!userRepository.existsByPhoneNumber(Default.User.Admin.PHONE_NUMBER)){
-         User adminUser = new User();
-         adminUser.setPhoneNumber(Default.User.Admin.PHONE_NUMBER);
-         adminUser.setPassword(passwordEncoder.encode(Default.User.Admin.PASSWORD));
-         adminUser.setName(Default.User.Admin.NAME);
-
-         Role adminRole = roleRepository.findByName(Default.User.Admin.ROLE.name()).orElseThrow(()->new InternalServerErrorExceptionCustomize("No role found"));
-         adminUser.setRole(adminRole);
-
-         Vip adminVip = vipRepository.findFirstByOrderByDepositMilestonesDesc().orElseThrow(()->new InternalServerErrorExceptionCustomize("No vip found"));
-         adminUser.setVip(adminVip);
-
-         adminUser.setStatus(Default.User.Admin.STATUS.name());
-
-         return userRepository.save(adminUser);
-      }
-
-      return null;
    }
 
    private void innitPiece(){
@@ -146,6 +124,29 @@ public class ApplicationRunnerImpl implements ApplicationRunner{
       defaultPieces.add(new Piece(32, EPiece.GENERAL.name(), false, "black_general.png", 4, 0));
 
       pieceRepository.saveAll(defaultPieces);
+   }
+
+   private User initAdminUser(){
+      if(!userRepository.existsByPhoneNumber(Default.User.Admin.PHONE_NUMBER)){
+         User adminUser = new User();
+         adminUser.setPhoneNumber(Default.User.Admin.PHONE_NUMBER);
+         adminUser.setPassword(passwordEncoder.encode(Default.User.Admin.PASSWORD));
+         adminUser.setName(Default.User.Admin.NAME);
+
+         Role adminRole = roleRepository.findByName(Default.User.Admin.ROLE.name())
+                                        .orElseThrow(()->new InternalServerErrorExceptionCustomize("No role found"));
+         adminUser.setRole(adminRole);
+
+         Vip adminVip = vipRepository.findFirstByOrderByDepositMilestonesDesc()
+                                     .orElseThrow(()->new InternalServerErrorExceptionCustomize("No vip found"));
+         adminUser.setVip(adminVip);
+
+         adminUser.setStatus(Default.User.Admin.STATUS.name());
+
+         return userRepository.save(adminUser);
+      }
+
+      return null;
    }
 
 }

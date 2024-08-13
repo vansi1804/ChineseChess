@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class PlayerProfileDTO{
+public class PlayerProfileDTO {
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Valid
-   private UserProfileDTO userProfileDTO;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Valid
+  private UserProfileDTO userProfileDTO;
 
-   private com.nvs.data.dto.player.PlayerOthersInfoDTO playerOthersInfoDTO;
+  private com.nvs.data.dto.player.PlayerOthersInfoDTO playerOthersInfoDTO;
 
 }

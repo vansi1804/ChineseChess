@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ApiUrl.PIECE)
 @Tag(name = "Piece", description = "Endpoints for managing Pieces")
 @RequiredArgsConstructor
-public class PieceController{
+public class PieceController {
 
-   private final PieceService pieceService;
+  private final PieceService pieceService;
 
-   @Operation(summary = "Get all base", description = "Endpoint to get all base trainings")
-   @GetMapping(value = "")
-   public ResponseEntity<List<PieceDTO>> findAll(){
-      return ResponseEntity.ok(pieceService.findAll());
-   }
+  @Operation(summary = "Get all base", description = "Endpoint to get all base trainings")
+  @GetMapping(value = "")
+  public ResponseEntity<List<PieceDTO>> findAll() {
+    return ResponseEntity.ok(pieceService.findAll());
+  }
 
 }

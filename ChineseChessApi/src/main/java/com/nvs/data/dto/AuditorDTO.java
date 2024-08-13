@@ -17,16 +17,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @MappedSuperclass
 @NoArgsConstructor
-public class AuditorDTO implements Serializable{
+public class AuditorDTO implements Serializable {
 
-   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
-   private Date createdDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
+  private Date createdDate;
 
-   private Long createdByUserId;
+  private Long createdByUserId;
 
-   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
-   private Date lastModifiedDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Default.DateTimeFormat.DATE_TIME)
+  private Date lastModifiedDate;
 
-   private Long lastModifiedByUserId;
+  private Long lastModifiedByUserId;
 
 }

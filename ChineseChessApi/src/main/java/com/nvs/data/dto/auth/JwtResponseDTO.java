@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class JwtResponseDTO implements Serializable{
+public class JwtResponseDTO implements Serializable {
 
-   private final String tokenType = Default.JWT.TOKEN_PREFIX.trim();
+  private final String tokenType = Default.JWT.TOKEN_PREFIX.trim();
 
-   private String accessToken;
+  private String accessToken;
 
-   private String refreshToken;
+  private String refreshToken;
 
 }

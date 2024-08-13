@@ -8,17 +8,17 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {RoleMapper.class, VipMapper.class})
-public interface UserMapper{
+public interface UserMapper {
 
-   User toEntity(UserCreationDTO userCreationDTO);
+  User toEntity(UserCreationDTO userCreationDTO);
 
-   User toEntity(UserProfileDTO userProfileDTO);
+  User toEntity(UserProfileDTO userProfileDTO);
 
-   @Mapping(source = "vip", target = "vipDTO")
-   UserProfileDTO toProfileDTO(User user);
+  @Mapping(source = "vip", target = "vipDTO")
+  UserProfileDTO toProfileDTO(User user);
 
-   @Mapping(expression = "java(toProfileDTO(user))", target = "userProfileDTO")
-   @Mapping(source = "role", target = "roleDTO")
-   UserDTO toDTO(User user);
+  @Mapping(expression = "java(toProfileDTO(user))", target = "userProfileDTO")
+  @Mapping(source = "role", target = "roleDTO")
+  UserDTO toDTO(User user);
 
 }

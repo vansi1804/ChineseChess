@@ -23,23 +23,23 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @RequiredArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class Auditor implements Serializable{
+public class Auditor implements Serializable {
 
-   @CreatedDate
-   @Temporal(TemporalType.TIMESTAMP)
-   @Column(name = "created_date", updatable = false)
-   private Date createdDate;
+  @CreatedDate
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "created_date", updatable = false)
+  private Date createdDate;
 
-   @CreatedBy
-   @Column(name = "created_by_user_id", updatable = false)
-   private Long createdByUserId;
+  @CreatedBy
+  @Column(name = "created_by_user_id", updatable = false)
+  private Long createdByUserId;
 
-   @LastModifiedDate
-   @Temporal(TemporalType.TIMESTAMP)
-   @Column(name = "last_modified_date")
-   private Date lastModifiedDate;
+  @LastModifiedDate
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "last_modified_date")
+  private Date lastModifiedDate;
 
-   @LastModifiedBy
-   @Column(name = "last_modified_by_user_id")
-   private Long lastModifiedByUserId;
+  @LastModifiedBy
+  @Column(name = "last_modified_by_user_id")
+  private Long lastModifiedByUserId;
 }

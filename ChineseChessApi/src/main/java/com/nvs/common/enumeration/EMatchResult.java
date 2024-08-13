@@ -6,11 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum EMatchResult {
+  WIN(1), DRAW(0), LOSE(-1);
 
-    WIN(1),
-    DRAW(0),
-    LOSE(-1);
-
-    private final int value;
-
+  private final int value;
 }

@@ -8,25 +8,25 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RankRepository extends JpaRepository<Rank, Integer>{
+public interface RankRepository extends JpaRepository<Rank, Integer> {
 
-   boolean existsByName(String name);
+  boolean existsByName(String name);
 
-   Optional<Rank> findByName(String name);
+  Optional<Rank> findByName(String name);
 
-   boolean existsByIdNotAndName(int id, String name);
+  boolean existsByIdNotAndName(int id, String name);
 
-   Optional<Rank> findFirstByOrderByEloMilestonesAsc();
+  Optional<Rank> findFirstByOrderByEloMilestonesAsc();
 
-   boolean existsByEloMilestones(int eloMilestones);
+  boolean existsByEloMilestones(int eloMilestones);
 
-   boolean existsByIdNotAndEloMilestones(int id, int eloMilestones);
+  boolean existsByIdNotAndEloMilestones(int id, int eloMilestones);
 
-   @Query(value = "SELECT r" +
-         " FROM Rank r" +
-         " WHERE r.eloMilestones <= :elo" +
-         " ORDER BY r.eloMilestones DESC" +
-         " LIMIT 1", nativeQuery = true)
-   Optional<Rank> findByElo(@Param("elo") int elo);
+  @Query(value = "SELECT r" +
+      " FROM Rank r" +
+      " WHERE r.eloMilestones <= :elo" +
+      " ORDER BY r.eloMilestones DESC" +
+      " LIMIT 1", nativeQuery = true)
+  Optional<Rank> findByElo(@Param("elo") int elo);
 
 }

@@ -8,16 +8,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class PlayerOthersInfoDTO{
+public class PlayerOthersInfoDTO {
 
-   private int elo;
+  private int elo;
 
-   private RankDTO rankDTO;
+  private RankDTO rankDTO;
 
-   private int win;
+  private int win;
 
-   private int draw;
+  private int draw;
 
-   private int lose;
+  private int lose;
 
 }

@@ -13,19 +13,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MoveDetailCreationDTO implements Serializable{
+public class MoveDetailCreationDTO implements Serializable {
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   private Integer movingPieceId;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  private Integer movingPieceId;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Min(value = Default.Game.PlayBoardSize.COL_MIN, message = ErrorMessage.COL)
-   @Max(value = Default.Game.PlayBoardSize.COL_MAX, message = ErrorMessage.COL)
-   private Integer toCol;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Min(value = Default.Game.PlayBoardSize.COL_MIN, message = ErrorMessage.COL)
+  @Max(value = Default.Game.PlayBoardSize.COL_MAX, message = ErrorMessage.COL)
+  private Integer toCol;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Min(value = Default.Game.PlayBoardSize.ROW_MIN, message = ErrorMessage.ROW)
-   @Max(value = Default.Game.PlayBoardSize.ROW_MAX, message = ErrorMessage.ROW)
-   private Integer toRow;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Min(value = Default.Game.PlayBoardSize.ROW_MIN, message = ErrorMessage.ROW)
+  @Max(value = Default.Game.PlayBoardSize.ROW_MAX, message = ErrorMessage.ROW)
+  private Integer toRow;
 
 }

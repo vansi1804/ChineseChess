@@ -5,10 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum EMoveTypeDescription{
+public enum EMoveTypeDescription {
+  UP(':'), ACROSS('-'), DOWN('/');
 
-   UP(':'), ACROSS('-'), DOWN('/');
-
-   private final char value;
-
+  private final char value;
 }

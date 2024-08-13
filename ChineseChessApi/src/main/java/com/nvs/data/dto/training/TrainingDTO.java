@@ -13,15 +13,15 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class TrainingDTO extends AuditorDTO{
+public class TrainingDTO extends AuditorDTO {
 
-   private Long id;
+  private Long id;
 
-   @NotBlank(message = ErrorMessage.BLANK_DATA)
-   private String title;
+  @NotBlank(message = ErrorMessage.BLANK_DATA)
+  private String title;
 
-   private Long parentTrainingId;
+  private Long parentTrainingId;
 
-   private List<TrainingDTO> childTrainingDTOs;
+  private List<TrainingDTO> childTrainingDTOs;
 
 }

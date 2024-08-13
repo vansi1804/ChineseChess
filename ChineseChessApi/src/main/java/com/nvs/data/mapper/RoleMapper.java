@@ -5,10 +5,10 @@ import com.nvs.data.entity.Role;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface RoleMapper{
+public interface RoleMapper {
 
-   Role toEntity(RoleDTO roleDTO);
+  Role toEntity(RoleDTO roleDTO);
 
-   RoleDTO toDTO(Role role);
+  RoleDTO toDTO(Role role);
 
 }

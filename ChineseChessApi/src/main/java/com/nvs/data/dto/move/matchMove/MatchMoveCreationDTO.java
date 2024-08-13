@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class MatchMoveCreationDTO extends MoveDetailCreationDTO{
+public class MatchMoveCreationDTO extends MoveDetailCreationDTO {
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   private Long matchId;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  private Long matchId;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   private Long playerId;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  private Long playerId;
 
 }

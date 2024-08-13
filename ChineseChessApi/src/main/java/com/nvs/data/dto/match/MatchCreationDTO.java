@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class MatchCreationDTO{
+public class MatchCreationDTO {
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   private Long player1Id;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  private Long player1Id;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   private Long player2Id;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  private Long player2Id;
 
-   @NotNull(message = ErrorMessage.NULL_DATA)
-   @Valid
-   private MatchOthersInfoDTO matchOthersInfoDTO;
+  @NotNull(message = ErrorMessage.NULL_DATA)
+  @Valid
+  private MatchOthersInfoDTO matchOthersInfoDTO;
 
 }

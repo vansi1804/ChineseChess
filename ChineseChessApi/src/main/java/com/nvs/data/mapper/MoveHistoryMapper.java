@@ -7,14 +7,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface MoveHistoryMapper{
+public interface MoveHistoryMapper {
 
-   @Mapping(source = "matchId", target = "match.id")
-   @Mapping(source = "movingPieceId", target = "piece.id")
-   MoveHistory toEntity(MatchMoveCreationDTO matchMoveCreationDTO);
+  @Mapping(source = "matchId", target = "match.id")
+  @Mapping(source = "movingPieceId", target = "piece.id")
+  MoveHistory toEntity(MatchMoveCreationDTO matchMoveCreationDTO);
 
-   @Mapping(source = "trainingId", target = "training.id")
-   @Mapping(source = "movingPieceId", target = "piece.id")
-   MoveHistory toEntity(TrainingMoveCreationDTO trainingMoveCreationDTO);
+  @Mapping(source = "trainingId", target = "training.id")
+  @Mapping(source = "movingPieceId", target = "piece.id")
+  MoveHistory toEntity(TrainingMoveCreationDTO trainingMoveCreationDTO);
 
 }

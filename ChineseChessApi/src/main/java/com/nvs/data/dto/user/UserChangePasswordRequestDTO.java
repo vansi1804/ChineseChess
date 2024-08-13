@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class UserChangePasswordRequestDTO implements Serializable{
+public class UserChangePasswordRequestDTO implements Serializable {
 
-   @NotBlank(message = ErrorMessage.BLANK_DATA)
-   private String oldPassword;
+  @NotBlank(message = ErrorMessage.BLANK_DATA)
+  private String oldPassword;
 
-   @NotBlank(message = ErrorMessage.BLANK_DATA)
-   @Size(min = Validation.PASSWORD_SIZE_MIN, message = ErrorMessage.INVALID_PASSWORD_SIZE)
-   private String newPassword;
+  @NotBlank(message = ErrorMessage.BLANK_DATA)
+  @Size(min = Validation.PASSWORD_SIZE_MIN, message = ErrorMessage.INVALID_PASSWORD_SIZE)
+  private String newPassword;
 
-   private String newPasswordConfirm;
+  private String newPasswordConfirm;
 
 }
