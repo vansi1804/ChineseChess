@@ -1,6 +1,5 @@
 package com.nvs.data.dto.player;
 
-import com.nvs.common.ErrorMessage;
 import com.nvs.data.dto.user.UserProfileDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -13,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayerProfileDTO {
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
+  @NotNull(message = "NULL_DATA")
   @Valid
   private UserProfileDTO userProfileDTO;
 
-  private com.nvs.data.dto.player.PlayerOthersInfoDTO playerOthersInfoDTO;
+  private PlayerOthersInfoDTO playerOthersInfoDTO;
 
 }

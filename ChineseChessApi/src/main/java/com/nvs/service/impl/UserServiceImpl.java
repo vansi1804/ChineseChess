@@ -1,13 +1,13 @@
 package com.nvs.service.impl;
 
 import com.nvs.common.Default;
-import com.nvs.common.ErrorMessage;
 import com.nvs.common.enumeration.ERole;
 import com.nvs.common.enumeration.EStatus;
 import com.nvs.config.exception.ConflictExceptionCustomize;
 import com.nvs.config.exception.InternalServerErrorExceptionCustomize;
 import com.nvs.config.exception.InvalidExceptionCustomize;
 import com.nvs.config.exception.ResourceNotFoundExceptionCustomize;
+import com.nvs.config.i18nMessage.Translator;
 import com.nvs.data.dto.user.UserChangePasswordRequestDTO;
 import com.nvs.data.dto.user.UserCreationDTO;
 import com.nvs.data.dto.user.UserDTO;
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
         user.getPassword())) {
       Map<String, Object> errors = new HashMap<>();
       errors.put("id", id);
-      errors.put("message", ErrorMessage.ERROR_OLD_PASSWORD);
+      errors.put("message", Translator.toLocale("ERROR_OLD_PASSWORD"));
 
       throw new InvalidExceptionCustomize(errors);
     }
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
         .equals(userChangePasswordRequestDTO.getNewPasswordConfirm())) {
       Map<String, Object> errors = new HashMap<>();
       errors.put("id", id);
-      errors.put("message", ErrorMessage.ERROR_NEW_PASSWORD_CONFIRM);
+      errors.put("message", Translator.toLocale("ERROR_NEW_PASSWORD_CONFIRM"));
 
       throw new InvalidExceptionCustomize(errors);
     }

@@ -1,9 +1,11 @@
 package com.nvs.config.exception;
 
-public class UnauthorizedExceptionCustomize extends ExceptionCustomize {
+import com.nvs.config.i18nMessage.Translator;
+
+public class UnauthorizedExceptionCustomize extends BaseExceptionCustomize {
 
   public UnauthorizedExceptionCustomize() {
-    super();
+    super(Translator.toLocale("UNAUTHORIZED"));
   }
 
 }

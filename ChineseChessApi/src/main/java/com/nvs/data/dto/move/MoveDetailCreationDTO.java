@@ -1,10 +1,9 @@
 package com.nvs.data.dto.move;
 
 import com.nvs.common.Default;
-import com.nvs.common.ErrorMessage;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import com.nvs.common.Default.Game.PlayBoardSize;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,17 +14,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MoveDetailCreationDTO implements Serializable {
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
+  @NotNull(message = "NULL_DATA")
   private Integer movingPieceId;
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
-  @Min(value = Default.Game.PlayBoardSize.COL_MIN, message = ErrorMessage.COL)
-  @Max(value = Default.Game.PlayBoardSize.COL_MAX, message = ErrorMessage.COL)
+  @NotNull(message = "NULL_DATA")
+  @Size(max = Default.Game.PlayBoardSize.COL_MAX, message = "COL")
   private Integer toCol;
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
-  @Min(value = Default.Game.PlayBoardSize.ROW_MIN, message = ErrorMessage.ROW)
-  @Max(value = Default.Game.PlayBoardSize.ROW_MAX, message = ErrorMessage.ROW)
+  @NotNull(message = "NULL_DATA")
+  @Size(max = PlayBoardSize.ROW_MAX, message = "ROW")
   private Integer toRow;
 
 }

@@ -1,8 +1,8 @@
 package com.nvs.data.dto.move;
 
-import com.nvs.common.ErrorMessage;
+import com.nvs.config.validation.Validator;
+import com.nvs.config.validation.impl.PlayBoardDTOValidatorIml;
 import com.nvs.data.dto.PlayBoardDTO;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MoveCreationDTO extends MoveDetailCreationDTO {
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
-  @Valid
+  @NotNull(message = "NULL_DATA")
+  @Validator(value = {PlayBoardDTOValidatorIml.class})
   private PlayBoardDTO playBoardDTO;
 
 }
