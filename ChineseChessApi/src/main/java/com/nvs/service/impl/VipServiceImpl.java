@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +26,7 @@ public class VipServiceImpl implements VipService {
   private final VipMapper vipMapper;
 
   @Override
+  @Cacheable(value = "vips")
   public List<VipDTO> findAll() {
     log.debug("Fetching all VIPs");
     List<VipDTO> vipDTOs = vipRepository.findAll().stream()
@@ -33,6 +37,7 @@ public class VipServiceImpl implements VipService {
   }
 
   @Override
+  @Cacheable(value = "vips", key = "#id")
   public VipDTO findById(int id) {
     log.debug("Fetching VIP by ID: {}", id);
     VipDTO vipDTO = vipRepository.findById(id)
@@ -44,6 +49,7 @@ public class VipServiceImpl implements VipService {
   }
 
   @Override
+  @CachePut(value = "vips", key = "#vipDTO.name")
   public VipDTO create(VipDTO vipDTO) {
     log.debug("Creating VIP with DTO: {}", vipDTO);
 
@@ -62,6 +68,7 @@ public class VipServiceImpl implements VipService {
   }
 
   @Override
+  @CachePut(value = "vips", key = "#id")
   public VipDTO update(int id, VipDTO vipDTO) {
     log.debug("Updating VIP with ID: {} and DTO: {}", id, vipDTO);
 
@@ -91,6 +98,7 @@ public class VipServiceImpl implements VipService {
   }
 
   @Override
+  @CacheEvict(value = "vips", key = "#id")
   public boolean delete(int id) {
     log.debug("Deleting VIP with ID: {}", id);
 

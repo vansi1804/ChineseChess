@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class LoginDTO implements Serializable {
+public class LoginRequestDTO implements Serializable {
 
   @NotBlank(message = "BLANK_DATA")
   private String phoneNumber;

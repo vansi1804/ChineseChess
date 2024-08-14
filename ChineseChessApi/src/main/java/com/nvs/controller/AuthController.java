@@ -1,7 +1,7 @@
 package com.nvs.controller;
 
 import com.nvs.common.ApiUrl;
-import com.nvs.data.dto.auth.LoginDTO;
+import com.nvs.data.dto.auth.LoginRequestDTO;
 import com.nvs.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,8 +23,8 @@ public class AuthController {
 
   @Operation(summary = "Login", description = "Endpoint to login")
   @PostMapping(value = "/login")
-  public ResponseEntity<?> login(@RequestBody @Valid LoginDTO loginDTO) {
-    return ResponseEntity.ok(authService.login(loginDTO));
+  public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO) {
+    return ResponseEntity.ok(authService.login(loginRequestDTO));
   }
 
 }

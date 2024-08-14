@@ -20,6 +20,8 @@ import com.nvs.service.UserService;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -36,6 +38,7 @@ public class PlayerServiceImpl implements PlayerService {
   private final UserService userService;
   private final RankService rankService;
 
+  @Cacheable(value = "players", key = "#no + '-' + #limit + '-' + #sortBy")
   @Override
   public Page<PlayerDTO> findAll(int no, int limit, String sortBy) {
     log.debug("Finding all players with page number: {}, page size: {}, sort by: {}", no, limit,
@@ -47,17 +50,18 @@ public class PlayerServiceImpl implements PlayerService {
     return playersPage;
   }
 
+  @Cacheable(value = "playerByUserId", key = "#userId")
   @Override
   public PlayerDTO findByUserId(long userId) {
     log.debug("Finding player by user ID: {}", userId);
     PlayerDTO playerDTO = playerRepository.findByUser_Id(userId).map(playerMapper::toDTO)
-        .orElseThrow(
-            () -> new ResourceNotFoundExceptionCustomize(
-                Collections.singletonMap("userId", userId)));
+        .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
+            Collections.singletonMap("userId", userId)));
     log.debug("Found player: {}", playerDTO);
     return playerDTO;
   }
 
+  @Cacheable(value = "playerProfileById", key = "#id")
   @Override
   public PlayerProfileDTO findById(long id) {
     log.debug("Finding player by ID: {}", id);
@@ -68,6 +72,7 @@ public class PlayerServiceImpl implements PlayerService {
     return playerProfileDTO;
   }
 
+  @CachePut(value = "player", key = "#playerCreationDTO.userCreationDTO.phoneNumber")
   @Override
   public PlayerDTO create(PlayerCreationDTO playerCreationDTO) {
     log.debug("Creating player with details: {}", playerCreationDTO);
@@ -92,6 +97,7 @@ public class PlayerServiceImpl implements PlayerService {
     return createdPlayerDTO;
   }
 
+  @CachePut(value = "playerProfileById", key = "#id")
   @Override
   public PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO) {
     log.debug("Updating player with ID: {} and details: {}", id, playerProfileDTO);
@@ -119,6 +125,7 @@ public class PlayerServiceImpl implements PlayerService {
     return updatedPlayerProfileDTO;
   }
 
+  @CachePut(value = "playerProfileById", key = "#id")
   @Override
   public PlayerProfileDTO updateByMatchResult(long id, int result, int eloBet) {
     log.debug("Updating player by match result with ID: {}, result: {}, elo bet: {}", id, result,

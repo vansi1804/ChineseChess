@@ -20,6 +20,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,7 @@ public class TrainingServiceImpl implements TrainingService {
   private final UserService userService;
 
   @Override
+  @Cacheable(value = "trainings")
   public List<TrainingDTO> findAllBase() {
     log.debug("Fetching all base training records");
     List<TrainingDTO> trainingList = trainingRepository.findAllBase().stream()
@@ -44,6 +48,7 @@ public class TrainingServiceImpl implements TrainingService {
   }
 
   @Override
+  @Cacheable(value = "training", key = "#id")
   public TrainingDTO findById(long id) {
     log.debug("Fetching training by ID: {}", id);
     TrainingDTO trainingDTO = trainingRepository.findById(id)
@@ -55,6 +60,7 @@ public class TrainingServiceImpl implements TrainingService {
   }
 
   @Override
+  @Cacheable(value = "training", key = "#id", unless = "#result == null")
   public TrainingDetailDTO findDetailById(long id) {
     log.debug("Fetching training details by ID: {}", id);
     TrainingDetailDTO trainingDetailDTO = trainingRepository.findById(id)
@@ -72,6 +78,7 @@ public class TrainingServiceImpl implements TrainingService {
   }
 
   @Override
+  @CachePut(value = "training")
   public TrainingDTO create(TrainingDTO trainingDTO) {
     log.debug("Creating new training with DTO: {}", trainingDTO);
 
@@ -97,6 +104,7 @@ public class TrainingServiceImpl implements TrainingService {
   }
 
   @Override
+  @CachePut(value = "training", key = "#id")
   public TrainingDTO update(long id, TrainingDTO trainingDTO) {
     log.debug("Updating training with ID: {} and DTO: {}", id, trainingDTO);
 
@@ -144,6 +152,7 @@ public class TrainingServiceImpl implements TrainingService {
   }
 
   @Override
+  @CacheEvict(value = "training", key = "#id")
   public boolean deleteById(long id) {
     log.debug("Deleting training with ID: {}", id);
 
@@ -159,5 +168,4 @@ public class TrainingServiceImpl implements TrainingService {
 
     return true;
   }
-
 }

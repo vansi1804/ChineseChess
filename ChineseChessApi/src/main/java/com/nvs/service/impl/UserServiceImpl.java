@@ -28,6 +28,8 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +52,7 @@ public class UserServiceImpl implements UserService {
   private final AuditorAware<Long> auditorAware;
 
   @Override
+  @Cacheable(value = "users", key = "#no + '-' + #limit + '-' + #sortBy")
   public Page<UserDTO> findAll(int no, int limit, String sortBy) {
     log.debug("Fetching all users with pagination, page number: {}, limit: {}, sorted by: {}", no,
         limit, sortBy);
@@ -60,6 +63,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Cacheable(value = "users", key = "#id")
   public UserDTO findById(long id) {
     log.debug("Fetching user by ID: {}", id);
     UserDTO userDTO = userRepository.findById(id)
@@ -71,6 +75,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Cacheable(value = "users", key = "#phoneNumber")
   public UserDTO findByPhoneNumber(String phoneNumber) {
     log.debug("Fetching user by phone number: {}", phoneNumber);
     UserDTO userDTO = userRepository.findByPhoneNumber(phoneNumber)
@@ -82,6 +87,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Cacheable(value = "users", key = "#name")
   public UserDTO findByName(String name) {
     log.debug("Fetching user by name: {}", name);
     UserDTO userDTO = userRepository.findByName(name)
@@ -93,6 +99,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @CachePut(value = "users", key = "#userCreationDTO.phoneNumber")
   public UserDTO create(UserCreationDTO userCreationDTO, ERole eRole) {
     log.debug("Creating user with DTO: {} and role: {}", userCreationDTO, eRole);
 
@@ -120,6 +127,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @CachePut(value = "users", key = "#id")
   public UserProfileDTO update(long id, UserProfileDTO userProfileDTO) {
     log.debug("Updating user with ID: {} and DTO: {}", id, userProfileDTO);
 
@@ -154,6 +162,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @CachePut(value = "users", key = "#id")
   public UserDTO lockById(long id) {
     log.debug("Locking user with ID: {}", id);
     UserDTO lockedUserDTO = this.updateStatusById(id, EStatus.LOCK);
@@ -162,6 +171,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @CachePut(value = "users", key = "#id")
   public UserDTO unlockById(long id) {
     log.debug("Unlocking user with ID: {}", id);
     UserDTO unlockedUserDTO = this.updateStatusById(id, EStatus.ACTIVE);
@@ -213,6 +223,7 @@ public class UserServiceImpl implements UserService {
     return updatedProfileDTO;
   }
 
+  @CachePut(value = "users", key = "#id")
   public UserDTO updateStatusById(long id, EStatus eStatus) {
     log.debug("Updating status for user ID: {} to {}", id, eStatus);
 

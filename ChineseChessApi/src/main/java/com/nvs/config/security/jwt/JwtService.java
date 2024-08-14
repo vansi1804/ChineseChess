@@ -1,6 +1,7 @@
 package com.nvs.config.security.jwt;
 
 import com.nvs.common.Default;
+import com.nvs.util.MaskUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -66,7 +67,8 @@ public class JwtService {
     final Date expiredDate = new Date(createdDate.getTime() + expirationTime);
     String token = Jwts.builder().setClaims(claims).setSubject(userName).setIssuedAt(createdDate)
         .setExpiration(expiredDate).signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
-    log.info("Token created for user '{}', expires at: {}", userName, expiredDate);
+    log.info("Token created for user '{}', expires at: {}", MaskUtil.maskPhoneNumber(userName),
+        expiredDate);
     return token;
   }
 

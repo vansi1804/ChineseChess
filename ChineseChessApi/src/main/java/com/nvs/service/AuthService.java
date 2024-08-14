@@ -1,10 +1,10 @@
 package com.nvs.service;
 
-import com.nvs.data.dto.auth.LoginDTO;
+import com.nvs.data.dto.auth.LoginRequestDTO;
 import com.nvs.data.dto.auth.LoginResponseDTO;
 
-public interface AuthService{
+public interface AuthService {
 
-   LoginResponseDTO login(LoginDTO loginDTO);
+  LoginResponseDTO login(LoginRequestDTO loginRequestDTO);
 
 }
