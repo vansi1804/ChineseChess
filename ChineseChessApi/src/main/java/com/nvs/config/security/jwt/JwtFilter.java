@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
   private final JwtService jwtService;
@@ -31,15 +33,23 @@ public class JwtFilter extends OncePerRequestFilter {
     String token = null;
     String username = null;
 
-    // extract token
+    log.debug("Processing authentication for request: {}", request.getRequestURI());
+
+    // Extract token
     String TOKEN_PREFIX = Default.JWT.TOKEN_PREFIX;
     if ((authHeader != null) && authHeader.startsWith(TOKEN_PREFIX)) {
       token = authHeader.substring(TOKEN_PREFIX.length());
       username = jwtService.extractUsername(token);
+      log.debug("Token extracted: {}", token);
+      log.debug("Username extracted from token: {}", username);
+    } else {
+      log.warn("No valid Authorization header found in request");
     }
 
+    // Validate token and set authentication
     if ((username != null) && SecurityContextHolder.getContext().getAuthentication() == null) {
       UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+      log.debug("UserDetails loaded for username: {}", username);
 
       if (jwtService.isValidToken(token, userDetails)) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -48,10 +58,16 @@ public class JwtFilter extends OncePerRequestFilter {
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
+        log.info("Authentication set for user: {}", username);
+      } else {
+        log.warn("Invalid token for username: {}", username);
       }
+    } else if (username == null) {
+      log.warn("Username is null, cannot set authentication");
+    } else {
+      log.debug("Authentication already set in context for user: {}", username);
     }
 
     filterChain.doFilter(request, response);
   }
-
 }

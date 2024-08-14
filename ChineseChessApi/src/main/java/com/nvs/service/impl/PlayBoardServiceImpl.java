@@ -15,10 +15,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PlayBoardServiceImpl implements PlayBoardService {
 
   private final int COL_MIN = Default.Game.PlayBoardSize.COL_MIN;
@@ -33,6 +35,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
   @Override
   public PlayBoardDTO generate() {
+    log.debug("Generating new PlayBoardDTO.");
     PlayBoardDTO playBoardDTO = new PlayBoardDTO(new PieceDTO[COL_MAX + 1][ROW_MAX + 1]);
     List<Piece> pieces = pieceRepository.findAll();
 
@@ -40,19 +43,26 @@ public class PlayBoardServiceImpl implements PlayBoardService {
         pDTO -> playBoardDTO.getState()[pDTO.getCurrentCol()][pDTO.getCurrentRow()] = pDTO);
 
     printTest(null, playBoardDTO, null);
+    log.debug("PlayBoardDTO generated successfully.");
 
     return playBoardDTO;
   }
 
   @Override
   public PlayBoardDTO build(List<MoveHistory> moveHistories) {
-    return moveHistories.stream().reduce(generate(), (playBoardDTO, mh) -> update(playBoardDTO,
-        pieceService.findOneInBoard(playBoardDTO, mh.getPiece().getId()), mh.getToCol(),
-        mh.getToRow()), (playBoardDTO, updatedBoardDTO) -> updatedBoardDTO);
+    log.debug("Building PlayBoardDTO with move histories: {}", moveHistories);
+    return moveHistories.stream().reduce(generate(), (playBoardDTO, mh) -> {
+      log.debug("Updating PlayBoardDTO for move history: {}", mh);
+      return update(playBoardDTO,
+          pieceService.findOneInBoard(playBoardDTO, mh.getPiece().getId()), mh.getToCol(),
+          mh.getToRow());
+    }, (playBoardDTO, updatedBoardDTO) -> updatedBoardDTO);
   }
 
   @Override
   public PlayBoardDTO update(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
+    log.debug("Updating PlayBoardDTO: moving piece {} to position ({}, {}).", pieceDTO, toCol,
+        toRow);
     PlayBoardDTO updatePlayBoardDTO = new PlayBoardDTO(pieceMapper.copy(playBoardDTO.getState()));
 
     updatePlayBoardDTO.getState()[pieceDTO.getCurrentCol()][pieceDTO.getCurrentRow()] = null;
@@ -63,12 +73,16 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
     updatePlayBoardDTO.getState()[toCol][toRow] = updatedPieceDTO;
 
+    log.debug("PlayBoardDTO updated successfully.");
     return updatePlayBoardDTO;
   }
 
   @Override
   public PlayBoardDTO restore(PlayBoardDTO playBoardDTO, PieceDTO movedPieceDTO, int fromCol,
       int fromRow, PieceDTO deadPieceDTO) {
+    log.debug(
+        "Restoring PlayBoardDTO: moving piece {} back to position ({}, {}) and adding dead piece {}.",
+        movedPieceDTO, fromCol, fromRow, deadPieceDTO);
     PlayBoardDTO restorePlayBoardDTO = new PlayBoardDTO(pieceMapper.copy(playBoardDTO.getState()));
 
     restorePlayBoardDTO.getState()[movedPieceDTO.getCurrentCol()][movedPieceDTO.getCurrentRow()] = deadPieceDTO;
@@ -77,20 +91,25 @@ public class PlayBoardServiceImpl implements PlayBoardService {
     restorePieceDTO.setCurrentCol(fromCol);
     restorePieceDTO.setCurrentRow(fromRow);
 
-    restorePlayBoardDTO.getState()[fromCol][fromCol] = restorePieceDTO;
+    restorePlayBoardDTO.getState()[fromCol][fromRow] = restorePieceDTO;
 
+    log.debug("PlayBoardDTO restored successfully.");
     return restorePlayBoardDTO;
   }
 
   @Override
   public boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO1,
       PieceDTO generalPieceDTO2) {
+    log.debug("Checking if generals are facing: {} vs {}", generalPieceDTO1, generalPieceDTO2);
     if (Objects.equals(generalPieceDTO1.getCurrentCol(), generalPieceDTO2.getCurrentCol())) {
       int currentCol = generalPieceDTO1.getCurrentCol();
       int fromRow = generalPieceDTO1.getCurrentRow();
       int toRow = generalPieceDTO2.getCurrentRow();
 
-      return pieceService.existsBetweenInColPath(playBoardDTO, currentCol, fromRow, toRow);
+      boolean facing = pieceService.existsBetweenInColPath(playBoardDTO, currentCol, fromRow,
+          toRow);
+      log.debug("Generals are facing: {}", facing);
+      return facing;
     }
 
     return false;
@@ -98,26 +117,35 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
   @Override
   public boolean isGeneralBeingChecked(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO) {
+    log.debug("Checking if general is being checked: {}", generalPieceDTO);
     List<PieceDTO> opponentPieceDTOsInBoard = pieceService.findAllInBoard(playBoardDTO, null,
         !generalPieceDTO.isRed());
 
-    return opponentPieceDTOsInBoard.stream().anyMatch(
+    boolean checked = opponentPieceDTOsInBoard.stream().anyMatch(
         opponentPiece -> moveRuleService.isValid(playBoardDTO, opponentPiece,
             generalPieceDTO.getCurrentCol(), generalPieceDTO.getCurrentRow()));
+
+    log.debug("General is being checked: {}", checked);
+    return checked;
   }
 
   @Override
   public boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO) {
+    log.debug("Checking if general is safe: {}", generalPieceDTO);
     PieceDTO opponentGeneralDTO = pieceService.findGeneralInBoard(playBoardDTO,
         !generalPieceDTO.isRed());
 
-    return (!areTwoGeneralsFacing(playBoardDTO, generalPieceDTO, opponentGeneralDTO)
+    boolean safe = (!areTwoGeneralsFacing(playBoardDTO, generalPieceDTO, opponentGeneralDTO)
         && !isGeneralBeingChecked(playBoardDTO, generalPieceDTO));
+
+    log.debug("General is in safe: {}", safe);
+    return safe;
   }
 
   @Override
   public int evaluate(PlayBoardDTO playBoardDTO) {
-    return IntStream.rangeClosed(COL_MIN, COL_MAX).flatMap(
+    log.debug("Evaluating PlayBoardDTO.");
+    int score = IntStream.rangeClosed(COL_MIN, COL_MAX).flatMap(
         col -> IntStream.rangeClosed(ROW_MIN, ROW_MAX)
             .filter(row -> playBoardDTO.getState()[col][row] != null).map(row -> {
               PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
@@ -125,10 +153,14 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
               return pieceDTO.isRed() ? piecePower : -piecePower;
             })).sum();
+
+    log.debug("Evaluation result: {}", score);
+    return score;
   }
 
   @Override
   public void printTest(Object title, PlayBoardDTO playBoardDTO, PieceDTO pieceDTO) {
+    log.debug("Printing test board with title: {}", title);
     System.out.println("\n===========================================");
     System.out.println(title);
     System.out.println("===========================================");
@@ -148,6 +180,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
   public void printTest(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO,
       List<int[]> availableMoveIndexes) {
 
+    log.debug("Printing test board with available move indexes: {}", availableMoveIndexes);
     System.out.println("\n===========================================");
     System.out.println("Available move: ");
     System.out.println("===========================================");

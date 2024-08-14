@@ -23,10 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MatchServiceImpl implements MatchService {
 
   private final MatchRepository matchRepository;
@@ -37,29 +39,40 @@ public class MatchServiceImpl implements MatchService {
 
   @Override
   public List<MatchDTO> findAll() {
+    log.info("Fetching all matches");
     return matchRepository.findAll().stream().map(matchMapper::toDTO).collect(Collectors.toList());
   }
 
   @Override
   public MatchDTO findById(long id) {
-    return matchRepository.findById(id).map(matchMapper::toDTO).orElseThrow(
-        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.info("Fetching match by id: {}", id);
+    return matchRepository.findById(id)
+        .map(matchMapper::toDTO)
+        .orElseThrow(() -> {
+          log.error("Match with id {} not found", id);
+          return new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id));
+        });
   }
 
   @Override
   public List<MatchDTO> findAllByPlayerId(long playerId) {
-    return matchRepository.findAllByPlayerId(playerId).stream().map(matchMapper::toDTO)
+    log.info("Fetching matches for player id: {}", playerId);
+    return matchRepository.findAllByPlayerId(playerId).stream()
+        .map(matchMapper::toDTO)
         .collect(Collectors.toList());
   }
 
   @Override
   public MatchDetailDTO findDetailById(long id) {
-    MatchDetailDTO matchDetailDTO = matchRepository.findById(id).map(matchMapper::toDetailDTO)
-        .orElseThrow(
-            () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.info("Fetching match details by id: {}", id);
+    MatchDetailDTO matchDetailDTO = matchRepository.findById(id)
+        .map(matchMapper::toDetailDTO)
+        .orElseThrow(() -> {
+          log.error("Match details with id {} not found", id);
+          return new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id));
+        });
 
     Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.findAllByMatchId(id);
-
     matchDetailDTO.setTotalTurn((long) moveHistoryDTOs.size());
     matchDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
 
@@ -68,19 +81,29 @@ public class MatchServiceImpl implements MatchService {
 
   @Override
   public MatchDTO create(MatchCreationDTO matchCreationDTO) {
-    Player player1 = playerRepository.findById(matchCreationDTO.getPlayer1Id()).orElseThrow(
-        () -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("player1Id", matchCreationDTO.getPlayer1Id())));
+    log.info("Creating match with players: {} and {}", matchCreationDTO.getPlayer1Id(),
+        matchCreationDTO.getPlayer2Id());
 
-    Player player2 = playerRepository.findById(matchCreationDTO.getPlayer2Id()).orElseThrow(
-        () -> new ResourceNotFoundExceptionCustomize(
-            Collections.singletonMap("player2Id", matchCreationDTO.getPlayer2Id())));
+    Player player1 = playerRepository.findById(matchCreationDTO.getPlayer1Id())
+        .orElseThrow(() -> {
+          log.error("Player with id {} not found", matchCreationDTO.getPlayer1Id());
+          return new ResourceNotFoundExceptionCustomize(
+              Collections.singletonMap("player1Id", matchCreationDTO.getPlayer1Id()));
+        });
+
+    Player player2 = playerRepository.findById(matchCreationDTO.getPlayer2Id())
+        .orElseThrow(() -> {
+          log.error("Player with id {} not found", matchCreationDTO.getPlayer2Id());
+          return new ResourceNotFoundExceptionCustomize(
+              Collections.singletonMap("player2Id", matchCreationDTO.getPlayer2Id()));
+        });
 
     if (matchRepository.existsPlayingByPlayerId(player1.getId())) {
       Map<String, Object> errors = new HashMap<>();
       errors.put("message", Translator.toLocale("PLAYER_PLAYING"));
       errors.put("player1Id", player1.getId());
 
+      log.error("Player with id {} is already playing a match", player1.getId());
       throw new InvalidExceptionCustomize(errors);
     }
 
@@ -89,6 +112,7 @@ public class MatchServiceImpl implements MatchService {
       errors.put("message", Translator.toLocale("PLAYER_PLAYING"));
       errors.put("player2Id", player2.getId());
 
+      log.error("Player with id {} is already playing a match", player2.getId());
       throw new InvalidExceptionCustomize(errors);
     }
 
@@ -96,19 +120,27 @@ public class MatchServiceImpl implements MatchService {
     match.setPlayer1(player1);
     match.setPlayer2(player2);
 
-    return matchMapper.toDTO(matchRepository.save(match));
+    MatchDTO createdMatchDTO = matchMapper.toDTO(matchRepository.save(match));
+    log.info("Match created successfully with id: {}", createdMatchDTO.getId());
+
+    return createdMatchDTO;
   }
 
   @Override
   public MatchDTO updateResult(long id, Boolean result) {
-    Match existingMatch = matchRepository.findById(id).orElseThrow(
-        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.info("Updating result for match id: {}", id);
+    Match existingMatch = matchRepository.findById(id)
+        .orElseThrow(() -> {
+          log.error("Match with id {} not found", id);
+          return new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id));
+        });
 
     if (existingMatch.getResult() != null) {
       Map<String, Object> errors = new HashMap<>();
       errors.put("message", Translator.toLocale("END_MATCH"));
       errors.put("id", existingMatch.getId());
 
+      log.error("Match with id {} has already ended", existingMatch.getId());
       throw new InvalidExceptionCustomize(errors);
     }
 
@@ -139,7 +171,7 @@ public class MatchServiceImpl implements MatchService {
     updatedMatchDTO.setPlayer1ProfileDTO(player1ProfileDTO);
     updatedMatchDTO.setPlayer2ProfileDTO(player2ProfileDTO);
 
+    log.info("Match result updated successfully for match id: {}", updatedMatchDTO.getId());
     return updatedMatchDTO;
   }
-
 }
