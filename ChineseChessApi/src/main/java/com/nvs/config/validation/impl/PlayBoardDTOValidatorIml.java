@@ -17,10 +17,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, PlayBoardDTO> {
 
   private static final int COL_MAX = Default.Game.PlayBoardSize.COL_MAX;
@@ -31,10 +33,16 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
 
   @Override
   public boolean isValid(PlayBoardDTO playBoardDTO, ConstraintValidatorContext context) {
+    log.debug("Starting validation for PlayBoardDTO: {}", playBoardDTO);
+
     int colLength = playBoardDTO.getState().length - 1;
     int rowLength = playBoardDTO.getState()[0].length - 1;
 
     if ((COL_MAX != colLength) || (ROW_MAX != rowLength)) {
+      log.error(
+          "PlayBoard size mismatch: expected COL_MAX={}, ROW_MAX={}, but got colLength={}, rowLength={}",
+          COL_MAX, ROW_MAX, colLength, rowLength);
+
       Map<String, Object> errors = new HashMap<>();
       errors.put("col", Translator.toLocale("COLUMN_LENGTH", COL_MAX));
       errors.put("row", Translator.toLocale("ROW_LENGTH", ROW_MAX));
@@ -42,7 +50,6 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
       throw new InvalidExceptionCustomize(Translator.toLocale("PLAY_BOARD_SIZE"), errors);
     } else {
       Set<Integer> pieceIds = new HashSet<>();
-
       boolean existsRedGeneral = false;
       boolean existsBlackGeneral = false;
 
@@ -50,27 +57,32 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
         for (int row = 0; row <= rowLength; row++) {
           PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
           if (pieceDTO != null) {
-            // validate id
+            log.debug("Validating piece at col={}, row={}, pieceDTO={}", col, row, pieceDTO);
+
+            // Validate id
             if (!pieceRepository.existsById(pieceDTO.getId())) {
+              log.error("Piece ID not found in repository: {}", pieceDTO.getId());
               throw new InvalidExceptionCustomize(
                   buildValidateErrors(pieceDTO, col, row, Translator.toLocale("DATA_NOT_FOUND")));
             }
 
             if (pieceIds.contains(pieceDTO.getId())) {
+              log.error("Duplicate piece ID found: {}", pieceDTO.getId());
               throw new InvalidExceptionCustomize(buildValidateErrors(pieceDTO, col, row,
                   Translator.toLocale("DATA_ALREADY_EXISTS")));
             } else {
               pieceIds.add(pieceDTO.getId());
             }
 
-            // validate name
+            // Validate name
             EPiece ePiece = pieceService.convertByName(pieceDTO.getName());
             if (ePiece == null) {
+              log.error("Invalid piece name: {}", pieceDTO.getName());
               throw new InvalidExceptionCustomize(
                   buildValidateErrors(pieceDTO, col, row, Translator.toLocale("DATA_NOT_FOUND")));
             }
 
-            // check exists generals
+            // Check if generals exist
             if (!existsRedGeneral || !existsBlackGeneral) {
               if (EPiece.GENERAL == ePiece) {
                 if (pieceDTO.isRed()) {
@@ -81,8 +93,11 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
               }
             }
 
-            // validate index
+            // Validate index
             if ((col != pieceDTO.getCurrentCol()) || (row != pieceDTO.getCurrentRow())) {
+              log.error(
+                  "Invalid piece index: expected col={}, row={}, but got currentCol={}, currentRow={}",
+                  col, row, pieceDTO.getCurrentCol(), pieceDTO.getCurrentRow());
               throw new InvalidExceptionCustomize(buildValidateErrors(pieceDTO, col, row,
                   Translator.toLocale("PIECE_INVALID_INDEX")));
             }
@@ -91,6 +106,7 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
       }
 
       if (!existsRedGeneral) {
+        log.error("Red general not found on the board");
         throw new InvalidExceptionCustomize(
             Collections.singletonMap("message",
                 Translator.toLocale("PIECE_NOT_FOUND_IN_BOARD",
@@ -98,6 +114,7 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
       }
 
       if (!existsBlackGeneral) {
+        log.error("Black general not found on the board");
         throw new InvalidExceptionCustomize(
             Collections.singletonMap("message",
                 Translator.toLocale("PIECE_NOT_FOUND_IN_BOARD",
@@ -105,6 +122,7 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
       }
     }
 
+    log.debug("Validation passed for PlayBoardDTO: {}", playBoardDTO);
     return true;
   }
 

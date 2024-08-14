@@ -11,10 +11,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VipServiceImpl implements VipService {
 
   private final VipRepository vipRepository;
@@ -22,17 +24,29 @@ public class VipServiceImpl implements VipService {
 
   @Override
   public List<VipDTO> findAll() {
-    return vipRepository.findAll().stream().map(vipMapper::toDTO).collect(Collectors.toList());
+    log.debug("Fetching all VIPs");
+    List<VipDTO> vipDTOs = vipRepository.findAll().stream()
+        .map(vipMapper::toDTO)
+        .collect(Collectors.toList());
+    log.debug("Found {} VIPs", vipDTOs.size());
+    return vipDTOs;
   }
 
   @Override
   public VipDTO findById(int id) {
-    return vipRepository.findById(id).map(vipMapper::toDTO).orElseThrow(
-        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.debug("Fetching VIP by ID: {}", id);
+    VipDTO vipDTO = vipRepository.findById(id)
+        .map(vipMapper::toDTO)
+        .orElseThrow(
+            () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.debug("Found VIP: {}", vipDTO);
+    return vipDTO;
   }
 
   @Override
   public VipDTO create(VipDTO vipDTO) {
+    log.debug("Creating VIP with DTO: {}", vipDTO);
+
     if (vipRepository.existsByName(vipDTO.getName())) {
       throw new ConflictExceptionCustomize(Collections.singletonMap("name", vipDTO.getName()));
     }
@@ -42,11 +56,15 @@ public class VipServiceImpl implements VipService {
           Collections.singletonMap("depositMilestones", vipDTO.getDepositMilestones()));
     }
 
-    return vipMapper.toDTO(vipRepository.save(vipMapper.toEntity(vipDTO)));
+    VipDTO createdVipDTO = vipMapper.toDTO(vipRepository.save(vipMapper.toEntity(vipDTO)));
+    log.debug("Created VIP: {}", createdVipDTO);
+    return createdVipDTO;
   }
 
   @Override
   public VipDTO update(int id, VipDTO vipDTO) {
+    log.debug("Updating VIP with ID: {} and DTO: {}", id, vipDTO);
+
     Vip existingVip = vipRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
@@ -67,13 +85,19 @@ public class VipServiceImpl implements VipService {
     Vip updatedVip = vipRepository.save(updateVip);
     vipRepository.flush();
 
-    return vipMapper.toDTO(updatedVip);
+    VipDTO updatedVipDTO = vipMapper.toDTO(updatedVip);
+    log.debug("Updated VIP: {}", updatedVipDTO);
+    return updatedVipDTO;
   }
 
   @Override
   public boolean delete(int id) {
-    vipRepository.delete(vipRepository.findById(id).orElseThrow(
-        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id))));
+    log.debug("Deleting VIP with ID: {}", id);
+
+    Vip vip = vipRepository.findById(id).orElseThrow(
+        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    vipRepository.delete(vip);
+    log.debug("Deleted VIP with ID: {}", id);
     return true;
   }
 

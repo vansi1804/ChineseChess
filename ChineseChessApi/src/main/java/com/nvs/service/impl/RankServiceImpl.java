@@ -12,10 +12,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RankServiceImpl implements RankService {
 
   private final RankRepository rankRepository;
@@ -23,54 +25,81 @@ public class RankServiceImpl implements RankService {
 
   @Override
   public List<RankDTO> findAll() {
-    return rankRepository.findAll().stream().map(rankMapper::toDTO).collect(Collectors.toList());
+    log.debug("Finding all ranks");
+    List<RankDTO> ranks = rankRepository.findAll().stream().map(rankMapper::toDTO)
+        .collect(Collectors.toList());
+    log.debug("Found {} ranks", ranks.size());
+    return ranks;
   }
 
   @Override
   public RankDTO findById(int id) {
-    return rankRepository.findById(id).map(rankMapper::toDTO).orElseThrow(
+    log.debug("Finding rank by ID: {}", id);
+    RankDTO rankDTO = rankRepository.findById(id).map(rankMapper::toDTO).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.debug("Found rank: {}", rankDTO);
+    return rankDTO;
   }
 
   @Override
   public RankDTO findByName(String name) {
-    return rankRepository.findByName(name).map(rankMapper::toDTO).orElseThrow(
+    log.debug("Finding rank by name: {}", name);
+    RankDTO rankDTO = rankRepository.findByName(name).map(rankMapper::toDTO).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("name", name)));
+    log.debug("Found rank: {}", rankDTO);
+    return rankDTO;
   }
 
   @Override
   public RankDTO findByPlayerElo(int elo) {
-    return rankMapper.toDTO(rankRepository.findFirstByOrderByEloMilestonesAsc().orElseThrow(
-        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("elo", elo))));
+    log.debug("Finding rank by player Elo: {}", elo);
+    RankDTO rankDTO = rankMapper.toDTO(
+        rankRepository.findFirstByOrderByEloMilestonesAsc().orElseThrow(
+            () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("elo", elo))));
+    log.debug("Found rank: {}", rankDTO);
+    return rankDTO;
   }
 
   @Override
   public RankDTO findDefault() {
-    return rankMapper.toDTO(rankRepository.findFirstByOrderByEloMilestonesAsc()
+    log.debug("Finding default rank");
+    RankDTO rankDTO = rankMapper.toDTO(rankRepository.findFirstByOrderByEloMilestonesAsc()
         .orElseThrow(() -> new InternalServerErrorExceptionCustomize("No rank found")));
+    log.debug("Found default rank: {}", rankDTO);
+    return rankDTO;
   }
 
   @Override
   public RankDTO create(RankDTO rankDTO) {
+    log.debug("Creating rank with details: {}", rankDTO);
+
     if (rankRepository.existsByName(rankDTO.getName())) {
+      log.warn("Rank creation failed due to name conflict: {}", rankDTO.getName());
       throw new ConflictExceptionCustomize(Collections.singletonMap("name", rankDTO.getName()));
     }
 
     if (rankRepository.existsByEloMilestones(rankDTO.getEloMilestones())) {
+      log.warn("Rank creation failed due to Elo milestones conflict: {}",
+          rankDTO.getEloMilestones());
       throw new ConflictExceptionCustomize(
           Collections.singletonMap("eloMilestones", rankDTO.getEloMilestones()));
     }
 
-    return rankMapper.toDTO(rankRepository.save(rankMapper.toEntity(rankDTO)));
+    RankDTO createdRankDTO = rankMapper.toDTO(rankRepository.save(rankMapper.toEntity(rankDTO)));
+    log.debug("Rank created successfully: {}", createdRankDTO);
+    return createdRankDTO;
   }
 
   @Override
   public RankDTO update(int id, RankDTO rankDTO) {
+    log.debug("Updating rank with ID: {} and details: {}", id, rankDTO);
+
     Rank existingRank = rankRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
     if (rankRepository.existsByIdNotAndName(id, rankDTO.getName())
         || rankRepository.existsByIdNotAndEloMilestones(id, rankDTO.getEloMilestones())) {
+      log.warn("Rank update failed due to name or Elo milestones conflict");
       throw new ConflictExceptionCustomize(
           Collections.singletonMap("conflict", "Name or eloMilestones conflict"));
     }
@@ -83,13 +112,17 @@ public class RankServiceImpl implements RankService {
     Rank updatedRank = rankRepository.save(updateRank);
     rankRepository.flush();
 
-    return rankMapper.toDTO(updatedRank);
+    RankDTO updatedRankDTO = rankMapper.toDTO(updatedRank);
+    log.debug("Rank updated successfully: {}", updatedRankDTO);
+    return updatedRankDTO;
   }
 
   @Override
   public boolean delete(int id) {
+    log.debug("Deleting rank with ID: {}", id);
     rankRepository.delete(rankRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id))));
+    log.debug("Rank with ID: {} deleted successfully", id);
     return true;
   }
 

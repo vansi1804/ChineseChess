@@ -9,10 +9,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RoleServiceImpl implements RoleService {
 
   private final RoleRepository roleRepository;
@@ -20,19 +22,29 @@ public class RoleServiceImpl implements RoleService {
 
   @Override
   public List<RoleDTO> findAll() {
-    return roleRepository.findAll().stream().map(roleMapper::toDTO).collect(Collectors.toList());
+    log.debug("Finding all roles");
+    List<RoleDTO> roles = roleRepository.findAll().stream().map(roleMapper::toDTO)
+        .collect(Collectors.toList());
+    log.debug("Found {} roles", roles.size());
+    return roles;
   }
 
   @Override
   public RoleDTO findById(int id) {
-    return roleRepository.findById(id).map(roleMapper::toDTO).orElseThrow(
+    log.debug("Finding role by ID: {}", id);
+    RoleDTO roleDTO = roleRepository.findById(id).map(roleMapper::toDTO).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.debug("Found role: {}", roleDTO);
+    return roleDTO;
   }
 
   @Override
   public RoleDTO findByName(String name) {
-    return roleRepository.findByName(name).map(roleMapper::toDTO).orElseThrow(
+    log.debug("Finding role by name: {}", name);
+    RoleDTO roleDTO = roleRepository.findByName(name).map(roleMapper::toDTO).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("name", name)));
+    log.debug("Found role: {}", roleDTO);
+    return roleDTO;
   }
 
 }

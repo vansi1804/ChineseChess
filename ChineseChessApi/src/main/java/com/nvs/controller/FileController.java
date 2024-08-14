@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.Tika;
 import org.springframework.core.io.Resource;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequestMapping(ApiUrl.FILES)
 @Tag(name = "File", description = "Endpoints for managing files")
@@ -34,15 +36,20 @@ public class FileController {
   @Operation(summary = "Upload a file", description = "Endpoint to upload a file")
   @PostMapping(value = "/upload")
   public ResponseEntity<String> uploadFile(@RequestParam MultipartFile file) {
-    return ResponseEntity.ok().body(fileService.uploadFile(file));
+    log.debug("Uploading file: {}", file.getOriginalFilename());
+    String response = fileService.uploadFile(file);
+    log.info("File uploaded successfully: {}", file.getOriginalFilename());
+    return ResponseEntity.ok().body(response);
   }
 
   @Operation(summary = "Download file", description = "Endpoint to download a file")
   @GetMapping(value = "/download/{fileName}")
   public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws IOException {
+    log.debug("Downloading file: {}", fileName);
     Resource resource = fileService.downloadFile(fileName);
     String originalFilename = obtainOriginalFileName(resource);
     String mediaType = Files.probeContentType(resource.getFile().toPath());
+    log.info("File downloaded successfully: {}", originalFilename);
 
     return ResponseEntity.ok().contentType(MediaType.parseMediaType(mediaType))
         .header(HttpHeaders.CONTENT_DISPOSITION,
@@ -52,6 +59,7 @@ public class FileController {
   @Operation(summary = "Display file", description = "Endpoint to display a file on the web")
   @GetMapping(value = "/display/{fileName}") // view on web
   public ResponseEntity<byte[]> displayFile(@PathVariable String fileName) throws IOException {
+    log.debug("Displaying file: {}", fileName);
     Resource resource = fileService.downloadFile(fileName);
     String originalFilename = obtainOriginalFileName(resource);
     String mediaType = detectMediaType(originalFilename);
@@ -65,6 +73,7 @@ public class FileController {
       fileBytes = IOUtils.toByteArray(inputStream);
     }
 
+    log.info("File displayed successfully: {}", originalFilename);
     return ResponseEntity.ok().headers(headers).body(fileBytes);
   }
 
@@ -79,5 +88,4 @@ public class FileController {
   private String detectMediaType(String filename) {
     return new Tika().detect(filename);
   }
-
 }

@@ -19,6 +19,7 @@ import com.nvs.service.RankService;
 import com.nvs.service.UserService;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PlayerServiceImpl implements PlayerService {
 
   private final PlayerRepository playerRepository;
@@ -36,24 +38,40 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public Page<PlayerDTO> findAll(int no, int limit, String sortBy) {
-    return playerRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
+    log.debug("Finding all players with page number: {}, page size: {}, sort by: {}", no, limit,
+        sortBy);
+    Page<PlayerDTO> playersPage = playerRepository.findAll(
+            PageRequest.of(no, limit, Sort.by(sortBy)))
         .map(playerMapper::toDTO);
+    log.debug("Found {} players.", playersPage.getTotalElements());
+    return playersPage;
   }
 
   @Override
   public PlayerDTO findByUserId(long userId) {
-    return playerRepository.findByUser_Id(userId).map(playerMapper::toDTO).orElseThrow(
-        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("userId", userId)));
+    log.debug("Finding player by user ID: {}", userId);
+    PlayerDTO playerDTO = playerRepository.findByUser_Id(userId).map(playerMapper::toDTO)
+        .orElseThrow(
+            () -> new ResourceNotFoundExceptionCustomize(
+                Collections.singletonMap("userId", userId)));
+    log.debug("Found player: {}", playerDTO);
+    return playerDTO;
   }
 
   @Override
   public PlayerProfileDTO findById(long id) {
-    return playerRepository.findById(id).map(playerMapper::toProfileDTO).orElseThrow(
-        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.debug("Finding player by ID: {}", id);
+    PlayerProfileDTO playerProfileDTO = playerRepository.findById(id)
+        .map(playerMapper::toProfileDTO).orElseThrow(
+            () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.debug("Found player profile: {}", playerProfileDTO);
+    return playerProfileDTO;
   }
 
   @Override
   public PlayerDTO create(PlayerCreationDTO playerCreationDTO) {
+    log.debug("Creating player with details: {}", playerCreationDTO);
+
     UserDTO createdUserDTO = userService.create(playerCreationDTO.getUserCreationDTO(),
         ERole.PLAYER);
 
@@ -70,16 +88,20 @@ public class PlayerServiceImpl implements PlayerService {
     createdPlayerDTO.setUserDTO(createdUserDTO);
     createdPlayerDTO.getPlayerOthersInfoDTO().setRankDTO(defaultRank);
 
+    log.debug("Player created successfully: {}", createdPlayerDTO);
     return createdPlayerDTO;
   }
 
   @Override
   public PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO) {
+    log.debug("Updating player with ID: {} and details: {}", id, playerProfileDTO);
+
     Player existingPlayer = playerRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
     if (userService.isCurrentUser(existingPlayer.getUser().getId())) {
-      throw new AccessDeniedException(null);
+      throw new AccessDeniedException(
+          "Access denied for user ID: " + existingPlayer.getUser().getId());
     }
 
     UserProfileDTO updatedUserProfileDTO = userService.update(existingPlayer.getUser().getId(),
@@ -93,11 +115,15 @@ public class PlayerServiceImpl implements PlayerService {
     PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(updatePlayer);
     updatedPlayerProfileDTO.setUserProfileDTO(updatedUserProfileDTO);
 
+    log.debug("Player profile updated successfully: {}", updatedPlayerProfileDTO);
     return updatedPlayerProfileDTO;
   }
 
   @Override
   public PlayerProfileDTO updateByMatchResult(long id, int result, int eloBet) {
+    log.debug("Updating player by match result with ID: {}, result: {}, elo bet: {}", id, result,
+        eloBet);
+
     Player existingPlayer = playerRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
@@ -119,6 +145,7 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.save(existingPlayer));
     updatedPlayerProfileDTO.getPlayerOthersInfoDTO().setRankDTO(rankDTO);
 
+    log.debug("Player profile updated by match result successfully: {}", updatedPlayerProfileDTO);
     return updatedPlayerProfileDTO;
   }
 

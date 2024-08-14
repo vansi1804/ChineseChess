@@ -19,11 +19,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TrainingServiceImpl implements TrainingService {
 
   private final TrainingMapper trainingMapper;
@@ -33,20 +35,31 @@ public class TrainingServiceImpl implements TrainingService {
 
   @Override
   public List<TrainingDTO> findAllBase() {
-    return trainingRepository.findAllBase().stream().map(trainingMapper::toDTO)
+    log.debug("Fetching all base training records");
+    List<TrainingDTO> trainingList = trainingRepository.findAllBase().stream()
+        .map(trainingMapper::toDTO)
         .collect(Collectors.toList());
+    log.debug("Found {} training records", trainingList.size());
+    return trainingList;
   }
 
   @Override
   public TrainingDTO findById(long id) {
-    return trainingRepository.findById(id).map(trainingMapper::toDTO).orElseThrow(
-        () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.debug("Fetching training by ID: {}", id);
+    TrainingDTO trainingDTO = trainingRepository.findById(id)
+        .map(trainingMapper::toDTO)
+        .orElseThrow(
+            () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.debug("Found training: {}", trainingDTO);
+    return trainingDTO;
   }
 
   @Override
   public TrainingDetailDTO findDetailById(long id) {
+    log.debug("Fetching training details by ID: {}", id);
     TrainingDetailDTO trainingDetailDTO = trainingRepository.findById(id)
-        .map(trainingMapper::toDetailDTO).orElseThrow(
+        .map(trainingMapper::toDetailDTO)
+        .orElseThrow(
             () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
     Map<Long, MoveHistoryDTO> moveHistoryDTOs = moveService.findAllByTrainingId(id);
@@ -54,11 +67,14 @@ public class TrainingServiceImpl implements TrainingService {
     trainingDetailDTO.setTotalTurn(moveHistoryDTOs.size());
     trainingDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
 
+    log.debug("Found training details: {}", trainingDetailDTO);
     return trainingDetailDTO;
   }
 
   @Override
   public TrainingDTO create(TrainingDTO trainingDTO) {
+    log.debug("Creating new training with DTO: {}", trainingDTO);
+
     if ((trainingDTO.getParentTrainingId() != null) && !trainingRepository.existsById(
         trainingDTO.getParentTrainingId())) {
       throw new ResourceNotFoundExceptionCustomize(
@@ -74,11 +90,16 @@ public class TrainingServiceImpl implements TrainingService {
       throw new ConflictExceptionCustomize(errors);
     }
 
-    return trainingMapper.toDTO(trainingRepository.save(trainingMapper.toEntity(trainingDTO)));
+    TrainingDTO createdTrainingDTO = trainingMapper.toDTO(
+        trainingRepository.save(trainingMapper.toEntity(trainingDTO)));
+    log.debug("Created training: {}", createdTrainingDTO);
+    return createdTrainingDTO;
   }
 
   @Override
   public TrainingDTO update(long id, TrainingDTO trainingDTO) {
+    log.debug("Updating training with ID: {} and DTO: {}", id, trainingDTO);
+
     Training existingTraining = trainingRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
@@ -117,11 +138,15 @@ public class TrainingServiceImpl implements TrainingService {
     Training updatedTraining = trainingRepository.save(updateTraining);
     trainingRepository.flush();
 
-    return trainingMapper.toDTO(updatedTraining);
+    TrainingDTO updatedTrainingDTO = trainingMapper.toDTO(updatedTraining);
+    log.debug("Updated training: {}", updatedTrainingDTO);
+    return updatedTrainingDTO;
   }
 
   @Override
   public boolean deleteById(long id) {
+    log.debug("Deleting training with ID: {}", id);
+
     Training oldTraining = trainingRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
@@ -130,6 +155,7 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     trainingRepository.delete(oldTraining);
+    log.debug("Deleted training with ID: {}", id);
 
     return true;
   }

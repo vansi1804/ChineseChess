@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
@@ -49,36 +51,51 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Page<UserDTO> findAll(int no, int limit, String sortBy) {
-    return userRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
+    log.debug("Fetching all users with pagination, page number: {}, limit: {}, sorted by: {}", no,
+        limit, sortBy);
+    Page<UserDTO> users = userRepository.findAll(PageRequest.of(no, limit, Sort.by(sortBy)))
         .map(userMapper::toDTO);
+    log.debug("Found {} users", users.getTotalElements());
+    return users;
   }
 
   @Override
   public UserDTO findById(long id) {
-    return userRepository.findById(id)
+    log.debug("Fetching user by ID: {}", id);
+    UserDTO userDTO = userRepository.findById(id)
         .map(userMapper::toDTO)
         .orElseThrow(
             () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
+    log.debug("Found user: {}", userDTO);
+    return userDTO;
   }
 
   @Override
   public UserDTO findByPhoneNumber(String phoneNumber) {
-    return userRepository.findByPhoneNumber(phoneNumber)
+    log.debug("Fetching user by phone number: {}", phoneNumber);
+    UserDTO userDTO = userRepository.findByPhoneNumber(phoneNumber)
         .map(userMapper::toDTO)
         .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
             Collections.singletonMap("phoneNumber", phoneNumber)));
+    log.debug("Found user: {}", userDTO);
+    return userDTO;
   }
 
   @Override
   public UserDTO findByName(String name) {
-    return userRepository.findByName(name)
+    log.debug("Fetching user by name: {}", name);
+    UserDTO userDTO = userRepository.findByName(name)
         .map(userMapper::toDTO)
         .orElseThrow(
             () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("name", name)));
+    log.debug("Found user: {}", userDTO);
+    return userDTO;
   }
 
   @Override
   public UserDTO create(UserCreationDTO userCreationDTO, ERole eRole) {
+    log.debug("Creating user with DTO: {} and role: {}", userCreationDTO, eRole);
+
     if (userRepository.existsByPhoneNumber(userCreationDTO.getPhoneNumber())) {
       throw new ConflictExceptionCustomize(
           Collections.singletonMap("phoneNumber", userCreationDTO.getPhoneNumber()));
@@ -97,11 +114,15 @@ public class UserServiceImpl implements UserService {
 
     createUser.setStatus(Default.User.STATUS.name());
 
-    return userMapper.toDTO(userRepository.save(createUser));
+    UserDTO createdUserDTO = userMapper.toDTO(userRepository.save(createUser));
+    log.debug("Created user: {}", createdUserDTO);
+    return createdUserDTO;
   }
 
   @Override
   public UserProfileDTO update(long id, UserProfileDTO userProfileDTO) {
+    log.debug("Updating user with ID: {} and DTO: {}", id, userProfileDTO);
+
     User existingUser = userRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
@@ -113,8 +134,9 @@ public class UserServiceImpl implements UserService {
     User updateUser = userMapper.toEntity(userProfileDTO);
     updateUser.setId(existingUser.getId());
     updateUser.setPassword(existingUser.getPassword());
-    // check update file Avatar
+    // Check and update file Avatar
     if (!StringUtils.equals(updateUser.getAvatar(), existingUser.getAvatar())) {
+      log.debug("Avatar updated. Deleting old avatar: {}", existingUser.getAvatar());
       fileService.deleteFile(existingUser.getAvatar());
     }
     updateUser.setRole(existingUser.getRole());
@@ -126,27 +148,39 @@ public class UserServiceImpl implements UserService {
     User updatedUser = userRepository.save(updateUser);
     userRepository.flush();
 
-    return userMapper.toProfileDTO(updatedUser);
+    UserProfileDTO updatedUserProfileDTO = userMapper.toProfileDTO(updatedUser);
+    log.debug("Updated user: {}", updatedUserProfileDTO);
+    return updatedUserProfileDTO;
   }
 
   @Override
   public UserDTO lockById(long id) {
-    return this.updateStatusById(id, EStatus.LOCK);
+    log.debug("Locking user with ID: {}", id);
+    UserDTO lockedUserDTO = this.updateStatusById(id, EStatus.LOCK);
+    log.debug("Locked user: {}", lockedUserDTO);
+    return lockedUserDTO;
   }
 
   @Override
   public UserDTO unlockById(long id) {
-    return this.updateStatusById(id, EStatus.ACTIVE);
+    log.debug("Unlocking user with ID: {}", id);
+    UserDTO unlockedUserDTO = this.updateStatusById(id, EStatus.ACTIVE);
+    log.debug("Unlocked user: {}", unlockedUserDTO);
+    return unlockedUserDTO;
   }
 
   @Override
   public boolean isCurrentUser(long id) {
-    return !Objects.equals(id, auditorAware.getCurrentAuditor().orElse(null));
+    boolean isCurrent = Objects.equals(id, auditorAware.getCurrentAuditor().orElse(null));
+    log.debug("Checking if ID {} is the current user: {}", id, isCurrent);
+    return !isCurrent;
   }
 
   @Override
   public UserProfileDTO changePassword(long id,
       UserChangePasswordRequestDTO userChangePasswordRequestDTO) {
+    log.debug("Changing password for user ID: {}", id);
+
     if (this.isCurrentUser(id)) {
       throw new AccessDeniedException(null);
     }
@@ -174,16 +208,21 @@ public class UserServiceImpl implements UserService {
 
     user.setPassword(passwordEncoder.encode(userChangePasswordRequestDTO.getNewPasswordConfirm()));
 
-    return userMapper.toProfileDTO(userRepository.save(user));
+    UserProfileDTO updatedProfileDTO = userMapper.toProfileDTO(userRepository.save(user));
+    log.debug("Password changed successfully for user ID: {}", id);
+    return updatedProfileDTO;
   }
 
   public UserDTO updateStatusById(long id, EStatus eStatus) {
+    log.debug("Updating status for user ID: {} to {}", id, eStatus);
+
     User user = userRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
 
     user.setStatus(eStatus.name());
 
-    return userMapper.toDTO(userRepository.save(user));
+    UserDTO updatedUserDTO = userMapper.toDTO(userRepository.save(user));
+    log.debug("Updated user status: {}", updatedUserDTO);
+    return updatedUserDTO;
   }
-
 }

@@ -10,43 +10,45 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Slf4j
 public class FileServiceImpl implements FileService {
 
-  private static final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
   private final String UPLOAD_DIR = "path/files";
 
   @Override
   public String uploadFile(MultipartFile file) {
-    if ((file == null) || file.isEmpty()) {
+    if (file == null || file.isEmpty()) {
+      log.warn("Attempted to upload an empty file");
       return null;
     }
 
     // Generate a unique file name to avoid overwriting existing files
     String fileName = System.currentTimeMillis() + "__" + file.getOriginalFilename();
+    Path targetPath = Paths.get(UPLOAD_DIR, fileName);
 
     // Create the directory for storing uploaded files if it doesn't exist
     File uploadDir = new File(UPLOAD_DIR);
     if (!uploadDir.exists()) {
       boolean created = uploadDir.mkdirs();
       if (!created) {
-        logger.error("Failed to create directory: {", UPLOAD_DIR);
+        log.error("Failed to create directory: {}", UPLOAD_DIR);
         return null;
       }
+      log.info("Created directory for uploads: {}", UPLOAD_DIR);
     }
 
-    Path targetPath = Paths.get(UPLOAD_DIR, fileName);
     try {
       Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+      log.info("Successfully uploaded file: {}", fileName);
     } catch (IOException e) {
-      logger.error("Error uploading file: {", fileName, e);
+      log.error("Error uploading file: {}", fileName, e);
       return null;
     }
 
@@ -55,7 +57,8 @@ public class FileServiceImpl implements FileService {
 
   @Override
   public Resource downloadFile(String fileName) {
-    if ((fileName == null) || fileName.isEmpty()) {
+    if (fileName == null || fileName.isEmpty()) {
+      log.warn("File name is null or empty for download request");
       throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
     }
 
@@ -64,23 +67,28 @@ public class FileServiceImpl implements FileService {
     try {
       resource = new UrlResource(filePath.toUri());
       if (!resource.exists() || !resource.isReadable()) {
+        log.warn("File not found or not readable: {}", fileName);
         throw new ResourceNotFoundExceptionCustomize(
             Collections.singletonMap("fileName", fileName));
       }
     } catch (MalformedURLException e) {
+      log.error("Malformed URL for file: {}", fileName, e);
       throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
     }
 
+    log.info("Successfully retrieved file for download: {}", fileName);
     return resource;
   }
 
   @Override
   public void deleteFile(String fileName) {
+    Path filePath = Paths.get(UPLOAD_DIR, fileName);
     try {
-      Files.delete(Paths.get(UPLOAD_DIR, fileName));
+      Files.delete(filePath);
+      log.info("Successfully deleted file: {}", fileName);
     } catch (IOException e) {
+      log.error("Error deleting file: {}", fileName, e);
       throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
     }
   }
-
 }
