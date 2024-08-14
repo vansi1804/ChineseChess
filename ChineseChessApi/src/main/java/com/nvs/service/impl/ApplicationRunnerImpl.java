@@ -93,7 +93,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     log.info("Initializing admin player...");
     User adminUser = initAdminUser();
     if (adminUser == null) {
-      log.info("Admin user already exists. Skipping admin player initialization.");
+      log.info("Admin player already exists. Skipping admin player initialization.");
       return;
     }
 
