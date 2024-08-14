@@ -1,10 +1,11 @@
 package com.nvs.config.exception;
 
-import com.nvs.common.ErrorMessage;
+import com.nvs.config.i18nMessage.Translator;
 import com.nvs.data.dto.ErrorMessageResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -24,15 +26,15 @@ public class GlobalExceptionHandler {
       HttpServletRequest request) {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
         new ErrorMessageResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            ErrorMessage.INTERNAL_SERVER_ERROR, null, request.getServletPath()));
+            Translator.toLocale("INTERNAL_SERVER_ERROR"), null, request.getServletPath()));
   }
 
   @ExceptionHandler(ResourceNotFoundExceptionCustomize.class)
   public ResponseEntity<ErrorMessageResponseDTO> handleNotFoundException(
       ResourceNotFoundExceptionCustomize ex, HttpServletRequest request) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-        new ErrorMessageResponseDTO(HttpStatus.NOT_FOUND.value(), ex.getMessage(), ex.getErrors(),
-            request.getServletPath()));
+        new ErrorMessageResponseDTO(HttpStatus.NOT_FOUND.value(),
+            Translator.toLocale("DATA_NOT_FOUND"), ex.getErrors(), request.getServletPath()));
   }
 
   @ExceptionHandler(ConflictExceptionCustomize.class)
@@ -46,15 +48,23 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorMessageResponseDTO> handleMethodArgumentNotValidException(
       MethodArgumentNotValidException ex, HttpServletRequest request) {
-    FieldError fieldError = ex.getBindingResult().getFieldErrors().get(0);
-    String field = fieldError.getField();
-    String defaultMessage = fieldError.getDefaultMessage();
 
-    Map<String, Object> errors = Collections.singletonMap(field, defaultMessage);
+    Map<String, Object> errors = new HashMap<>();
+
+    for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+      String field = fieldError.getField();
+      String defaultMessage = fieldError.getDefaultMessage();
+
+      // Resolve the default message to the localized message
+      String localizedMessage = Translator.toLocale(defaultMessage);
+
+      // Add the localized message to errors map
+      errors.put(field, localizedMessage);
+    }
 
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-        new ErrorMessageResponseDTO(HttpStatus.BAD_REQUEST.value(), ErrorMessage.INVALID_DATA,
-            errors, request.getServletPath()));
+        new ErrorMessageResponseDTO(HttpStatus.BAD_REQUEST.value(),
+            Translator.toLocale("INVALID_DATA"), errors, request.getServletPath()));
   }
 
   @ExceptionHandler(InvalidExceptionCustomize.class)
@@ -65,30 +75,31 @@ public class GlobalExceptionHandler {
             request.getServletPath()));
   }
 
-  @ExceptionHandler({DisabledException.class, LockedException.class, AccessDeniedException.class,})
+  @ExceptionHandler({DisabledException.class, LockedException.class, AccessDeniedException.class})
   public ResponseEntity<ErrorMessageResponseDTO> handleForbiddenException(Exception ex,
       HttpServletRequest request) {
-    String error;
+    String errorMessage;
 
     if (ex instanceof DisabledException) {
-      error = ErrorMessage.DISABLE_USER;
+      errorMessage = Translator.toLocale("DISABLE_USER");
     } else if (ex instanceof LockedException) {
-      error = ErrorMessage.LOCKED_USER;
+      errorMessage = Translator.toLocale("LOCKED_USER");
     } else {
-      error = ErrorMessage.NOT_ENOUGH_PERMISSION;
+      errorMessage = Translator.toLocale("NOT_ENOUGH_PERMISSION");
     }
 
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-        new ErrorMessageResponseDTO(HttpStatus.FORBIDDEN.value(), ErrorMessage.ACCESS_DENIED, error,
-            request.getServletPath()));
+        new ErrorMessageResponseDTO(HttpStatus.FORBIDDEN.value(),
+            Translator.toLocale("ACCESS_DENIED"), errorMessage, request.getServletPath()));
   }
 
   @ExceptionHandler({UnauthorizedExceptionCustomize.class, UsernameNotFoundException.class})
   public ResponseEntity<ErrorMessageResponseDTO> handleUnauthorizedException(
       HttpServletRequest request) {
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-        new ErrorMessageResponseDTO(HttpStatus.UNAUTHORIZED.value(), ErrorMessage.UNAUTHORIZED,
-            ErrorMessage.INCORRECT_DATA_LOGIN, request.getServletPath()));
+        new ErrorMessageResponseDTO(HttpStatus.UNAUTHORIZED.value(),
+            Translator.toLocale("UNAUTHORIZED"), Translator.toLocale("INCORRECT_DATA_LOGIN"),
+            request.getServletPath()));
   }
 
 }

@@ -1,7 +1,6 @@
 package com.nvs.data.dto.match;
 
 import com.nvs.common.Default;
-import com.nvs.common.ErrorMessage;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -14,20 +13,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MatchOthersInfoDTO implements Serializable {
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
-  @Min(value = Default.Game.MATCH_TIME, message = ErrorMessage.MATCH_TIME)
+  @NotNull(message = "NULL_DATA")
+  @Min(value = Default.Game.MATCH_TIME, message = "MATCH_TIME")
   private Integer time;
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
-  @Min(value = Default.Game.MOVING_TIME, message = ErrorMessage.MOVING_TIME)
+  @NotNull(message = "NULL_DATA")
+  @Min(value = Default.Game.MOVING_TIME, message = "MOVING_TIME")
   private Integer movingTime;
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
-  @Min(value = Default.Game.CUMULATIVE_TIME, message = ErrorMessage.CUMULATIVE_TIME)
+  @NotNull(message = "NULL_DATA")
+  @Min(value = Default.Game.CUMULATIVE_TIME, message = "CUMULATIVE_TIME")
   private Integer cumulativeTime;
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
-  @Min(value = Default.Game.BET_ELO, message = ErrorMessage.BET_ELO)
+  @NotNull(message = "NULL_DATA")
+  @Min(value = Default.Game.BET_ELO, message = "BET_ELO")
   private Integer eloBet;
 
 }

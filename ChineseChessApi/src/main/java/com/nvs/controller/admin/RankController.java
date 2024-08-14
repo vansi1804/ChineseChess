@@ -23,32 +23,32 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize(value = "hasAuthority('ADMIN')")
 @RequiredArgsConstructor
 @Tag(name = "Rank", description = "Endpoints for managing Vips - requires 'ADMIN' role")
-public class RankController{
+public class RankController {
 
-   private final RankService rankService;
+  private final RankService rankService;
 
-   @Operation(summary = "Get all ranks", description = "Endpoint to retrieve all ranks")
-   @GetMapping(value = "")
-   public ResponseEntity<List<RankDTO>> findAll(){
-      return ResponseEntity.ok(rankService.findAll());
-   }
+  @Operation(summary = "Get all ranks", description = "Endpoint to retrieve all ranks")
+  @GetMapping(value = "")
+  public ResponseEntity<List<RankDTO>> findAll() {
+    return ResponseEntity.ok(rankService.findAll());
+  }
 
-   @Operation(summary = "Find a rank by id", description = "Endpoint to retrieve a rank by its id")
-   @GetMapping(value = "/{id}")
-   public ResponseEntity<RankDTO> findById(@PathVariable int id){
-      return ResponseEntity.ok(rankService.findById(id));
-   }
+  @Operation(summary = "Find a rank by id", description = "Endpoint to retrieve a rank by its id")
+  @GetMapping(value = "/{id}")
+  public ResponseEntity<RankDTO> findById(@PathVariable int id) {
+    return ResponseEntity.ok(rankService.findById(id));
+  }
 
-   @Operation(summary = "Create a rank", description = "Endpoint to create a new rank")
-   @PostMapping(value = "")
-   public ResponseEntity<RankDTO> create(@RequestBody @Valid RankDTO rankDTO){
-      return ResponseEntity.ok(rankService.create(rankDTO));
-   }
+  @Operation(summary = "Create a rank", description = "Endpoint to create a new rank")
+  @PostMapping(value = "")
+  public ResponseEntity<RankDTO> create(@RequestBody @Valid RankDTO rankDTO) {
+    return ResponseEntity.ok(rankService.create(rankDTO));
+  }
 
-   @Operation(summary = "Update a rank", description = "Endpoint to update an existing rank")
-   @PutMapping(value = "/{id}")
-   public ResponseEntity<RankDTO> update(@PathVariable int id, @RequestBody @Valid RankDTO rankDTO){
-      return ResponseEntity.ok(rankService.update(id, rankDTO));
-   }
+  @Operation(summary = "Update a rank", description = "Endpoint to update an existing rank")
+  @PutMapping(value = "/{id}")
+  public ResponseEntity<RankDTO> update(@PathVariable int id, @RequestBody @Valid RankDTO rankDTO) {
+    return ResponseEntity.ok(rankService.update(id, rankDTO));
+  }
 
 }

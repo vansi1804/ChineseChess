@@ -1,6 +1,5 @@
 package com.nvs.data.dto.move.trainingMove;
 
-import com.nvs.common.ErrorMessage;
 import com.nvs.data.dto.move.MoveDetailCreationDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 public class TrainingMoveCreationDTO extends MoveDetailCreationDTO {
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
+  @NotNull(message = "NULL_DATA")
   private Long trainingId;
 
 }

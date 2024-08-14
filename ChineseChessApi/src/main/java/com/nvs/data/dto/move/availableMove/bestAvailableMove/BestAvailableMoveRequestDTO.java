@@ -1,6 +1,7 @@
 package com.nvs.data.dto.move.availableMove.bestAvailableMove;
 
-import com.nvs.common.ErrorMessage;
+import com.nvs.config.validation.Validator;
+import com.nvs.config.validation.impl.PlayBoardDTOValidatorIml;
 import com.nvs.data.dto.PlayBoardDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -13,13 +14,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BestAvailableMoveRequestDTO {
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
+  @NotNull(message = "NULL_DATA")
   @Valid
+  @Validator(value = {PlayBoardDTOValidatorIml.class})
   private PlayBoardDTO playBoardDTO;
 
   private Boolean isRed;
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
+  @NotNull(message = "NULL_DATA")
   private Integer depth;
 
 }

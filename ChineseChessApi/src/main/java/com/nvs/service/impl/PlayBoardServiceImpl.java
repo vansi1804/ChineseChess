@@ -90,7 +90,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
       int fromRow = generalPieceDTO1.getCurrentRow();
       int toRow = generalPieceDTO2.getCurrentRow();
 
-      return !pieceService.existsBetweenInColPath(playBoardDTO, currentCol, fromRow, toRow);
+      return pieceService.existsBetweenInColPath(playBoardDTO, currentCol, fromRow, toRow);
     }
 
     return false;
@@ -147,7 +147,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
   @Override
   public void printTest(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO,
       List<int[]> availableMoveIndexes) {
-    
+
     System.out.println("\n===========================================");
     System.out.println("Available move: ");
     System.out.println("===========================================");

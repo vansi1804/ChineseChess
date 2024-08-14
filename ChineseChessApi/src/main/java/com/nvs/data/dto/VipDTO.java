@@ -1,7 +1,6 @@
 package com.nvs.data.dto;
 
 import com.nvs.common.Default;
-import com.nvs.common.ErrorMessage;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,11 +17,11 @@ public class VipDTO extends AuditorDTO {
 
   private Integer id;
 
-  @NotBlank(message = ErrorMessage.BLANK_DATA)
+  @NotBlank(message = "BLANK_DATA")
   private String name;
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
-  @Min(value = Default.Game.DEPOSIT_MILESTONES, message = ErrorMessage.DEPOSIT_MILESTONES)
+  @NotNull(message = "NOT_NULL")
+  @Min(value = Default.Game.DEPOSIT_MILESTONES, message = "DEPOSIT_MILESTONES")
   private Integer depositMilestones;
 
 }

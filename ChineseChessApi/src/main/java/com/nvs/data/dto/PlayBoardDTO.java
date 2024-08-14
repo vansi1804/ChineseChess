@@ -1,6 +1,5 @@
 package com.nvs.data.dto;
 
-import com.nvs.common.ErrorMessage;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayBoardDTO {
 
-  @NotNull(message = ErrorMessage.NULL_DATA)
+  @NotNull(message = "NULL_DATA")
   @Valid
   private PieceDTO[][] state;
 

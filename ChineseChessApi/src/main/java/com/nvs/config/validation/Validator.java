@@ -1,7 +1,6 @@
-package com.nvs.config.dtoValidation;
+package com.nvs.config.validation;
 
-import com.nvs.common.ErrorMessage;
-import com.nvs.config.dtoValidation.impl.PlayBoardDTOValidatorIml;
+import com.nvs.config.validation.impl.PlayBoardDTOValidatorIml;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.Payload;
@@ -13,14 +12,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {PlayBoardDTOValidatorIml.class})
-public @interface Validator{
+public @interface Validator {
 
-   String message() default ErrorMessage.INVALID_DATA;
+  String message() default "INVALID_DATA";
 
-   Class<?>[] groups() default {};
+  Class<?>[] groups() default {};
 
-   Class<? extends Payload>[] payload() default {};
+  Class<? extends Payload>[] payload() default {};
 
-   Class<? extends ConstraintValidator<?, ?>>[] value();
-   
+  Class<? extends ConstraintValidator<?, ?>>[] value();
 }
