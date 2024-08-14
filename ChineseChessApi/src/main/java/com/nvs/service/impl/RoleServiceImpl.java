@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,7 @@ public class RoleServiceImpl implements RoleService {
   private final RoleRepository roleRepository;
   private final RoleMapper roleMapper;
 
+  @Cacheable(value = "roles")
   @Override
   public List<RoleDTO> findAll() {
     log.debug("Finding all roles");
@@ -29,6 +31,7 @@ public class RoleServiceImpl implements RoleService {
     return roles;
   }
 
+  @Cacheable(value = "roleById", key = "#id")
   @Override
   public RoleDTO findById(int id) {
     log.debug("Finding role by ID: {}", id);
@@ -38,6 +41,7 @@ public class RoleServiceImpl implements RoleService {
     return roleDTO;
   }
 
+  @Cacheable(value = "roleByName", key = "#name")
   @Override
   public RoleDTO findByName(String name) {
     log.debug("Finding role by name: {}", name);

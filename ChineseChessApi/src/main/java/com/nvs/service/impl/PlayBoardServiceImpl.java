@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,6 +34,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
   private final PieceService pieceService;
   private final MoveRuleService moveRuleService;
 
+  @Cacheable(value = "playBoard", key = "#root.methodName")
   @Override
   public PlayBoardDTO generate() {
     log.debug("Generating new PlayBoardDTO.");

@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +26,7 @@ public class RankServiceImpl implements RankService {
   private final RankRepository rankRepository;
   private final RankMapper rankMapper;
 
+  @Cacheable(value = "ranks")
   @Override
   public List<RankDTO> findAll() {
     log.debug("Finding all ranks");
@@ -32,6 +36,7 @@ public class RankServiceImpl implements RankService {
     return ranks;
   }
 
+  @Cacheable(value = "rank", key = "#id")
   @Override
   public RankDTO findById(int id) {
     log.debug("Finding rank by ID: {}", id);
@@ -41,6 +46,7 @@ public class RankServiceImpl implements RankService {
     return rankDTO;
   }
 
+  @Cacheable(value = "rank", key = "#name")
   @Override
   public RankDTO findByName(String name) {
     log.debug("Finding rank by name: {}", name);
@@ -50,6 +56,7 @@ public class RankServiceImpl implements RankService {
     return rankDTO;
   }
 
+  @Cacheable(value = "rank", key = "#elo")
   @Override
   public RankDTO findByPlayerElo(int elo) {
     log.debug("Finding rank by player Elo: {}", elo);
@@ -60,6 +67,7 @@ public class RankServiceImpl implements RankService {
     return rankDTO;
   }
 
+  @Cacheable(value = "defaultRank")
   @Override
   public RankDTO findDefault() {
     log.debug("Finding default rank");
@@ -69,6 +77,7 @@ public class RankServiceImpl implements RankService {
     return rankDTO;
   }
 
+  @CachePut(value = "rank", key = "#rankDTO.name")
   @Override
   public RankDTO create(RankDTO rankDTO) {
     log.debug("Creating rank with details: {}", rankDTO);
@@ -90,6 +99,7 @@ public class RankServiceImpl implements RankService {
     return createdRankDTO;
   }
 
+  @CachePut(value = "rank", key = "#id")
   @Override
   public RankDTO update(int id, RankDTO rankDTO) {
     log.debug("Updating rank with ID: {} and details: {}", id, rankDTO);
@@ -117,6 +127,7 @@ public class RankServiceImpl implements RankService {
     return updatedRankDTO;
   }
 
+  @CacheEvict(value = "rank", key = "#id")
   @Override
   public boolean delete(int id) {
     log.debug("Deleting rank with ID: {}", id);
@@ -125,5 +136,4 @@ public class RankServiceImpl implements RankService {
     log.debug("Rank with ID: {} deleted successfully", id);
     return true;
   }
-
 }

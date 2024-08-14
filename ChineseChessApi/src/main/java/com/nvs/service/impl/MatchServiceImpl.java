@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,12 +40,14 @@ public class MatchServiceImpl implements MatchService {
   private final MoveService moveService;
 
   @Override
+  @Cacheable(value = "matches")
   public List<MatchDTO> findAll() {
     log.info("Fetching all matches");
     return matchRepository.findAll().stream().map(matchMapper::toDTO).collect(Collectors.toList());
   }
 
   @Override
+  @Cacheable(value = "match", key = "#id")
   public MatchDTO findById(long id) {
     log.info("Fetching match by id: {}", id);
     return matchRepository.findById(id)
@@ -55,6 +59,7 @@ public class MatchServiceImpl implements MatchService {
   }
 
   @Override
+  @Cacheable(value = "matchesByPlayer", key = "#playerId")
   public List<MatchDTO> findAllByPlayerId(long playerId) {
     log.info("Fetching matches for player id: {}", playerId);
     return matchRepository.findAllByPlayerId(playerId).stream()
@@ -63,6 +68,7 @@ public class MatchServiceImpl implements MatchService {
   }
 
   @Override
+  @Cacheable(value = "matchDetails", key = "#id")
   public MatchDetailDTO findDetailById(long id) {
     log.info("Fetching match details by id: {}", id);
     MatchDetailDTO matchDetailDTO = matchRepository.findById(id)
@@ -80,6 +86,7 @@ public class MatchServiceImpl implements MatchService {
   }
 
   @Override
+  @CachePut(value = "match")
   public MatchDTO create(MatchCreationDTO matchCreationDTO) {
     log.info("Creating match with players: {} and {}", matchCreationDTO.getPlayer1Id(),
         matchCreationDTO.getPlayer2Id());
@@ -127,6 +134,7 @@ public class MatchServiceImpl implements MatchService {
   }
 
   @Override
+  @CachePut(value = "matches", key = "#id")
   public MatchDTO updateResult(long id, Boolean result) {
     log.info("Updating result for match id: {}", id);
     Match existingMatch = matchRepository.findById(id)
@@ -174,4 +182,5 @@ public class MatchServiceImpl implements MatchService {
     log.info("Match result updated successfully for match id: {}", updatedMatchDTO.getId());
     return updatedMatchDTO;
   }
+
 }

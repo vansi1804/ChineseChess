@@ -16,6 +16,7 @@ import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +28,7 @@ public class PieceServiceImpl implements PieceService {
   private final PieceMapper pieceMapper;
 
   @Override
+  @Cacheable(value = "pieces")
   public List<PieceDTO> findAll() {
     log.debug("Fetching all pieces from repository.");
     return pieceRepository.findAll().stream()
@@ -35,6 +37,7 @@ public class PieceServiceImpl implements PieceService {
   }
 
   @Override
+  @Cacheable(value = "pieces", key = "#id")
   public PieceDTO findById(int id) {
     log.debug("Finding piece by id: {}", id);
     return pieceRepository.findById(id)
@@ -46,6 +49,7 @@ public class PieceServiceImpl implements PieceService {
   }
 
   @Override
+  @Cacheable(value = "piecesByName", key = "#name")
   public EPiece convertByName(String name) {
     log.debug("Converting name to EPiece: {}", name);
     try {
@@ -93,7 +97,7 @@ public class PieceServiceImpl implements PieceService {
 
     deadPieces.removeIf(deadPiece -> piecesInBoard.stream()
         .map(PieceDTO::getId)
-        .collect(Collectors.toList())
+        .toList()
         .contains(deadPiece.getId()));
 
     log.debug("Found {} pieces not in play board.", deadPieces.size());
@@ -172,8 +176,8 @@ public class PieceServiceImpl implements PieceService {
     int startRow = Math.min(fromRow, toRow) + 1;
     int endRow = Math.max(fromRow, toRow) - 1;
 
-    boolean exists = !IntStream.rangeClosed(startRow, endRow)
-        .anyMatch(row -> playBoardDTO.getState()[currentCol][row] != null);
+    boolean exists = IntStream.rangeClosed(startRow, endRow)
+        .noneMatch(row -> playBoardDTO.getState()[currentCol][row] != null);
 
     log.debug("Existence of pieces between rows {} and {} in column {}: {}", fromRow, toRow,
         currentCol, exists);

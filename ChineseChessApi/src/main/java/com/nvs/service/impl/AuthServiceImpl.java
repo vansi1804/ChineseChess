@@ -4,10 +4,11 @@ import com.nvs.common.Default;
 import com.nvs.config.exception.UnauthorizedExceptionCustomize;
 import com.nvs.config.security.jwt.JwtService;
 import com.nvs.config.security.userDetails.UserDetailsImpl;
-import com.nvs.data.dto.auth.LoginDTO;
+import com.nvs.data.dto.auth.LoginRequestDTO;
 import com.nvs.data.dto.auth.LoginResponseDTO;
 import com.nvs.data.mapper.RoleMapper;
 import com.nvs.service.AuthService;
+import com.nvs.util.MaskUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,16 +28,18 @@ public class AuthServiceImpl implements AuthService {
   private final RoleMapper roleMapper;
 
   @Override
-  public LoginResponseDTO login(LoginDTO loginDTO) {
-    log.info("Attempting login for phone number: {}", loginDTO.getPhoneNumber());
+  public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
+    log.info("Attempting login for phone number: {}", loginRequestDTO.getPhoneNumber());
 
     try {
       Authentication authentication = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(loginDTO.getPhoneNumber(), loginDTO.getPassword())
+          new UsernamePasswordAuthenticationToken(loginRequestDTO.getPhoneNumber(),
+              loginRequestDTO.getPassword())
       );
 
       UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-      log.info("Authentication successful for phone number: {}", loginDTO.getPhoneNumber());
+      log.info("Authentication successful for phone number: {}",
+          MaskUtil.maskPhoneNumber(loginRequestDTO.getPhoneNumber()));
 
       LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
 
@@ -54,12 +57,14 @@ public class AuthServiceImpl implements AuthService {
       loginResponseDTO.setAccessToken(accessToken);
       loginResponseDTO.setRefreshToken(refreshToken);
 
-      log.info("Generated JWT tokens for phone number: {}", loginDTO.getPhoneNumber());
+      log.info("Generated JWT tokens for phone number: {}",
+          MaskUtil.maskPhoneNumber(loginRequestDTO.getPhoneNumber()));
 
       return loginResponseDTO;
 
     } catch (BadCredentialsException ex) {
-      log.warn("Login failed for phone number: {}", loginDTO.getPhoneNumber());
+      log.warn("Login failed for phone number: {}",
+          MaskUtil.maskPhoneNumber(loginRequestDTO.getPhoneNumber()));
       throw new UnauthorizedExceptionCustomize();
     }
   }
