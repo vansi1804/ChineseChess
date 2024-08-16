@@ -37,7 +37,6 @@ public class PieceServiceImpl implements PieceService {
   }
 
   @Override
-  @Cacheable(value = "pieces", key = "#id")
   public PieceDTO findById(int id) {
     log.debug("Finding piece by id: {}", id);
     return pieceRepository.findById(id)
@@ -49,7 +48,6 @@ public class PieceServiceImpl implements PieceService {
   }
 
   @Override
-  @Cacheable(value = "piecesByName", key = "#name")
   public EPiece convertByName(String name) {
     log.debug("Converting name to EPiece: {}", name);
     try {

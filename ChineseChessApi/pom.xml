@@ -7,38 +7,13 @@
 
   <build>
     <plugins>
-      <!-- Configuration for spring-boot-maven-plugin -->
       <plugin>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <classifier>exec</classifier>
-          <excludes>
-            <exclude>
-              <artifactId>lombok</artifactId>
-              <groupId>org.projectlombok</groupId>
-            </exclude>
-            <exclude>
-              <artifactId>mapstruct</artifactId>
-              <groupId>org.mapstruct</groupId>
-            </exclude>
-            <exclude>
-              <artifactId>mapstruct-processor</artifactId>
-              <groupId>org.mapstruct</groupId>
-            </exclude>
-          </excludes>
-          <executable>true</executable>
-          <image>
-            <builder>paketobuildpacks/builder:tiny</builder>
-            <env>
-              <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
-            </env>
-          </image>
-          <jvmArguments>-Dfile.encoding=UTF8</jvmArguments>
           <mainClass>com.nvs.ChineseChessApiApplication</mainClass>
         </configuration>
         <groupId>org.springframework.boot</groupId>
       </plugin>
-
       <!-- Configuration for hibernate-enhance-maven-plugin -->
       <plugin>
         <artifactId>hibernate-enhance-maven-plugin</artifactId>
@@ -175,16 +150,12 @@
       <groupId>org.apache.commons</groupId>
     </dependency>
     <dependency>
-      <artifactId>springdoc-openapi-ui</artifactId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       <groupId>org.springdoc</groupId>
-      <version>1.8.0</version>
-    </dependency>
-    <dependency>
-      <artifactId>springdoc-openapi-core</artifactId>
-      <groupId>org.springdoc</groupId>
-      <version>1.1.49</version>
+      <version>2.0.2</version>
     </dependency>
   </dependencies>
+
   <description>Chinese Chess API</description>
   <groupId>com</groupId>
   <modelVersion>4.0.0</modelVersion>

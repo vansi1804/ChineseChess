@@ -95,9 +95,8 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
 
             // Validate index
             if ((col != pieceDTO.getCurrentCol()) || (row != pieceDTO.getCurrentRow())) {
-              log.error(
-                  "Invalid piece index: expected col={}, row={}, but got currentCol={}, currentRow={}",
-                  col, row, pieceDTO.getCurrentCol(), pieceDTO.getCurrentRow());
+              log.error("Invalid piece index: {} expected colInBoard={}, rowInBoard={}", pieceDTO,
+                  col, row);
               throw new InvalidExceptionCustomize(buildValidateErrors(pieceDTO, col, row,
                   Translator.toLocale("PIECE_INVALID_INDEX")));
             }
@@ -107,18 +106,14 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
 
       if (!existsRedGeneral) {
         log.error("Red general not found on the board");
-        throw new InvalidExceptionCustomize(
-            Collections.singletonMap("message",
-                Translator.toLocale("PIECE_NOT_FOUND_IN_BOARD",
-                    Translator.toLocale("RED_GENERAL"))));
+        throw new InvalidExceptionCustomize(Collections.singletonMap("message",
+            Translator.toLocale("PIECE_NOT_FOUND_IN_BOARD", Translator.toLocale("RED_GENERAL"))));
       }
 
       if (!existsBlackGeneral) {
         log.error("Black general not found on the board");
-        throw new InvalidExceptionCustomize(
-            Collections.singletonMap("message",
-                Translator.toLocale("PIECE_NOT_FOUND_IN_BOARD",
-                    Translator.toLocale("BLACK_GENERAL"))));
+        throw new InvalidExceptionCustomize(Collections.singletonMap("message",
+            Translator.toLocale("PIECE_NOT_FOUND_IN_BOARD", Translator.toLocale("BLACK_GENERAL"))));
       }
     }
 

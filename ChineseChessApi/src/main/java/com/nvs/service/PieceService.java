@@ -5,32 +5,33 @@ import com.nvs.data.dto.PieceDTO;
 import com.nvs.data.dto.PlayBoardDTO;
 import java.util.List;
 
-public interface PieceService{
+public interface PieceService {
 
-   List<PieceDTO> findAll();
+  List<PieceDTO> findAll();
 
-   PieceDTO findById(int id);
+  PieceDTO findById(int id);
 
-   EPiece convertByName(String name);
+  EPiece convertByName(String name);
 
-   List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed);
+  List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed);
 
-   List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed, int fromCol, int fromRow, int toCol, int toRow);
+  List<PieceDTO> findAllInBoard(PlayBoardDTO playBoardDTO, String name, Boolean isRed, int fromCol,
+      int fromRow, int toCol, int toRow);
 
-   PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id);
+  PieceDTO findOneInBoard(PlayBoardDTO playBoardDTO, int id);
 
-   List<PieceDTO> findAllNotInPlayBoard(PlayBoardDTO playBoardDTO);
+  List<PieceDTO> findAllNotInPlayBoard(PlayBoardDTO playBoardDTO);
 
-   PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO);
+  PieceDTO findExistingTheSameInColPath(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO);
 
-   boolean existsBetweenInRowPath(PlayBoardDTO playBoardDTO, int row, int fromCol, int toCol);
+  boolean existsBetweenInRowPath(PlayBoardDTO playBoardDTO, int row, int fromCol, int toCol);
 
-   boolean existsBetweenInColPath(PlayBoardDTO playBoardDTO, int col, int fromRow, int toRow);
+  boolean existsBetweenInColPath(PlayBoardDTO playBoardDTO, int col, int fromRow, int toRow);
 
-   int countBetweenInRowPath(PlayBoardDTO playBoardDTO, int row, int fromCol, int toCol);
+  int countBetweenInRowPath(PlayBoardDTO playBoardDTO, int row, int fromCol, int toCol);
 
-   int countBetweenInColPath(PlayBoardDTO playBoardDTO, int col, int fromRow, int toRow);
+  int countBetweenInColPath(PlayBoardDTO playBoardDTO, int col, int fromRow, int toRow);
 
-   PieceDTO findGeneralInBoard(PlayBoardDTO playBoardDTO, boolean isRed);
+  PieceDTO findGeneralInBoard(PlayBoardDTO playBoardDTO, boolean isRed);
 
 }
