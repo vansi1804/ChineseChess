@@ -4,10 +4,13 @@ import com.nvs.common.ApiUrl;
 import com.nvs.data.dto.VipDTO;
 import com.nvs.service.VipService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,28 +30,47 @@ public class VipController {
 
   private final VipService vipService;
 
-  @Operation(summary = "Get all vips", description = "Endpoint to retrieve all vips")
+  @Operation(summary = "Get all vips", description = "Retrieve a list of all vips.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully retrieved all vips"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
   @GetMapping(value = "")
   public ResponseEntity<List<VipDTO>> findAll() {
     return ResponseEntity.ok(vipService.findAll());
   }
 
-  @Operation(summary = "Find a vip by id", description = "Endpoint to update an existing vip")
+  @Operation(summary = "Find a vip by ID", description = "Retrieve a vip by its ID.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully retrieved the vip"),
+      @ApiResponse(responseCode = "404", description = "Vip not found"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
   @GetMapping(value = "/{id}")
   public ResponseEntity<VipDTO> findById(@PathVariable int id) {
     return ResponseEntity.ok(vipService.findById(id));
   }
 
-  @Operation(summary = "Create a vip", description = "Endpoint to create a new vip")
+  @Operation(summary = "Create a new vip", description = "Create a new vip with the provided details.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Successfully created the vip"),
+      @ApiResponse(responseCode = "400", description = "Invalid input provided"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
   @PostMapping(value = "")
   public ResponseEntity<VipDTO> create(@RequestBody @Valid VipDTO vipDTO) {
-    return ResponseEntity.ok(vipService.create(vipDTO));
+    return ResponseEntity.status(HttpStatus.CREATED).body(vipService.create(vipDTO));
   }
 
-  @Operation(summary = "Update a vip", description = "Endpoint to update an existing vip")
+  @Operation(summary = "Update an existing vip", description = "Update an existing vip with the provided details.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully updated the vip"),
+      @ApiResponse(responseCode = "400", description = "Invalid input provided"),
+      @ApiResponse(responseCode = "404", description = "Vip not found"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
   @PutMapping(value = "/{id}")
   public ResponseEntity<VipDTO> update(@PathVariable int id, @RequestBody @Valid VipDTO vipDTO) {
     return ResponseEntity.ok(vipService.update(id, vipDTO));
   }
-
 }

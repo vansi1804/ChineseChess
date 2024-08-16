@@ -29,7 +29,8 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
-    log.info("Attempting login for phone number: {}", loginRequestDTO.getPhoneNumber());
+    log.info("Attempting login for phone number: {}",
+        MaskUtil.maskPhoneNumber(loginRequestDTO.getPhoneNumber()));
 
     try {
       Authentication authentication = authenticationManager.authenticate(
