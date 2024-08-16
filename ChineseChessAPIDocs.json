@@ -1,0 +1,3118 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Chinese Chess API Document",
+    "description": "Chinese chess Service API Docs",
+    "license": {
+      "name": "API License",
+      "url": "http://domain.vn/license"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8088",
+      "description": "Local Development Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Endpoints for managing authentication"
+    },
+    {
+      "name": "Training",
+      "description": "Endpoints for managing trainings"
+    },
+    {
+      "name": "User",
+      "description": "Endpoints for managing users"
+    },
+    {
+      "name": "Vip",
+      "description": "Endpoints for managing Vips - requires 'ADMIN' role"
+    },
+    {
+      "name": "Player",
+      "description": "Endpoints for managing players"
+    },
+    {
+      "name": "Move",
+      "description": "Endpoints for managing moves"
+    },
+    {
+      "name": "Role",
+      "description": "Endpoints for managing roles - requires 'ADMIN' role"
+    },
+    {
+      "name": "Matches",
+      "description": "Endpoints for managing matches"
+    },
+    {
+      "name": "Piece",
+      "description": "Endpoints for managing pieces"
+    },
+    {
+      "name": "File",
+      "description": "Endpoints for managing files"
+    },
+    {
+      "name": "Play board",
+      "description": "Endpoints for managing the play board"
+    },
+    {
+      "name": "Rank",
+      "description": "Endpoints for managing ranks - requires 'ADMIN' role"
+    }
+  ],
+  "paths": {
+    "/api/users/{id}/lock": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Lock user",
+        "description": "Lock an existing user by ID to prevent login.",
+        "operationId": "lockById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User locked successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/{id}/change-password": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Change user password",
+        "description": "Change the password for a user by ID.",
+        "operationId": "changePassword",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserChangePasswordRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Password changed successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/{id}/active": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Unlock user",
+        "description": "Unlock an existing user by ID to allow login.",
+        "operationId": "unlockById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User unlocked successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/trainings/{id}": {
+      "get": {
+        "tags": [
+          "Training"
+        ],
+        "summary": "Find training by id",
+        "description": "Retrieve training details by its ID.",
+        "operationId": "findById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Training found by ID",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Training not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Training"
+        ],
+        "summary": "Update training",
+        "description": "Update an existing training entry. Requires 'ADMIN' role.",
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Training updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Training not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Training"
+        ],
+        "summary": "Delete training",
+        "description": "Delete an existing training by ID. Also deletes related children or move history. Requires 'ADMIN' role.",
+        "operationId": "deleteById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Training deleted successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Training not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/players/{id}": {
+      "get": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Find player by id",
+        "description": "Retrieve player profile details by player id. Requires authentication.",
+        "operationId": "findById_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player profile found by id",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerProfileDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerProfileDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Player not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerProfileDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Update player information",
+        "description": "Update an existing player's information. Requires authentication.",
+        "operationId": "update_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayerProfileDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Player updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerProfileDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerProfileDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Player not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerProfileDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/matches/{id}": {
+      "get": {
+        "tags": [
+          "Matches"
+        ],
+        "summary": "Find match details by ID",
+        "description": "Retrieve match details by match ID.",
+        "operationId": "findDetailById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Match details successfully retrieved",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchDetailDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Match not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchDetailDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchDetailDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Matches"
+        ],
+        "summary": "Update match result",
+        "description": "Update the result of an existing match.",
+        "operationId": "updateResult",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "result",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Match result successfully updated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid result update request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Match not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/vips/{id}": {
+      "get": {
+        "tags": [
+          "Vip"
+        ],
+        "summary": "Find a vip by ID",
+        "description": "Retrieve a vip by its ID.",
+        "operationId": "findById_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the vip",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Vip not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vip"
+        ],
+        "summary": "Update an existing vip",
+        "description": "Update an existing vip with the provided details.",
+        "operationId": "update_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VipDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the vip",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input provided",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Vip not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/ranks/{id}": {
+      "get": {
+        "tags": [
+          "Rank"
+        ],
+        "summary": "Find a rank by ID",
+        "description": "Retrieve a rank by its ID.",
+        "operationId": "findById_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the rank",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Rank not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Rank"
+        ],
+        "summary": "Update an existing rank",
+        "description": "Update an existing rank with the provided details.",
+        "operationId": "update_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RankDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the rank",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input provided",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Rank not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trainings": {
+      "get": {
+        "tags": [
+          "Training"
+        ],
+        "summary": "Get all base trainings",
+        "description": "Retrieve a list of all base trainings.",
+        "operationId": "findAllBase",
+        "responses": {
+          "200": {
+            "description": "List of all base trainings",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrainingDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrainingDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Training"
+        ],
+        "summary": "Create new training",
+        "description": "Create a new training entry. Requires 'ADMIN' role.",
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Training created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/players": {
+      "get": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Get all players",
+        "description": "Retrieve a paginated list of all players. Requires 'ADMIN' role.",
+        "operationId": "findAll_1",
+        "parameters": [
+          {
+            "name": "no",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all players",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagePlayerDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagePlayerDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Create a new player",
+        "description": "Create a new player with the provided details. No authentication required.",
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayerCreationDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Player created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/moves": {
+      "post": {
+        "tags": [
+          "Move"
+        ],
+        "summary": "Create a move",
+        "description": "Create a new move",
+        "operationId": "createMove",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveCreationDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Move successfully created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid move creation request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/moves/training": {
+      "post": {
+        "tags": [
+          "Move"
+        ],
+        "summary": "Create a move for training",
+        "description": "Create a move for training purposes",
+        "operationId": "createTrainingMove",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingMoveCreationDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Training move successfully created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid training move creation request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/moves/match": {
+      "post": {
+        "tags": [
+          "Move"
+        ],
+        "summary": "Create a move for a match",
+        "description": "Create a move for a match",
+        "operationId": "createMatchMove",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MatchMoveCreationDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Match move successfully created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid match move creation request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/moves/best-available": {
+      "post": {
+        "tags": [
+          "Move"
+        ],
+        "summary": "Find all best available moves",
+        "description": "Retrieve the best available moves based on the provided criteria",
+        "operationId": "findAllBestAvailable",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BestAvailableMoveRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Best available moves successfully retrieved",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/BestAvailableMoveResponseDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/BestAvailableMoveResponseDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/BestAvailableMoveResponseDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/moves/available": {
+      "post": {
+        "tags": [
+          "Move"
+        ],
+        "summary": "Find all available moves",
+        "description": "Retrieve a list of all available moves",
+        "operationId": "findAllAvailable",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AvailableMoveRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Available moves successfully retrieved",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/matches": {
+      "post": {
+        "tags": [
+          "Matches"
+        ],
+        "summary": "Create a new match",
+        "description": "Create a new match played by two players.",
+        "operationId": "create_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MatchCreationDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Match successfully created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid match creation request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/files/upload": {
+      "post": {
+        "tags": [
+          "File"
+        ],
+        "summary": "Upload a file",
+        "description": "Upload a file to the server.",
+        "operationId": "uploadFile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File uploaded successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid file or upload request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login",
+        "description": "Authenticate a user and return an authentication token.",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully authenticated, returns an authentication token",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid login credentials or request format",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/vips": {
+      "get": {
+        "tags": [
+          "Vip"
+        ],
+        "summary": "Get all vips",
+        "description": "Retrieve a list of all vips.",
+        "operationId": "findAll_3",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all vips",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VipDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VipDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Vip"
+        ],
+        "summary": "Create a new vip",
+        "description": "Create a new vip with the provided details.",
+        "operationId": "create_3",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VipDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the vip",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input provided",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/ranks": {
+      "get": {
+        "tags": [
+          "Rank"
+        ],
+        "summary": "Get all ranks",
+        "description": "Retrieve a list of all ranks.",
+        "operationId": "findAll_5",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all ranks",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RankDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RankDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Rank"
+        ],
+        "summary": "Create a new rank",
+        "description": "Create a new rank with the provided details.",
+        "operationId": "create_4",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RankDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the rank",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input provided",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get all users",
+        "description": "Retrieve a paginated list of all users.",
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "no",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all users retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageUserDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageUserDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/trainings/{id}/details": {
+      "get": {
+        "tags": [
+          "Training"
+        ],
+        "summary": "Find training details by id",
+        "description": "Retrieve detailed information of a training by its ID.",
+        "operationId": "findDetailsById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Training details found by ID",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDetailDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Training not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDetailDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingDetailDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/players/users/{userId}": {
+      "get": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Find player by user id",
+        "description": "Retrieve player details by user id. Requires 'ADMIN' role.",
+        "operationId": "findByUserId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player found by user id",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Player not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/play-board/generate": {
+      "get": {
+        "tags": [
+          "Play board"
+        ],
+        "summary": "Generate a new play board",
+        "description": "Creates and returns a new play board, typically used at the start of a new game or session",
+        "operationId": "generate",
+        "responses": {
+          "200": {
+            "description": "Play board successfully generated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayBoardDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayBoardDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pieces": {
+      "get": {
+        "tags": [
+          "Piece"
+        ],
+        "summary": "Retrieve all pieces",
+        "description": "Fetches a list of all pieces available in the system",
+        "operationId": "findAll_2",
+        "responses": {
+          "200": {
+            "description": "List of all pieces successfully retrieved",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PieceDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PieceDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/matches/players/{playerId}": {
+      "get": {
+        "tags": [
+          "Matches"
+        ],
+        "summary": "Get all matches by player's ID",
+        "description": "Retrieve all matches played by a player's ID.",
+        "operationId": "findAllByPlayerId",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matches successfully retrieved",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MatchDTO"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Player not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MatchDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MatchDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/files/download/{fileName}": {
+      "get": {
+        "tags": [
+          "File"
+        ],
+        "summary": "Download a file",
+        "description": "Download a file from the server.",
+        "operationId": "downloadFile",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File downloaded successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/files/display/{fileName}": {
+      "get": {
+        "tags": [
+          "File"
+        ],
+        "summary": "Display a file",
+        "description": "Display a file inline on the web.",
+        "operationId": "displayFile",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File displayed successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "byte"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "byte"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "byte"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/roles": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "summary": "Get all roles",
+        "description": "Retrieve a list of all roles.",
+        "operationId": "findAll_4",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all roles",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RoleDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "UserDTO": {
+        "type": "object",
+        "properties": {
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastModifiedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userProfileDTO": {
+            "$ref": "#/components/schemas/UserProfileDTO"
+          },
+          "roleDTO": {
+            "$ref": "#/components/schemas/RoleDTO"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "UserProfileDTO": {
+        "required": [
+          "name",
+          "phoneNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "phoneNumber": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "vipDTO": {
+            "$ref": "#/components/schemas/VipDTO"
+          }
+        }
+      },
+      "VipDTO": {
+        "required": [
+          "depositMilestones",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastModifiedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "depositMilestones": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UserChangePasswordRequestDTO": {
+        "required": [
+          "newPassword",
+          "oldPassword"
+        ],
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string"
+          },
+          "newPasswordConfirm": {
+            "type": "string"
+          }
+        }
+      },
+      "TrainingDTO": {
+        "required": [
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastModifiedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "parentTrainingId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "childTrainingDTOs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrainingDTO"
+            }
+          }
+        }
+      },
+      "PlayerOthersInfoDTO": {
+        "type": "object",
+        "properties": {
+          "elo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rankDTO": {
+            "$ref": "#/components/schemas/RankDTO"
+          },
+          "win": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "draw": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lose": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PlayerProfileDTO": {
+        "required": [
+          "userProfileDTO"
+        ],
+        "type": "object",
+        "properties": {
+          "userProfileDTO": {
+            "$ref": "#/components/schemas/UserProfileDTO"
+          },
+          "playerOthersInfoDTO": {
+            "$ref": "#/components/schemas/PlayerOthersInfoDTO"
+          }
+        }
+      },
+      "RankDTO": {
+        "required": [
+          "eloMilestones",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastModifiedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "eloMilestones": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "MatchDTO": {
+        "type": "object",
+        "properties": {
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastModifiedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "player1ProfileDTO": {
+            "$ref": "#/components/schemas/PlayerProfileDTO"
+          },
+          "player2ProfileDTO": {
+            "$ref": "#/components/schemas/PlayerProfileDTO"
+          },
+          "matchOthersInfoDTO": {
+            "$ref": "#/components/schemas/MatchOthersInfoDTO"
+          },
+          "result": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "MatchOthersInfoDTO": {
+        "required": [
+          "cumulativeTime",
+          "eloBet",
+          "movingTime",
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "time": {
+            "minimum": 5,
+            "type": "integer",
+            "format": "int32"
+          },
+          "movingTime": {
+            "minimum": 30,
+            "type": "integer",
+            "format": "int32"
+          },
+          "cumulativeTime": {
+            "minimum": 3,
+            "type": "integer",
+            "format": "int32"
+          },
+          "eloBet": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PlayerCreationDTO": {
+        "required": [
+          "userCreationDTO"
+        ],
+        "type": "object",
+        "properties": {
+          "userCreationDTO": {
+            "$ref": "#/components/schemas/UserCreationDTO"
+          }
+        }
+      },
+      "UserCreationDTO": {
+        "required": [
+          "name",
+          "password",
+          "phoneNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "phoneNumber": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "vipDTO": {
+            "$ref": "#/components/schemas/VipDTO"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "PlayerDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userDTO": {
+            "$ref": "#/components/schemas/UserDTO"
+          },
+          "playerOthersInfoDTO": {
+            "$ref": "#/components/schemas/PlayerOthersInfoDTO"
+          }
+        }
+      },
+      "MoveCreationDTO": {
+        "required": [
+          "movingPieceId",
+          "playBoardDTO",
+          "toCol",
+          "toRow"
+        ],
+        "type": "object",
+        "properties": {
+          "movingPieceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "toCol": {
+            "maximum": 8,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "toRow": {
+            "maximum": 9,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "playBoardDTO": {
+            "$ref": "#/components/schemas/PlayBoardDTO"
+          }
+        }
+      },
+      "PieceDTO": {
+        "required": [
+          "currentCol",
+          "currentRow",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "currentCol": {
+            "maximum": 8,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentRow": {
+            "maximum": 9,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "red": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PlayBoardDTO": {
+        "required": [
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PieceDTO"
+              }
+            }
+          }
+        }
+      },
+      "MoveDTO": {
+        "type": "object",
+        "properties": {
+          "movingPieceDTO": {
+            "$ref": "#/components/schemas/PieceDTO"
+          },
+          "toCol": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "toRow": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "deadPieceDTO": {
+            "$ref": "#/components/schemas/PieceDTO"
+          },
+          "playBoardDTO": {
+            "$ref": "#/components/schemas/PlayBoardDTO"
+          },
+          "checkedGeneralPieceDTO": {
+            "$ref": "#/components/schemas/PieceDTO"
+          },
+          "checkmateState": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TrainingMoveCreationDTO": {
+        "required": [
+          "movingPieceId",
+          "toCol",
+          "toRow",
+          "trainingId"
+        ],
+        "type": "object",
+        "properties": {
+          "movingPieceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "toCol": {
+            "maximum": 8,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "toRow": {
+            "maximum": 9,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "trainingId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "MatchMoveCreationDTO": {
+        "required": [
+          "matchId",
+          "movingPieceId",
+          "playerId",
+          "toCol",
+          "toRow"
+        ],
+        "type": "object",
+        "properties": {
+          "movingPieceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "toCol": {
+            "maximum": 8,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "toRow": {
+            "maximum": 9,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "matchId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "playerId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "BestAvailableMoveRequestDTO": {
+        "required": [
+          "depth",
+          "playBoardDTO"
+        ],
+        "type": "object",
+        "properties": {
+          "playBoardDTO": {
+            "$ref": "#/components/schemas/PlayBoardDTO"
+          },
+          "isRed": {
+            "type": "boolean"
+          },
+          "depth": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "BestAvailableMoveResponseDTO": {
+        "type": "object",
+        "properties": {
+          "evalScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bestMovesResponseDTOs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BestMoveResponseDTO"
+            }
+          }
+        }
+      },
+      "BestMoveResponseDTO": {
+        "type": "object",
+        "properties": {
+          "pieceDTO": {
+            "$ref": "#/components/schemas/PieceDTO"
+          },
+          "bestAvailableMoveIndexes": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        }
+      },
+      "AvailableMoveRequestDTO": {
+        "required": [
+          "movingPieceId",
+          "playBoardDTO"
+        ],
+        "type": "object",
+        "properties": {
+          "movingPieceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playBoardDTO": {
+            "$ref": "#/components/schemas/PlayBoardDTO"
+          }
+        }
+      },
+      "MatchCreationDTO": {
+        "required": [
+          "matchOthersInfoDTO",
+          "player1Id",
+          "player2Id"
+        ],
+        "type": "object",
+        "properties": {
+          "player1Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "player2Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "matchOthersInfoDTO": {
+            "$ref": "#/components/schemas/MatchOthersInfoDTO"
+          }
+        }
+      },
+      "LoginRequestDTO": {
+        "required": [
+          "password",
+          "phoneNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "phoneNumber": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "PageUserDTO": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDTO"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "unpaged": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MoveHistoryDTO": {
+        "type": "object",
+        "properties": {
+          "movingPieceDTO": {
+            "$ref": "#/components/schemas/PieceDTO"
+          },
+          "toCol": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "toRow": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "deadPieceDTO": {
+            "$ref": "#/components/schemas/PieceDTO"
+          },
+          "playBoardDTO": {
+            "$ref": "#/components/schemas/PlayBoardDTO"
+          },
+          "checkedGeneralPieceDTO": {
+            "$ref": "#/components/schemas/PieceDTO"
+          },
+          "turn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "description": {
+            "type": "string"
+          },
+          "lastDeadPieceDTOs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PieceDTO"
+            }
+          },
+          "checkmateState": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TrainingDetailDTO": {
+        "type": "object",
+        "properties": {
+          "trainingDTO": {
+            "$ref": "#/components/schemas/TrainingDTO"
+          },
+          "totalTurn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "moveHistoryDTOs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/MoveHistoryDTO"
+            }
+          }
+        }
+      },
+      "PagePlayerDTO": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlayerDTO"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MatchDetailDTO": {
+        "type": "object",
+        "properties": {
+          "matchDTO": {
+            "$ref": "#/components/schemas/MatchDTO"
+          },
+          "totalTurn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "moveHistoryDTOs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/MoveHistoryDTO"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "X-Custom-Header": {
+        "name": "X-Custom-Header",
+        "in": "header",
+        "description": "Custom header for this API",
+        "required": false
+      },
+      "Accept-Language": {
+        "name": "Accept-Language",
+        "in": "header",
+        "description": "Language to be used for the response",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "enum": [
+            "en",
+            "vi"
+          ]
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
