@@ -26,3 +26,17 @@ domain:
 url:
   redirect:
     path: ${domain.path}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+openapi:
+  service:
+    api-docs: api-service
+    serverUrl: http://localhost:${server.port} # http://localhost:8088/swagger-ui/index.html
+    title: Chinese Chess API Document
+    version: 1.0.0
+    description: Chinese chess Service API Docs
+    serverName: Local Development Server

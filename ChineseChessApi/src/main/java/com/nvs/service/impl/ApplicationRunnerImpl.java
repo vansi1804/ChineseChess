@@ -111,6 +111,12 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
   }
 
   private void innitPiece() {
+    log.info("Checking game pieces already existing.");
+    if (pieceRepository.count() > 0) {
+      log.info("Game pieces already initialized.");
+      return;
+    }
+
     log.info("Initializing game pieces...");
     List<Piece> defaultPieces = new ArrayList<>();
 

@@ -3,6 +3,8 @@ package com.nvs.controller;
 import com.nvs.common.ApiUrl;
 import com.nvs.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +35,12 @@ public class FileController {
 
   private final FileService fileService;
 
-  @Operation(summary = "Upload a file", description = "Endpoint to upload a file")
+  @Operation(summary = "Upload a file", description = "Upload a file to the server.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "File uploaded successfully"),
+      @ApiResponse(responseCode = "400", description = "Invalid file or upload request"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
   @PostMapping(value = "/upload")
   public ResponseEntity<String> uploadFile(@RequestParam MultipartFile file) {
     log.debug("Uploading file: {}", file.getOriginalFilename());
@@ -42,7 +49,12 @@ public class FileController {
     return ResponseEntity.ok().body(response);
   }
 
-  @Operation(summary = "Download file", description = "Endpoint to download a file")
+  @Operation(summary = "Download a file", description = "Download a file from the server.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "File downloaded successfully"),
+      @ApiResponse(responseCode = "404", description = "File not found"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
   @GetMapping(value = "/download/{fileName}")
   public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws IOException {
     log.debug("Downloading file: {}", fileName);
@@ -56,8 +68,13 @@ public class FileController {
             "attachment; filename=\"" + originalFilename + "\"").body(resource);
   }
 
-  @Operation(summary = "Display file", description = "Endpoint to display a file on the web")
-  @GetMapping(value = "/display/{fileName}") // view on web
+  @Operation(summary = "Display a file", description = "Display a file inline on the web.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "File displayed successfully"),
+      @ApiResponse(responseCode = "404", description = "File not found"),
+      @ApiResponse(responseCode = "500", description = "Internal server error")
+  })
+  @GetMapping(value = "/display/{fileName}")
   public ResponseEntity<byte[]> displayFile(@PathVariable String fileName) throws IOException {
     log.debug("Displaying file: {}", fileName);
     Resource resource = fileService.downloadFile(fileName);
