@@ -1,9 +1,8 @@
 package com.nvs.config.logging;
 
-import com.nvs.util.SensitiveDataMasker;
+import com.nvs.util.GsonParserUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -14,43 +13,31 @@ public class LoggingService {
   private static final String REQUEST_ID = "request_id";
 
   public void logRequest(HttpServletRequest httpServletRequest, Object body) {
-    String traceId = UUID.randomUUID().toString();
-    httpServletRequest.setAttribute(REQUEST_ID, traceId);
+    if (httpServletRequest.getRequestURI().contains("medias")) {
+      return;
+    }
+    Object requestId = httpServletRequest.getAttribute(REQUEST_ID);
+    String sanitizedBody = GsonParserUtils.parseObjectToString(body);
+    String data =
+        "\nLOGGING REQUEST BODY-----------------------------------\n" + "[REQUEST-ID]: " + requestId
+            + "\n" + "[BODY REQUEST]: " + "\n\n" + sanitizedBody + "\n\n"
+            + "LOGGING REQUEST BODY-----------------------------------\n";
 
-    // Mask dữ liệu nhạy cảm trước khi ghi log
-    String maskedRequestBody = SensitiveDataMasker.maskSensitiveData(body);
-
-    String data = String.format(
-        "\nLOGGING REQUEST BODY-----------------------------------\n" +
-            "[TRACE-ID]: %s\n" +
-            "[REQUEST-ID]: %s\n" +
-            "[BODY REQUEST]: \n%s\n" +
-            "LOGGING REQUEST BODY-----------------------------------\n",
-        traceId,
-        httpServletRequest.getAttribute(REQUEST_ID),
-        maskedRequestBody
-    );
     log.info(data);
   }
 
   public void logResponse(HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse, Object body) {
-    String traceId = (String) httpServletRequest.getAttribute(REQUEST_ID);
+    if (httpServletRequest.getRequestURI().contains("medias")) {
+      return;
+    }
+    Object requestId = httpServletRequest.getAttribute(REQUEST_ID);
+    String sanitizedBody = GsonParserUtils.parseObjectToString(body);
+    String data =
+        "\nLOGGING RESPONSE-----------------------------------\n" + "[REQUEST-ID]: " + requestId
+            + "\n" + "[BODY RESPONSE]: " + "\n\n" + sanitizedBody + "\n\n"
+            + "LOGGING RESPONSE-----------------------------------\n";
 
-    // Mask dữ liệu nhạy cảm trước khi ghi log
-    String maskedResponseBody = SensitiveDataMasker.maskSensitiveData(body);
-
-    String data = String.format(
-        "\nLOGGING RESPONSE-----------------------------------\n" +
-            "[TRACE-ID]: %s\n" +
-            "[REQUEST-ID]: %s\n" +
-            "[BODY RESPONSE]: \n%s\n" +
-            "LOGGING RESPONSE-----------------------------------\n",
-        traceId,
-        httpServletRequest.getAttribute(REQUEST_ID),
-        maskedResponseBody
-    );
     log.info(data);
   }
-
 }

@@ -1,0 +1,250 @@
+2024-08-20 16:05:45,340 INFO  [background-preinit] o.h.v.i.u.Version: HV000001: Hibernate Validator 8.0.1.Final
+2024-08-20 16:05:45,371 INFO  [restartedMain] o.s.b.StartupInfoLogger: Starting ChineseChessApiApplication using Java 19.0.2 with PID 42723 (/Users/nvs/Downloads/Project/ChineseChess/ChineseChessAPI/target/classes started by nvs in /Users/nvs/Downloads/Project/ChineseChess/ChineseChessAPI)
+2024-08-20 16:05:45,372 INFO  [restartedMain] o.s.b.SpringApplication: The following 1 profile is active: "dev"
+2024-08-20 16:05:45,399 INFO  [restartedMain] o.s.b.l.DeferredLog: Vault location [secret/ChineseChess/dev] not resolvable: Not found
+2024-08-20 16:05:45,399 INFO  [restartedMain] o.s.b.l.DeferredLog: Vault location [secret/ChineseChess] not resolvable: Not found
+2024-08-20 16:05:45,399 INFO  [restartedMain] o.s.b.l.DeferredLog: Vault location [secret/application/dev] not resolvable: Not found
+2024-08-20 16:05:45,399 INFO  [restartedMain] o.s.b.l.DeferredLog: Vault location [secret/application] not resolvable: Not found
+2024-08-20 16:05:45,400 INFO  [restartedMain] o.s.b.l.DeferredLog: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-08-20 16:05:45,400 INFO  [restartedMain] o.s.b.l.DeferredLog: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-08-20 16:05:45,938 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+2024-08-20 16:05:45,939 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-08-20 16:05:46,055 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 112 ms. Found 9 JPA repository interfaces.
+2024-08-20 16:05:46,318 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+2024-08-20 16:05:46,319 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-08-20 16:05:46,336 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.MatchRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:05:46,336 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.MoveHistoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:05:46,337 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.PieceRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:05:46,337 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.PlayerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:05:46,337 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.RankRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:05:46,337 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:05:46,338 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.TrainingRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:05:46,338 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:05:46,338 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.VipRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:05:46,338 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2024-08-20 16:05:46,508 INFO  [restartedMain] o.s.c.c.s.GenericScope: BeanFactory id=2269dc87-ec71-3915-b069-de7960ddd534
+2024-08-20 16:05:47,499 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer: Tomcat initialized with port 8088 (http)
+2024-08-20 16:05:47,511 INFO  [restartedMain] o.a.j.l.DirectJDKLog: Initializing ProtocolHandler ["http-nio-8088"]
+2024-08-20 16:05:47,513 INFO  [restartedMain] o.a.j.l.DirectJDKLog: Starting service [Tomcat]
+2024-08-20 16:05:47,513 INFO  [restartedMain] o.a.j.l.DirectJDKLog: Starting Servlet engine: [Apache Tomcat/10.1.20]
+2024-08-20 16:05:47,560 INFO  [restartedMain] o.a.j.l.DirectJDKLog: Initializing Spring embedded WebApplicationContext
+2024-08-20 16:05:47,562 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext: Root WebApplicationContext: initialization completed in 2160 ms
+2024-08-20 16:05:47,926 INFO  [restartedMain] o.h.j.i.u.LogHelper: HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-08-20 16:05:47,964 INFO  [restartedMain] o.h.Version: HHH000412: Hibernate ORM core version 6.4.4.Final
+2024-08-20 16:05:47,985 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator: HHH000026: Second-level cache disabled
+2024-08-20 16:05:48,126 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo: No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-08-20 16:05:48,143 INFO  [restartedMain] c.z.h.HikariDataSource: HikariPool-1 - Starting...
+2024-08-20 16:05:48,245 INFO  [restartedMain] c.z.h.p.HikariPool: HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@63a4e7e8
+2024-08-20 16:05:48,246 INFO  [restartedMain] c.z.h.HikariDataSource: HikariPool-1 - Start completed.
+2024-08-20 16:05:48,260 WARN  [restartedMain] o.h.e.j.d.i.DialectFactoryImpl: HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-08-20 16:05:48,261 WARN  [restartedMain] o.h.e.j.d.i.DialectFactoryImpl: HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2024-08-20 16:05:48,925 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator: HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-08-20 16:05:49,029 INFO  [restartedMain] o.s.o.j.AbstractEntityManagerFactoryBean: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-08-20 16:05:49,262 DEBUG [restartedMain] o.s.w.f.GenericFilterBean: Filter 'logFilter' configured for use
+2024-08-20 16:05:49,346 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-08-20 16:05:49,480 INFO  [restartedMain] o.s.d.j.r.q.QueryEnhancerFactory: Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-08-20 16:05:50,921 INFO  [restartedMain] o.s.b.a.e.w.EndpointLinksResolver: Exposing 1 endpoint(s) beneath base path '/actuator'
+2024-08-20 16:05:50,992 INFO  [restartedMain] o.s.s.w.DefaultSecurityFilterChain: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@63ea7488, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3c1a97f9, org.springframework.security.web.context.SecurityContextHolderFilter@50affb09, org.springframework.security.web.header.HeaderWriterFilter@641c2813, org.springframework.web.filter.CorsFilter@1e633503, org.springframework.web.filter.CharacterEncodingFilter@87fda58, org.springframework.security.web.authentication.logout.LogoutFilter@1269088, com.nvs.config.security.jwt.JwtFilter@7bc17c9f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1d4e698a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4bf3b86f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@27706c20, org.springframework.security.web.session.SessionManagementFilter@3bde9537, org.springframework.security.web.access.ExceptionTranslationFilter@1110957e, org.springframework.security.web.access.intercept.AuthorizationFilter@2834d755]
+2024-08-20 16:05:51,652 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer: LiveReload server is running on port 35729
+2024-08-20 16:05:51,708 INFO  [restartedMain] o.a.j.l.DirectJDKLog: Starting ProtocolHandler ["http-nio-8088"]
+2024-08-20 16:05:51,717 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer: Tomcat started on port 8088 (http) with context path ''
+2024-08-20 16:05:51,738 INFO  [restartedMain] o.s.b.StartupInfoLogger: Started ChineseChessApiApplication in 7.23 seconds (process running for 8.081)
+2024-08-20 16:05:51,780 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Starting application initialization...
+2024-08-20 16:05:51,780 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Initializing roles...
+2024-08-20 16:05:51,842 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- No new roles to initialize.
+2024-08-20 16:05:51,842 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Initializing VIPs...
+2024-08-20 16:05:51,866 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- VIPs already initialized.
+2024-08-20 16:05:51,867 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Initializing ranks...
+2024-08-20 16:05:51,870 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Ranks already initialized.
+2024-08-20 16:05:51,870 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Initializing admin player...
+2024-08-20 16:05:51,870 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Checking if admin user exists...
+2024-08-20 16:05:51,873 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Admin user already exists. Skipping initialization.
+2024-08-20 16:05:51,873 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Admin player already exists. Skipping admin player initialization.
+2024-08-20 16:05:51,873 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Checking game pieces already existing.
+2024-08-20 16:05:51,876 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Game pieces already initialized.
+2024-08-20 16:05:51,876 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Application initialization completed.
+2024-08-20 16:05:55,297 INFO  [http-nio-8088-exec-1] o.a.j.l.DirectJDKLog: Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-08-20 16:05:55,297 INFO  [http-nio-8088-exec-1] o.s.w.s.FrameworkServlet: Initializing Servlet 'dispatcherServlet'
+2024-08-20 16:05:55,299 INFO  [http-nio-8088-exec-1] o.s.w.s.FrameworkServlet: Completed initialization in 1 ms
+2024-08-20 16:05:55,312 WARN  [http-nio-8088-exec-1] c.n.c.s.j.JwtFilter: -- No valid Authorization header found in request
+2024-08-20 16:05:55,312 WARN  [http-nio-8088-exec-1] c.n.c.s.j.JwtFilter: -- Username is null, cannot set authentication
+2024-08-20 16:05:55,316 INFO  [http-nio-8088-exec-1] c.n.c.l.CustomURLFilter: 
+LOGGING REQUEST-----------------------------------
+[REQUEST-ID]: 7e7de213-701e-4d50-8cde-e92651d28ac2
+[PATH]: /api/auth/login
+[QUERIES]: null
+[HEADERS]: 
+---accept-language : vi
+---content-type : application/json
+---user-agent : PostmanRuntime/7.41.1
+---accept : */*
+---postman-token : 9398f516-ca39-4eae-b4dc-ea508152767d
+---host : localhost:8088
+---accept-encoding : gzip, deflate, br
+---connection : keep-alive
+---content-length : 81
+LOGGING REQUEST-----------------------------------
+
+2024-08-20 16:05:55,317 DEBUG [http-nio-8088-exec-1] o.s.w.f.CommonsRequestLoggingFilter: Before request [POST /api/auth/login]
+2024-08-20 16:05:55,317 WARN  [http-nio-8088-exec-1] c.n.c.s.j.JwtFilter: -- No valid Authorization header found in request
+2024-08-20 16:05:55,318 WARN  [http-nio-8088-exec-1] c.n.c.s.j.JwtFilter: -- Username is null, cannot set authentication
+2024-08-20 16:05:55,333 INFO  [http-nio-8088-exec-1] c.n.c.l.LoggingService: 
+LOGGING REQUEST BODY-----------------------------------
+[REQUEST-ID]: 7e7de213-701e-4d50-8cde-e92651d28ac2
+[BODY REQUEST]: 
+
+{"phoneNumber":"**********","password":"*****"}
+
+LOGGING REQUEST BODY-----------------------------------
+
+2024-08-20 16:05:55,356 INFO  [http-nio-8088-exec-1] c.n.c.AuthController: -- auth/logging
+2024-08-20 16:05:55,357 INFO  [http-nio-8088-exec-1] c.n.s.i.AuthServiceImpl: -- Attempting login for phone number: ******6839
+2024-08-20 16:05:55,632 INFO  [http-nio-8088-exec-1] c.n.s.i.AuthServiceImpl: -- Authentication successful for phone number: ******6839
+2024-08-20 16:05:55,653 INFO  [http-nio-8088-exec-1] c.n.c.s.j.JwtService: -- Token created for user '******6839', expires at: Tue Aug 20 17:05:55 ICT 2024
+2024-08-20 16:05:55,654 INFO  [http-nio-8088-exec-1] c.n.c.s.j.JwtService: -- Token created for user '******6839', expires at: Wed Aug 21 16:05:55 ICT 2024
+2024-08-20 16:05:55,654 INFO  [http-nio-8088-exec-1] c.n.s.i.AuthServiceImpl: -- Generated JWT tokens for phone number: ******6839
+2024-08-20 16:05:55,660 INFO  [http-nio-8088-exec-1] c.n.c.l.LoggingService: 
+LOGGING RESPONSE-----------------------------------
+[REQUEST-ID]: 7e7de213-701e-4d50-8cde-e92651d28ac2
+[BODY RESPONSE]: 
+
+{"userId":1,"roleDTO":{"id":1,"name":"ADMIN"},"tokenType":"Bearer","accessToken":"*****************************************************************************************************************************************","refreshToken":"*****************************************************************************************************************************************"}
+
+LOGGING RESPONSE-----------------------------------
+
+2024-08-20 16:05:55,666 DEBUG [http-nio-8088-exec-1] o.s.w.f.CommonsRequestLoggingFilter: REQUEST DATA : POST /api/auth/login, payload={
+    
+    "phoneNumber": "**********",
+    "password": "*****"
+
+    
+    
+}]
+2024-08-20 16:06:01,793 INFO  [SpringContextShutdownHook] o.s.o.j.AbstractEntityManagerFactoryBean: Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-08-20 16:06:01,795 INFO  [SpringContextShutdownHook] c.z.h.HikariDataSource: HikariPool-1 - Shutdown initiated...
+2024-08-20 16:06:01,799 INFO  [SpringContextShutdownHook] c.z.h.HikariDataSource: HikariPool-1 - Shutdown completed.
+2024-08-20 16:06:18,233 INFO  [background-preinit] o.h.v.i.u.Version: HV000001: Hibernate Validator 8.0.1.Final
+2024-08-20 16:06:18,261 INFO  [restartedMain] o.s.b.StartupInfoLogger: Starting ChineseChessApiApplication using Java 19.0.2 with PID 42765 (/Users/nvs/Downloads/Project/ChineseChess/ChineseChessAPI/target/classes started by nvs in /Users/nvs/Downloads/Project/ChineseChess/ChineseChessAPI)
+2024-08-20 16:06:18,262 INFO  [restartedMain] o.s.b.SpringApplication: The following 1 profile is active: "dev"
+2024-08-20 16:06:18,289 INFO  [restartedMain] o.s.b.l.DeferredLog: Vault location [secret/ChineseChess/dev] not resolvable: Not found
+2024-08-20 16:06:18,289 INFO  [restartedMain] o.s.b.l.DeferredLog: Vault location [secret/ChineseChess] not resolvable: Not found
+2024-08-20 16:06:18,290 INFO  [restartedMain] o.s.b.l.DeferredLog: Vault location [secret/application/dev] not resolvable: Not found
+2024-08-20 16:06:18,290 INFO  [restartedMain] o.s.b.l.DeferredLog: Vault location [secret/application] not resolvable: Not found
+2024-08-20 16:06:18,291 INFO  [restartedMain] o.s.b.l.DeferredLog: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-08-20 16:06:18,291 INFO  [restartedMain] o.s.b.l.DeferredLog: For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-08-20 16:06:18,863 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+2024-08-20 16:06:18,863 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-08-20 16:06:18,998 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 130 ms. Found 9 JPA repository interfaces.
+2024-08-20 16:06:19,268 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+2024-08-20 16:06:19,269 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-08-20 16:06:19,289 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.MatchRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:06:19,289 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.MoveHistoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:06:19,290 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.PieceRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:06:19,290 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.PlayerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:06:19,290 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.RankRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:06:19,290 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:06:19,291 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.TrainingRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:06:19,291 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:06:19,291 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nvs.data.repository.VipRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-08-20 16:06:19,291 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2024-08-20 16:06:19,452 INFO  [restartedMain] o.s.c.c.s.GenericScope: BeanFactory id=2269dc87-ec71-3915-b069-de7960ddd534
+2024-08-20 16:06:20,042 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer: Tomcat initialized with port 8088 (http)
+2024-08-20 16:06:20,049 INFO  [restartedMain] o.a.j.l.DirectJDKLog: Initializing ProtocolHandler ["http-nio-8088"]
+2024-08-20 16:06:20,050 INFO  [restartedMain] o.a.j.l.DirectJDKLog: Starting service [Tomcat]
+2024-08-20 16:06:20,050 INFO  [restartedMain] o.a.j.l.DirectJDKLog: Starting Servlet engine: [Apache Tomcat/10.1.20]
+2024-08-20 16:06:20,081 INFO  [restartedMain] o.a.j.l.DirectJDKLog: Initializing Spring embedded WebApplicationContext
+2024-08-20 16:06:20,082 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext: Root WebApplicationContext: initialization completed in 1790 ms
+2024-08-20 16:06:20,306 INFO  [restartedMain] o.h.j.i.u.LogHelper: HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-08-20 16:06:20,339 INFO  [restartedMain] o.h.Version: HHH000412: Hibernate ORM core version 6.4.4.Final
+2024-08-20 16:06:20,357 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator: HHH000026: Second-level cache disabled
+2024-08-20 16:06:20,473 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo: No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-08-20 16:06:20,486 INFO  [restartedMain] c.z.h.HikariDataSource: HikariPool-1 - Starting...
+2024-08-20 16:06:20,612 INFO  [restartedMain] c.z.h.p.HikariPool: HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2a489ebd
+2024-08-20 16:06:20,614 INFO  [restartedMain] c.z.h.HikariDataSource: HikariPool-1 - Start completed.
+2024-08-20 16:06:20,630 WARN  [restartedMain] o.h.e.j.d.i.DialectFactoryImpl: HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-08-20 16:06:20,631 WARN  [restartedMain] o.h.e.j.d.i.DialectFactoryImpl: HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2024-08-20 16:06:21,335 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator: HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-08-20 16:06:21,440 INFO  [restartedMain] o.s.o.j.AbstractEntityManagerFactoryBean: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-08-20 16:06:21,674 DEBUG [restartedMain] o.s.w.f.GenericFilterBean: Filter 'logFilter' configured for use
+2024-08-20 16:06:21,761 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-08-20 16:06:21,880 INFO  [restartedMain] o.s.d.j.r.q.QueryEnhancerFactory: Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-08-20 16:06:23,357 INFO  [restartedMain] o.s.b.a.e.w.EndpointLinksResolver: Exposing 1 endpoint(s) beneath base path '/actuator'
+2024-08-20 16:06:23,413 INFO  [restartedMain] o.s.s.w.DefaultSecurityFilterChain: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3b722347, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3dbee72c, org.springframework.security.web.context.SecurityContextHolderFilter@53ec574f, org.springframework.security.web.header.HeaderWriterFilter@5aabf214, org.springframework.web.filter.CorsFilter@117c3840, org.springframework.web.filter.CharacterEncodingFilter@534ad3f4, org.springframework.security.web.authentication.logout.LogoutFilter@fa96fc8, com.nvs.config.security.jwt.JwtFilter@627bc5e5, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7d44223e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@67ef46cc, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@136f8ff1, org.springframework.security.web.session.SessionManagementFilter@4aafc690, org.springframework.security.web.access.ExceptionTranslationFilter@31ab1293, org.springframework.security.web.access.intercept.AuthorizationFilter@2071ff4]
+2024-08-20 16:06:24,091 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer: LiveReload server is running on port 35729
+2024-08-20 16:06:24,151 INFO  [restartedMain] o.a.j.l.DirectJDKLog: Starting ProtocolHandler ["http-nio-8088"]
+2024-08-20 16:06:24,160 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer: Tomcat started on port 8088 (http) with context path ''
+2024-08-20 16:06:24,181 INFO  [restartedMain] o.s.b.StartupInfoLogger: Started ChineseChessApiApplication in 6.813 seconds (process running for 7.515)
+2024-08-20 16:06:24,222 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Starting application initialization...
+2024-08-20 16:06:24,222 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Initializing roles...
+2024-08-20 16:06:24,283 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- No new roles to initialize.
+2024-08-20 16:06:24,283 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Initializing VIPs...
+2024-08-20 16:06:24,301 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- VIPs already initialized.
+2024-08-20 16:06:24,301 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Initializing ranks...
+2024-08-20 16:06:24,304 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Ranks already initialized.
+2024-08-20 16:06:24,304 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Initializing admin player...
+2024-08-20 16:06:24,304 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Checking if admin user exists...
+2024-08-20 16:06:24,306 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Admin user already exists. Skipping initialization.
+2024-08-20 16:06:24,307 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Admin player already exists. Skipping admin player initialization.
+2024-08-20 16:06:24,307 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Checking game pieces already existing.
+2024-08-20 16:06:24,309 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Game pieces already initialized.
+2024-08-20 16:06:24,309 INFO  [restartedMain] c.n.s.i.ApplicationRunnerImpl: -- Application initialization completed.
+2024-08-20 16:06:27,651 INFO  [http-nio-8088-exec-2] o.a.j.l.DirectJDKLog: Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-08-20 16:06:27,652 INFO  [http-nio-8088-exec-2] o.s.w.s.FrameworkServlet: Initializing Servlet 'dispatcherServlet'
+2024-08-20 16:06:27,653 INFO  [http-nio-8088-exec-2] o.s.w.s.FrameworkServlet: Completed initialization in 1 ms
+2024-08-20 16:06:27,667 WARN  [http-nio-8088-exec-2] c.n.c.s.j.JwtFilter: -- No valid Authorization header found in request
+2024-08-20 16:06:27,667 WARN  [http-nio-8088-exec-2] c.n.c.s.j.JwtFilter: -- Username is null, cannot set authentication
+2024-08-20 16:06:27,671 INFO  [http-nio-8088-exec-2] c.n.c.l.CustomURLFilter: 
+LOGGING REQUEST-----------------------------------
+[REQUEST-ID]: 34adbe58-0a6f-4f90-a825-809fd2d55df0
+[PATH]: /api/auth/login
+[QUERIES]: null
+[HEADERS]: 
+---accept-language : vi
+---content-type : application/json
+---user-agent : PostmanRuntime/7.41.1
+---accept : */*
+---postman-token : 6d6f10f1-ffee-4619-a82f-762ed7498b8e
+---host : localhost:8088
+---accept-encoding : gzip, deflate, br
+---connection : keep-alive
+---content-length : 81
+LOGGING REQUEST-----------------------------------
+
+2024-08-20 16:06:27,672 DEBUG [http-nio-8088-exec-2] o.s.w.f.CommonsRequestLoggingFilter: Before request [POST /api/auth/login]
+2024-08-20 16:06:27,672 WARN  [http-nio-8088-exec-2] c.n.c.s.j.JwtFilter: -- No valid Authorization header found in request
+2024-08-20 16:06:27,672 WARN  [http-nio-8088-exec-2] c.n.c.s.j.JwtFilter: -- Username is null, cannot set authentication
+2024-08-20 16:06:27,690 INFO  [http-nio-8088-exec-2] c.n.c.l.LoggingService: 
+LOGGING REQUEST BODY-----------------------------------
+[REQUEST-ID]: 34adbe58-0a6f-4f90-a825-809fd2d55df0
+[BODY REQUEST]: 
+
+{"phoneNumber":"**********","password":"*****"}
+
+LOGGING REQUEST BODY-----------------------------------
+
+2024-08-20 16:06:27,716 INFO  [http-nio-8088-exec-2] c.n.c.AuthController: -- auth/logging
+2024-08-20 16:06:27,716 INFO  [http-nio-8088-exec-2] c.n.s.i.AuthServiceImpl: -- Attempting login for phone number: ******6839
+2024-08-20 16:06:28,003 INFO  [http-nio-8088-exec-2] c.n.s.i.AuthServiceImpl: -- Authentication successful for phone number: ******6839
+2024-08-20 16:06:28,023 INFO  [http-nio-8088-exec-2] c.n.c.s.j.JwtService: -- Token created for user '******6839', expires at: Tue Aug 20 17:06:28 ICT 2024
+2024-08-20 16:06:28,024 INFO  [http-nio-8088-exec-2] c.n.c.s.j.JwtService: -- Token created for user '******6839', expires at: Wed Aug 21 16:06:28 ICT 2024
+2024-08-20 16:06:28,024 INFO  [http-nio-8088-exec-2] c.n.s.i.AuthServiceImpl: -- Generated JWT tokens for phone number: ******6839
+2024-08-20 16:06:28,030 INFO  [http-nio-8088-exec-2] c.n.c.l.LoggingService: 
+LOGGING RESPONSE-----------------------------------
+[REQUEST-ID]: 34adbe58-0a6f-4f90-a825-809fd2d55df0
+[BODY RESPONSE]: 
+
+{"userId":1,"roleDTO":{"id":1,"name":"ADMIN"},"tokenType":"Bearer","accessToken":"*****************************************************************************************************************************************","refreshToken":"*****************************************************************************************************************************************"}
+
+LOGGING RESPONSE-----------------------------------
+
+2024-08-20 16:06:28,036 DEBUG [http-nio-8088-exec-2] o.s.w.f.CommonsRequestLoggingFilter: REQUEST DATA : POST /api/auth/login, payload={
+    
+    "phoneNumber": "**********",
+    "password": "*****"
+
+    
+    
+}]
+2024-08-20 16:06:35,517 INFO  [SpringContextShutdownHook] o.s.o.j.AbstractEntityManagerFactoryBean: Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-08-20 16:06:35,520 INFO  [SpringContextShutdownHook] c.z.h.HikariDataSource: HikariPool-1 - Shutdown initiated...
+2024-08-20 16:06:35,523 INFO  [SpringContextShutdownHook] c.z.h.HikariDataSource: HikariPool-1 - Shutdown completed.

@@ -24,15 +24,11 @@ public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter {
     return true;
   }
 
-
   @Override
-  public Object afterBodyRead(Object body, HttpInputMessage inputMessage,
-      MethodParameter parameter, Type targetType,
-      Class<? extends HttpMessageConverter<?>> converterType) {
-
+  public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter,
+      Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
     loggingService.logRequest(httpServletRequest, body);
 
     return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
   }
-
 }

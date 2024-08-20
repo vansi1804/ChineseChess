@@ -1,19 +1,33 @@
 <configuration>
   <appender class="ch.qos.logback.core.ConsoleAppender" name="Console">
-    <layout class="ch.qos.logback.classic.PatternLayout">
-      <Pattern>
-        %white(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %green(%C): %msg%n%throwable
-      </Pattern>
-    </layout>
+    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      <layout class="com.nvs.util.MaskingPatternLayout">
+        <Pattern>
+          %white(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %green(%C): %msg%n%throwable
+        </Pattern>
+        <maskPattern>\"address\"\s*:\s*\"(.*?)\"</maskPattern>
+        <maskPattern>\"phoneNumber\"\s*:\s*\"(.*?)\"</maskPattern>
+        <maskPattern>\"password\"\s*:\s*\"(.*?)\"</maskPattern>
+        <maskPattern>\"accessToken\"\s*:\s*\"(.*?)\"</maskPattern>
+        <maskPattern>\"refreshToken\"\s*:\s*\"(.*?)\"</maskPattern>
+      </layout>
+    </encoder>
   </appender>
 
   <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="RollingFile">
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <Pattern>%d{ISO8601} %-5level [%t] %C{1}: %msg%n%throwable</Pattern>
+    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      <layout class="com.nvs.util.MaskingPatternLayout">
+        <Pattern>%d{ISO8601} %-5level [%t] %C{1}: %msg%n%throwable</Pattern>
+        <maskPattern>\"address\"\s*:\s*\"(.*?)\"</maskPattern>
+        <maskPattern>\"phoneNumber\"\s*:\s*\"(.*?)\"</maskPattern>
+        <maskPattern>\"password\"\s*:\s*\"(.*?)\"</maskPattern>
+        <maskPattern>\"accessToken\"\s*:\s*\"(.*?)\"</maskPattern>
+        <maskPattern>\"refreshToken\"\s*:\s*\"(.*?)\"</maskPattern>
+      </layout>
     </encoder>
 
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/chinese-chess-log-%d{yyyy-MM-dd}--v%i.log</fileNamePattern>
+      <fileNamePattern>logs/chinese-chess--%d{yyyy-MM-dd}--v%i.log</fileNamePattern>
       <maxHistory>100</maxHistory>
       <timeBasedFileNamingAndTriggeringPolicy
         class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">

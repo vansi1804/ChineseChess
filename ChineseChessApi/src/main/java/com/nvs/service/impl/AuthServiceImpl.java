@@ -8,9 +8,9 @@ import com.nvs.data.dto.auth.LoginRequestDTO;
 import com.nvs.data.dto.auth.LoginResponseDTO;
 import com.nvs.data.mapper.RoleMapper;
 import com.nvs.service.AuthService;
-import com.nvs.util.SensitiveDataMasker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,18 +29,19 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
-    log.info("-- Attempting login for phone number: {}",
-        SensitiveDataMasker.maskSensitiveData(loginRequestDTO.getPhoneNumber()));
+    log.info("-- Attempting login for phone number: {}", StringUtils.leftPad(
+        loginRequestDTO.getPhoneNumber().substring(loginRequestDTO.getPhoneNumber().length() - 4),
+        loginRequestDTO.getPhoneNumber().length(), '*'));
 
     try {
       Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(loginRequestDTO.getPhoneNumber(),
-              loginRequestDTO.getPassword())
-      );
+              loginRequestDTO.getPassword()));
 
       UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-      log.info("-- Authentication successful for phone number: {}",
-          SensitiveDataMasker.maskSensitiveData(loginRequestDTO.getPhoneNumber()));
+      log.info("-- Authentication successful for phone number: {}", StringUtils.leftPad(
+          loginRequestDTO.getPhoneNumber().substring(loginRequestDTO.getPhoneNumber().length() - 4),
+          loginRequestDTO.getPhoneNumber().length(), '*'));
 
       LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
 
@@ -58,14 +59,16 @@ public class AuthServiceImpl implements AuthService {
       loginResponseDTO.setAccessToken(accessToken);
       loginResponseDTO.setRefreshToken(refreshToken);
 
-      log.info("-- Generated JWT tokens for phone number: {}",
-          SensitiveDataMasker.maskSensitiveData(loginRequestDTO.getPhoneNumber()));
+      log.info("-- Generated JWT tokens for phone number: {}", StringUtils.leftPad(
+          loginRequestDTO.getPhoneNumber().substring(loginRequestDTO.getPhoneNumber().length() - 4),
+          loginRequestDTO.getPhoneNumber().length(), '*'));
 
       return loginResponseDTO;
 
     } catch (BadCredentialsException ex) {
-      log.warn("-- Login failed for phone number: {}",
-          SensitiveDataMasker.maskSensitiveData(loginRequestDTO.getPhoneNumber()));
+      log.warn("-- Login failed for phone number: {}", StringUtils.leftPad(
+          loginRequestDTO.getPhoneNumber().substring(loginRequestDTO.getPhoneNumber().length() - 4),
+          loginRequestDTO.getPhoneNumber().length(), '*'));
       throw new UnauthorizedExceptionCustomize();
     }
   }

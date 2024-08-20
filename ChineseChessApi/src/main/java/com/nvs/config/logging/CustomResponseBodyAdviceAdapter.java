@@ -24,22 +24,20 @@ public class CustomResponseBodyAdviceAdapter implements ResponseBodyAdvice<Objec
   }
 
   @Override
-  public Object beforeBodyWrite(Object body, MethodParameter methodParameter,
-      MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass,
+  public Object beforeBodyWrite(Object o,
+      MethodParameter methodParameter,
+      MediaType mediaType,
+      Class<? extends HttpMessageConverter<?>> aClass,
       ServerHttpRequest serverHttpRequest,
       ServerHttpResponse serverHttpResponse) {
 
-    // Ghi log phản hồi sau khi toàn bộ yêu cầu đã được xử lý
-    if (serverHttpRequest instanceof ServletServerHttpRequest
-        && serverHttpResponse instanceof ServletServerHttpResponse) {
+    if (serverHttpRequest instanceof ServletServerHttpRequest &&
+        serverHttpResponse instanceof ServletServerHttpResponse) {
       loggingService.logResponse(
           ((ServletServerHttpRequest) serverHttpRequest).getServletRequest(),
-          ((ServletServerHttpResponse) serverHttpResponse).getServletResponse(),
-          body
-      );
+          ((ServletServerHttpResponse) serverHttpResponse).getServletResponse(), o);
     }
 
-    return body;
+    return o;
   }
-
 }
