@@ -149,6 +149,11 @@
       <groupId>org.springdoc</groupId>
       <version>2.0.2</version>
     </dependency>
+    <dependency>
+      <artifactId>gson</artifactId>
+      <groupId>com.google.code.gson</groupId>
+      <version>2.11.0</version>
+    </dependency>
   </dependencies>
 
   <description>Chinese Chess API</description>

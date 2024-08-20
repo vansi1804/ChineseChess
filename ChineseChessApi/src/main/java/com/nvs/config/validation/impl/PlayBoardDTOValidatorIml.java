@@ -33,7 +33,7 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
 
   @Override
   public boolean isValid(PlayBoardDTO playBoardDTO, ConstraintValidatorContext context) {
-    log.debug("Starting validation for PlayBoardDTO: {}", playBoardDTO);
+    log.debug("-- Starting validation for PlayBoardDTO: {}", playBoardDTO);
 
     int colLength = playBoardDTO.getState().length - 1;
     int rowLength = playBoardDTO.getState()[0].length - 1;
@@ -57,7 +57,7 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
         for (int row = 0; row <= rowLength; row++) {
           PieceDTO pieceDTO = playBoardDTO.getState()[col][row];
           if (pieceDTO != null) {
-            log.debug("Validating piece at col={}, row={}, pieceDTO={}", col, row, pieceDTO);
+            log.debug("-- Validating piece at col={}, row={}, pieceDTO={}", col, row, pieceDTO);
 
             // Validate id
             if (!pieceRepository.existsById(pieceDTO.getId())) {
@@ -117,7 +117,7 @@ public class PlayBoardDTOValidatorIml implements ConstraintValidator<Validator, 
       }
     }
 
-    log.debug("Validation passed for PlayBoardDTO: {}", playBoardDTO);
+    log.debug("-- Validation passed for PlayBoardDTO: {}", playBoardDTO);
     return true;
   }
 

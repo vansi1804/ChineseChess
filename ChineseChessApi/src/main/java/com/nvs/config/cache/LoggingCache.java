@@ -29,9 +29,9 @@ public class LoggingCache implements Cache {
   public ValueWrapper get(@NotNull Object key) {
     ValueWrapper value = delegate.get(key);
     if (value != null) {
-      log.info("Cache hit in '{}' for key: {}", name, key);
+      log.info("-- Cache hit in '{}' for key: {}", name, key);
     } else {
-      log.info("Cache miss in '{}' for key: {}", name, key);
+      log.info("-- Cache miss in '{}' for key: {}", name, key);
     }
     return value;
   }
@@ -48,25 +48,25 @@ public class LoggingCache implements Cache {
 
   @Override
   public void put(@NotNull Object key, Object value) {
-    log.info("Putting value in cache '{}' for key: {}", name, key);
+    log.info("-- Putting value in cache '{}' for key: {}", name, key);
     delegate.put(key, value);
   }
 
   @Override
   public ValueWrapper putIfAbsent(@NotNull Object key, Object value) {
-    log.info("Putting value in cache '{}' if absent for key: {}", name, key);
+    log.info("-- Putting value in cache '{}' if absent for key: {}", name, key);
     return delegate.putIfAbsent(key, value);
   }
 
   @Override
   public void evict(@NotNull Object key) {
-    log.info("Evicting cache entry in '{}' for key: {}", name, key);
+    log.info("-- Evicting cache entry in '{}' for key: {}", name, key);
     delegate.evict(key);
   }
 
   @Override
   public void clear() {
-    log.info("Clearing all cache entries in '{}'", name);
+    log.info("-- Clearing all cache entries in '{}'", name);
     delegate.clear();
   }
 }

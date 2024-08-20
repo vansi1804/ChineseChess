@@ -28,30 +28,30 @@ public class VipServiceImpl implements VipService {
   @Override
   @Cacheable(value = "vips")
   public List<VipDTO> findAll() {
-    log.debug("Fetching all VIPs");
+    log.debug("-- Fetching all VIPs");
     List<VipDTO> vipDTOs = vipRepository.findAll().stream()
         .map(vipMapper::toDTO)
         .collect(Collectors.toList());
-    log.debug("Found {} VIPs", vipDTOs.size());
+    log.debug("-- Found {} VIPs", vipDTOs.size());
     return vipDTOs;
   }
 
   @Override
   @Cacheable(value = "vips", key = "#id")
   public VipDTO findById(int id) {
-    log.debug("Fetching VIP by ID: {}", id);
+    log.debug("-- Fetching VIP by ID: {}", id);
     VipDTO vipDTO = vipRepository.findById(id)
         .map(vipMapper::toDTO)
         .orElseThrow(
             () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
-    log.debug("Found VIP: {}", vipDTO);
+    log.debug("-- Found VIP: {}", vipDTO);
     return vipDTO;
   }
 
   @Override
   @CachePut(value = "vips", key = "#vipDTO.name")
   public VipDTO create(VipDTO vipDTO) {
-    log.debug("Creating VIP with DTO: {}", vipDTO);
+    log.debug("-- Creating VIP with DTO: {}", vipDTO);
 
     if (vipRepository.existsByName(vipDTO.getName())) {
       throw new ConflictExceptionCustomize(Collections.singletonMap("name", vipDTO.getName()));
@@ -63,14 +63,14 @@ public class VipServiceImpl implements VipService {
     }
 
     VipDTO createdVipDTO = vipMapper.toDTO(vipRepository.save(vipMapper.toEntity(vipDTO)));
-    log.debug("Created VIP: {}", createdVipDTO);
+    log.debug("-- Created VIP: {}", createdVipDTO);
     return createdVipDTO;
   }
 
   @Override
   @CachePut(value = "vips", key = "#id")
   public VipDTO update(int id, VipDTO vipDTO) {
-    log.debug("Updating VIP with ID: {} and DTO: {}", id, vipDTO);
+    log.debug("-- Updating VIP with ID: {} and DTO: {}", id, vipDTO);
 
     Vip existingVip = vipRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
@@ -93,19 +93,19 @@ public class VipServiceImpl implements VipService {
     vipRepository.flush();
 
     VipDTO updatedVipDTO = vipMapper.toDTO(updatedVip);
-    log.debug("Updated VIP: {}", updatedVipDTO);
+    log.debug("-- Updated VIP: {}", updatedVipDTO);
     return updatedVipDTO;
   }
 
   @Override
   @CacheEvict(value = "vips", key = "#id")
   public boolean delete(int id) {
-    log.debug("Deleting VIP with ID: {}", id);
+    log.debug("-- Deleting VIP with ID: {}", id);
 
     Vip vip = vipRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
     vipRepository.delete(vip);
-    log.debug("Deleted VIP with ID: {}", id);
+    log.debug("-- Deleted VIP with ID: {}", id);
     return true;
   }
 

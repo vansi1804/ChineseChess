@@ -42,58 +42,58 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
 
   @Override
   public void run(ApplicationArguments args) {
-    log.info("Starting application initialization...");
+    log.info("-- Starting application initialization...");
     this.initRole();
     this.initVip();
     this.initRank();
     this.initAdminPlayer();
     this.innitPiece();
-    log.info("Application initialization completed.");
+    log.info("-- Application initialization completed.");
   }
 
   private void initRole() {
-    log.info("Initializing roles...");
+    log.info("-- Initializing roles...");
     List<Role> roles = Arrays.stream(ERole.values())
         .filter(eRole -> !roleRepository.existsByName(eRole.name())).map(eRole -> {
           Role role = new Role();
           role.setName(eRole.name());
-          log.debug("Creating role: {}", eRole.name());
+          log.debug("-- Creating role: {}", eRole.name());
           return role;
         }).collect(Collectors.toList());
 
     if (!roles.isEmpty()) {
       roleRepository.saveAll(roles);
-      log.info("Saved {} roles to the database.", roles.size());
+      log.info("-- Saved {} roles to the database.", roles.size());
     } else {
-      log.info("No new roles to initialize.");
+      log.info("-- No new roles to initialize.");
     }
   }
 
   private void initVip() {
-    log.info("Initializing VIPs...");
+    log.info("-- Initializing VIPs...");
     if (vipRepository.count() == 0) {
       vipRepository.save(new Vip(1, "Vip0", 0));
-      log.info("Default VIP initialized.");
+      log.info("-- Default VIP initialized.");
     } else {
-      log.info("VIPs already initialized.");
+      log.info("-- VIPs already initialized.");
     }
   }
 
   private void initRank() {
-    log.info("Initializing ranks...");
+    log.info("-- Initializing ranks...");
     if (rankRepository.count() == 0) {
       rankRepository.save(new Rank(1, "Novice", 2000));
-      log.info("Default rank initialized.");
+      log.info("-- Default rank initialized.");
     } else {
-      log.info("Ranks already initialized.");
+      log.info("-- Ranks already initialized.");
     }
   }
 
   private void initAdminPlayer() {
-    log.info("Initializing admin player...");
+    log.info("-- Initializing admin player...");
     User adminUser = initAdminUser();
     if (adminUser == null) {
-      log.info("Admin player already exists. Skipping admin player initialization.");
+      log.info("-- Admin player already exists. Skipping admin player initialization.");
       return;
     }
 
@@ -107,21 +107,21 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     adminPlayer.setElo(defaultRank.getEloMilestones());
 
     playerRepository.save(adminPlayer);
-    log.info("Admin player initialized with default rank: {}", defaultRank.getName());
+    log.info("-- Admin player initialized with default rank: {}", defaultRank.getName());
   }
 
   private void innitPiece() {
-    log.info("Checking game pieces already existing.");
+    log.info("-- Checking game pieces already existing.");
     if (pieceRepository.count() > 0) {
-      log.info("Game pieces already initialized.");
+      log.info("-- Game pieces already initialized.");
       return;
     }
 
-    log.info("Initializing game pieces...");
+    log.info("-- Initializing game pieces...");
     List<Piece> defaultPieces = new ArrayList<>();
 
     // Red pieces
-    log.debug("Adding red pieces...");
+    log.debug("-- Adding red pieces...");
     defaultPieces.add(new Piece(1, EPiece.SOLDIER.name(), true, "red_soldier.png", 0, 6));
     defaultPieces.add(new Piece(2, EPiece.SOLDIER.name(), true, "red_soldier.png", 2, 6));
     defaultPieces.add(new Piece(3, EPiece.SOLDIER.name(), true, "red_soldier.png", 4, 6));
@@ -140,7 +140,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     defaultPieces.add(new Piece(16, EPiece.GENERAL.name(), true, "red_general.png", 4, 9));
 
     // Black pieces
-    log.debug("Adding black pieces...");
+    log.debug("-- Adding black pieces...");
     defaultPieces.add(new Piece(17, EPiece.SOLDIER.name(), false, "black_soldier.png", 0, 3));
     defaultPieces.add(new Piece(18, EPiece.SOLDIER.name(), false, "black_soldier.png", 2, 3));
     defaultPieces.add(new Piece(19, EPiece.SOLDIER.name(), false, "black_soldier.png", 4, 3));
@@ -159,13 +159,13 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
     defaultPieces.add(new Piece(32, EPiece.GENERAL.name(), false, "black_general.png", 4, 0));
 
     pieceRepository.saveAll(defaultPieces);
-    log.info("Initialized {} game pieces.", defaultPieces.size());
+    log.info("-- Initialized {} game pieces.", defaultPieces.size());
   }
 
   private User initAdminUser() {
-    log.info("Checking if admin user exists...");
+    log.info("-- Checking if admin user exists...");
     if (!userRepository.existsByPhoneNumber(Default.User.Admin.PHONE_NUMBER)) {
-      log.info("Admin user does not exist. Initializing admin user...");
+      log.info("-- Admin user does not exist. Initializing admin user...");
       User adminUser = new User();
       adminUser.setPhoneNumber(Default.User.Admin.PHONE_NUMBER);
       adminUser.setPassword(passwordEncoder.encode(Default.User.Admin.PASSWORD));
@@ -186,11 +186,11 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
       adminUser.setStatus(Default.User.Admin.STATUS.name());
 
       User savedAdminUser = userRepository.save(adminUser);
-      log.info("Admin user initialized with phone number: {}", savedAdminUser.getPhoneNumber());
+      log.info("-- Admin user initialized with phone number: {}", savedAdminUser.getPhoneNumber());
       return savedAdminUser;
     }
 
-    log.info("Admin user already exists. Skipping initialization.");
+    log.info("-- Admin user already exists. Skipping initialization.");
     return null;
   }
 

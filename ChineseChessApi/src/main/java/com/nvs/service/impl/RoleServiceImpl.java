@@ -24,30 +24,30 @@ public class RoleServiceImpl implements RoleService {
   @Cacheable(value = "roles")
   @Override
   public List<RoleDTO> findAll() {
-    log.debug("Finding all roles");
+    log.debug("-- Finding all roles");
     List<RoleDTO> roles = roleRepository.findAll().stream().map(roleMapper::toDTO)
         .collect(Collectors.toList());
-    log.debug("Found {} roles", roles.size());
+    log.debug("-- Found {} roles", roles.size());
     return roles;
   }
 
   @Cacheable(value = "roleById", key = "#id")
   @Override
   public RoleDTO findById(int id) {
-    log.debug("Finding role by ID: {}", id);
+    log.debug("-- Finding role by ID: {}", id);
     RoleDTO roleDTO = roleRepository.findById(id).map(roleMapper::toDTO).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
-    log.debug("Found role: {}", roleDTO);
+    log.debug("-- Found role: {}", roleDTO);
     return roleDTO;
   }
 
   @Cacheable(value = "roleByName", key = "#name")
   @Override
   public RoleDTO findByName(String name) {
-    log.debug("Finding role by name: {}", name);
+    log.debug("-- Finding role by name: {}", name);
     RoleDTO roleDTO = roleRepository.findByName(name).map(roleMapper::toDTO).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("name", name)));
-    log.debug("Found role: {}", roleDTO);
+    log.debug("-- Found role: {}", roleDTO);
     return roleDTO;
   }
 

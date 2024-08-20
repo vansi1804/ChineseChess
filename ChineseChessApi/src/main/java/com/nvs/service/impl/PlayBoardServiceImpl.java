@@ -37,7 +37,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
   @Cacheable(value = "playBoard", key = "#root.methodName")
   @Override
   public PlayBoardDTO generate() {
-    log.debug("Generating new PlayBoardDTO.");
+    log.debug("-- Generating new PlayBoardDTO.");
     PlayBoardDTO playBoardDTO = new PlayBoardDTO(new PieceDTO[COL_MAX + 1][ROW_MAX + 1]);
     List<Piece> pieces = pieceRepository.findAll();
 
@@ -45,16 +45,16 @@ public class PlayBoardServiceImpl implements PlayBoardService {
         pDTO -> playBoardDTO.getState()[pDTO.getCurrentCol()][pDTO.getCurrentRow()] = pDTO);
 
     printTest(null, playBoardDTO, null);
-    log.debug("PlayBoardDTO generated successfully.");
+    log.debug("-- PlayBoardDTO generated successfully.");
 
     return playBoardDTO;
   }
 
   @Override
   public PlayBoardDTO build(List<MoveHistory> moveHistories) {
-    log.debug("Building PlayBoardDTO with move histories: {}", moveHistories);
+    log.debug("-- Building PlayBoardDTO with move histories: {}", moveHistories);
     return moveHistories.stream().reduce(generate(), (playBoardDTO, mh) -> {
-      log.debug("Updating PlayBoardDTO for move history: {}", mh);
+      log.debug("-- Updating PlayBoardDTO for move history: {}", mh);
       return update(playBoardDTO,
           pieceService.findOneInBoard(playBoardDTO, mh.getPiece().getId()), mh.getToCol(),
           mh.getToRow());
@@ -63,7 +63,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
   @Override
   public PlayBoardDTO update(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol, int toRow) {
-    log.debug("Updating PlayBoardDTO: moving piece {} to position ({}, {}).", pieceDTO, toCol,
+    log.debug("-- Updating PlayBoardDTO: moving piece {} to position ({}, {}).", pieceDTO, toCol,
         toRow);
     PlayBoardDTO updatePlayBoardDTO = new PlayBoardDTO(pieceMapper.copy(playBoardDTO.getState()));
 
@@ -75,7 +75,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
     updatePlayBoardDTO.getState()[toCol][toRow] = updatedPieceDTO;
 
-    log.debug("PlayBoardDTO updated successfully.");
+    log.debug("-- PlayBoardDTO updated successfully.");
     return updatePlayBoardDTO;
   }
 
@@ -95,14 +95,14 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
     restorePlayBoardDTO.getState()[fromCol][fromRow] = restorePieceDTO;
 
-    log.debug("PlayBoardDTO restored successfully.");
+    log.debug("-- PlayBoardDTO restored successfully.");
     return restorePlayBoardDTO;
   }
 
   @Override
   public boolean areTwoGeneralsFacing(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO1,
       PieceDTO generalPieceDTO2) {
-    log.debug("Checking if generals are facing: {} vs {}", generalPieceDTO1, generalPieceDTO2);
+    log.debug("-- Checking if generals are facing: {} vs {}", generalPieceDTO1, generalPieceDTO2);
     if (Objects.equals(generalPieceDTO1.getCurrentCol(), generalPieceDTO2.getCurrentCol())) {
       int currentCol = generalPieceDTO1.getCurrentCol();
       int fromRow = generalPieceDTO1.getCurrentRow();
@@ -110,7 +110,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
       boolean facing = pieceService.existsBetweenInColPath(playBoardDTO, currentCol, fromRow,
           toRow);
-      log.debug("Generals are facing: {}", facing);
+      log.debug("-- Generals are facing: {}", facing);
       return facing;
     }
 
@@ -119,7 +119,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
 
   @Override
   public boolean isGeneralBeingChecked(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO) {
-    log.debug("Checking if general is being checked: {}", generalPieceDTO);
+    log.debug("-- Checking if general is being checked: {}", generalPieceDTO);
     List<PieceDTO> opponentPieceDTOsInBoard = pieceService.findAllInBoard(playBoardDTO, null,
         !generalPieceDTO.isRed());
 
@@ -127,26 +127,26 @@ public class PlayBoardServiceImpl implements PlayBoardService {
         opponentPiece -> moveRuleService.isValid(playBoardDTO, opponentPiece,
             generalPieceDTO.getCurrentCol(), generalPieceDTO.getCurrentRow()));
 
-    log.debug("General is being checked: {}", checked);
+    log.debug("-- General is being checked: {}", checked);
     return checked;
   }
 
   @Override
   public boolean isGeneralInSafe(PlayBoardDTO playBoardDTO, PieceDTO generalPieceDTO) {
-    log.debug("Checking if general is safe: {}", generalPieceDTO);
+    log.debug("-- Checking if general is safe: {}", generalPieceDTO);
     PieceDTO opponentGeneralDTO = pieceService.findGeneralInBoard(playBoardDTO,
         !generalPieceDTO.isRed());
 
     boolean safe = (!areTwoGeneralsFacing(playBoardDTO, generalPieceDTO, opponentGeneralDTO)
         && !isGeneralBeingChecked(playBoardDTO, generalPieceDTO));
 
-    log.debug("General is in safe: {}", safe);
+    log.debug("-- General is in safe: {}", safe);
     return safe;
   }
 
   @Override
   public int evaluate(PlayBoardDTO playBoardDTO) {
-    log.debug("Evaluating PlayBoardDTO.");
+    log.debug("-- Evaluating PlayBoardDTO.");
     int score = IntStream.rangeClosed(COL_MIN, COL_MAX).flatMap(
         col -> IntStream.rangeClosed(ROW_MIN, ROW_MAX)
             .filter(row -> playBoardDTO.getState()[col][row] != null).map(row -> {
@@ -156,13 +156,13 @@ public class PlayBoardServiceImpl implements PlayBoardService {
               return pieceDTO.isRed() ? piecePower : -piecePower;
             })).sum();
 
-    log.debug("Evaluation result: {}", score);
+    log.debug("-- Evaluation result: {}", score);
     return score;
   }
 
   @Override
   public void printTest(Object title, PlayBoardDTO playBoardDTO, PieceDTO pieceDTO) {
-    log.debug("Printing test board with title: {}", title);
+    log.debug("-- Printing test board with title: {}", title);
     System.out.println("\n===========================================");
     System.out.println(title);
     System.out.println("===========================================");
@@ -182,7 +182,7 @@ public class PlayBoardServiceImpl implements PlayBoardService {
   public void printTest(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO,
       List<int[]> availableMoveIndexes) {
 
-    log.debug("Printing test board with available move indexes: {}", availableMoveIndexes);
+    log.debug("-- Printing test board with available move indexes: {}", availableMoveIndexes);
     System.out.println("\n===========================================");
     System.out.println("Available move: ");
     System.out.println("===========================================");

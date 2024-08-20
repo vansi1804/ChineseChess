@@ -41,41 +41,41 @@ public class PlayerServiceImpl implements PlayerService {
   @Cacheable(value = "players", key = "#no + '-' + #limit + '-' + #sortBy")
   @Override
   public Page<PlayerDTO> findAll(int no, int limit, String sortBy) {
-    log.debug("Finding all players with page number: {}, page size: {}, sort by: {}", no, limit,
+    log.debug("-- Finding all players with page number: {}, page size: {}, sort by: {}", no, limit,
         sortBy);
     Page<PlayerDTO> playersPage = playerRepository.findAll(
             PageRequest.of(no, limit, Sort.by(sortBy)))
         .map(playerMapper::toDTO);
-    log.debug("Found {} players.", playersPage.getTotalElements());
+    log.debug("-- Found {} players.", playersPage.getTotalElements());
     return playersPage;
   }
 
   @Cacheable(value = "playerByUserId", key = "#userId")
   @Override
   public PlayerDTO findByUserId(long userId) {
-    log.debug("Finding player by user ID: {}", userId);
+    log.debug("-- Finding player by user ID: {}", userId);
     PlayerDTO playerDTO = playerRepository.findByUser_Id(userId).map(playerMapper::toDTO)
         .orElseThrow(() -> new ResourceNotFoundExceptionCustomize(
             Collections.singletonMap("userId", userId)));
-    log.debug("Found player: {}", playerDTO);
+    log.debug("-- Found player: {}", playerDTO);
     return playerDTO;
   }
 
   @Cacheable(value = "playerProfileById", key = "#id")
   @Override
   public PlayerProfileDTO findById(long id) {
-    log.debug("Finding player by ID: {}", id);
+    log.debug("-- Finding player by ID: {}", id);
     PlayerProfileDTO playerProfileDTO = playerRepository.findById(id)
         .map(playerMapper::toProfileDTO).orElseThrow(
             () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
-    log.debug("Found player profile: {}", playerProfileDTO);
+    log.debug("-- Found player profile: {}", playerProfileDTO);
     return playerProfileDTO;
   }
 
   @CachePut(value = "player", key = "#playerCreationDTO.userCreationDTO.phoneNumber")
   @Override
   public PlayerDTO create(PlayerCreationDTO playerCreationDTO) {
-    log.debug("Creating player with details: {}", playerCreationDTO);
+    log.debug("-- Creating player with details: {}", playerCreationDTO);
 
     UserDTO createdUserDTO = userService.create(playerCreationDTO.getUserCreationDTO(),
         ERole.PLAYER);
@@ -93,14 +93,14 @@ public class PlayerServiceImpl implements PlayerService {
     createdPlayerDTO.setUserDTO(createdUserDTO);
     createdPlayerDTO.getPlayerOthersInfoDTO().setRankDTO(defaultRank);
 
-    log.debug("Player created successfully: {}", createdPlayerDTO);
+    log.debug("-- Player created successfully: {}", createdPlayerDTO);
     return createdPlayerDTO;
   }
 
   @CachePut(value = "playerProfileById", key = "#id")
   @Override
   public PlayerProfileDTO update(long id, PlayerProfileDTO playerProfileDTO) {
-    log.debug("Updating player with ID: {} and details: {}", id, playerProfileDTO);
+    log.debug("-- Updating player with ID: {} and details: {}", id, playerProfileDTO);
 
     Player existingPlayer = playerRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
@@ -121,14 +121,14 @@ public class PlayerServiceImpl implements PlayerService {
     PlayerProfileDTO updatedPlayerProfileDTO = playerMapper.toProfileDTO(updatePlayer);
     updatedPlayerProfileDTO.setUserProfileDTO(updatedUserProfileDTO);
 
-    log.debug("Player profile updated successfully: {}", updatedPlayerProfileDTO);
+    log.debug("-- Player profile updated successfully: {}", updatedPlayerProfileDTO);
     return updatedPlayerProfileDTO;
   }
 
   @CachePut(value = "playerProfileById", key = "#id")
   @Override
   public PlayerProfileDTO updateByMatchResult(long id, int result, int eloBet) {
-    log.debug("Updating player by match result with ID: {}, result: {}, elo bet: {}", id, result,
+    log.debug("-- Updating player by match result with ID: {}, result: {}, elo bet: {}", id, result,
         eloBet);
 
     Player existingPlayer = playerRepository.findById(id).orElseThrow(
@@ -152,7 +152,8 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.save(existingPlayer));
     updatedPlayerProfileDTO.getPlayerOthersInfoDTO().setRankDTO(rankDTO);
 
-    log.debug("Player profile updated by match result successfully: {}", updatedPlayerProfileDTO);
+    log.debug("-- Player profile updated by match result successfully: {}",
+        updatedPlayerProfileDTO);
     return updatedPlayerProfileDTO;
   }
 

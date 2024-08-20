@@ -39,30 +39,30 @@ public class TrainingServiceImpl implements TrainingService {
   @Override
   @Cacheable(value = "trainings")
   public List<TrainingDTO> findAllBase() {
-    log.debug("Fetching all base training records");
+    log.debug("-- Fetching all base training records");
     List<TrainingDTO> trainingList = trainingRepository.findAllBase().stream()
         .map(trainingMapper::toDTO)
         .collect(Collectors.toList());
-    log.debug("Found {} training records", trainingList.size());
+    log.debug("-- Found {} training records", trainingList.size());
     return trainingList;
   }
 
   @Override
   @Cacheable(value = "training", key = "#id")
   public TrainingDTO findById(long id) {
-    log.debug("Fetching training by ID: {}", id);
+    log.debug("-- Fetching training by ID: {}", id);
     TrainingDTO trainingDTO = trainingRepository.findById(id)
         .map(trainingMapper::toDTO)
         .orElseThrow(
             () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
-    log.debug("Found training: {}", trainingDTO);
+    log.debug("-- Found training: {}", trainingDTO);
     return trainingDTO;
   }
 
   @Override
   @Cacheable(value = "training", key = "#id", unless = "#result == null")
   public TrainingDetailDTO findDetailById(long id) {
-    log.debug("Fetching training details by ID: {}", id);
+    log.debug("-- Fetching training details by ID: {}", id);
     TrainingDetailDTO trainingDetailDTO = trainingRepository.findById(id)
         .map(trainingMapper::toDetailDTO)
         .orElseThrow(
@@ -73,14 +73,14 @@ public class TrainingServiceImpl implements TrainingService {
     trainingDetailDTO.setTotalTurn(moveHistoryDTOs.size());
     trainingDetailDTO.setMoveHistoryDTOs(moveHistoryDTOs);
 
-    log.debug("Found training details: {}", trainingDetailDTO);
+    log.debug("-- Found training details: {}", trainingDetailDTO);
     return trainingDetailDTO;
   }
 
   @Override
   @CachePut(value = "training")
   public TrainingDTO create(TrainingDTO trainingDTO) {
-    log.debug("Creating new training with DTO: {}", trainingDTO);
+    log.debug("-- Creating new training with DTO: {}", trainingDTO);
 
     if ((trainingDTO.getParentTrainingId() != null) && !trainingRepository.existsById(
         trainingDTO.getParentTrainingId())) {
@@ -99,14 +99,14 @@ public class TrainingServiceImpl implements TrainingService {
 
     TrainingDTO createdTrainingDTO = trainingMapper.toDTO(
         trainingRepository.save(trainingMapper.toEntity(trainingDTO)));
-    log.debug("Created training: {}", createdTrainingDTO);
+    log.debug("-- Created training: {}", createdTrainingDTO);
     return createdTrainingDTO;
   }
 
   @Override
   @CachePut(value = "training", key = "#id")
   public TrainingDTO update(long id, TrainingDTO trainingDTO) {
-    log.debug("Updating training with ID: {} and DTO: {}", id, trainingDTO);
+    log.debug("-- Updating training with ID: {} and DTO: {}", id, trainingDTO);
 
     Training existingTraining = trainingRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
@@ -147,14 +147,14 @@ public class TrainingServiceImpl implements TrainingService {
     trainingRepository.flush();
 
     TrainingDTO updatedTrainingDTO = trainingMapper.toDTO(updatedTraining);
-    log.debug("Updated training: {}", updatedTrainingDTO);
+    log.debug("-- Updated training: {}", updatedTrainingDTO);
     return updatedTrainingDTO;
   }
 
   @Override
   @CacheEvict(value = "training", key = "#id")
   public boolean deleteById(long id) {
-    log.debug("Deleting training with ID: {}", id);
+    log.debug("-- Deleting training with ID: {}", id);
 
     Training oldTraining = trainingRepository.findById(id).orElseThrow(
         () -> new ResourceNotFoundExceptionCustomize(Collections.singletonMap("id", id)));
@@ -164,7 +164,7 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     trainingRepository.delete(oldTraining);
-    log.debug("Deleted training with ID: {}", id);
+    log.debug("-- Deleted training with ID: {}", id);
 
     return true;
   }

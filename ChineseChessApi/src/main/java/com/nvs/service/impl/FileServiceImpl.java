@@ -25,7 +25,7 @@ public class FileServiceImpl implements FileService {
   @Override
   public String uploadFile(MultipartFile file) {
     if (file == null || file.isEmpty()) {
-      log.warn("Attempted to upload an empty file");
+      log.warn("-- Attempted to upload an empty file");
       return null;
     }
 
@@ -41,12 +41,12 @@ public class FileServiceImpl implements FileService {
         log.error("Failed to create directory: {}", UPLOAD_DIR);
         return null;
       }
-      log.info("Created directory for uploads: {}", UPLOAD_DIR);
+      log.info("-- Created directory for uploads: {}", UPLOAD_DIR);
     }
 
     try {
       Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-      log.info("Successfully uploaded file: {}", fileName);
+      log.info("-- Successfully uploaded file: {}", fileName);
     } catch (IOException e) {
       log.error("Error uploading file: {}", fileName, e);
       return null;
@@ -58,7 +58,7 @@ public class FileServiceImpl implements FileService {
   @Override
   public Resource downloadFile(String fileName) {
     if (fileName == null || fileName.isEmpty()) {
-      log.warn("File name is null or empty for download request");
+      log.warn("-- File name is null or empty for download request");
       throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
     }
 
@@ -67,7 +67,7 @@ public class FileServiceImpl implements FileService {
     try {
       resource = new UrlResource(filePath.toUri());
       if (!resource.exists() || !resource.isReadable()) {
-        log.warn("File not found or not readable: {}", fileName);
+        log.warn("-- File not found or not readable: {}", fileName);
         throw new ResourceNotFoundExceptionCustomize(
             Collections.singletonMap("fileName", fileName));
       }
@@ -76,7 +76,7 @@ public class FileServiceImpl implements FileService {
       throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));
     }
 
-    log.info("Successfully retrieved file for download: {}", fileName);
+    log.info("-- Successfully retrieved file for download: {}", fileName);
     return resource;
   }
 
@@ -85,7 +85,7 @@ public class FileServiceImpl implements FileService {
     Path filePath = Paths.get(UPLOAD_DIR, fileName);
     try {
       Files.delete(filePath);
-      log.info("Successfully deleted file: {}", fileName);
+      log.info("-- Successfully deleted file: {}", fileName);
     } catch (IOException e) {
       log.error("Error deleting file: {}", fileName, e);
       throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("fileName", fileName));

@@ -43,9 +43,9 @@ public class FileController {
   })
   @PostMapping(value = "/upload")
   public ResponseEntity<String> uploadFile(@RequestParam MultipartFile file) {
-    log.debug("Uploading file: {}", file.getOriginalFilename());
+    log.debug("-- Uploading file: {}", file.getOriginalFilename());
     String response = fileService.uploadFile(file);
-    log.info("File uploaded successfully: {}", file.getOriginalFilename());
+    log.info("-- File uploaded successfully: {}", file.getOriginalFilename());
     return ResponseEntity.ok().body(response);
   }
 
@@ -57,11 +57,11 @@ public class FileController {
   })
   @GetMapping(value = "/download/{fileName}")
   public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws IOException {
-    log.debug("Downloading file: {}", fileName);
+    log.debug("-- Downloading file: {}", fileName);
     Resource resource = fileService.downloadFile(fileName);
     String originalFilename = obtainOriginalFileName(resource);
     String mediaType = Files.probeContentType(resource.getFile().toPath());
-    log.info("File downloaded successfully: {}", originalFilename);
+    log.info("-- File downloaded successfully: {}", originalFilename);
 
     return ResponseEntity.ok().contentType(MediaType.parseMediaType(mediaType))
         .header(HttpHeaders.CONTENT_DISPOSITION,
@@ -76,7 +76,7 @@ public class FileController {
   })
   @GetMapping(value = "/display/{fileName}")
   public ResponseEntity<byte[]> displayFile(@PathVariable String fileName) throws IOException {
-    log.debug("Displaying file: {}", fileName);
+    log.debug("-- Displaying file: {}", fileName);
     Resource resource = fileService.downloadFile(fileName);
     String originalFilename = obtainOriginalFileName(resource);
     String mediaType = detectMediaType(originalFilename);
@@ -90,7 +90,7 @@ public class FileController {
       fileBytes = IOUtils.toByteArray(inputStream);
     }
 
-    log.info("File displayed successfully: {}", originalFilename);
+    log.info("-- File displayed successfully: {}", originalFilename);
     return ResponseEntity.ok().headers(headers).body(fileBytes);
   }
 

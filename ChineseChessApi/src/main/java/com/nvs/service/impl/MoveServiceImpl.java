@@ -60,7 +60,7 @@ public class MoveServiceImpl implements MoveService {
       log.error("Match with ID {} not found", matchId);
       throw new ResourceNotFoundExceptionCustomize(Collections.singletonMap("matchId", matchId));
     }
-    log.info("Finding all move histories for match ID {}", matchId);
+    log.info("-- Finding all move histories for match ID {}", matchId);
     return this.build(moveHistoryRepository.findAllByMatch_Id(matchId));
   }
 
@@ -71,7 +71,7 @@ public class MoveServiceImpl implements MoveService {
       throw new ResourceNotFoundExceptionCustomize(
           Collections.singletonMap("trainingId", trainingId));
     }
-    log.info("Finding all move histories for training ID {}", trainingId);
+    log.info("-- Finding all move histories for training ID {}", trainingId);
     return this.build(moveHistoryRepository.findAllByTraining_Id(trainingId));
   }
 
@@ -93,7 +93,7 @@ public class MoveServiceImpl implements MoveService {
     List<int[]> availableMoveIndexes = this.findAllAvailableMoveIndexes(
         availableMoveRequestDTO.getPlayBoardDTO(), movingPieceDTO);
 
-    log.debug("Available moves for piece ID {}: {}", availableMoveRequestDTO.getMovingPieceId(),
+    log.debug("-- Available moves for piece ID {}: {}", availableMoveRequestDTO.getMovingPieceId(),
         availableMoveIndexes);
 
     playBoardService.printTest(availableMoveRequestDTO.getPlayBoardDTO(), movingPieceDTO,
@@ -118,13 +118,13 @@ public class MoveServiceImpl implements MoveService {
         movingPieceDTO, moveCreationDTO.getToCol(), moveCreationDTO.getToRow());
 
     if (isAvailableMove) {
-      log.info("Creating move for piece ID {} to position ({}, {})",
+      log.info("-- Creating move for piece ID {} to position ({}, {})",
           moveCreationDTO.getMovingPieceId(),
           moveCreationDTO.getToCol(), moveCreationDTO.getToRow());
       return this.makeMove(moveCreationDTO.getPlayBoardDTO(), movingPieceDTO,
           moveCreationDTO.getToCol(), moveCreationDTO.getToRow());
     } else {
-      log.warn("Invalid move attempt for piece ID {} to position ({}, {})",
+      log.warn("-- Invalid move attempt for piece ID {} to position ({}, {})",
           moveCreationDTO.getMovingPieceId(),
           moveCreationDTO.getToCol(), moveCreationDTO.getToRow());
       Map<String, Object> errors = new HashMap<>();
@@ -144,7 +144,7 @@ public class MoveServiceImpl implements MoveService {
 
     long newTurn = moveHistoryRepository.countTurnByTraining_Id(training.getId()) + 1;
 
-    log.info("Creating training move for training ID {} on turn {}", training.getId(), newTurn);
+    log.info("-- Creating training move for training ID {} on turn {}", training.getId(), newTurn);
 
     List<MoveHistory> moveHistories = moveHistoryRepository.findAllByTraining_Id(training.getId());
     PlayBoardDTO playBoardDTO = playBoardService.build(moveHistories);
@@ -165,7 +165,7 @@ public class MoveServiceImpl implements MoveService {
 
     if (((newTurn % 2 != 0) && !movingPieceDTO.isRed()) || ((newTurn % 2 == 0)
         && movingPieceDTO.isRed())) {
-      log.warn("Training move attempted on opponent's turn for piece ID {}",
+      log.warn("-- Training move attempted on opponent's turn for piece ID {}",
           trainingMoveCreationDTO.getMovingPieceId());
       Map<String, Object> errors = new HashMap<>();
       errors.put("message", Translator.toLocale("OPPONENT_TURN"));
@@ -183,14 +183,14 @@ public class MoveServiceImpl implements MoveService {
       moveHistory.setTurn(newTurn);
       moveHistoryRepository.save(moveHistory);
 
-      log.info("Training move created successfully for piece ID {} to position ({}, {})",
+      log.info("-- Training move created successfully for piece ID {} to position ({}, {})",
           trainingMoveCreationDTO.getMovingPieceId(),
           trainingMoveCreationDTO.getToCol(), trainingMoveCreationDTO.getToRow());
 
       return this.makeMove(playBoardDTO, movingPieceDTO, trainingMoveCreationDTO.getToCol(),
           trainingMoveCreationDTO.getToRow());
     } else {
-      log.warn("Invalid training move attempt for piece ID {} to position ({}, {})",
+      log.warn("-- Invalid training move attempt for piece ID {} to position ({}, {})",
           trainingMoveCreationDTO.getMovingPieceId(),
           trainingMoveCreationDTO.getToCol(), trainingMoveCreationDTO.getToRow());
       Map<String, Object> errors = new HashMap<>();
@@ -228,7 +228,7 @@ public class MoveServiceImpl implements MoveService {
 
     long newTurn = moveHistoryRepository.countTurnByMatch_Id(match.getId()) + 1;
 
-    log.info("Creating match move for match ID {} on turn {}", match.getId(), newTurn);
+    log.info("-- Creating match move for match ID {} on turn {}", match.getId(), newTurn);
 
     List<MoveHistory> moveHistories = moveHistoryRepository.findAllByMatch_Id(match.getId());
     PlayBoardDTO playBoardDTO = playBoardService.build(moveHistories);
@@ -249,7 +249,7 @@ public class MoveServiceImpl implements MoveService {
 
     if (((newTurn % 2 != 0) && !movingPieceDTO.isRed()) || ((newTurn % 2 == 0)
         && movingPieceDTO.isRed())) {
-      log.warn("Match move attempted on opponent's turn for piece ID {}",
+      log.warn("-- Match move attempted on opponent's turn for piece ID {}",
           matchMoveCreationDTO.getMovingPieceId());
       Map<String, Object> errors = new HashMap<>();
       errors.put("message", Translator.toLocale("OPPONENT_TURN"));
@@ -267,14 +267,14 @@ public class MoveServiceImpl implements MoveService {
       moveHistory.setTurn(newTurn);
       moveHistoryRepository.save(moveHistory);
 
-      log.info("Match move created successfully for piece ID {} to position ({}, {})",
+      log.info("-- Match move created successfully for piece ID {} to position ({}, {})",
           matchMoveCreationDTO.getMovingPieceId(),
           matchMoveCreationDTO.getToCol(), matchMoveCreationDTO.getToRow());
 
       return this.makeMove(playBoardDTO, movingPieceDTO, matchMoveCreationDTO.getToCol(),
           matchMoveCreationDTO.getToRow());
     } else {
-      log.warn("Invalid match move attempt for piece ID {} to position ({}, {})",
+      log.warn("-- Invalid match move attempt for piece ID {} to position ({}, {})",
           matchMoveCreationDTO.getMovingPieceId(),
           matchMoveCreationDTO.getToCol(), matchMoveCreationDTO.getToRow());
       Map<String, Object> errors = new HashMap<>();
@@ -291,7 +291,7 @@ public class MoveServiceImpl implements MoveService {
   @Override
   public Map<Boolean, BestAvailableMoveResponseDTO> findAllBestAvailable(
       BestAvailableMoveRequestDTO bestAvailableMoveRequestDTO) {
-    log.info("Starting findAllBestAvailable with request: {}", bestAvailableMoveRequestDTO);
+    log.info("-- Starting findAllBestAvailable with request: {}", bestAvailableMoveRequestDTO);
 
     PlayBoardDTO playBoardDTO = bestAvailableMoveRequestDTO.getPlayBoardDTO();
     Integer depth = bestAvailableMoveRequestDTO.getDepth();
@@ -303,8 +303,8 @@ public class MoveServiceImpl implements MoveService {
     List<PieceDTO> redPieces = pieceService.findAllInBoard(playBoardDTO, null, true);
     List<PieceDTO> blackPieces = pieceService.findAllInBoard(playBoardDTO, null, false);
 
-    log.debug("Red pieces: {}", redPieces);
-    log.debug("Black pieces: {}", blackPieces);
+    log.debug("-- Red pieces: {}", redPieces);
+    log.debug("-- Black pieces: {}", blackPieces);
 
     // Determine which pieces to evaluate based on the isRed parameter
     List<PieceDTO> piecesToEvaluate;
@@ -315,7 +315,7 @@ public class MoveServiceImpl implements MoveService {
       piecesToEvaluate = bestAvailableMoveRequestDTO.getIsRed() ? redPieces : blackPieces;
     }
 
-    log.debug("Pieces to evaluate: {}", piecesToEvaluate);
+    log.debug("-- Pieces to evaluate: {}", piecesToEvaluate);
 
     // Find the best moves for each piece
     List<BestMoveResponseDTO> bestMoveResponseDTOs = piecesToEvaluate.stream()
@@ -332,7 +332,7 @@ public class MoveServiceImpl implements MoveService {
               .collect(Collectors.toList()));
       redBestAvailableMoveResponse.setEvalScore(playBoardService.evaluate(playBoardDTO));
       bestAvailableMovesMap.put(true, redBestAvailableMoveResponse);
-      log.info("Red best moves: {}",
+      log.info("-- Red best moves: {}",
           redBestAvailableMoveResponse.getBestMovesResponseDTOs().size());
     }
 
@@ -342,7 +342,7 @@ public class MoveServiceImpl implements MoveService {
               .collect(Collectors.toList()));
       blackBestAvailableMoveResponse.setEvalScore(playBoardService.evaluate(playBoardDTO));
       bestAvailableMovesMap.put(false, blackBestAvailableMoveResponse);
-      log.info("Black best moves: {}",
+      log.info("-- Black best moves: {}",
           blackBestAvailableMoveResponse.getBestMovesResponseDTOs().size());
     }
 
@@ -350,7 +350,7 @@ public class MoveServiceImpl implements MoveService {
   }
 
   private List<int[]> findAllAvailableMoveIndexes(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO) {
-    log.debug("Finding all available move indexes for piece: {}", pieceDTO);
+    log.debug("-- Finding all available move indexes for piece: {}", pieceDTO);
 
     int fromCol = 0;
     int fromRow = 0;
@@ -362,12 +362,12 @@ public class MoveServiceImpl implements MoveService {
             .filter(row -> this.isAvailableMove(playBoardDTO, pieceDTO, col, row))
             .mapToObj(row -> new int[]{col, row})).collect(Collectors.toList());
 
-    log.debug("Available move indexes: {}", availableMoveIndexes);
+    log.debug("-- Available move indexes: {}", availableMoveIndexes);
     return availableMoveIndexes;
   }
 
   private Map<Long, MoveHistoryDTO> build(List<MoveHistory> moveHistories) {
-    log.info("Building move history from moveHistories: {}", moveHistories);
+    log.info("-- Building move history from moveHistories: {}", moveHistories);
 
     AtomicReference<PlayBoardDTO> playBoardDTO = new AtomicReference<>(playBoardService.generate());
     playBoardService.printTest("start: ", playBoardDTO.get(), null);
@@ -400,7 +400,7 @@ public class MoveServiceImpl implements MoveService {
           mh.getToCol(), mh.getToRow());
       moveHistoryDTO.setDescription(description);
 
-      log.info("Turn {}: {}", turn, description);
+      log.info("-- Turn {}: {}", turn, description);
 
       MoveDTO moveDTO = this.makeMove(playBoardDTO.get(), movingPieceDTO, mh.getToCol(),
           mh.getToRow());
@@ -422,13 +422,13 @@ public class MoveServiceImpl implements MoveService {
       moveHistoryDTOMap.put(turn, moveHistoryDTO);
     });
 
-    log.info("Built move history map with {} entries", moveHistoryDTOMap.size());
+    log.info("-- Built move history map with {} entries", moveHistoryDTOMap.size());
     return moveHistoryDTOMap;
   }
 
   private MoveDTO makeMove(PlayBoardDTO playBoardDTO, PieceDTO movingPieceDTO, int toCol,
       int toRow) {
-    log.debug("Making move for piece {} to position ({}, {})", movingPieceDTO, toCol, toRow);
+    log.debug("-- Making move for piece {} to position ({}, {})", movingPieceDTO, toCol, toRow);
 
     MoveDTO moveDTO = new MoveDTO();
     moveDTO.setMovingPieceDTO(movingPieceDTO);
@@ -449,24 +449,24 @@ public class MoveServiceImpl implements MoveService {
 
     playBoardService.printTest("", moveDTO.getPlayBoardDTO(), movingPieceDTO);
 
-    log.debug("Move result: {}", moveDTO);
+    log.debug("-- Move result: {}", moveDTO);
     return moveDTO;
   }
 
   private PieceDTO findGeneralBeingChecked(PlayBoardDTO playBoardDTO, boolean isRed) {
-    log.debug("Finding if general is being checked for color: {}", isRed);
+    log.debug("-- Finding if general is being checked for color: {}", isRed);
 
     PieceDTO opponentGeneralPieceDTO = pieceService.findGeneralInBoard(playBoardDTO, !isRed);
     PieceDTO result = playBoardService.isGeneralBeingChecked(playBoardDTO, opponentGeneralPieceDTO)
         ? opponentGeneralPieceDTO : null;
 
-    log.debug("General being checked: {}", result);
+    log.debug("-- General being checked: {}", result);
     return result;
   }
 
   // Checkmate state (End game) is the state that no any available moves found
   private boolean isCheckmateState(PlayBoardDTO playBoardDTO, boolean isRed) {
-    log.debug("Checking for checkmate state. Red is: {}", isRed);
+    log.debug("-- Checking for checkmate state. Red is: {}", isRed);
 
     int fromCol = 0;
     int fromRow = 0;
@@ -474,7 +474,7 @@ public class MoveServiceImpl implements MoveService {
     int toRow = playBoardDTO.getState()[0].length - 1;
 
     List<PieceDTO> opponentPiecesInBoard = pieceService.findAllInBoard(playBoardDTO, null, !isRed);
-    log.debug("Opponent pieces on board: {}", opponentPiecesInBoard);
+    log.debug("-- Opponent pieces on board: {}", opponentPiecesInBoard);
 
     boolean isCheckmate = opponentPiecesInBoard.stream().flatMap(
             opponentPiece -> IntStream.rangeClosed(fromCol, toCol).boxed().flatMap(
@@ -485,24 +485,24 @@ public class MoveServiceImpl implements MoveService {
         .findAny()
         .isEmpty();
 
-    log.info("Checkmate state result: {}", isCheckmate);
+    log.info("-- Checkmate state result: {}", isCheckmate);
     return isCheckmate;
   }
 
   private boolean isAvailableMove(PlayBoardDTO playBoardDTO, PieceDTO pieceDTO, int toCol,
       int toRow) {
-    log.debug("Checking available move for piece {} at destination ({}, {}).", pieceDTO, toCol,
+    log.debug("-- Checking available move for piece {} at destination ({}, {}).", pieceDTO, toCol,
         toRow);
 
     // Check if the move is valid
     boolean isValidMove = moveRuleService.isValid(playBoardDTO, pieceDTO, toCol, toRow);
-    log.debug("Move validity for piece {} to ({}, {}): {}", pieceDTO, toCol, toRow, isValidMove);
+    log.debug("-- Move validity for piece {} to ({}, {}): {}", pieceDTO, toCol, toRow, isValidMove);
 
     if (isValidMove) {
       // Update the playboard with the move
       PlayBoardDTO updatedPlayBoardDTO = playBoardService.update(playBoardDTO, pieceDTO, toCol,
           toRow);
-      log.debug("Playboard updated after move. Checking general safety...");
+      log.debug("-- Playboard updated after move. Checking general safety...");
 
       // Find the general piece on the updated board
       PieceDTO generalPieceDTO = pieceService.findGeneralInBoard(updatedPlayBoardDTO,
@@ -511,11 +511,11 @@ public class MoveServiceImpl implements MoveService {
       // Check if the general is safe after the move
       boolean isGeneralSafe = playBoardService.isGeneralInSafe(updatedPlayBoardDTO,
           generalPieceDTO);
-      log.debug("General safety status after move: {}", isGeneralSafe);
+      log.debug("-- General safety status after move: {}", isGeneralSafe);
 
       return isGeneralSafe;
     } else {
-      log.debug("Move is not valid. Returning false.");
+      log.debug("-- Move is not valid. Returning false.");
       return false;
     }
   }

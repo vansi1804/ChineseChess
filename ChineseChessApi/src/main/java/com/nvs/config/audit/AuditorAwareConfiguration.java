@@ -38,16 +38,17 @@ public class AuditorAwareConfiguration {
   private boolean isAuthenticated(Authentication authentication) {
     boolean authenticated = authentication.isAuthenticated()
         && !(authentication instanceof AnonymousAuthenticationToken);
-    log.debug("Authentication checked: {}, authenticated: {}", authentication.getName(),
+    log.debug("-- Authentication checked: {}, authenticated: {}", authentication.getName(),
         authenticated);
     return authenticated;
   }
 
   private Optional<Long> getUserIdFromCacheOrRepository(String phoneNumber) {
-    log.debug("Attempting to retrieve user ID for phone number: {}", phoneNumber);
+    log.debug("-- Attempting to retrieve user ID for phone number: {}", phoneNumber);
 
     return Optional.ofNullable(phoneNumberToIdCache().get(phoneNumber)).or(() -> {
-      log.debug("User ID not found in cache, querying database for phone number: {}", phoneNumber);
+      log.debug("-- User ID not found in cache, querying database for phone number: {}",
+          phoneNumber);
       return Optional.ofNullable(fetchUserIdFromRepository(phoneNumber));
     });
   }
@@ -55,18 +56,18 @@ public class AuditorAwareConfiguration {
   private Long fetchUserIdFromRepository(String phoneNumber) {
     User user = userRepository.findByPhoneNumber(phoneNumber).orElse(null);
     if (user != null) {
-      log.info("User found in database: {}, updating cache", user.getId());
+      log.info("-- User found in database: {}, updating cache", user.getId());
       updatePhoneNumberToIdCache(phoneNumber, user.getId());
       return user.getId();
     } else {
-      log.warn("No user found in database for phone number: {}", phoneNumber);
+      log.warn("-- No user found in database for phone number: {}", phoneNumber);
     }
     return null;
   }
 
   @Async
   private void updatePhoneNumberToIdCache(String phoneNumber, Long userId) {
-    log.debug("Updating cache with phone number: {} and user ID: {}", phoneNumber, userId);
+    log.debug("-- Updating cache with phone number: {} and user ID: {}", phoneNumber, userId);
     phoneNumberToIdCache().put(phoneNumber, userId);
   }
 }

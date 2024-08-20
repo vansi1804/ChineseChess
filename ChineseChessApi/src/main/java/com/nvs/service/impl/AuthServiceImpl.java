@@ -8,7 +8,7 @@ import com.nvs.data.dto.auth.LoginRequestDTO;
 import com.nvs.data.dto.auth.LoginResponseDTO;
 import com.nvs.data.mapper.RoleMapper;
 import com.nvs.service.AuthService;
-import com.nvs.util.MaskUtil;
+import com.nvs.util.SensitiveDataMasker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,8 +29,8 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
-    log.info("Attempting login for phone number: {}",
-        MaskUtil.maskPhoneNumber(loginRequestDTO.getPhoneNumber()));
+    log.info("-- Attempting login for phone number: {}",
+        SensitiveDataMasker.maskSensitiveData(loginRequestDTO.getPhoneNumber()));
 
     try {
       Authentication authentication = authenticationManager.authenticate(
@@ -39,13 +39,13 @@ public class AuthServiceImpl implements AuthService {
       );
 
       UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-      log.info("Authentication successful for phone number: {}",
-          MaskUtil.maskPhoneNumber(loginRequestDTO.getPhoneNumber()));
+      log.info("-- Authentication successful for phone number: {}",
+          SensitiveDataMasker.maskSensitiveData(loginRequestDTO.getPhoneNumber()));
 
       LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
 
       if (userDetails instanceof UserDetailsImpl userDetailsImpl) {
-        log.debug("Fetching user details for user ID: {}", userDetailsImpl.getUser().getId());
+        log.debug("-- Fetching user details for user ID: {}", userDetailsImpl.getUser().getId());
         loginResponseDTO.setUserId(userDetailsImpl.getUser().getId());
         loginResponseDTO.setRoleDTO(roleMapper.toDTO(userDetailsImpl.getUser().getRole()));
       }
@@ -58,14 +58,14 @@ public class AuthServiceImpl implements AuthService {
       loginResponseDTO.setAccessToken(accessToken);
       loginResponseDTO.setRefreshToken(refreshToken);
 
-      log.info("Generated JWT tokens for phone number: {}",
-          MaskUtil.maskPhoneNumber(loginRequestDTO.getPhoneNumber()));
+      log.info("-- Generated JWT tokens for phone number: {}",
+          SensitiveDataMasker.maskSensitiveData(loginRequestDTO.getPhoneNumber()));
 
       return loginResponseDTO;
 
     } catch (BadCredentialsException ex) {
-      log.warn("Login failed for phone number: {}",
-          MaskUtil.maskPhoneNumber(loginRequestDTO.getPhoneNumber()));
+      log.warn("-- Login failed for phone number: {}",
+          SensitiveDataMasker.maskSensitiveData(loginRequestDTO.getPhoneNumber()));
       throw new UnauthorizedExceptionCustomize();
     }
   }

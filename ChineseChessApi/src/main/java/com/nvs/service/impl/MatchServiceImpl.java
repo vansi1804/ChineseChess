@@ -42,14 +42,14 @@ public class MatchServiceImpl implements MatchService {
   @Override
   @Cacheable(value = "matches")
   public List<MatchDTO> findAll() {
-    log.info("Fetching all matches");
+    log.info("-- Fetching all matches");
     return matchRepository.findAll().stream().map(matchMapper::toDTO).collect(Collectors.toList());
   }
 
   @Override
   @Cacheable(value = "match", key = "#id")
   public MatchDTO findById(long id) {
-    log.info("Fetching match by id: {}", id);
+    log.info("-- Fetching match by id: {}", id);
     return matchRepository.findById(id)
         .map(matchMapper::toDTO)
         .orElseThrow(() -> {
@@ -61,7 +61,7 @@ public class MatchServiceImpl implements MatchService {
   @Override
   @Cacheable(value = "matchesByPlayer", key = "#playerId")
   public List<MatchDTO> findAllByPlayerId(long playerId) {
-    log.info("Fetching matches for player id: {}", playerId);
+    log.info("-- Fetching matches for player id: {}", playerId);
     return matchRepository.findAllByPlayerId(playerId).stream()
         .map(matchMapper::toDTO)
         .collect(Collectors.toList());
@@ -70,7 +70,7 @@ public class MatchServiceImpl implements MatchService {
   @Override
   @Cacheable(value = "matchDetails", key = "#id")
   public MatchDetailDTO findDetailById(long id) {
-    log.info("Fetching match details by id: {}", id);
+    log.info("-- Fetching match details by id: {}", id);
     MatchDetailDTO matchDetailDTO = matchRepository.findById(id)
         .map(matchMapper::toDetailDTO)
         .orElseThrow(() -> {
@@ -88,7 +88,7 @@ public class MatchServiceImpl implements MatchService {
   @Override
   @CachePut(value = "match")
   public MatchDTO create(MatchCreationDTO matchCreationDTO) {
-    log.info("Creating match with players: {} and {}", matchCreationDTO.getPlayer1Id(),
+    log.info("-- Creating match with players: {} and {}", matchCreationDTO.getPlayer1Id(),
         matchCreationDTO.getPlayer2Id());
 
     Player player1 = playerRepository.findById(matchCreationDTO.getPlayer1Id())
@@ -128,7 +128,7 @@ public class MatchServiceImpl implements MatchService {
     match.setPlayer2(player2);
 
     MatchDTO createdMatchDTO = matchMapper.toDTO(matchRepository.save(match));
-    log.info("Match created successfully with id: {}", createdMatchDTO.getId());
+    log.info("-- Match created successfully with id: {}", createdMatchDTO.getId());
 
     return createdMatchDTO;
   }
@@ -136,7 +136,7 @@ public class MatchServiceImpl implements MatchService {
   @Override
   @CachePut(value = "matches", key = "#id")
   public MatchDTO updateResult(long id, Boolean result) {
-    log.info("Updating result for match id: {}", id);
+    log.info("-- Updating result for match id: {}", id);
     Match existingMatch = matchRepository.findById(id)
         .orElseThrow(() -> {
           log.error("Match with id {} not found", id);
@@ -179,7 +179,7 @@ public class MatchServiceImpl implements MatchService {
     updatedMatchDTO.setPlayer1ProfileDTO(player1ProfileDTO);
     updatedMatchDTO.setPlayer2ProfileDTO(player2ProfileDTO);
 
-    log.info("Match result updated successfully for match id: {}", updatedMatchDTO.getId());
+    log.info("-- Match result updated successfully for match id: {}", updatedMatchDTO.getId());
     return updatedMatchDTO;
   }
 
